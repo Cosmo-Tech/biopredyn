@@ -1,0 +1,24 @@
+SET(CTEST_CUSTOM_WARNING_EXCEPTION
+  ${CTEST_CUSTOM_WARNING_EXCEPTION}
+  "GtkWarning: could not open display"
+  "paragraph overflows the available area"
+  # WARNING: Font 'ZapfDingbats,normal,700' not found. Substituting with 'ZapfDingbats,normal,400'.
+  "ZapfDingbats,normal,700"
+  "ZapfDingbats,italic,400"
+  "Symbol,normal,700"
+  )
+
+SET(CTEST_CUSTOM_ERROR_EXCEPTION
+  ${CTEST_CUSTOM_ERROR_EXCEPTION}
+  "GtkWarning: could not open display"
+  # SEVERE: Ignoring property: hyphenate="0" (file:/.../CoSMoGUI_ReferenceGuide.fo:77:159: No conversion defined 0; property:'hyphenate')
+  "SEVERE: Ignoring property: hyphenate"
+  "GRAVE: Ignoring property: hyphenate"
+  "Invalid property value encountered in hyphenate"
+  )
+
+SET(CTEST_CUSTOM_ERROR_MATCH
+  ${CTEST_CUSTOM_ERROR_MATCH}
+  "parser error :"
+  )
+

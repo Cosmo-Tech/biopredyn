@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Language: XML
+  $Author: sjoubert $
+  $Date: 2012-11-29 15:10:25 +0100 (jeu. 29 nov. 2012) $
+  $Revision: 16150 $
+  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+-->
+<!--
+This files contains the common docbook setting for the entire CoSMo DocBook documentation
+This is the FO part
+-->
+<xsl:stylesheet
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xslthl="http://xslthl.sf.net"
+    xmlns:fo="http://www.w3.org/1999/XSL/Format"
+exclude-result-prefixes="xslthl"
+version="1.0">
+<!-- xsl:import elements must come first -->
+<!--xsl:import href="/usr/share/xml/docbook/stylesheet/docbook-xsl/fo/docbook.xsl"/-->
+<xsl:import href="@DOCBOOK_FO_XSL@"/>
+<!--xsl:import href="/usr/share/xml/docbook/stylesheet/docbook-xsl/fo/highlight.xsl"/-->
+@DOCBOOK_IMPORT_FO_SYNTAX_HIGHLIGHTING@
+<xsl:import href="@Documentation_SOURCE_DIR@/CMake/cosmodocbookcommon.xsl"/>
+
+<xsl:output method="xml" indent="no" encoding="UTF-8"/>
+
+<!-- http://docbook.sourceforge.net/release/xsl/current/doc/fo/highlight.source.html -->
+<xsl:param name="highlight.xslthl.config">file://@XSLTHL_CONFIG_XML@</xsl:param>
+<xsl:param name="callout.graphics.path" select="'@DOCBOOK_XSL_DIRECTORY@/images/callouts/'"/>
+
+<!-- http://www.sagehill.net/docbookxsl/SyntaxHighlighting.html -->
+<xsl:template match='xslthl:keyword' mode="xslthl">
+  <fo:inline font-weight="bold" color="blue"><xsl:apply-templates mode="xslthl"/></fo:inline>
+</xsl:template>
+
+<xsl:template match='xslthl:attribute' mode="xslthl">
+  <fo:inline font-style="italic" color="green"><xsl:apply-templates mode="xslthl"/></fo:inline>
+</xsl:template>
+
+<xsl:template match='xslthl:directive' mode="xslthl">
+  <fo:inline font-style="italic" color="yellow"><xsl:apply-templates mode="xslthl"/></fo:inline>
+</xsl:template>
+
+<xsl:template match='xslthl:string' mode="xslthl">
+  <fo:inline font-style="italic" color="red"><xsl:apply-templates mode="xslthl"/></fo:inline>
+</xsl:template>
+
+<xsl:template match='xslthl:comment' mode="xslthl">
+  <fo:inline font-style="italic" color="silver"><xsl:apply-templates mode="xslthl"/></fo:inline>
+</xsl:template>
+
+<xsl:template match='xslthl:value' mode="xslthl">
+  <fo:inline color="#993300"><xsl:apply-templates mode="xslthl"/></fo:inline>
+</xsl:template>
+
+
+<xsl:param name="fop1.extensions" select="1"/>
+<!-- FIXME
+ I am removing hyphenation handling as it is broken
+ http://bugs.debian.org/570095
+ http://issues.apache.org/bugzilla/show_bug.cgi?id=48765
+ http://issues.apache.org/bugzilla/show_bug.cgi?id=46386
+      - -stringparam hyphenate 1
+
+In order to prevent:
+java.lang.NullPointerException
+  at org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager.applyChanges(InlineStackingLayoutManager.java:350)
+
+we need to set hyphenate to 0
+-->
+<xsl:param name="hyphenate" select="0"/>
+
+<xsl:param name="graphicsize.extension" select="0"></xsl:param>
+<xsl:param name="use.svg" select="1"/>
+
+<!-- http://docbook.sourceforge.net/release/xsl/current/doc/fo/ulink.show.html -->
+<xsl:param name="ulink.show" select="1"/>
+<xsl:param name="ulink.footnotes" select="1"/>
+<xsl:param name="section.autolabel" select="1"/>
+<xsl:param name="draft.mode" select="'no'"/>
+
+<xsl:param name="shade.verbatim" select="1"/>
+<xsl:param name="insert.olink.pdf.frag" select="1"></xsl:param>
+
+<xsl:attribute-set name="xref.properties">
+  <xsl:attribute name="color">
+    <xsl:choose>
+      <xsl:when test="self::ulink">green</xsl:when>
+      <xsl:otherwise>blue</xsl:otherwise>
+    </xsl:choose>
+  </xsl:attribute>
+</xsl:attribute-set>
+
+<xsl:attribute-set name="olink.properties">
+  <!--xsl:attribute name="show-destination">replace</xsl:attribute-->
+  <xsl:attribute name="color">blue
+  </xsl:attribute>
+</xsl:attribute-set>
+
+
+<!--
+http://www.dpawson.co.uk/xsl/sect2/replace.html
+-->
+<xsl:template name="replace-string">
+    <xsl:param name="singlequote">
+      <xsl:text>'</xsl:text>
+    </xsl:param>
+    <xsl:param name="curlyquote">
+      <xsl:text>’</xsl:text>
+    </xsl:param>
+    <xsl:param name="text"/>
+    <xsl:param name="replace"/>
+    <xsl:param name="with"/>
+    <xsl:choose>
+      <xsl:when test="contains($text,$replace)">
+        <xsl:value-of select="substring-before($text,$replace)"/>
+        <xsl:value-of select="$with"/>
+        <xsl:call-template name="replace-string">
+          <xsl:with-param name="text"
+select="substring-after($text,$replace)"/>
+          <xsl:with-param name="replace" select="$replace"/>
+          <xsl:with-param name="with" select="$with"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- make sure to use curly quote -->
+        <xsl:value-of select="translate($text,$singlequote,$curlyquote)"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+<!-- http://www.mail-archive.com/docbook-apps@lists.oasis-open.org/msg13299.html -->
+<!--xsl:value-of select="replace(.,'C++','C&#xFEFF;+&#xFEFF;+')"/>-->
+<xsl:template match="para/text() | title/text()">
+<xsl:call-template name="replace-string">
+<xsl:with-param name="text" select="."/>
+<xsl:with-param name="replace" select="'C++'"/>
+<xsl:with-param name="with" select="'C&#xFEFF;+&#xFEFF;+'"/>
+</xsl:call-template>
+</xsl:template>
+
+<!-- http://www.sagehill.net/docbookxsl/LandscapeImage.html -->
+<xsl:template match="figure[processing-instruction('landscapeFigure')]">
+  <fo:block-container reference-orientation="90">
+    <xsl:apply-imports/>
+  </fo:block-container>
+</xsl:template>
+
+
+</xsl:stylesheet>
