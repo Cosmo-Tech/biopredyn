@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="SoftwareSuiteDesignNotesReferences">
+  <title>References</title>
+  <itemizedlist>
+    <listitem>
+      <para>
+        <anchor id="ReferencesSBML"
+                xreflabel="Hucka2003" />
+        <emphasis role="bold">[1]</emphasis>
+        Hucka, M., Finney, A., Sauro, H. M., Bolouri, H., Doyle, J. C., Kitano,
+        H., Arkin, a. P., et al. (2003). 
+        <ulink url="http://bioinformatics.oxfordjournals.org/cgi/doi/10.1093/bioinformatics/btg015">
+        The systems biology markup language (SBML): a medium for representation
+        and exchange of biochemical network models.</ulink>
+        Bioinformatics, 19(4), 524–531. doi:10.1093/bioinformatics/btg015
+        </para>
+    </listitem>
+    <listitem>
+      <para>
+        <anchor id="ReferencesSEDML"
+                xreflabel="Kohn2008" />
+        <emphasis role="bold">[2]</emphasis>
+        Köhn, D., Novere, N. Le. (2008). 
+        <ulink url="http://www.springerlink.com/index/N67N137071431XT7.pdf">
+        SED-ML–an XML format for the implementation of the MIASE guidelines.
+        </ulink>
+        Computational Methods in Systems Biology, 176–190.</para>
+    </listitem>
+    <listitem>
+      <para>
+        <anchor id="ReferencesSBRML"
+                xreflabel="Dada2010" />
+        <emphasis role="bold">[3]</emphasis>
+        Dada, J. O., Spasić, I., Paton, N. W., Mendes, P. (2010).
+        <ulink url="http://www.ncbi.nlm.nih.gov/pubmed/20176582">SBRML: a markup
+        language for associating systems biology data with models.</ulink>
+        Bioinformatics (Oxford, England), 26(7), 932–8.
+        doi:10.1093/bioinformatics/btq069
+      </para>
+    </listitem>
+  </itemizedlist>
+</section>
