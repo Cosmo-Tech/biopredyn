@@ -35,7 +35,7 @@
     <pubdate>2013</pubdate>
     <abstract>
       <para>This document summarizes the requirements for the development of
-      the integrated software suite (deliverable 3.4 / 8.3).</para>
+      the BioPreDyn integrated software suite (deliverable 3.4 / 8.3).</para>
     </abstract>
   </articleinfo>
   <xi:include href="Requirements/Preface.xml"

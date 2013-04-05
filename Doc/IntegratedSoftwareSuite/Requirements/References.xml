@@ -29,7 +29,7 @@
         <anchor id="ReferencesSEDML"
                 xreflabel="Kohn2008" />
         <emphasis role="bold">[2]</emphasis>
-        Köhn, D., & Novere, N. Le. (2008). 
+        Köhn, D., Novere, N. Le. (2008). 
         <ulink url="http://www.springerlink.com/index/N67N137071431XT7.pdf">
         SED-ML–an XML format for the implementation of the MIASE guidelines.
         </ulink>
@@ -40,7 +40,7 @@
         <anchor id="ReferencesSBRML"
                 xreflabel="Dada2010" />
         <emphasis role="bold">[3]</emphasis>
-        Dada, J. O., Spasić, I., Paton, N. W., & Mendes, P. (2010).
+        Dada, J. O., Spasić, I., Paton, N. W., Mendes, P. (2010).
         <ulink url="http://www.ncbi.nlm.nih.gov/pubmed/20176582">SBRML: a markup
         language for associating systems biology data with models.</ulink>
         Bioinformatics (Oxford, England), 26(7), 932–8.
@@ -52,8 +52,8 @@
         <anchor id="ReferencesAMIGO"
                 xreflabel="BalsaCanto2011" />
         <emphasis role="bold">[4]</emphasis>
-        Balsa-Canto, E., & Banga, J. R. (2011). 
-        <ulink url="http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=3150037&tool=pmcentrez&rendertype=abstract">
+        Balsa-Canto, E., Banga, J. R. (2011). 
+        <ulink url="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3150037/?report=abstract">
         AMIGO, a toolbox for advanced model identification in systems biology
         using global optimization.</ulink>
         Bioinformatics (Oxford, England), 27(16), 2311–3.
