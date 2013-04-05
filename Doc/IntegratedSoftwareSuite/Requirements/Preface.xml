@@ -10,5 +10,59 @@
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section id="SoftwareSuiteRequirementsPreface">
   <title>Preface</title>
-  <para></para>
+  <section id="SoftwareSuiteRequirementsPurpose">
+    <title>Purpose of this document</title>
+    <para>This document aims at summarizing the requirements for the development
+    of the <literal>BioPreDyn</literal> integrated software suite (deliverables
+    3.4 and 8.3). It lists the main specifications as listed in the official
+    description of work, or gathered by the development team when visiting the
+    project partners. Critical use cases are then identified using these
+    specifications.
+    </para>
+    <para>This document does not describe the solution chosen; this will be
+    detailed in the design notes.</para>
+  </section>
+  <section id="SoftwareSuiteRequirementsAudience">
+    <title>Audience</title>
+    <para>This document is primarily intended to developers willing to
+    understand the choices made during the <literal>BioPreDyn</literal> software
+    suite design stage. It is particularly useful for maintenance and
+    modification purposes.</para>
+  </section>
+  <section id="SoftwareSuiteRequirementsOrganization">
+    <title>Organization</title>
+    <para>This guide is divided into four main sections:</para>
+    <itemizedlist>
+      <listitem>
+        <formalpara>
+          <title>Introduction</title>
+          <para>A short introduction to the project context, and how the current
+          document fits in the global picture.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Specifications</title>
+          <para>Review of the high level objectives of the deliverables 3.4 and
+          8.3, through the study of the project's description of work and
+          several visits to the project's partners.
+          </para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Use cases</title>
+          <para>Formalization of the needs described in the
+          <emphasis>Specifications</emphasis> section into use cases describing
+          the main aspects and mechanisms to be captured by the design.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>References</title>
+          <para>Articles and publications related to the project.</para>
+        </formalpara>
+      </listitem>
+    </itemizedlist>
+  </section>
 </section>
