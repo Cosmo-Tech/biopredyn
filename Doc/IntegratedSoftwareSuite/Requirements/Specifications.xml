@@ -10,5 +10,73 @@
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section id="SoftwareSuiteRequirementsSpecifications">
   <title>Specifications</title>
-  <para></para>
+  <section id="SpecificationsDescriptionOfWork">
+    <title>Description of work</title>
+    <para>As a starting point for this analysis we take the official
+    <literal>BioPreDyn</literal> description of work. In this document, the
+    integrated software suite requirements are briefly described in two
+    distinct deliverables:
+      <blockquote>
+        <para>D3.4) Integrated Suite of Tools: Integrated software-suite for
+        iterative multi-scale model building providing tools for all the steps
+        in the modeling cycle; documentation describing the suite, 
+        <abbrev>incl.</abbrev> algorithm comparison and applications
+        </para>
+      </blockquote>
+      <blockquote>
+        <para>D8.3) Integrate Software Suite: Integrated software suite
+        implementing the methods and tools developed during this project in an
+        interoperable, user-friendly and well-supported way
+        </para>
+      </blockquote>
+    A few keywords can be extracted from this two descriptions:
+      <itemizedlist>
+        <listitem>
+          <formalpara>
+            <title>Integrated software suite</title>
+            <para>The objective of those deliverables therefore consist in
+            combining several systems biology modeling tools together. Most of
+            those tools are developed or maintained by consortium partners, but
+            third-party tools will be considered. Tools used by consortium
+            members include
+            <ulink url="http://code.google.com/p/sbpipeline/wiki/DataRail">DataRail</ulink>,
+            <ulink url="http://www.cellnopt.org/">CellNOpt</ulink>,
+            <ulink url="http://www.iim.csic.es/~amigo/index.html">AMIGO</ulink>,
+            <ulink url="http://www.copasi.org/tiki-view_articles.php">COPASI</ulink>,
+            <ulink url="http://www.cytoscape.org/">Cytoscape</ulink>...
+            </para>
+          </formalpara>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <mediaobject id="SBModelBuildingCycle">
+      <imageobject role="html">
+        <imagedata align="center" contentdepth="100%"
+          fileref="Sketches/systems_biology_cycle.png" format="PNG"
+          scalefit="1" width="100%" />
+      </imageobject>
+      <caption>Specifications [1]: eleven step systems biology model building
+      cycle
+      </caption>
+    </mediaobject>
+  </section>
+  <section id="SpecificationsPartnerTools">
+    <title>Partner tools</title>
+    <section id="PartnerToolsAMIGO">
+      <title>AMIGO</title>
+      <para></para>
+    </section>
+    <section id="PartnerToolsFlyTools">
+      <title>FlyTools</title>
+      <para></para>
+    </section>
+    <section id="PartnerToolsCOPASI">
+      <title>COPASI</title>
+      <para></para>
+    </section>
+  </section>
+  <section id="SpecificationSummary">
+    <title>Summary</title>
+    <para></para>
+  </section>
 </section>
