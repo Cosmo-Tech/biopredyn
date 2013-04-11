@@ -47,24 +47,53 @@
             </para>
           </formalpara>
         </listitem>
+        <listitem>
+          <formalpara>
+            <title>Modeling cycle</title>
+            <para>The systems biology modeling cycle (as defined by the
+            consortium) is consists in an eleven step cycle covering the main
+            aspects of modeling, from data generation to model validation.
+              <mediaobject id="SBModelBuildingCycle">
+                <imageobject role="html">
+                  <imagedata align="center" contentdepth="100%"
+                    fileref="Sketches/systems_biology_cycle.png" format="PNG"
+                    scalefit="1" width="100%" />
+                </imageobject>
+                <caption>Specifications [1]: eleven step systems biology model
+                building cycle
+                </caption>
+              </mediaobject>
+            The software suite should therefore cover most of these steps,
+            through the tools it will aggregates.
+            </para>
+          </formalpara>
+        </listitem>
+        <listitem>
+          <formalpara>
+            <title>User-friendly</title>
+            <para>The chosen implementation of the <literal>BioPreDyn</literal>
+            software suite will have to be easily usable by non-developer
+            people; a graphical user interface is required here.</para>
+          </formalpara>
+        </listitem>
       </itemizedlist>
     </para>
-    <mediaobject id="SBModelBuildingCycle">
-      <imageobject role="html">
-        <imagedata align="center" contentdepth="100%"
-          fileref="Sketches/systems_biology_cycle.png" format="PNG"
-          scalefit="1" width="100%" />
-      </imageobject>
-      <caption>Specifications [1]: eleven step systems biology model building
-      cycle
-      </caption>
-    </mediaobject>
   </section>
   <section id="SpecificationsPartnerTools">
     <title>Partner tools</title>
+    <para>As a pre-study for the software suite development, several tools and
+    work flows used in the consortium were investigated. It aimed at detecting
+    additional needs or constraints not expressed in the original description
+    of work, and include them in the final design.</para>
     <section id="PartnerToolsAMIGO">
       <title>AMIGO</title>
-      <para></para>
+      <formalpara>
+        <title>Summary</title>
+        <para>
+        <ulink url="http://www.iim.csic.es/~amigo/index.html">AMIGO</ulink> is
+        a <ulink url="http://www.mathworks.com/products/matlab/index.html">
+        Matlab</ulink> tool box for systems biology model identification.</para>
+      </formalpara>
     </section>
     <section id="PartnerToolsFlyTools">
       <title>FlyTools</title>
