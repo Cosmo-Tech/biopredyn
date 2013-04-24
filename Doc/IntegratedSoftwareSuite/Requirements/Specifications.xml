@@ -92,12 +92,138 @@
         <para>
         <ulink url="http://www.iim.csic.es/~amigo/index.html">AMIGO</ulink> is
         a <ulink url="http://www.mathworks.com/products/matlab/index.html">
-        Matlab</ulink> tool box for systems biology model identification.</para>
+        Matlab</ulink> tool box for systems biology model identification. It
+        accepts <literal>Matlab</literal>, <literal>Fortran</literal> and
+        <acronym>SBML</acronym> files as input model files, and
+        <literal>Matlab</literal> files as input data files. Model
+        identification steps can be generated in <acronym>C</acronym> or
+        <literal>Fortran</literal> before being executed in order to improve
+        performances.</para>
+      </formalpara>
+      <formalpara>
+        <title>Languages</title>
+        <para><literal>Matlab</literal>, <acronym>C</acronym>,
+        <literal>Fortran</literal></para>
+      </formalpara>
+      <formalpara>
+        <title>Model building cycle steps</title>
+        <para>The following steps of the systems biology model building cycle
+        are implemented in <literal>AMIGO</literal>:
+          <itemizedlist>
+            <listitem>
+              <para>4. <emphasis>A priori</emphasis> identifiability analysis
+              </para>
+            </listitem>
+            <listitem>
+              <para>5. Model fitting / Parameter estimation
+              </para>
+            </listitem>
+            <listitem>
+              <para>6. <emphasis>A posteriori</emphasis> identifiability
+              analysis</para>
+            </listitem>
+            <listitem>
+              <para>9. Optimal experimental design (<acronym>OED</acronym>)
+              </para>
+            </listitem>
+            <listitem>
+              <para>10. Global sensitivity analysis
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </formalpara>
+      <formalpara>
+        <title>Needs</title>
+        <para><literal>AMIGO</literal> developers expressed the following needs
+        for the integrated software suite:
+          <itemizedlist>
+            <listitem>
+              <para>Data alignment standards</para>
+            </listitem>
+            <listitem>
+              <para>Portable task, experiment and report generation</para>
+            </listitem>
+            <listitem>
+              <para>Interoperability with third-party solvers</para>
+            </listitem>
+          </itemizedlist>
+        </para>
       </formalpara>
     </section>
     <section id="PartnerToolsFlyTools">
-      <title>FlyTools</title>
-      <para></para>
+      <title>Fly suite</title>
+      <formalpara>
+        <title>Summary</title>
+        <para>Collection of tools dedicated to developmental
+        <ulink url="http://en.wikipedia.org/wiki/Gene_regulatory_network">gene
+        regulatory network</ulink> (<acronym>GRN</acronym>) study in
+        <emphasis>Drosophila melanogaster</emphasis> embryos. The different
+        tools cover the analysis from the embryo picture analysis to the
+        <acronym>GRN</acronym> weight inference from experimental data:
+          <itemizedlist>
+            <listitem>
+              <para><literal>fly_gui</literal> is a <literal>Java</literal>
+              software tool for gene expression profile extraction from stained
+              fly embryo pictures. It generates custom data files containing the
+              gene expression data for each gene, time point and cell nucleus in
+              the selected stripe.
+              </para>
+            </listitem>
+            <listitem>
+              <para><literal>fly_sa</literal> is a <literal>C++</literal> tool
+              implementing a <link linkend="ReferencesSimulatedAnnealing">
+              parallel version of the
+              Lam simulated annealing algorithm</link> applied to
+              <acronym>GRN</acronym> inference.</para>
+            </listitem>
+            <listitem>
+              <para><literal>Python</literal> scripts are used besides those
+              tools in order to compute intermediate values such as the
+              promoter strength, diffusion parameters... and write them in the
+              data file.</para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </formalpara>
+      <formalpara>
+        <title>Languages</title>
+        <para><literal>Java</literal>, <literal>C++</literal>,
+        <literal>Python</literal>.</para>
+      </formalpara>
+      <formalpara>
+        <title>Model building cycle</title>
+        <para>The following steps of the systems biology model building cycle
+        are implemented in the fly suite:
+          <itemizedlist>
+            <listitem>
+              <para>1. Data extraction</para>
+            </listitem>
+            <listitem>
+              <para>2. Exploratory data analysis</para>
+            </listitem>
+            <listitem>
+              <para>5. Model fitting / Parameter estimation</para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </formalpara>
+      <formalpara>
+        <title>Needs</title>
+        <para>Fly suite developers expressed the following needs regarding the
+        integration of their tools in the <literal>BioPreDyn</literal> software
+        suite:
+          <itemizedlist>
+            <listitem>
+              <para>Interoperability with third-party solvers</para>
+            </listitem>
+            <listitem>
+              <para>Standard data-alignment tools (compatibility with
+              <acronym>SBML</acronym>)</para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </formalpara>
     </section>
     <section id="PartnerToolsCOPASI">
       <title>COPASI</title>

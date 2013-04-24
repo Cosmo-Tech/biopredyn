@@ -61,5 +61,17 @@
         doi:10.1038/nrm2030
       </para>
     </listitem>
+    <listitem>
+      <para>
+        <anchor id="ReferencesSimulatedAnnealing"
+                xreflabel="Chu1999" />
+        <emphasis role="bold">[5]</emphasis>
+        Chu, K.-W., Deng, Y., Reinitz, J. (1999).
+        <ulink url="http://linkinghub.elsevier.com/retrieve/pii/S0021999198961344">
+        Parallel Simulated Annealing by Mixing of States.</ulink>
+        Journal of Computational Physics, 148(2), 646–662.
+        doi:10.1006/jcph.1998.6134
+      </para>
+    </listitem>
   </itemizedlist>
 </section>
