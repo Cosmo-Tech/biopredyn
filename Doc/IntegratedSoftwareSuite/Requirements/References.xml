@@ -73,5 +73,29 @@
         doi:10.1006/jcph.1998.6134
       </para>
     </listitem>
+    <listitem>
+      <para>
+        <anchor id="ReferencesSEDML"
+                xreflabel="Kohn2008" />
+        <emphasis role="bold">[6]</emphasis>
+        Köhn, D., Novere, N. Le. (2008).
+        <ulink url="http://www.springerlink.com/index/N67N137071431XT7.pdf">
+        SED-ML–an XML format for the implementation of the MIASE guidelines.
+        </ulink>
+        Computational Methods in Systems Biology, 176–190.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        <anchor id="ReferencesSBRML"
+                xreflabel="Dada2010" />
+        <emphasis role="bold">[7]</emphasis>
+        Dada, J. O., Spasic, I., Paton, N. W., Mendes, P. (2010).
+        <ulink url="http://www.ncbi.nlm.nih.gov/pubmed/20176582">SBRML: a markup
+        language for associating systems biology data with models.</ulink>
+        Bioinformatics (Oxford, England), 26(7), 932–8.
+        doi:10.1093/bioinformatics/btq069
+      </para>
+    </listitem>
   </itemizedlist>
 </section>

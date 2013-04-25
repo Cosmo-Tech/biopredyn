@@ -10,5 +10,110 @@
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section id="SoftwareSuiteRequirementsUseCases">
   <title>Use cases</title>
-  <para></para>
+  <para>In this chapter, we formalize the main features to be captured by the
+  integrated software suite into use cases.</para>
+  <section id="UseCaseSBCycle">
+    <title>Systems biology model building cycle implementation</title>
+    <formalpara>
+      <title>Model building steps</title>
+      <para>The chosen architecture should consist in an implementation of the
+      systems biology model building cycle. It should allow modelers to execute
+      all the steps of this cycle on a given model with a given data set.
+      </para>
+    </formalpara>
+    <formalpara>
+      <title>Integration of <literal>BioPreDyn</literal> tools</title>
+      <para>As a part of the <literal>BioPreDyn</literal> project, the resulting
+      software suite should use as many software tools developed within the
+      consortium as possible, and integrate them as building blocks for the
+      steps they cover.</para>
+    </formalpara>
+    <formalpara>
+      <title>Graphical user interface</title>
+      <para>As a tool intended to non-developers, the
+      <literal>BioPreDyn</literal> software suite should be as user-friendly as
+      possible, and give access to all its functionalities through a convenient
+      graphical user interface.</para>
+    </formalpara>
+  </section>
+  <section id="UseCaseModularity">
+    <title>Modularity</title>
+    <formalpara>
+      <title>Sparse model building cycle</title>
+      <para>
+      Not all the biochemical models use all the steps described in the
+      <link linkend="SBModelBuildingCycle">systems biology model building
+      cycle</link>; most of them use only a subset of those steps. As a
+      consequence, the chosen design should allow any combination of operation
+      on the input model file.
+      </para>
+    </formalpara>
+    <mediaobject id="UseCaseModularityPipeline">
+      <imageobject role="html">
+        <imagedata align="center" contentdepth="100%"
+          fileref="Sketches/pipeline.png" format="PNG"
+          scalefit="1" width="100%" />
+      </imageobject>
+      <caption>Use cases [1]: representation of a generic analysis pipeline
+      </caption>
+    </mediaobject>
+    <formalpara>
+      <title>Third party components</title>
+      <para>
+      The <literal>BioPreDyn</literal> integrated software suite should not be
+      limited to consortium tools only, and should allow third-party tool
+      integration as model building blocks.
+      </para>
+    </formalpara>
+  </section>
+  <section id="UseCaseSimulationFileStandard">
+    <title>Simulation file standard</title>
+    <formalpara>
+      <title>Standard formats</title>
+      <para>In order to be easily interfaced with other tools, the integrated
+      software suite should be compatible with reference biochemical model and
+      data formats.</para>
+    </formalpara>
+    <formalpara>
+      <title>Simulation formats</title>
+      <para>Model and data are closely related in the described model building
+      cycle; each output model file should therefore be associated with the data
+      used for model calibration. Similarly, the conditions according to which
+      the model should be simulated should be specified in the model file, along
+      with the results of this simulation. Such model / data structures are
+      described both in <link linkend="ReferencesSEDML">SED-ML</link> and
+      <link linkend="ReferencesSBRML">SBRML</link> languages.</para>
+    </formalpara>
+  </section>
+  <section id="UseCaseValidation">
+    <title>Validation cases</title>
+    <formalpara>
+      <title>Systems biology model building cycle prototype</title>
+      <para>A simple example of systems biology model (such as the one described
+      in <link linkend="ReferencesSBCycle">[3]</link>) should be implemented as
+      a proof of concept of the <literal>BioPreDyn</literal>software suite.
+      </para>
+    </formalpara>
+    <formalpara>
+      <title><literal>BioPreDyn</literal> use cases</title>
+      <para>The <literal>BioPreDyn</literal> description of work defines four
+      biological modeling problems:
+      <itemizedlist>
+        <listitem>
+          <para>Animal developmental gene regulatory networks</para>
+        </listitem>
+        <listitem>
+          <para>Large-scale models of microorganisms</para>
+        </listitem>
+        <listitem>
+          <para>Signaling and regulatory networks in cells</para>
+        </listitem>
+        <listitem>
+          <para>Biotechnological production processes</para>
+        </listitem>
+      </itemizedlist>
+      As a validation step, each <literal>BioPreDyn</literal> use case analysis
+      pipeline should be executed using the integrated software suite.</para>
+    </formalpara>
+  </section>
 </section>
