@@ -39,11 +39,15 @@
             those tools are developed or maintained by consortium partners, but
             third-party tools will be considered. Tools used by consortium
             members include
-            <ulink url="http://code.google.com/p/sbpipeline/wiki/DataRail">DataRail</ulink>,
-            <ulink url="http://www.cellnopt.org/">CellNOpt</ulink>,
-            <ulink url="http://www.iim.csic.es/~amigo/index.html">AMIGO</ulink>,
-            <ulink url="http://www.copasi.org/tiki-view_articles.php">COPASI</ulink>,
-            <ulink url="http://www.cytoscape.org/">Cytoscape</ulink>...
+            <ulink url="http://code.google.com/p/sbpipeline/wiki/DataRail">
+            <literal>DataRail</literal></ulink>,
+            <ulink url="http://www.cellnopt.org/"><literal>CellNOpt</literal>
+            </ulink>, <ulink url="http://www.iim.csic.es/~amigo/index.html">
+            <literal>AMIGO</literal></ulink>,
+            <ulink url="http://www.copasi.org/tiki-view_articles.php">
+            <literal>COPASI</literal></ulink>,
+            <ulink url="http://www.cytoscape.org/"><literal>Cytoscape</literal>
+            </ulink>...
             </para>
           </formalpara>
         </listitem>
@@ -90,9 +94,10 @@
       <formalpara>
         <title>Summary</title>
         <para>
-        <ulink url="http://www.iim.csic.es/~amigo/index.html">AMIGO</ulink> is
+        <ulink url="http://www.iim.csic.es/~amigo/index.html">
+        <literal>AMIGO</literal></ulink> is
         a <ulink url="http://www.mathworks.com/products/matlab/index.html">
-        Matlab</ulink> tool box for systems biology model identification. It
+        <literal>Matlab</literal></ulink> tool box for systems biology model identification. It
         accepts <literal>Matlab</literal>, <literal>Fortran</literal> and
         <acronym>SBML</acronym> files as input model files, and
         <literal>Matlab</literal> files as input data files. Model
@@ -227,11 +232,89 @@
     </section>
     <section id="PartnerToolsCOPASI">
       <title>COPASI</title>
-      <para></para>
+      <formalpara>
+        <title>Summary</title>
+        <para><ulink url="http://www.copasi.org/tiki-view_articles.php">
+        <literal>COPASI</literal></ulink> is a <literal>C++</literal> software
+        tool for biochemical networks analysis; it implements a dedicated
+        language called <ulink url="http://www.copasi.org/static/schemadoc/">
+        <literal>CopasiML</literal></ulink> for
+        encoding all the aspects of a <literal>COPASI</literal> simulation.
+        <literal>COPASI</literal> accepts <acronym>SBML</acronym> as an input
+        format for biochemical models.
+        </para>
+      </formalpara>
+      <formalpara>
+        <title>Languages</title>
+        <para><literal>C++</literal>, <literal>Qt</literal>.</para>
+      </formalpara>
+      <formalpara>
+        <title>Model building cycle</title>
+        <para>The following steps of the systems biology model building cycle
+        are implemented in COPASI:
+          <itemizedlist>
+            <listitem>
+              <para>4. <emphasis>A priori</emphasis> identifiability analysis
+              </para>
+            </listitem>
+            <listitem>
+              <para>5. Model fitting / Parameter estimation</para>
+            </listitem>
+            <listitem>
+              <para>6. <emphasis>A posteriori</emphasis> identifiability
+              analysis</para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </formalpara>
+      <formalpara>
+        <title>Needs</title>
+        <para><literal>COPASI</literal> developers expressed the following needs
+        regarding the integration of their tools in the
+        <literal>BioPreDyn</literal> software suite:
+          <itemizedlist>
+            <listitem>
+              <para>Interoperability with third-party tools (AMIGO)</para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </formalpara>
     </section>
   </section>
   <section id="SpecificationSummary">
     <title>Summary</title>
-    <para></para>
+    <para>With only three software tools / work flows investigated, several
+    common characteristics appear:</para>
+    <itemizedlist>
+      <listitem>
+        <formalpara>
+          <title>Programming languages</title>
+          <para>The described tools use a wide spectrum of programming
+          languages: <literal>C</literal>, <literal>C++</literal>,
+          <literal>Java</literal>, <literal>Matlab</literal>,
+          <literal>Fortran</literal>...</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Data / model alignment</title>
+          <para>Portable standard formats for exchanging models and / or data
+          are a major concern for all the development teams we met during this
+          preliminary investigation; one model format seems to emerge:
+          <literal>SBML</literal>. Besides, a format encoding the model, the
+          simulation, the initial conditions and the results in a same file
+          is requested.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Systems biology cycle steps</title>
+          <para>Several steps of the model building cycle are covered by the
+          tools described here, and several are not. Most developers / users
+          requested the possibility to use alternative tools for specific steps
+          in their analysis pipelines.</para>
+        </formalpara>
+      </listitem>
+    </itemizedlist>
   </section>
 </section>
