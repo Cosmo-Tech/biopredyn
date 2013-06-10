@@ -271,7 +271,7 @@
 </species>
 </listOfSpecies>
 <listOfReactions>
-<reaction metaid="re1" id="re1">
+<reaction metaid="re1" id="re1" reversible="false" fast="false">
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>HETERODIMER_ASSOCIATION</celldesigner:reactionType>
@@ -295,7 +295,7 @@
 <celldesigner:lineDirection arm="2" index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
-<celldesigner:editPoints num0="0" num1="0" num2="0" tShapeIndex="0">0.3092488611081683,0.35205000529717145</celldesigner:editPoints>
+<celldesigner:editPoints num0="0" num1="0" num2="0" tShapeIndex="0">0.7461065790867669,0.5081576438182016</celldesigner:editPoints>
 <celldesigner:line width="1.0" color="ff000000"/>
 </celldesigner:extension>
 </annotation>
@@ -324,8 +324,26 @@
 </annotation>
 </speciesReference>
 </listOfProducts>
+<kineticLaw metaid="CDMT00012">
+<annotation>
+<celldesigner:extension>
+<celldesigner:selectedFunction>Mass_Action_Kinetics</celldesigner:selectedFunction>
+</celldesigner:extension>
+</annotation>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<apply>
+<times/>
+<ci> s1 </ci>
+<ci> s2 </ci>
+<ci> k1 </ci>
+</apply>
+</math>
+<listOfParameters>
+<parameter metaid="k1" id="k1" name="k1" value="6" units="substance"/>
+</listOfParameters>
+</kineticLaw>
 </reaction>
-<reaction metaid="re2" id="re2" reversible="false">
+<reaction metaid="re2" id="re2" reversible="false" fast="false">
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>DISSOCIATION</celldesigner:reactionType>
@@ -378,6 +396,94 @@
 </annotation>
 </speciesReference>
 </listOfProducts>
+<kineticLaw metaid="CDMT00013">
+<annotation>
+<celldesigner:extension>
+<celldesigner:selectedFunction>Mass_Action_Kinetics</celldesigner:selectedFunction>
+</celldesigner:extension>
+</annotation>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<apply>
+<times/>
+<ci> s3 </ci>
+<ci> k1 </ci>
+</apply>
+</math>
+<listOfParameters>
+<parameter metaid="CDMT00014" id="k1" name="k1" value="1.2" units="substance"/>
+</listOfParameters>
+</kineticLaw>
+</reaction>
+<reaction metaid="re3" id="re3" reversible="false" fast="false">
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>DISSOCIATION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<celldesigner:baseReactant species="s3" alias="csa1">
+<celldesigner:linkAnchor position="W"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s1" alias="sa1">
+<celldesigner:linkAnchor position="E"/>
+</celldesigner:baseProduct>
+<celldesigner:baseProduct species="s2" alias="sa2">
+<celldesigner:linkAnchor position="E"/>
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection arm="0" index="0" value="unknown"/>
+<celldesigner:lineDirection arm="1" index="0" value="unknown"/>
+<celldesigner:lineDirection arm="2" index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:editPoints num0="0" num1="0" num2="0" tShapeIndex="0">0.7786312109333617,-0.223858459582583</celldesigner:editPoints>
+<celldesigner:line width="1.0" color="ff000000"/>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00015" species="s3">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>csa1</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<speciesReference metaid="CDMT00016" species="s1">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa1</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+<speciesReference metaid="CDMT00017" species="s2">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa2</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+<kineticLaw metaid="CDMT00018">
+<annotation>
+<celldesigner:extension>
+<celldesigner:selectedFunction>Mass_Action_Kinetics</celldesigner:selectedFunction>
+</celldesigner:extension>
+</annotation>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<apply>
+<times/>
+<ci> s3 </ci>
+<ci> k1 </ci>
+</apply>
+</math>
+<listOfParameters>
+<parameter metaid="CDMT00019" id="k1" name="k1" value="0.8" units="substance"/>
+</listOfParameters>
+</kineticLaw>
 </reaction>
 </listOfReactions>
 </model>
