@@ -32,6 +32,10 @@ analysis of biochemical networks.
 
 1.2. Known problems
 
+* libSBML installation (Windows XP32): linking problem related to libiconv when
+building the library with cosmo-externals (for libxml); the file encoding.h must
+be modified in order to include <libiconv/iconv.h> instead of <iconv.h>.
+
 * libSEDML installation (Ubuntu 11.10): Python files are not completely
 installed after running the installation process. A way to complete the
 installation consists in manually putting the required files in
