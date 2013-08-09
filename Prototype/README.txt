@@ -16,19 +16,34 @@ official project website: http://www.biopredyn.eu/
 1.1. Dependencies
 
 * CMake (http://www.cmake.org/): software build system.
+
 * git (http://git-scm.com/): version control system; required for cloning the
 libSEDML repository on GitHub.
+
 * Python (version 2.7 or more - http://www.python.org/)
+
 * libSBML (http://sbml.org/Software/libSBML): library for SBML file
 manipulation; do not forget to build the library with Python bindings enabled.
+
 * libSEDML (https://github.com/fbergmann/libSEDML): library for SED-ML file
 manipulation; clone the https://github.com/fbergmann/libSEDML.git repository
 with git and build the library with CMake, as described in the README.md file.
+Note that libSBML is a pre-requisite for libSEDML.
+
 * COBRApy (http://sourceforge.net/projects/opencobra/files/python/cobra/0.2.1/):
 library of tools for systems biology model analysis, originally a Matlab
-toolbox; a Python version is now available.
+toolbox; a Python version is now available. Dependency:
+ * pyGLPK solver (http://tfinley.net/software/pyglpk/).
+
 * COPASI (http://www.copasi.org) Python bindings: library for the simulation and
 analysis of biochemical networks.
+
+* CellNOpt.wrapper (http://www.ebi.ac.uk/~cokelaer/cellnopt/wrapper/): Python
+wrapper for CellNOptR, a package for signalling pathways optimization in R. It
+requires:
+ * R (http://www.r-project.org/)
+ * rpy2 (http://rpy.sourceforge.net/rpy2.html), a Python interface for R.
+ * pywin32 (http://sourceforge.net/projects/pywin32)
 
 1.2. Known problems
 
@@ -52,6 +67,24 @@ solution than the one described for libsedml can be used (with COPASI files
 instead of libsedml files of course); alternatively, Eclipse users can simply
 link the copasi*_python*_linux_x86 folder as an external library (in the project
 properties).
+
+* CellNOpt.wrapper installation (Windows XP32): the CellNOpt library in itself
+is not a problem; however, rpy2 is quite tricky to install on Windows platforms.
+The following steps gave satisfying results on Windows XP 32 bits:
+ * Install R 2.15.3 (other versions not tested - did not work with R 3.0.x)
+ * Install rpy2: compiling the sources on Windows proved to be painful and
+ eventually unsuccessful. The only - unofficial - working binary distribution
+ of this library was found here:
+ https://bitbucket.org/breisfeld/rpy2_w32_fix/issue/1/binary-installer-for-win32
+ Install it then:
+  * Add the path to R.dll to the PATH environment variable (in my case
+  D:\Env\R-2.15.3\bin\i386)
+  * Add the R_HOME environment variable (in my case D:\Env\R-2.15.3)
+  * Add the R_USER environment variable (your Windows username)
+ * Install pywin32 (http://sourceforge.net/projects/pywin32)
+ * Install cellnopt.wrapper; the best way to do so consists in using the
+ easy_install tool:
+  easy_intall cellnopt.wrapper
 
 2. User guide
 
