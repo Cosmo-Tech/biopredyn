@@ -15,7 +15,8 @@
     <para>As a starting point for this analysis we take the official
     <literal>BioPreDyn</literal> description of work. In this document, the
     integrated software suite requirements are briefly described in two
-    distinct deliverables:
+    distinct deliverables (three if we consider D7.2, which is the prototype -
+    or proof of concept - of the two other deliverables):
       <blockquote>
         <para>D3.4) Integrated Suite of Tools: Integrated software-suite for
         iterative multi-scale model building providing tools for all the steps
@@ -24,12 +25,17 @@
         </para>
       </blockquote>
       <blockquote>
+        <para>D7.2) Prototype Software for Testing: User-friendly version of
+        prototype software for testing in a setting for industrial applications.
+        </para>
+      </blockquote>
+      <blockquote>
         <para>D8.3) Integrate Software Suite: Integrated software suite
         implementing the methods and tools developed during this project in an
         interoperable, user-friendly and well-supported way
         </para>
       </blockquote>
-    A few keywords can be extracted from this two descriptions:
+    A few keywords can be extracted from these descriptions:
       <itemizedlist>
         <listitem>
           <formalpara>
@@ -83,13 +89,13 @@
       </itemizedlist>
     </para>
   </section>
-  <section id="SpecificationsPartnerTools">
-    <title>Partner tools</title>
+  <section id="SpecificationsCaseStudy">
+    <title>Case study</title>
     <para>As a pre-study for the software suite development, several tools and
     work flows used in the consortium were investigated. It aimed at detecting
     additional needs or constraints not expressed in the original description
     of work, and include them in the final design.</para>
-    <section id="PartnerToolsAMIGO">
+    <section id="CaseStudyAMIGO">
       <title>AMIGO</title>
       <formalpara>
         <title>Summary</title>
@@ -156,7 +162,7 @@
         </para>
       </formalpara>
     </section>
-    <section id="PartnerToolsFlyTools">
+    <section id="CaseStudyFlyTools">
       <title>Fly suite</title>
       <formalpara>
         <title>Summary</title>
@@ -230,7 +236,7 @@
         </para>
       </formalpara>
     </section>
-    <section id="PartnerToolsCOPASI">
+    <section id="CaseStudyCOPASI">
       <title>COPASI</title>
       <formalpara>
         <title>Summary</title>
@@ -281,7 +287,7 @@
       </formalpara>
     </section>
   </section>
-  <section id="SpecificationSummary">
+  <section id="SpecificationsSummary">
     <title>Summary</title>
     <para>With only three software tools / work flows investigated, several
     common characteristics appear:</para>

@@ -14,10 +14,10 @@
     <title>Purpose of this document</title>
     <para>This document aims at summarizing the requirements for the development
     of the <literal>BioPreDyn</literal> integrated software suite (deliverables
-    3.4 and 8.3). It lists the main specifications as listed in the official
-    description of work, or gathered by the development team when visiting the
-    project partners. Critical use cases are then identified using these
-    specifications.
+    3.4, 7.2 and 8.3). It lists the main specifications as listed in the
+    official description of work, or gathered by the development team when
+    visiting the project partners. Critical use cases are then identified using
+    these specifications.
     </para>
     <para>This document does not describe the solution chosen; this will be
     detailed in the design notes.</para>
@@ -43,8 +43,8 @@
       <listitem>
         <formalpara>
           <title>Specifications</title>
-          <para>Review of the high level objectives of the deliverables 3.4 and
-          8.3, through the study of the project's description of work and
+          <para>Review of the high level objectives of the deliverables 3.4, 7.2
+          and 8.3, through the study of the project's description of work and
           several visits to the project's partners.
           </para>
         </formalpara>

@@ -15,8 +15,8 @@
   Nowadays, there exists a great variety of very specialized tools in this
   field: each one of them is capable of handling one or several steps in the
   systems biology model building cycle.</para>
-  <para>Deliverables 3.4 and 8.3 of the <literal>BioPreDyn</literal> project
-  consist in a software tool linking some of those tools together in a
+  <para>Deliverables 3.4, 7.2 and 8.3 of the <literal>BioPreDyn</literal>
+  project consist in a software tool linking some of those tools together in a
   cross-platform, user-friendly framework. This document describes the
   requirements for such a tool.</para>
 </section>
