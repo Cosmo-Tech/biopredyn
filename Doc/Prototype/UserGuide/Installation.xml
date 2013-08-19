@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>Installation</title>
+  <para />
+  <section>
+    <title>Dependencies</title>
+    <itemizedlist spacing="compact">
+      <listitem>
+        <para>
+          <ulink url="http://www.cmake.org/">CMake</ulink>: software build
+          system.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <ulink url="http://git-scm.com/">git</ulink>: version control system;
+          required for cloning the libSEDML repository on GitHub.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <ulink url="http://www.python.org/">Python</ulink>: version 2.7 or
+          more.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <ulink url="http://sbml.org/Software/libSBML">libSBML</ulink>: library
+          for SBML file manipulation; do not forget to build the library with
+          Python bindings enabled.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <ulink url="https://github.com/fbergmann/libSEDML">libSEDML</ulink>:
+          library for SED-ML file manipulation; clone the
+          <ulink url="https://github.com/fbergmann/libSEDML.git">
+          https://github.com/fbergmann/libSEDML.git</ulink> repository with git
+          and build the library with CMake, as described in the README.md file.
+          Note that libSBML is a pre-requisite for libSEDML.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <ulink url="http://sourceforge.net/projects/opencobra/files/python/cobra/0.2.1/">
+          COBRApy</ulink>: library of tools for systems biology model analysis,
+          originally a Matlab toolbox; a Python version is now available.
+          Dependency:
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>
+                <ulink url="http://tfinley.net/software/pyglpk/">pyGLPK</ulink>
+                solver.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <ulink url="http://www.copasi.org">COPASI</ulink> Python bindings:
+          library for the simulation and analysis of biochemical networks.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <ulink url="http://www.ebi.ac.uk/~cokelaer/cellnopt/wrapper/">
+          CellNOpt.wrapper</ulink>: Python wrapper for CellNOptR, a package for
+          signalling pathways optimization in R. It requires:
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>
+                <ulink url="http://www.r-project.org/">R</ulink>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Windows 32 specific dependencies:
+                <itemizedlist spacing="compact">
+                  <listitem>
+                    <para>
+                      <ulink url="http://rpy.sourceforge.net/rpy2.html">rpy2
+                      </ulink>, a Python interface for R.
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para>
+                      <ulink url="http://sourceforge.net/projects/pywin32">
+                      pywin32</ulink>, a Win32 API for Python.
+                    </para>
+                  </listitem>
+                </itemizedlist>
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>
+  <section>
+    <title>Installation</title>
+    <section>
+      <title>Ubuntu 32 (11.10 or later)</title>
+      <section>
+        <title>Basic packages</title>
+        <programlisting>
+  sudo apt-get install cmake
+  sudo apt-get install
+  cmake-curses-gui
+  sudo apt-get install subversion
+  sudo apt-get
+  install git
+  sudo apt-get install python2.7
+        </programlisting>
+      </section>
+      <section>
+        <title>libSBML (with GNU make)</title>
+        <para>Source code must be first checked-out using Subversion:</para>
+        <programlisting>
+  svn checkout
+  svn://svn.code.sf.net/p/sbml/code/trunk sbml-code
+        </programlisting>
+        <para>Through command line, go to the freshly checked-out directory,
+        and execute the following commands:</para>
+        <programlisting>
+  cd libsbml
+  ./configure
+  --prefix="/where/to/install/libsbml" --with-python
+  make
+  make
+  install
+        </programlisting>
+      </section>
+      <section>
+        <title>libSEDML (with CMake)</title>
+        <para>Source code must be first checked-out using git:</para>
+        <programlisting>
+  git clone
+  https://github.com/fbergmann/libSEDML.git
+        </programlisting>
+        <para>Go to the freshly checked-out directory and execute the
+        following commands:</para>
+        <programlisting>
+  mkdir BUILD
+  cd BUILD
+  ccmake ..
+        </programlisting>
+        <para>At this point several options require manual input:</para>
+        <itemizedlist spacing="compact">
+          <listitem>
+            <para>WITH_PYTHON and WITH_SWIG have to be ON;</para>
+          </listitem>
+          <listitem>
+            <para>LIBSBML_LIBRARY should point to the libsbml.lib file
+            previously installed;</para>
+          </listitem>
+          <listitem>
+            <para>LIBSBML_INCLUDE_DIR should point to the libSBML include dir
+            (located in the libSBML install directory);</para>
+          </listitem>
+          <listitem>
+            <para>CMAKE_INSTALL_PREFIX should point to the location where
+            libSEDML will be installed (default /usr/local).</para>
+          </listitem>
+        </itemizedlist>
+        <para>Once the required options have been set, press 'c' to configure;
+        if everything works fine, generate the code by pressing 'g'. It should
+        close the cmake interface. Execute the following commands in order to
+        finish the installation:
+          <programlisting>
+  make
+  make install
+          </programlisting>
+        </para>
+      </section>
+      <section>
+        <title>COBRApy</title>
+        <para>COBRApy requires pyGLPK to be installed; easy_install is not
+        mandatory, but it makes the installation process a lot easier.</para>
+        <section>
+          <title>pyGLPK</title>
+          <itemizedlist>
+            <listitem>
+              <para>Download the latest package of pyGLPK located at:
+                <ulink url="http://www.tfinley.net/software/pyglpk/download.html">
+                  http://www.tfinley.net/software/pyglpk/download.html
+                </ulink>
+              </para>
+            </listitem>
+            <listitem>
+              <para>Extract it to the desired location;</para>
+            </listitem>
+            <listitem>
+              <para>Go to this location and execute the following commands:
+                <programlisting>
+  make
+  make test
+  make install
+                </programlisting>
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+        <section>
+          <title>easy_install</title>
+          <itemizedlist>
+            <listitem>
+              <para>Download the <literal>ez_setup.py</literal> file located at:
+                <ulink url="https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py">
+                https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+                </ulink>.</para>
+            </listitem>
+            <listitem>
+              <para>Execute the following command in the directory where
+              <literal>ez_setup.py</literal> is:
+                <programlisting>
+  python ez_setup.py
+                </programlisting>
+              </para>
+            </listitem>
+          </itemizedlist>
+        </section>
+        <section>
+          <title>COBRApy installation</title>
+          <programlisting>
+  sudo easy_install cobra
+          </programlisting>
+        </section>
+      </section>
+      <section>
+        <title>COPASI</title>
+        <para>No tool is provided for building the library; see "Known
+        problems" chapter below for more information.</para>
+      </section>
+      <section>
+        <title>CellNOpt.wrapper</title>
+        <para>
+          First of all R must be installed, as CellNOpt.wrapper is
+          a Python
+          wrapper for the R library CellNOptR.
+        </para>
+        <programlisting>
+  sudo apt-get install r-base
+      </programlisting>
+        <para>
+          It can now be installed using easy_install (see
+          paragraph
+          1.2.1.4.2 for more details about easy_install
+          installation):
+        </para>
+        <programlisting>
+  easy_install cellnopt.wrapper
+        </programlisting>
+      </section>
+    </section>
+    <section>
+      <title>Windows XP 32</title>
+      <para>
+        <emphasis role="em">TODO</emphasis>
+      </para>
+    </section>
+  </section>
+  <section>
+    <title>Known problems</title>
+    <itemizedlist>
+      <listitem>
+        <para>libSBML installation (Windows XP32): linking problem
+          related to libiconv when building the library with
+          cosmo-externals (for libxml); the file encoding.h must be
+          modified in order to include &lt;libiconv/iconv.h&gt;
+          instead
+          of &lt;iconv.h&gt;.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          libSEDML installation (Ubuntu 11.10): Python files are not
+          completely installed after running the installation
+          process. A
+          way to complete the installation consists in
+          manually putting
+          the required files in
+          ${INSTALL_DIR}/lib/python*/dist-packages
+          and respecting
+          the following folder hierarchy:
+          <programlisting>
+  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml.pth
+  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml/_libsedml.so
+  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml/libsedml.py
+  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml.pyc
+          </programlisting>
+        </para>
+      </listitem>
+      <listitem>
+        <para>COPASI python bindings installation (Ubuntu 11.10): no
+          setup file can be found in the package, it therefore
+          cannot be
+          installed as a system library. The same solution
+          than the one
+          described for libsedml can be used (with
+          COPASI files instead
+          of libsedml files of course);
+          alternatively, Eclipse users can
+          simply link the
+          copasi*_python*_linux_x86 folder as an external
+          library
+          (in the project properties).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          CellNOpt.wrapper installation (Windows XP32): the CellNOpt
+          library in itself is not a problem; however, rpy2 is quite
+          tricky to install on Windows platforms. The following
+          steps
+          gave satisfying results on Windows XP 32 bits:
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>Install R 2.15.3 (other versions not tested -
+                did not
+                work with R 3.0.x)
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Install rpy2: compiling the sources on Windows
+                proved to
+                be painful and eventually unsuccessful.
+                The only -
+                unofficial - working binary distribution
+                of this library
+                was found here:
+                <ulink url="https://bitbucket.org/breisfeld/rpy2_w32_fix/issue/1/binary-installer-for-win32">
+                  https://bitbucket.org/breisfeld/rpy2_w32_fix/issue/1/binary-installer-for-win32
+                </ulink>
+                Install it:
+                <itemizedlist spacing="compact">
+                  <listitem>
+                    <para>Add the path to R.dll to the PATH
+                      environment
+                      variable (in my case
+                      D:\Env\R-2.15.3\bin\i386)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para>Add the R_HOME environment variable (in my
+                      case D:\Env\R-2.15.3)
+                    </para>
+                  </listitem>
+                  <listitem>
+                    <para>Add the R_USER environment variable (your
+                      Windows username)
+                    </para>
+                  </listitem>
+                </itemizedlist>
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Install pywin32 (
+                <ulink url="http://sourceforge.net/projects/pywin32">http://sourceforge.net/projects/pywin32
+                </ulink>.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Install cellnopt.wrapper; the best way to do so
+                consists
+                in using the easy_install tool:
+                <programlisting>
+  easy_install cellnopt.wrapper
+                </programlisting>
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</section>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>Introduction</title>
+  <para>
+    This code is the deliverable 7.2 of the BioPreDyn project
+    ("Prototype Software for Testing: User-friendly version of
+    prototype software for testing in a setting for industrial
+    applications").
+  </para>
+  <para>
+    For more information about the development tasks related to the
+    BioPreDyn project (and the content of the deliverable 7.2), please
+    visit the <ulink url="https://thecosmocompany.com/biopredyn-trac/">
+    developer's wiki</ulink>.
+  </para>
+  <para>
+    For more information about the BioPreDyn project itself, please
+    refer to the <ulink url="http://www.biopredyn.eu/">official project website
+    </ulink>.
+  </para>
+</section>

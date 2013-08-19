@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+[]>
+<article id="PrototypeUserGuide">
+  <articleinfo>
+    <title>BioPreDyn software suite prototype - Deliverable 7.2 - User guide
+    </title>
+    <subjectset>
+      <subject>
+        <subjectterm>BioPreDyn</subjectterm>
+      </subject>
+    </subjectset>
+    <keywordset>
+      <keyword>CoSMo</keyword>
+      <keyword>Project</keyword>
+      <keyword>Systems biology</keyword>
+      <keyword>BioPreDyn</keyword>
+    </keywordset>
+    <authorgroup>
+      <author>
+        <firstname>Bertrand</firstname>
+        <surname>Moreau</surname>
+        <affiliation>
+          <orgname>The CoSMo company</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+    <pubdate>2013</pubdate>
+    <abstract>
+      <para>This document is the user guide for the BioPreDyn software suite
+      prototype (deliverable 7.2).
+      </para>
+    </abstract>
+  </articleinfo>
+  <xi:include href="UserGuide/Preface.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="UserGuide/Introduction.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="UserGuide/Installation.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="UserGuide/Usage.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+</article>

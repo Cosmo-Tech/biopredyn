@@ -34,6 +34,7 @@ include(${DocBook_USE_FILE})
 
 add_subdirectory(CMake)
 add_subdirectory(IntegratedSoftwareSuite)
+add_subdirectory(Prototype)
 
 option( DOCUMENTATION_BUILD_TESTING "Build test suite." ON )
 mark_as_advanced(DOCUMENTATION_BUILD_TESTING)
