@@ -13,6 +13,7 @@ import getopt
 import sys
 import textwrap
 import libsbml
+import libsedml
 
 COMMAND_SYNTAX_MESSAGE = 'python main.py /path/to/input/file [options]'
 
@@ -22,8 +23,9 @@ HELP_MESSAGE = "This program is a prototype for the BioPreDyn software suite dev
 HELP_OPTION = {
 "help"    : [  "Display this help message."],
 "cobra"   : [  "Open the input file using the cobrapy library."],
-"copasi"  : [  "Open the input file using the Copasi library"],
+"copasi"  : [  "Open the input SED-ML file and execute its tasks using the Copasi library."],
 "sbml"    : [  "Open the input file as an SBML model; SBML compliance will be checked."],
+"sedml"   : [  "Open the input file as an SED-ML model; SED-ML compliance will be checked."],
 }
 
 HELP_KEYWORD_SIZE = 16   # Left column
@@ -63,9 +65,10 @@ def PrintHelpArgument(arg, listHelpLines):
         print ''.ljust(HELP_KEYWORD_SIZE) + line
   print ""
 
-# Check whether the input model file is compliant with the SBML standard; if no,
-# boolean value false is returned and the first error code met by the reader is
-# printed; if yes, the method returns a pointer to the SBML model instead.
+# Check whether the input model file is compliant with the SBML standard; if
+# not, boolean value false is returned and the first error code met by the
+# reader is printed; if yes, the method returns a pointer to the SBML model
+# instead.
 def CheckSBML(file):
   reader = libsbml.SBMLReader()
   model = reader.readSBML(file)
@@ -74,13 +77,35 @@ def CheckSBML(file):
           " when opening file: " + str(model.getError(0).getShortMessage()))
     sys.exit(2)
   else:
-    print("Model is SBML compliant.")
+    print("Model " + model.getModel().getName() + " is SBML compliant.")
     return model
+
+# Check whether the input model file is compliant with the SED-ML standard; if
+# not, boolean value false is returned and the first error code met by the
+# reader is printed; if yes, the method returns a pointer to the SED-ML model
+# instead.
+def CheckSedML(file):
+  reader = libsedml.SedReader()
+  doc = reader.readSedML(file)
+  if doc.getNumErrors() > 0:
+    print("Error code " + str(doc.getError(0).getErrorId()) +
+          " when opening file: " + str(doc.getError(0).getShortMessage()))
+    sys.exit(2)
+  else:
+    print("Document " + file + " is SED-ML compliant.")
+    return doc
+
+# Parse the input SED-ML file and run the tasks it contains using COPASI
+def RunWithCopasi(file):
+  doc = CheckSedML(file)
+  for m in doc.getListOfModels():
+    CheckSBML(m.getSource())
+  return 0
 
 # main
 try:
   opts, args = getopt.getopt(sys.argv[2:], "",
-                             ['help', 'cobra', 'copasi', 'sbml'])
+                             ['help', 'cobra', 'copasi', 'sbml', 'sedml'])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type main.py --help for more information" )
@@ -94,7 +119,9 @@ for o, a in opts:
     sys.exit(0)
   elif o == "--sbml":
     model = CheckSBML(sys.argv[1])
+  elif o == "--sedml":
+    model = CheckSedML(sys.argv[1])
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":
-    print("Something will happen with copasi here soon.")
+    RunWithCopasi(sys.argv[1])

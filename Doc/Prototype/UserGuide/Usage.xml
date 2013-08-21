@@ -27,12 +27,16 @@
       library.</para>
     </listitem>
     <listitem>
-      <para><literal>--copasi</literal>: Open the input file using the COPASI
-      library.</para>
+      <para><literal>--copasi</literal>: Open the input SED-ML file and execute
+      its tasks using the Copasi library.</para>
     </listitem>
     <listitem>
       <para><literal>--sbml</literal>: Open the input file as an SBML model;
       SBML compliance will be checked.</para>
+    </listitem>
+    <listitem>
+      <para><literal>--sedml</literal>: Open the input file as an SED-ML model;
+      SED-ML compliance will be checked.</para>
     </listitem>
   </itemizedlist>
 </section>
