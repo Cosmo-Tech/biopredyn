@@ -104,6 +104,13 @@
           </itemizedlist>
         </para>
       </listitem>
+      <listitem>
+        <para>
+          <ulink url="https://pypi.python.org/pypi/bioservices">BioServices
+          </ulink>: Python library for bioinformatics web services access;
+          deliverable 1.2 of project BioPreDyn.
+        </para>
+      </listitem>
     </itemizedlist>
   </section>
   <section>
@@ -267,6 +274,20 @@
       <para>
         <emphasis role="em">TODO</emphasis>
       </para>
+    </section>
+    <section>
+      <title>BioServices</title>
+      <para>Download the source files:</para>
+      <programlisting>
+  https://pypi.python.org/pypi/bioservices
+      </programlisting>
+      <para>
+        Extract the files, then execute the following commands in the directory
+        they were extracted to:
+      </para>
+      <programlisting>
+  sudo python setup.py install
+      </programlisting>
     </section>
   </section>
   <section>
