@@ -14,6 +14,7 @@ import sys
 import textwrap
 import libsbml
 import libsedml
+import COPASI
 
 COMMAND_SYNTAX_MESSAGE = 'python main.py /path/to/input/file [options]'
 
@@ -78,6 +79,19 @@ def CheckSBML(file):
     sys.exit(2)
   else:
     print("Model " + model.getModel().getName() + " is SBML compliant.")
+    # Check compatiblity with different versions of SBML
+    print( str(model.checkL1Compatibility()) +
+           " compatibility errors with SBML L1." )
+    print( str(model.checkL2v1Compatibility()) +
+           " compatibility errors with SBML L2v1." )
+    print( str(model.checkL2v2Compatibility()) +
+           " compatibility errors with SBML L2v2." )
+    print( str(model.checkL2v3Compatibility()) +
+           " compatibility errors with SBML L2v3." )
+    print( str(model.checkL2v4Compatibility()) +
+           " compatibility errors with SBML L2v4." )
+    print( str(model.checkL3v1Compatibility()) +
+           " compatibility errors with SBML L3v1." )
     return model
 
 # Check whether the input model file is compliant with the SED-ML standard; if
@@ -93,6 +107,9 @@ def CheckSedML(file):
     sys.exit(2)
   else:
     print("Document " + file + " is SED-ML compliant.")
+    # Check compatiblity with SED-ML level 1
+    print( str(doc.checkCompatibility(doc)) +
+           " compatibility errors with SED-ML L1." )
     return doc
 
 # Parse the input SED-ML file and run the tasks it contains using COPASI
@@ -100,7 +117,32 @@ def RunWithCopasi(file):
   doc = CheckSedML(file)
   for m in doc.getListOfModels():
     CheckSBML(m.getSource())
-  return 0
+
+  # Parse the list of tasks in the input file
+  for t in doc.getListOfTasks():
+    model_source = doc.getModel(t.getModelReference()).getSource()
+    # Import the model to COPASI
+    datamodel = COPASI.CCopasiDataModel()
+    datamodel.importSBML(model_source)
+    # Parse the tasks in COPASI datamodel
+    iMax = datamodel.getTaskList().size()
+    task=None
+    for i in range(0,iMax):
+      if datamodel.getTask(i).getType()==CCopasiTask.timeCourse:
+        task=datamodel.getTask(i)
+        break
+    if task==None:
+      # create the task
+      task=datamodel.addTask(CCopasiTask.timeCourse)
+    if task!=None:
+      problem=task.getProblem()
+      parameter=problem.getParameter("Duration")
+      if parameter!=null and parameter.getType()==CCopasiParameter.UDOUBLE:
+        parameter.setValue(100.3)
+      if task.setMethodType(CCopasiMethod.LSODAR):
+        # maybe change some method parameters
+        task.process(true)
+  return
 
 # main
 try:

@@ -7,6 +7,9 @@
           <location y="256" x="1702" />
           <size height="62" width="156" />
         </sbsi-editor>
+        <biopredyn-engine xmlns="http://www.biopredyn.eu/bpd">
+          <tool>COPASI</tool>
+        </biopredyn-engine>
       </annotation>
       <algorithm kisaoID="KISAO:0000035" />
     </uniformTimeCourse>
