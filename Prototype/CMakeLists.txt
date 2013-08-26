@@ -9,6 +9,6 @@ add_test(SedMLComplianceTest ${PYTHON_EXECUTABLE}
   ${CMAKE_CURRENT_SOURCE_DIR}/Data/FEBS_UniformTimeCourse.xml --sedml)
 
 # Third test: opens a SED-ML file and execute its tasks using COPASI
-add_test(SedMLComplianceTest ${PYTHON_EXECUTABLE}
+add_test(CopasiRunTest ${PYTHON_EXECUTABLE}
   ${CMAKE_CURRENT_SOURCE_DIR}/main.py
   ${CMAKE_CURRENT_SOURCE_DIR}/Data/FEBS_UniformTimeCourse.xml --copasi)

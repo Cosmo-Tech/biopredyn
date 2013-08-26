@@ -15,6 +15,8 @@ import textwrap
 import libsbml
 import libsedml
 import COPASI
+import numpy as np
+import matplotlib.pyplot as plt
 
 COMMAND_SYNTAX_MESSAGE = 'python main.py /path/to/input/file [options]'
 
@@ -114,34 +116,48 @@ def CheckSedML(file):
 
 # Parse the input SED-ML file and run the tasks it contains using COPASI
 def RunWithCopasi(file):
-  doc = CheckSedML(file)
-  for m in doc.getListOfModels():
+  sed_doc = CheckSedML(file)
+  for m in sed_doc.getListOfModels():
     CheckSBML(m.getSource())
 
   # Parse the list of tasks in the input file
-  for t in doc.getListOfTasks():
-    model_source = doc.getModel(t.getModelReference()).getSource()
+  for t in sed_doc.getListOfTasks():
+    model_source = sed_doc.getModel(t.getModelReference()).getSource()
     # Import the model to COPASI
-    datamodel = COPASI.CCopasiDataModel()
-    datamodel.importSBML(model_source)
-    # Parse the tasks in COPASI datamodel
-    iMax = datamodel.getTaskList().size()
-    task=None
-    for i in range(0,iMax):
-      if datamodel.getTask(i).getType()==CCopasiTask.timeCourse:
-        task=datamodel.getTask(i)
-        break
-    if task==None:
-      # create the task
-      task=datamodel.addTask(CCopasiTask.timeCourse)
-    if task!=None:
-      problem=task.getProblem()
-      parameter=problem.getParameter("Duration")
-      if parameter!=null and parameter.getType()==CCopasiParameter.UDOUBLE:
-        parameter.setValue(100.3)
-      if task.setMethodType(CCopasiMethod.LSODAR):
-        # maybe change some method parameters
-        task.process(true)
+    cop_datamodel = COPASI.CCopasiDataModel()
+    cop_datamodel.importSBML(model_source)
+    # Import simulation
+    sed_simulation = sed_doc.getSimulation(t.getSimulationReference())
+    # Case where the task is a uniform time course
+    if ( sed_simulation.getElementName() == "uniformTimeCourse" ):
+      cop_task = cop_datamodel.addTask(COPASI.CCopasiTask.timeCourse)
+      cop_problem = cop_task.getProblem()
+      # Required parameters are set from values in the input SED-ML file
+      cop_problem.setDuration( sed_simulation.getOutputEndTime() -
+                       sed_simulation.getOutputStartTime() )
+      cop_problem.setStepNumber(sed_simulation.getNumberOfPoints())
+      cop_problem.setOutputStartTime(sed_simulation.getOutputStartTime())
+      cop_problem.setTimeSeriesRequested(True)
+      # Deterministic method is chosen
+      # TODO: acquire it from KiSAO value in SED-ML file
+      cop_task.setMethodType(COPASI.CCopasiMethod.deterministic)
+      # Run
+      cop_task.process(True)
+      # TODO: Plot the results
+      series = cop_task.getTimeSeries()
+      x = np.linspace(sed_simulation.getOutputStartTime(),
+                      sed_simulation.getOutputEndTime(),
+                      num = sed_simulation.getNumberOfPoints() + 1)
+      plt.plot(x, series.getConcentrationDataForIndex(1),
+               x, series.getConcentrationDataForIndex(2),
+               x, series.getConcentrationDataForIndex(3),
+               x, series.getConcentrationDataForIndex(4))
+      plt.show()
+      plt.close()
+    # Case where the task does not describe a uniform time course not available
+    # in libSEDML yet
+    else:
+      print "Non existing in libSEDML yet."
   return
 
 # main
