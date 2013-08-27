@@ -111,6 +111,11 @@
           deliverable 1.2 of project BioPreDyn.
         </para>
       </listitem>
+      <listitem>
+        <para><ulink url="http://matplotlib.org/index.html">matplotlib</ulink>:
+        Python plotting library.
+        </para>
+      </listitem>
     </itemizedlist>
   </section>
   <section>
@@ -287,6 +292,17 @@
       </para>
       <programlisting>
   sudo python setup.py install
+      </programlisting>
+    </section>
+    <section>
+      <title>matplotlib</title>
+      <para>
+        First of all easy_install should be installed (see paragraph
+        1.2.1.4.2 for installation details). When it is done, simply open
+        a command shell and type:
+      </para>
+      <programlisting>
+  sudo easy_install matplotlib
       </programlisting>
     </section>
   </section>
