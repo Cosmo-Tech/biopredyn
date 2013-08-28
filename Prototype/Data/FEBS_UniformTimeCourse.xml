@@ -3,53 +3,25 @@
   <listOfSimulations>
     <uniformTimeCourse id="simulation_1" name="simulation_1" initialTime="0.0" outputStartTime="0.0" outputEndTime="20.0" numberOfPoints="20">
       <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="256" x="1702" />
-          <size height="62" width="156" />
-        </sbsi-editor>
         <biopredyn-engine xmlns="http://www.biopredyn.eu/bpd">
           <tool>COPASI</tool>
         </biopredyn-engine>
       </annotation>
-      <algorithm kisaoID="KISAO:0000035" />
+      <algorithm kisaoID="KISAO:0000035"/>
     </uniformTimeCourse>
   </listOfSimulations>
   <listOfModels>
     <model id="febs_model" language="urn:sedml:language:sbml" source="/home/bertrand/dev/BioPreDyn/trunk/Prototype/Data/FEBS_copasi.xml">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="260" x="1493" />
-          <size height="59" width="118" />
-        </sbsi-editor>
-      </annotation>
     </model>
   </listOfModels>
   <listOfTasks>
     <task id="task_1" name="task_1" modelReference="febs_model" simulationReference="simulation_1">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="374" x="1611" />
-          <size height="70" width="100" />
-        </sbsi-editor>
-      </annotation>
     </task>
   </listOfTasks>
   <listOfDataGenerators>
     <dataGenerator id="datagenerator_1" name="time_datagenerator">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="665" x="749" />
-          <size height="60" width="187" />
-        </sbsi-editor>
-      </annotation>
       <listOfVariables>
         <variable id="Time" name="time" taskReference="task_1" symbol="urn:sedml:symbol:time">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="662" x="1121" />
-              <size height="54" width="91" />
-            </sbsi-editor>
-          </annotation>
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -57,20 +29,8 @@
       </math>
     </dataGenerator>
     <dataGenerator id="datagenerator_2" name="E_datagenerator">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="561" x="825" />
-          <size height="56" width="184" />
-        </sbsi-editor>
-      </annotation>
       <listOfVariables>
         <variable id="species_1" name="E" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_1']">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="559" x="1112" />
-              <size height="58" width="121" />
-            </sbsi-editor>
-          </annotation>
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -78,20 +38,8 @@
       </math>
     </dataGenerator>
     <dataGenerator id="datagenerator_3" name="S_datagenerator">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="474" x="887" />
-          <size height="55" width="184" />
-        </sbsi-editor>
-      </annotation>
       <listOfVariables>
         <variable id="species_2" name="S" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_2']">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="471" x="1167" />
-              <size height="61" width="121" />
-            </sbsi-editor>
-          </annotation>
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -99,20 +47,8 @@
       </math>
     </dataGenerator>
     <dataGenerator id="datagenerator_4" name="C_datagenerator">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="380" x="964" />
-          <size height="57" width="184" />
-        </sbsi-editor>
-      </annotation>
       <listOfVariables>
         <variable id="species_3" name="C" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_3']">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="377" x="1233" />
-              <size height="63" width="116" />
-            </sbsi-editor>
-          </annotation>
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -120,20 +56,8 @@
       </math>
     </dataGenerator>
     <dataGenerator id="datagenerator_5" name="P_datagenerator">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="285" x="1032" />
-          <size height="59" width="185" />
-        </sbsi-editor>
-      </annotation>
       <listOfVariables>
         <variable id="species_4" name="P" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_4']">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="282" x="1293" />
-              <size height="63" width="116" />
-            </sbsi-editor>
-          </annotation>
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -143,47 +67,16 @@
   </listOfDataGenerators>
   <listOfOutputs>
     <plot2D id="plot2D" name="concentrations_vs_time">
-      <annotation>
-        <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-          <location y="330" x="292" />
-          <size height="53" width="164" />
-        </sbsi-editor>
-      </annotation>
       <listOfCurves>
         <curve id="curve1" name="E_vs_Time" logX="false" logY="false" xDataReference="datagenerator_1" yDataReference="datagenerator_2">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="476" x="454" />
-              <size height="30" width="60" />
-            </sbsi-editor>
-          </annotation>
         </curve>
         <curve id="curve2" name="S_vs_Time" logX="false" logY="false" xDataReference="datagenerator_1" yDataReference="datagenerator_3">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="392" x="520" />
-              <size height="30" width="60" />
-            </sbsi-editor>
-          </annotation>
         </curve>
         <curve id="curve3" name="C_vs_Time" logX="false" logY="false" xDataReference="datagenerator_1" yDataReference="datagenerator_4">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="314" x="610" />
-              <size height="30" width="60" />
-            </sbsi-editor>
-          </annotation>
         </curve>
         <curve id="curve4" name="P_vs_Time" logX="false" logY="false" xDataReference="datagenerator_1" yDataReference="datagenerator_5">
-          <annotation>
-            <sbsi-editor xmlns="http://www.sedml.sbsi.editor/level1">
-              <location y="224" x="688" />
-              <size height="30" width="60" />
-            </sbsi-editor>
-          </annotation>
         </curve>
       </listOfCurves>
     </plot2D>
   </listOfOutputs>
 </sedML>
-
