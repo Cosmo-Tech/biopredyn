@@ -9,7 +9,6 @@ __license__ = "BSD"
 __maintainer__ = ["Bertrand Moreau"]
 __email__ = "bertrand.moreau@thecosmocompany.com"
 __version__ = "$Revision$"
-# $Source$
 
 # Third-party dependencies
 import getopt

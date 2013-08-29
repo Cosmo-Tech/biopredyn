@@ -10,7 +10,6 @@ __license__ = "BSD"
 __maintainer__ = ["Bertrand Moreau"]
 __email__ = "bertrand.moreau@thecosmocompany.com"
 __version__ = "$Revision$"
-# $Source$
 
 import libsbml
 
@@ -23,7 +22,7 @@ class SBMLModel:
   def __init__(self, file):
     reader = libsbml.SBMLReader()
     self.address = file
-    self.model = reader.readSBML(model)
+    self.model = reader.readSBML(file)
   
   ## SBML compliance check function.
   # Checks whether self.file is compliant with the SBML standard.

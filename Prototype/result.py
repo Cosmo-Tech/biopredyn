@@ -10,9 +10,9 @@ __license__ = "BSD"
 __maintainer__ = ["Bertrand Moreau"]
 __email__ = "bertrand.moreau@thecosmocompany.com"
 __version__ = "$Revision$"
-# $Source$
 
 import lisbmlsim
+import COPASI
 
 ## Result class for libSBMLSim runs.
 class LibSBMLSimResult:
@@ -40,3 +40,12 @@ class LibSBMLSimResult:
     for i in range(self.result.getNumOfRows()):
       time.append(self.result.getTimeValueAtIndex(i))
     return time
+
+## Result class for COPASI runs.
+class CopasiResult:
+  
+  ## Constructor.
+  # @param self The object pointer.
+  # @param result The result of a COPASI run.
+  def __init__(self, result):
+    self.result = result
