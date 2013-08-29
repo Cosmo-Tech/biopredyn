@@ -2,13 +2,14 @@
 # Work flow handling package; a work flow is defined as a sequence of Task
 # elements (in the SED-ML sense) to be executed using one or several engines.
 
-__author__     = "$Author$"
-__copyright__  = "$Copyright: [2013] BioPreDyn $"
-__credits__    = ["Bertrand Moreau"]
-__license__    = "BSD"
+__author__ = "$Author$"
+__date__ = "$Date$"
+__copyright__ = "$Copyright: [2013] BioPreDyn $"
+__credits__ = ["Bertrand Moreau"]
+__license__ = "BSD"
 __maintainer__ = ["Bertrand Moreau"]
-__email__      = "bertrand.moreau@thecosmocompany.com"
-__version__    = "$Revision$"
+__email__ = "bertrand.moreau@thecosmocompany.com"
+__version__ = "$Revision$"
 # $Source$
 
 import libsedml

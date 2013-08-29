@@ -2,13 +2,14 @@
 # Model handling module; the only accepted format for models in package
 # biopredyn is SBML so far.
 
-__author__     = "$Author$"
-__copyright__  = "$Copyright: [2013] BioPreDyn $"
-__credits__    = ["Bertrand Moreau"]
-__license__    = "BSD"
+__author__ = "$Author$"
+__date__ = "$Date$"
+__copyright__ = "$Copyright: [2013] BioPreDyn $"
+__credits__ = ["Bertrand Moreau"]
+__license__ = "BSD"
 __maintainer__ = ["Bertrand Moreau"]
-__email__      = "bertrand.moreau@thecosmocompany.com"
-__version__    = "$Revision$"
+__email__ = "bertrand.moreau@thecosmocompany.com"
+__version__ = "$Revision$"
 # $Source$
 
 import libsbml

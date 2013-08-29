@@ -1,13 +1,14 @@
 ## @package biopredyn
 # Handles command line calls to biopredyn package functionalities.
 
-__author__     = "$Author$"
-__copyright__  = "$Copyright: [2013] BioPreDyn $"
-__credits__    = ["Bertrand Moreau"]
-__license__    = "BSD"
+__author__ = "$Author$"
+__date__ = "$Date$"
+__copyright__ = "$Copyright: [2013] BioPreDyn $"
+__credits__ = ["Bertrand Moreau"]
+__license__ = "BSD"
 __maintainer__ = ["Bertrand Moreau"]
-__email__      = "bertrand.moreau@thecosmocompany.com"
-__version__    = "$Revision$"
+__email__ = "bertrand.moreau@thecosmocompany.com"
+__version__ = "$Revision$"
 # $Source$
 
 # Third-party dependencies
