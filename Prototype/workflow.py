@@ -22,12 +22,16 @@ import model
 ## engine.
 class CopasiFlow:
   
+  ## Constructor.
+  # @param self The object pointer.
+  # @param file Address of the SED-ML file to be read.
   def __init__(self, file):
     simulation = SedMLFlow(file)
     self.sedml = simulation.check()
   
-  # Parse self.sedml and run the tasks it contains using COPASI; stores the
-  # resulting time series into self.timeseries
+  ## Runs the uniformTimeCourse encoded in self.sedml, if it exists.
+  # COPASI is used as simulation engine; stores the resulting time series into
+  # self.timeseries
   def run(self):
     # Parse the list of tasks in the input file
     for t in self.sedml.getListOfTasks():

@@ -60,11 +60,11 @@ def print_help():
 
 ## Display help information for the input option.
 # @param arg Name of the help option to be displayed.
-# @param listHelpLines Information about the help option being displayed.
-def print_help_argument(arg, listHelpLines):
+# @param listhelplines Information about the help option being displayed.
+def print_help_argument(arg, listhelplines):
   firstLine = True
   # Go trough list of help line
-  for helpline in listHelpLines:
+  for helpline in listhelplines:
     lines = textwrap.wrap(helpline, HELP_WRAP_SIZE - HELP_KEYWORD_SIZE)
     for line in lines:
       # First line: Print arg name.

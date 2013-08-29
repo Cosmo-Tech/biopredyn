@@ -39,7 +39,7 @@ class SBMLModel:
       sys.exit(2)
     else:
       print("Model " + self.model.getModel().getName() + " is SBML compliant.")
-      # check compatiblity with different versions of SBML
+      # Check compatibility with different versions of SBML
       print( str(self.model.checkL1Compatibility()) +
              " compatibility errors with SBML L1." )
       print( str(self.model.checkL2v1Compatibility()) +
