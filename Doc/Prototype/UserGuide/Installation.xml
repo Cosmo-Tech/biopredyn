@@ -10,7 +10,6 @@
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section>
   <title>Installation</title>
-  <para />
   <section>
     <title>Dependencies</title>
     <itemizedlist spacing="compact">
@@ -47,6 +46,29 @@
           https://github.com/fbergmann/libSEDML.git</ulink> repository with git
           and build the library with CMake, as described in the README.md file.
           Note that libSBML is a pre-requisite for libSEDML.
+        </para>
+          </listitem>
+      <listitem>
+        <para>
+          <ulink url="http://fun.bio.keio.ac.jp/software/libsbmlsim/">liSBMLSim
+          </ulink>: library for SBML model simulation. Note that libSBML is a
+          pre-requisite for libSBMLSim installation. Dependency:
+          <itemizedlist>
+            <listitem>
+              <para>
+                <ulink url="http://swig.org">SWIG 2.0</ulink>: language
+                interfacing tool for C/C++ application. Dependency:
+                <itemizedlist spacing="compact">
+                  <listitem>
+                    <para>
+                      <ulink url="http://www.gnu.org/software/octave/">Octave
+                      </ulink>: software tool for numerical computations.
+                    </para>
+                  </listitem>
+                </itemizedlist>
+              </para>
+            </listitem>
+          </itemizedlist>
         </para>
       </listitem>
       <listitem>
@@ -193,6 +215,68 @@
   make install
           </programlisting>
         </para>
+      </section>
+      <section>
+        <title>libSBMLSim (with CMake)</title>
+        <section>
+          <title>Octave</title>
+          <para>
+            Note that Octave must be installed before SWIG 2.0. Simply open a shell
+            and type:
+          </para>
+          <programlisting>
+  sudo apt-get install octave3.2
+  sudo apt-get install octave3.2-headers
+          </programlisting>
+        </section>
+        <section>
+          <title>SWIG 2.0 (or later)</title>
+          <para>
+            Download the latest package from
+            <ulink url="http://sourceforge.net/projects/swig/files/swig/">SWIG's Sourceforge repository</ulink>
+            ; extract it to the location of your choice. Open a shell, go to
+            the place were SWIG package was extracted, then type:
+          </para>
+          <programlisting>
+  ./configure
+  make
+  sudo make install
+          </programlisting>
+        </section>
+        <section>
+          <title>libSBMLSim installation</title>
+          <para>
+            libSBMLSim can now be installed: first download the source code
+            from
+            <ulink url="http://fun.bio.keio.ac.jp/software/libsbmlsim/">libSBMLSim website</ulink>
+            . Extract it to the location of your choice, then open a shell
+            and go to where the package was extracted. Type:
+          </para>
+          <programlisting>
+  mkdir build
+  cd build
+  ccmake ..
+          </programlisting>
+          <para>
+            It will open the CMake user interface; press 'c' to configure. A few
+            manual adjustments might be required, like pointing to the
+            location of a dependency. Set the WITH_PYTHON option to ON, then
+            press 'c' again, until the generation step is made available,
+            then press 'g'. The user interface closes; type:
+          </para>
+          <programlisting>
+  make
+  sudo make install
+          </programlisting>
+          <para>
+            Python bindings now have to be installed in your local Python
+            installation; type:
+          </para>
+          <programlisting>
+  cd src/bindings/python
+  python libsbmlsim.py install
+          </programlisting>
+        </section>
       </section>
       <section>
         <title>COBRApy</title>
