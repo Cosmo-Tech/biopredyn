@@ -1,13 +1,14 @@
-#!/usr/bin/python
+## @package biopredyn
+# Handles command line calls to biopredyn package functionalities.
 
-__author__     = "Bertrand Moreau"
-__copyright__  = "Copyright 2013, BioPreDyn"
+__author__     = "$Author$"
+__copyright__  = "$Copyright: [2013] BioPreDyn $"
 __credits__    = ["Bertrand Moreau"]
 __license__    = "BSD"
-__version__    = "0.1"
 __maintainer__ = ["Bertrand Moreau"]
 __email__      = "bertrand.moreau@thecosmocompany.com"
-__status__     = "Alpha"
+__version__    = "$Revision$"
+# $Source$
 
 # Third-party dependencies
 import getopt
@@ -18,11 +19,8 @@ import libsedml
 import COPASI
 import numpy as np
 import matplotlib.pyplot as plt
-
-# Internal dependencies
-import SBMLModel
-import SedMLFlow
-import CopasiFlow
+import model
+import workflow
 
 COMMAND_SYNTAX_MESSAGE = 'python main.py /path/to/input/file [options]'
 
@@ -40,8 +38,8 @@ HELP_OPTION = {
 HELP_KEYWORD_SIZE = 16   # Left column
 HELP_WRAP_SIZE = 79   # Total. 79 is windows limit
 
-# Display help information.
-def PrintHelp():
+## Display help information.
+def print_help():
   # General help message
   print " "
   lines = textwrap.wrap(HELP_MESSAGE, HELP_WRAP_SIZE)
@@ -57,10 +55,12 @@ def PrintHelp():
   
   # Optional arguments
   for arg in HELP_OPTION:
-    PrintHelpArgument(arg, HELP_OPTION[arg])
+    print_help_argument(arg, HELP_OPTION[arg])
 
-# Display help information for the input option.
-def PrintHelpArgument(arg, listHelpLines):
+## Display help information for the input option.
+# @param arg Name of the help option to be displayed.
+# @param listHelpLines Information about the help option being displayed.
+def print_help_argument(arg, listHelpLines):
   firstLine = True
   # Go trough list of help line
   for helpline in listHelpLines:
@@ -87,17 +87,17 @@ except getopt.error, msg:
 for o, a in opts:
   print str(o)
   if o == "--help":
-    PrintHelp()
+    print_help()
     sys.exit(0)
   elif o == "--sbml":
-    model = SBMLModel.SBMLModel(sys.argv[1])
-    model.Check()
+    model = model.SBMLModel(sys.argv[1])
+    model.check()
   elif o == "--sedml":
-    flow = SedMLFlow.SedMLFlow(sys.argv[1])
-    flow.Check()
+    flow = workflow.SedMLFlow(sys.argv[1])
+    flow.check()
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":
-    flow = CopasiFlow.CopasiFlow(sys.argv[1])
-    flow.Run()
-    flow.Plot()
+    flow = workflow.CopasiFlow(sys.argv[1])
+    flow.run()
+    flow.plot()
