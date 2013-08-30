@@ -1,6 +1,4 @@
 ## @package biopredyn
-# Work flow handling package; a work flow is defined as a sequence of Task
-# elements (in the SED-ML sense) to be executed using one or several engines.
 
 __author__ = "$Author$"
 __date__ = "$Date$"
@@ -17,8 +15,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import model
 
-## Class for COPASI-based work flows i.e. using COPASI as main simulation
-## engine.
+## Class for COPASI-based work flows using COPASI as main simulation engine.
 class CopasiFlow:
   
   ## Constructor.
@@ -69,7 +66,7 @@ class CopasiFlow:
 #       plt.plot(x, self.series.getConcentrationDataForIndex(i))
 #     plt.show(figure)
 
-## Class for SED-ML generic work flows i.e. using libSBMLSim as main simulation
+## Class for SED-ML generic work flows using libSBMLSim as main simulation
 ## engine.
 class SedMLFlow:
   

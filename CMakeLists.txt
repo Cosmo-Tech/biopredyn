@@ -7,6 +7,8 @@ include(CTest)
 include(FindPythonInterp)
 include(FindPythonLibs)
 
+option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" ON)
+
 if (PYTHONINTERP_FOUND AND PYTHON_LIBRARIES)
   # Prototype software for testing (D7.2)
   add_subdirectory(Prototype)

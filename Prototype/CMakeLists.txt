@@ -12,3 +12,8 @@ add_test(SedMLComplianceTest ${PYTHON_EXECUTABLE}
 add_test(CopasiRunTest ${PYTHON_EXECUTABLE}
   ${CMAKE_CURRENT_SOURCE_DIR}/main.py
   ${CMAKE_CURRENT_SOURCE_DIR}/Data/FEBS_UniformTimeCourse.xml --copasi)
+
+# doxygen generation
+if (BPD_GENERATE_DOXYGEN)
+  add_subdirectory(Doxygen)
+endif()

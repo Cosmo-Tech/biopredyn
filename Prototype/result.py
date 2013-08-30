@@ -1,6 +1,4 @@
 ## @package biopredyn
-# Work flow handling package; a work flow is defined as a sequence of Task
-# elements (in the SED-ML sense) to be executed using one or several engines.
 
 __author__ = "$Author$"
 __date__ = "$Date$"

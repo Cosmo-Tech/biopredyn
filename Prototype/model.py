@@ -1,6 +1,4 @@
 ## @package biopredyn
-# Model handling module; the only accepted format for models in package
-# biopredyn is SBML so far.
 
 __author__ = "$Author$"
 __date__ = "$Date$"

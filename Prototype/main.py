@@ -1,5 +1,4 @@
 ## @package biopredyn
-# Handles command line calls to biopredyn package functionalities.
 
 __author__ = "$Author$"
 __date__ = "$Date$"
