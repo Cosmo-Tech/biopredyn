@@ -1,19 +1,16 @@
 ## @package biopredyn
-
-__author__ = "$Author$"
-__date__ = "$Date$"
-__copyright__ = "$Copyright: [2013] BioPreDyn $"
-__credits__ = ["Bertrand Moreau"]
-__license__ = "BSD"
-__maintainer__ = ["Bertrand Moreau"]
-__email__ = "bertrand.moreau@thecosmocompany.com"
-__version__ = "$Revision$"
+## @author: $Author$
+## @date: $Date$
+## @copyright: $Copyright: [2013] BioPreDyn $
+## @version: $Revision$
 
 import lisbmlsim
 import COPASI
 
 ## Result class for libSBMLSim runs.
 class LibSBMLSimResult:
+  ## @var result
+  # A matrix of values resulting from a libSBMLSim simulation run.
   
   ## Constructor.
   # @param self The object pointer.
@@ -25,6 +22,7 @@ class LibSBMLSimResult:
   ## over time.
   # @param self The object pointer.
   # @param species The species which quantity values are wanted. 
+  # @return A list of quantity values for the input species over time.
   def get_quantities_per_species(self, species):
     quantities = []
     for i in range(self.result.getNumOfRows()):
@@ -33,6 +31,7 @@ class LibSBMLSimResult:
   
   ## Returns the list of all time steps in self.result.
   # @param self The object pointer.
+  # @return The list of time steps.
   def get_time_steps(self):
     time = []
     for i in range(self.result.getNumOfRows()):
@@ -41,6 +40,8 @@ class LibSBMLSimResult:
 
 ## Result class for COPASI runs.
 class CopasiResult:
+  ## @var result
+  # A time series resulting from a COPASI simulation run.
   
   ## Constructor.
   # @param self The object pointer.

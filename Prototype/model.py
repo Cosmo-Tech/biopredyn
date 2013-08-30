@@ -1,18 +1,18 @@
 ## @package biopredyn
-
-__author__ = "$Author$"
-__date__ = "$Date$"
-__copyright__ = "$Copyright: [2013] BioPreDyn $"
-__credits__ = ["Bertrand Moreau"]
-__license__ = "BSD"
-__maintainer__ = ["Bertrand Moreau"]
-__email__ = "bertrand.moreau@thecosmocompany.com"
-__version__ = "$Revision$"
+## @author: $Author$
+## @date: $Date$
+## @copyright: $Copyright: [2013] BioPreDyn $
+## @version: $Revision$
 
 import libsbml
 
 ## Class for SBML model manipulation.
 class SBMLModel:
+  ## @var address
+  # Address of the SBML file associated with the object.
+  
+  ## @var model
+  # An SBML document.
   
   ## Constructor.
   # @param self The object pointer.
@@ -28,6 +28,7 @@ class SBMLModel:
   # reader is printed; if yes, the method returns a pointer to the SBML model
   # instead.
   # @param self The object pointer.
+  # @return self.model
   def check(self):
     if self.model.getNumErrors() > 0:
       print("Error code " + str(self.model.getError(0).getErrorId()) +

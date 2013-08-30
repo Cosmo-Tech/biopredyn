@@ -1,13 +1,8 @@
 ## @package biopredyn
-
-__author__ = "$Author$"
-__date__ = "$Date$"
-__copyright__ = "$Copyright: [2013] BioPreDyn $"
-__credits__ = ["Bertrand Moreau"]
-__license__ = "BSD"
-__maintainer__ = ["Bertrand Moreau"]
-__email__ = "bertrand.moreau@thecosmocompany.com"
-__version__ = "$Revision$"
+## @author: $Author$
+## @date: $Date$
+## @copyright: $Copyright: [2013] BioPreDyn $
+## @version: $Revision$
 
 # Third-party dependencies
 import getopt
@@ -31,7 +26,7 @@ HELP_OPTION = {
 "cobra"   : [  "Open the input file using the cobrapy library."],
 "copasi"  : [  "Open the input SED-ML file and execute its tasks using the Copasi library."],
 "sbml"    : [  "Open the input file as an SBML model; SBML compliance will be checked."],
-"sedml"   : [  "Open the input file as an SED-ML model; SED-ML compliance will be checked."],
+"sedml"   : [  "Open the input SED-ML model file and execute its tasks using the libSBMLSim library."],
 }
 
 HELP_KEYWORD_SIZE = 16   # Left column
@@ -93,10 +88,9 @@ for o, a in opts:
     model.check()
   elif o == "--sedml":
     flow = workflow.SedMLFlow(sys.argv[1])
-    flow.check()
+    flow.run()
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":
     flow = workflow.CopasiFlow(sys.argv[1])
     flow.run()
-    flow.plot()
