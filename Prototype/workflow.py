@@ -4,6 +4,11 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
+import sys
+
+# FIXME: libsbmlsim should be installed in PYTHONPATH
+sys.path.append('/usr/local/share/libsbmlsim/python/')
+
 import libsedml
 import COPASI
 import libsbmlsim
@@ -85,8 +90,9 @@ class SedMLFlow:
   # @param file Address of the SED-ML file to be read.
   def __init__(self, file):
     self.address = file
-    simulation = SedMLFlow(file)
-    self.sedml = simulation.check()
+    reader = libsedml.SedReader()
+    self.sedml = reader.readSedML(file)
+    self.check()
     self.results = []
   
   ## SED-ML compliance check function.
@@ -116,8 +122,6 @@ class SedMLFlow:
     # Parse the list of tasks in the input file
     for t in self.sedml.getListOfTasks():
       model_source = self.sedml.getModel(t.getModelReference()).getSource()
-      # Import the model
-      sbml_model = model.SBMLModel(self.sedml.getModel().getSource())
       # Import simulation
       sed_simulation = self.sedml.getSimulation(t.getSimulationReference())
       # Case where the task is a uniform time course
@@ -126,8 +130,8 @@ class SedMLFlow:
         start = sed_simulation.getOutputStartTime()
         end = sed_simulation.getOutputEndTime()
         step = (end - start) / steps
-        r = libsbmlsim.simulateSBML(
-            sbml_model,
+        r = libsbmlsim.simulateSBMLFromFile(
+            model_source,
             end,
             step,
             steps,

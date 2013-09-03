@@ -4,7 +4,6 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
-import lisbmlsim
 import COPASI
 
 ## Result class for libSBMLSim runs.
