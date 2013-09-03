@@ -134,8 +134,16 @@ class SedMLFlow:
             model_source,
             end,
             step,
-            steps,
+            1,
             0,
-            libsbmlsim.MTHD_EULER,
+            libsbmlsim.MTHD_RUNGE_KUTTA,
             0)
         self.results.append(result.LibSBMLSimResult(r))
+  
+  ## Plots all the results stored in self.results
+  # @param self The object pointer.
+  # @param interactive Boolean value stating whether the plots have to be
+  #   drawn in interactive mode or not.
+  def plot_all_results(self, interactive):
+    for i in self.results:
+      i.plot2D_all(interactive)

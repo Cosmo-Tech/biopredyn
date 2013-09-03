@@ -71,7 +71,8 @@ def print_help_argument(arg, listhelplines):
 # main
 try:
   opts, args = getopt.getopt(sys.argv[2:], "",
-                             ['help', 'cobra', 'copasi', 'sbml', 'sedml'])
+      ['help', 'cobra', 'copasi', 'sbml', 'sedml', 'interactive',
+       'non-interactive'])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type main.py --help for more information" )
@@ -89,6 +90,7 @@ for o, a in opts:
   elif o == "--sedml":
     flow = workflow.SedMLFlow(sys.argv[1])
     flow.run()
+    flow.plot_all_results(True)
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":
