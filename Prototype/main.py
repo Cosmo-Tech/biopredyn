@@ -4,7 +4,6 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
-# Third-party dependencies
 import getopt
 import sys
 import textwrap
@@ -70,9 +69,8 @@ def print_help_argument(arg, listhelplines):
 
 # main
 try:
-  opts, args = getopt.getopt(sys.argv[2:], "",
-      ['help', 'cobra', 'copasi', 'sbml', 'sedml', 'interactive',
-       'non-interactive'])
+  opts, args = getopt.getopt(sys.argv[2:], "", [
+      'help', 'cobra', 'copasi', 'sbml', 'sedml'])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type main.py --help for more information" )
@@ -96,3 +94,4 @@ for o, a in opts:
   elif o == "--copasi":
     flow = workflow.CopasiFlow(sys.argv[1])
     flow.run()
+    flow.plot()

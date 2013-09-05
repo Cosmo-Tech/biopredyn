@@ -14,8 +14,7 @@ import COPASI
 import libsbmlsim
 from matplotlib import pyplot as plt
 import numpy as np
-import model
-import result
+import model, result, task
 
 ## Class for COPASI-based work flows using COPASI as main simulation engine.
 class CopasiFlow:
@@ -31,8 +30,8 @@ class CopasiFlow:
   # @param file Address of the SED-ML file to be read.
   def __init__(self, file):
     self.address = file
-    simulation = SedMLFlow(file)
-    self.sedml = simulation.check()
+    reader = libsedml.SedReader()
+    self.sedml = reader.readSedML(file)
   
   ## Runs the uniformTimeCourse encoded in self.sedml, if it exists.
   # COPASI is used as simulation engine; stores the resulting time series into
@@ -63,27 +62,21 @@ class CopasiFlow:
         cop_task.process(True)
         # Save the results
         self.series = cop_task.getTimeSeries()
-  
-  ## Plot the results of the work flow encoded in self.sedml using the list of
-  ## outputs defined in self.sedml.
-  # @param self The object pointer.
-  def plot(self):
-    figure = plt.figure()
-    print self.series.getNumVariables()
-#     x = self.series.getConcentrationDataForIndex(0)
-#     for i in range(1,self.series.getNumVariables()):
-#       plt.plot(x, self.series.getConcentrationDataForIndex(i))
-#     plt.show(figure)
+      else:
+        # TODO: case of a generic simulation element
+        print("Something to be done with Simulation element here")
 
 ## Class for SED-ML generic work flows using libSBMLSim as main simulation
 ## engine.
 class SedMLFlow:
   ## @var address
   # Address of the SED-ML file associated with the object.
-  ## @var sedml
-  # An SED-ML document.
   ## @var results
   # A list of results for the object simulation runs.
+  ## @var sedml
+  # A SED-ML document.
+  ## @var tasks
+  # A list of task elements.
   
   ## Constructor.
   # @param self The object pointer.
@@ -93,6 +86,10 @@ class SedMLFlow:
     reader = libsedml.SedReader()
     self.sedml = reader.readSedML(file)
     self.check()
+    self.tasks = []
+    # Parsing self.sedml for task elements
+    for t in self.sedml.getListOfTasks():
+      self.tasks.append(Task(t, self.sedml))
     self.results = []
   
   ## SED-ML compliance check function.
@@ -138,7 +135,8 @@ class SedMLFlow:
             0,
             libsbmlsim.MTHD_RUNGE_KUTTA,
             0)
-        self.results.append(result.LibSBMLSimResult(r))
+        self.results.append(
+            result.LibSBMLSimResult(r))
   
   ## Plots all the results stored in self.results
   # @param self The object pointer.

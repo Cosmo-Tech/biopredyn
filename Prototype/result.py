@@ -13,16 +13,19 @@ import libsbmlsim
 import COPASI
 from matplotlib import pyplot as plt
 
-## Result class for libSBMLSim runs.
-class LibSBMLSimResult:
-  ## @var result
-  # A matrix of values resulting from a libSBMLSim simulation run.
+## Base class for simulation results
+class Result:
+  ## @var result 
+  # Pointer to the output of a simulation run.
   
   ## Constructor.
   # @param self The object pointer.
-  # @param result The result of a libSBMLSim run.
+  # @param result The result of a simulation run.
   def __init__(self, result):
     self.result = result
+
+## Derived class for libSBMLSim simulation runs.
+class LibSBMLSimResult(Result):
   
   ## Returns a list containing all the quantity values for the input species
   ## over time.
@@ -66,13 +69,21 @@ class LibSBMLSimResult:
   def write(self, path):
     libsbmlsim.write_result(self.result, path)
 
-## Result class for COPASI runs.
+## Derived class for COPASI simulation runs.
 class CopasiResult:
-  ## @var result
-  # A time series resulting from a COPASI simulation run.
   
-  ## Constructor.
+  ## Returns a list containing all the quantity values for the input species
+  ## over time.
   # @param self The object pointer.
-  # @param result The result of a COPASI run.
-  def __init__(self, result):
-    self.result = result
+  # @param species The species which quantity values are wanted. 
+  # @return A list of quantity values for the input species over time.
+  def get_quantities_per_species(self, species):
+    quantities = []
+    return quantities
+  
+  ## Returns the list of all time steps in self.result.
+  # @param self The object pointer.
+  # @return The list of time steps.
+  def get_time_steps(self):
+    time = []
+    return time
