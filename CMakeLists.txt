@@ -7,6 +7,11 @@ include(CTest)
 include(FindPythonInterp)
 include(FindPythonLibs)
 
+set(
+    CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    "${CMAKE_CURRENT_SOURCE_DIR}/Prototype/CMake/"
+    )
+
 option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" ON)
 
 if (PYTHONINTERP_FOUND AND PYTHON_LIBRARIES)
