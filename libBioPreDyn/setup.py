@@ -1,11 +1,11 @@
 from distutils.core import setup, Extension
 
 biopredyn_module = Extension(
-    '_biopredyn',
-    sources=['biopredynPYTHON_wrap.cxx', 'biopredyn-pskel.cxx'],
+    '_libbiopredyn',
+    sources=['biopredynPYTHON_wrap.cxx', 'biopredyn.cxx'],
     )
 
-setup(name='biopredyn',
+setup(name='libbiopredyn',
       version='1.0',
-      py_modules=['biopredyn'],
+      py_modules=['libbiopredyn'],
       )

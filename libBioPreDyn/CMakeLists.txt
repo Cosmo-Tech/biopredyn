@@ -1,13 +1,23 @@
 cmake_minimum_required(VERSION 2.8)
+project(libbiopredyn CXX)
 
-# SWIG wrapping to Python
-FIND_PACKAGE(SWIG REQUIRED)
-INCLUDE(${SWIG_USE_FILE})
 FIND_PACKAGE(PythonLibs)
 INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+FIND_PACKAGE(XSD REQUIRED)
+FIND_PACKAGE(SWIG REQUIRED)
+
+# XSD code generation
+ADD_CUSTOM_COMMAND(
+  OUTPUT biopredyn.cxx biopredyn.hxx
+  COMMAND ${XSD_EXECUTABLE} cxx-tree
+  ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn.xsd
+  )
+
+# SWIG wrapping to Python
+INCLUDE(${SWIG_USE_FILE})
 SET(CMAKE_SWIG_FLAGS "")
 SET_SOURCE_FILES_PROPERTIES(biopredyn.i PROPERTIES CPLUSPLUS ON)
 SET_SOURCE_FILES_PROPERTIES(biopredyn.i PROPERTIES SWIG_FLAGS "-includeall")
-SWIG_ADD_MODULE(biopredyn python biopredyn.i biopredyn-pskel.cxx)
-SWIG_LINK_LIBRARIES(biopredyn ${PYTHON_LIBRARIES})
+SWIG_ADD_MODULE(libbiopredyn python biopredyn.i biopredyn.cxx)
+SWIG_LINK_LIBRARIES(libbiopredyn ${PYTHON_LIBRARIES})

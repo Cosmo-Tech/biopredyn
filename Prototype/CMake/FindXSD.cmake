@@ -5,17 +5,14 @@
 
 SET(XSD_FOUND 0)
 
-FIND_PROGRAM(XSD_EXECUTABLE
-  NAMES xsd
+FIND_PROGRAM(XSD_EXECUTABLE xsd
   PATHS /usr/bin /usr/local/bin )
 
-IF(EXISTS ${XSD_EXECUTABLE})
+IF(XSD_EXECUTABLE)
   SET(XSD_FOUND 1)
-  MESSAGE(STATUS "Found XSD: ${XSD_EXECUTABLE}" )
-ENDIF(EXISTS ${XSD_EXECUTABLE})
+  MESSAGE(STATUS "Found XSD: ${XSD_EXECUTABLE}")
+ENDIF()
 
-IF(NOT ${XSD_FOUND})
-  IF(${XSD_FIND_REQUIRED})
-    MESSAGE(FATAL_ERROR "XSD was not found on the system. Please specify the location of XSD.")
-  ENDIF(${XSD_FIND_REQUIRED})
-ENDIF(NOT ${XSD_FOUND})
+IF(NOT XSD_FOUND)
+  MESSAGE(FATAL_ERROR "XSD was not found on the system. Please specify the location of XSD.")
+ENDIF()

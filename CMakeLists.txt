@@ -13,6 +13,12 @@ set(
     )
 
 option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" ON)
+option(BPD_GENERATE_LIBBIOPREDYN "Build libBioPreDyn library" ON)
+
+if (BPD_GENERATE_LIBBIOPREDYN)
+  # Parsing library for biopredyn.xsd based XML files
+  add_subdirectory(libBioPreDyn)
+endif()
 
 if (PYTHONINTERP_FOUND AND PYTHON_LIBRARIES)
   # Prototype software for testing (D7.2)

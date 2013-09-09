@@ -1,4 +1,4 @@
-%module biopredyn
+%module libbiopredyn
 %{
-#include "biopredyn-pskel.hxx"
+#include "biopredyn.hxx"
 %}
