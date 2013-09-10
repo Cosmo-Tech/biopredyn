@@ -89,7 +89,7 @@ class SedMLFlow:
     self.tasks = []
     # Parsing self.sedml for task elements
     for t in self.sedml.getListOfTasks():
-      self.tasks.append(Task(t, self.sedml))
+      self.tasks.append(task.Task(t, self.sedml))
     self.results = []
   
   ## SED-ML compliance check function.
