@@ -4,6 +4,8 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
+import model, simulation
+
 ## Base representation of an atomic task in a SED-ML work flow.
 class Task:
   ## @var model
@@ -18,8 +20,9 @@ class Task:
   # @param task A SED-ML task.
   # @param sedfile The SED-ML file from which the input task comes from.
   def __init__(self, task, sedfile):
-    self.model = sedfile.getModel(task.getModelReference())
-    self.simulation = sedfile.getSimulation(task.getSimulationReference())
+    self.model = model.SBMLModel(sedfile.getModel(task.getModelReference()))
+    self.simulation = simulation.Simulation(
+      sedfile.getSimulation(task.getSimulationReference()))
   
   ## Execute the task.
   # @param self The object pointer.

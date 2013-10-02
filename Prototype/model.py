@@ -10,9 +10,8 @@ import libsbml
 class SBMLModel:
   ## @var address
   # Address of the SBML file associated with the object.
-  
   ## @var model
-  # An SBML document.
+  # An SBML model.
   
   ## Constructor.
   # @param self The object pointer.
