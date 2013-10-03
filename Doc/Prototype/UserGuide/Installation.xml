@@ -139,6 +139,83 @@
         </para>
       </listitem>
     </itemizedlist>
+    <table id="dependency_table">
+      <caption>BioPreDyn prototype dependencies</caption>
+      <thead>
+        <tr>
+          <td>Library</td>
+          <td>Available languages</td>
+          <td>Dependencies</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>libSBML</td>
+          <td>C++, C#, Java, Matlab, Octave, Python, C, Perl, Ruby</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>libSEDML</td>
+          <td>C++, C#, Java, Python, R, Ruby</td>
+          <td>libSBML</td>
+        </tr>
+        <tr>
+          <td>libSBMLSim</td>
+          <td>C++, C#, Java, Python, Ruby</td>
+          <td>libSBML</td>
+        </tr>
+        <tr>
+          <td>openCobra</td>
+          <td>Matlab, Python</td>
+          <td>PyGLPK</td>
+        </tr>
+        <tr>
+          <td>COPASI</td>
+          <td>C++, Java, Python, Perl, .NET</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>CellNOpt</td>
+          <td>Matlab, Python, R</td>
+          <td>R, rpy2 (Windows), pywin32 (Windows)</td>
+        </tr>
+        <tr>
+          <td>BioServices</td>
+          <td>Python</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>libKiSAO</td>
+          <td>Java</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>PyGLPK</td>
+          <td>Python</td>
+          <td>GLPK, GMP</td>
+        </tr>
+        <tr>
+          <td>GLPK</td>
+          <td>C</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>GMP</td>
+          <td>C</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>rpy2</td>
+          <td>Python</td>
+          <td>R</td>
+        </tr>
+        <tr>
+          <td>pywin32</td>
+          <td>Python</td>
+          <td>-</td>
+        </tr>
+      </tbody>
+    </table>
   </section>
   <section>
     <title>Installation</title>
