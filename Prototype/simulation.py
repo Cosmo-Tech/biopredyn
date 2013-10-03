@@ -4,6 +4,8 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
+import libsedml
+
 ## Description of the execution of an algorithm, independent from the model or
 ## data set it has to be run with.
 class Simulation:

@@ -23,6 +23,12 @@ class Result:
   # @param result The result of a simulation run.
   def __init__(self, result):
     self.result = result
+  
+  ## Getter. Returns self.result.
+  # @param self The object pointer.
+  # @return self.result
+  def get_result(self):
+    return self.result
 
 ## Derived class for libSBMLSim simulation runs.
 class LibSBMLSimResult(Result):
