@@ -14,9 +14,9 @@ class Output:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param id The ID of a SED-ML output.
-  def __init__(self, id):
-    self.id = id
+  # @param out A SedOutput object.
+  def __init__(self, out):
+    self.id = out.getId()
   
   ## Getter. Returns self.id.
   def get_id(self):

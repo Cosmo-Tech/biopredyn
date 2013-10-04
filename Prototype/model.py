@@ -50,3 +50,13 @@ class SBMLModel:
       print( str(self.model.checkL3v1Compatibility()) +
              " compatibility errors with SBML L3v1." )
       return self.model
+  
+  ## Getter. Returns self.address.
+  # @param self The object pointer.
+  def get_address(self):
+    return self.address
+  
+  ## Getter. Returns self.model.
+  # @param self The object pointer.
+  def get_model(self):
+    return self.model

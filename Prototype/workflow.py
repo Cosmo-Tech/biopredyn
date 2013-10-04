@@ -4,79 +4,21 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
-import sys
-
-# FIXME: libsbmlsim should be installed in PYTHONPATH
-sys.path.append('/usr/local/share/libsbmlsim/python/')
-
 import libsedml
-import COPASI
-import libsbmlsim
 from matplotlib import pyplot as plt
 import numpy as np
 import model, result, task
 
-## Class for COPASI-based work flows using COPASI as main simulation engine.
-class CopasiFlow:
+## Class for SED-ML generic work flows.
+class WorkFlow:
   ## @var address
   # Address of the SED-ML file associated with the object.
-  ## @var sedml
-  # An SED-ML document.
-  ## @var series
-  # A time series resulting from a COPASI simulation run.
-  
-  ## Constructor.
-  # @param self The object pointer.
-  # @param file Address of the SED-ML file to be read.
-  def __init__(self, file):
-    self.address = file
-    reader = libsedml.SedReader()
-    self.sedml = reader.readSedML(file)
-  
-  ## Runs the uniformTimeCourse encoded in self.sedml, if it exists.
-  # COPASI is used as simulation engine; stores the resulting time series into
-  # self.timeseries
-  def run(self):
-    # Parse the list of tasks in the input file
-    for t in self.sedml.getListOfTasks():
-      model_source = self.sedml.getModel(t.getModelReference()).getSource()
-      # Import the model to COPASI
-      cop_datamodel = COPASI.CCopasiDataModel()
-      cop_datamodel.importSBML(model_source)
-      # Import simulation
-      sed_simulation = self.sedml.getSimulation(t.getSimulationReference())
-      # Case where the task is a uniform time course
-      if ( sed_simulation.getElementName() == "uniformTimeCourse" ):
-        cop_task = cop_datamodel.addTask(COPASI.CCopasiTask.timeCourse)
-        cop_problem = cop_task.getProblem()
-        # Required parameters are set from values in the input SED-ML file
-        cop_problem.setDuration( sed_simulation.getOutputEndTime() -
-                         sed_simulation.getOutputStartTime() )
-        cop_problem.setStepNumber(sed_simulation.getNumberOfPoints())
-        cop_problem.setOutputStartTime(sed_simulation.getOutputStartTime())
-        cop_problem.setTimeSeriesRequested(True)
-        # Deterministic method is chosen
-        # TODO: acquire it from KiSAO value in SED-ML file
-        cop_task.setMethodType(COPASI.CCopasiMethod.deterministic)
-        # Run
-        cop_task.process(True)
-        # Save the results
-        self.series = cop_task.getTimeSeries()
-      else:
-        # TODO: case of a generic simulation element
-        print("Something to be done with Simulation element here")
-
-## Class for SED-ML generic work flows using libSBMLSim as main simulation
-## engine.
-class SedMLFlow:
-  ## @var address
-  # Address of the SED-ML file associated with the object.
-  ## @var results
-  # A list of results for the object simulation runs.
+  ## @var outputs
+  # A list of Output elements
   ## @var sedml
   # A SED-ML document.
   ## @var tasks
-  # A list of task elements.
+  # A list of Task elements.
   
   ## Constructor.
   # @param self The object pointer.
@@ -89,8 +31,20 @@ class SedMLFlow:
     self.tasks = []
     # Parsing self.sedml for task elements
     for t in self.sedml.getListOfTasks():
+      # TODO: check whether the tools are set
       self.tasks.append(task.Task(t, self.sedml))
-    self.results = []
+    self.outputs = []
+    # Parsing self.sedml for output elements
+    for o in self.sedml.getListOfOutputs():
+      name = o.getElementName()
+      if name == "SedPlot2D":
+        self.outputs.append(output.Plot2D(o))
+      elif name == "SedPlot3D":
+        self.outputs.append(output.Plot3D(o))
+      elif name == "SedReport":
+        self.outputs.append(output.Report(o))
+      else:
+        self.outputs.append(output.Output(o))
   
   ## SED-ML compliance check function.
   # Check whether self.sedml is compliant with the SED-ML standard; if
@@ -112,36 +66,50 @@ class SedMLFlow:
              " compatibility errors with SED-ML L1." )
       return self.sedml
   
-  ## Runs the uniformTimeCourse encoded in self.sedml.
+  ## Executes the pipeline encoded in self.sedml.
+  # Each task in self.tasks is executed.
   # libSBMLSim is used as simulation engine.
   # @param self The object pointer.
-  def run(self):
+  def run_tasks(self):
     # Parse the list of tasks in the input file
-    for t in self.sedml.getListOfTasks():
-      model_source = self.sedml.getModel(t.getModelReference()).getSource()
-      # Import simulation
-      sed_simulation = self.sedml.getSimulation(t.getSimulationReference())
-      # Case where the task is a uniform time course
-      if ( sed_simulation.getElementName() == "uniformTimeCourse" ):
-        steps = sed_simulation.getNumberOfPoints()
-        start = sed_simulation.getOutputStartTime()
-        end = sed_simulation.getOutputEndTime()
-        step = (end - start) / steps
-        r = libsbmlsim.simulateSBMLFromFile(
-            model_source,
-            end,
-            step,
-            1,
-            0,
-            libsbmlsim.MTHD_RUNGE_KUTTA,
-            0)
-        self.results.append(
-            result.LibSBMLSimResult(r))
+    for t in self.tasks:
+      print "TODO"
   
-  ## Plots all the results stored in self.results
+  ## Parse self.outputs and produce the corresponding outputs.
   # @param self The object pointer.
   # @param interactive Boolean value stating whether the plots have to be
   #   drawn in interactive mode or not.
-  def plot_all_results(self, interactive):
-    for i in self.results:
-      i.plot2D_all(interactive)
+  def process_outputs(self, interactive):
+    for o in self.outputs:
+      print "TODO"
+  
+  ## Getter. Returns self.address.
+  # @param self The object pointer.
+  def get_address(self):
+    return self.address
+  
+  ## Getter. Returns self.outputs.
+  # @param self The object pointer.
+  def get_outputs(self):
+    return self.outputs
+  
+  ## Getter. Returns self.sedml.
+  # @param self The object pointer.
+  def get_sedml(self):
+    return self.sedml
+  
+  ## Getter. Returns a task referenced by the input id listed in self.tasks.
+  # @param self The object pointer.
+  # @param id The id of the task to be returned.
+  # @return task A task object.
+  def get_task_by_id(self, id):
+    for t in self.tasks:
+      if t.getId() == id:
+        return t
+    print("Task not found: " + id)
+    return 0
+  
+  ## Getter. Returns self.tasks.
+  # @param self The object pointer.
+  def get_tasks(self):
+    return self.tasks

@@ -8,6 +8,8 @@ import model, simulation
 
 ## Base representation of an atomic task in a SED-ML work flow.
 class Task:
+  ## @var id
+  # A unique identifier associated with the object.
   ## @var model
   # Reference to the model this object is about.
   ## @var result
@@ -20,9 +22,39 @@ class Task:
   # @param task A SED-ML task.
   # @param sedfile The SED-ML file from which the input task comes from.
   def __init__(self, task, sedfile):
+    self.id = task.getId()
     self.model = model.SBMLModel(sedfile.getModel(task.getModelReference()))
     self.simulation = simulation.Simulation(
       sedfile.getSimulation(task.getSimulationReference()))
+  
+  ## Default run function.
+  # Uses libSBMLSim as simulation engine; encoded Task has to be a uniform
+  # time course.
+  # @param self The object pointer.
+  def run(self):
+    if ( self.simulation.getElementName() == "uniformTimeCourse" ):
+      steps = self.simulation.getNumberOfPoints()
+      start = self.simulation.getOutputStartTime()
+      end = self.simulation.getOutputEndTime()
+      step = (end - start) / steps
+      # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
+      r = libsbmlsim.simulateSBMLFromFile(
+          self.model.get_address(),
+          end,
+          step,
+          1,
+          0,
+          libsbmlsim.MTHD_RUNGE_KUTTA,
+          0)
+      # TODO: process the result - libNUML dependent
+    else:
+      print "TODO"
+
+  ## Getter. Returns self.id.
+  # @param self The object pointer.
+  # @return self.id
+  def get_id(self):
+    return self.id
   
   ## Getter. Returns self.model.
   # @param self The object pointer.
@@ -64,4 +96,24 @@ class CopasiTask(Task):
   ## Execute the task.
   # @param self The object pointer.
   def run(self):
-    print "TODO"
+    # TODO: direct copy/paste from the not-so-long dead CopasiFlow class; to
+    # be fixed.
+    if ( sed_simulation.getElementName() == "uniformTimeCourse" ):
+      cop_task = cop_datamodel.addTask(COPASI.CCopasiTask.timeCourse)
+      cop_problem = cop_task.getProblem()
+      # Required parameters are set from values in the input SED-ML file
+      cop_problem.setDuration( sed_simulation.getOutputEndTime() -
+                       sed_simulation.getOutputStartTime() )
+      cop_problem.setStepNumber(sed_simulation.getNumberOfPoints())
+      cop_problem.setOutputStartTime(sed_simulation.getOutputStartTime())
+      cop_problem.setTimeSeriesRequested(True)
+      # Deterministic method is chosen
+      # TODO: acquire it from KiSAO value in SED-ML file
+      cop_task.setMethodType(COPASI.CCopasiMethod.deterministic)
+      # Run
+      cop_task.process(True)
+      # Save the results
+      self.series = cop_task.getTimeSeries()
+    else:
+      # TODO: case of a generic simulation element
+      print("Something to be done with Simulation element here")
