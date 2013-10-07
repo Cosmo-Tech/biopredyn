@@ -7,7 +7,7 @@
 import libsedml
 from matplotlib import pyplot as plt
 import numpy as np
-import model, result, task
+import model, output, result, task
 
 ## Class for SED-ML generic work flows.
 class WorkFlow:
@@ -73,7 +73,7 @@ class WorkFlow:
   def run_tasks(self):
     # Parse the list of tasks in the input file
     for t in self.tasks:
-      print "TODO"
+      t.run()
   
   ## Parse self.outputs and produce the corresponding outputs.
   # @param self The object pointer.

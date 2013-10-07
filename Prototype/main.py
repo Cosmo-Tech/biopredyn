@@ -86,12 +86,11 @@ for o, a in opts:
     model = model.SBMLModel(sys.argv[1])
     model.check()
   elif o == "--sedml":
-    flow = workflow.SedMLFlow(sys.argv[1])
-    flow.run()
-    flow.plot_all_results(True)
+    flow = workflow.WorkFlow(sys.argv[1])
+    flow.run_tasks()
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":
-    flow = workflow.CopasiFlow(sys.argv[1])
+    flow = workflow.WorkFlow(sys.argv[1])
     flow.run()
     flow.plot()

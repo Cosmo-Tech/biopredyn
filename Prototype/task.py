@@ -4,6 +4,10 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
+import sys
+# FIXME: libsbmlsim should be installed in PYTHONPATH
+sys.path.append('/usr/local/share/libsbmlsim/python/')
+import libsbmlsim
 import model, simulation
 
 ## Base representation of an atomic task in a SED-ML work flow.
@@ -23,19 +27,25 @@ class Task:
   # @param sedfile The SED-ML file from which the input task comes from.
   def __init__(self, task, sedfile):
     self.id = task.getId()
-    self.model = model.SBMLModel(sedfile.getModel(task.getModelReference()))
-    self.simulation = simulation.Simulation(
-      sedfile.getSimulation(task.getSimulationReference()))
+    self.model = model.SBMLModel(
+      sedfile.getModel(task.getModelReference()).getSource())
+    simu = sedfile.getSimulation(task.getSimulationReference())
+    if simu.getElementName() == "uniformTimeCourse":
+      self.simulation = simulation.UniformTimeCourse(simu)
+    else:
+      self.simulation = simulation.Simulation(simu)
   
   ## Default run function.
   # Uses libSBMLSim as simulation engine; encoded Task has to be a uniform
   # time course.
   # @param self The object pointer.
   def run(self):
-    if ( self.simulation.getElementName() == "uniformTimeCourse" ):
-      steps = self.simulation.getNumberOfPoints()
-      start = self.simulation.getOutputStartTime()
-      end = self.simulation.getOutputEndTime()
+    if ( self.simulation.get_type() == "uniformTimeCourse" ):
+      steps = self.simulation.get_number_of_points()
+      start = self.simulation.get_output_start_time()
+      end = self.simulation.get_output_end_time()
+      # "step" is computed with respect to the output start / end times, as
+      # number_of_points is defined between these two points:
       step = (end - start) / steps
       # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
       r = libsbmlsim.simulateSBMLFromFile(
