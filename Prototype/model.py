@@ -4,6 +4,7 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
+import sys
 import libsbml
 
 ## Class for SBML model manipulation.
