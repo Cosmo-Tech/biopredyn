@@ -112,5 +112,6 @@ class WorkFlow:
   
   ## Getter. Returns self.tasks.
   # @param self The object pointer.
+  # @return self.tasks
   def get_tasks(self):
     return self.tasks

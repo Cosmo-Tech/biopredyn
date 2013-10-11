@@ -32,6 +32,7 @@ class Plot2D(Output):
   # @param plot_2d A SedPlot2D object.
   def __init__(self, plot_2d):
     self.id = plot_2d.getId()
+    self.curves = []
     for p in plot_2d.getNumCurves():
       self.curves.append(data.Curve(plot_2d.getCurve(p)))
   
@@ -39,6 +40,12 @@ class Plot2D(Output):
   # @param self The object pointer.
   def plot_curves(self):
     print "TODO"
+  
+  ## Getter. Returns self.curves.
+  # @param self The object pointer.
+  # @return self.curves
+  def get_curves(self):
+    return self.curves
 
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
@@ -50,6 +57,7 @@ class Plot3D(Output):
   # @param plot_3d A SedPlot3D object.
   def __init__(self, plot_3d):
     self.id = plot_3d.getId()
+    self.surfaces = []
     for p in plot_3d.getNumSurfaces():
       self.surfaces.append(data.Curve(plot_3d.getSurface(p)))
   
@@ -57,6 +65,12 @@ class Plot3D(Output):
   # @param self The object pointer.
   def plot_surfaces(self):
     print "TODO"
+  
+  ## Getter. Returns self.surfaces.
+  # @param self The object pointer.
+  # @return self.surfaces
+  def get_surfaces(self):
+    return self.surfaces
 
 ## Output-derived class for reports.
 class Report(Output):

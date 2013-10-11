@@ -6,7 +6,8 @@
 
 ## Base class for N-dimensional data set description.
 class Data:
-  ## @var id A unique identifier.
+  ## @var id
+  # A unique identifier.
   
   ## Constructor.
   # @param self The object pointer.
