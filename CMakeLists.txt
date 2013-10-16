@@ -8,9 +8,14 @@ include(FindPythonInterp)
 include(FindPythonLibs)
 
 set(
-    CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-    "${CMAKE_CURRENT_SOURCE_DIR}/Prototype/CMake/"
-    )
+  CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+  "${CMAKE_CURRENT_SOURCE_DIR}/Prototype/CMake/"
+  )
+
+set(
+  CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/Prototype/bin/"
+  CACHE PATH "BioPreDyn install prefix" FORCE
+  )
 
 option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" ON)
 option(BPD_GENERATE_LIBBIOPREDYN "Build libBioPreDyn library" ON)
