@@ -17,8 +17,9 @@ set(
   CACHE PATH "BioPreDyn install prefix" FORCE
   )
 
-option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" ON)
-option(BPD_GENERATE_LIBBIOPREDYN "Build libBioPreDyn library" ON)
+option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" OFF)
+option(BPD_GENERATE_LIBBIOPREDYN "Build libBioPreDyn library" OFF)
+option(WITH_PYTHON "Build Python wrappers for compiled libraries" ON)
 
 if (BPD_GENERATE_LIBBIOPREDYN)
   # Parsing library for biopredyn.xsd based XML files
