@@ -1,0 +1,247 @@
+                    LibSBMLSim API Documentation
+
+                     LibSBMLSim development team
+             http://fun.bio.keio.ac.jp/software/libsbmlsim/
+                  mailto:sbmlsim@fun.bio.keio.ac.jp
+
+-- Last modified: Wed, 02 Jan 2013 23:21:37 +0900
+
+* Overview
+  LibSBMLSim is a library for simulating an SBML model which contains
+  Ordinary Differential Equations (ODEs). LibSBMLSim provides simple
+
+  LibSBMLSim can be used to create your own SBML supported simulator,
+  plug-in, web based application and web services. The API is quite
+  straight forward. You can run a simulation and generate a result
+  file in Comma Separated Values (CSV) with a few lines of codes.
+  === Python ============================
+    from libsbmlsim import *
+    r = simulateSBMLFromFile('sbml.xml', 20.0, 0.1, 10, 0, MTHD_RUNGE_KUTTA, 0)
+    write_csv(r, 'result.csv')
+  =======================================
+  
+* LibSBMLSim API and its language bindings
+LibSBMLSim provides following functions as libSBMLSim C API.
+  3 functions for simulation
+  3 functions for exporting / printing results
+  2 functions for error handling
+  1 function  for freeing result object.
+
+- C, C++ API
+[Simulation]
+  + myResult* simulateSBMLModel(Model_t *m, double sim_time, double dt,
+                                int print_interval, int print_amount,
+                                int method, int use_lazy_method,
+                                double atol, double rtol, double facmax);
+    simulateSBMLModel() will run a simulation with given Model_t* object.
+    The arguments of simulateSBMLModel() is as follows:
+      arg0 ... SBML Model object (Model_t* comes from libSBML)
+      arg1 ... Simulation time
+      arg2 ... dt for each integration
+      arg3 ... print interval
+      arg4 ... will print species' value as 'amount' or not (1 == yes).
+      arg5 ... Integration method.
+               Please see libsbmlsim/methods.h for further information.
+      arg6 ... will use lazy method for newton method or not (1 == yes).
+      arg7 ... Absolute error tolerance
+      arg8 ... Relative error tolerance
+      arg9 ... Maximum acceptable increasing factor
+    "Absolute / Relative error tolerance" and "maximum acceptable
+    increasing factor" values are used for variable step integration to detect
+    accurate (acceptable) integration. If you don't know the exact value for
+    above 3 values, please just assign "0.0" for all 3 values, then libsbmlsim
+    will use the default values for the integration.
+    Return value is myResult*, which contains all Ids of Species, Parameters,
+    Compartments.
+
+  + myResult* simulateSBMLFromString(const char* str, double sim_time,
+                                double dt,
+                                int print_interval, int print_amount,
+                                int method, int use_lazy_method);
+    simulateSBMLFromString() will run a simulation with given SBML XML string.
+    The arguments of simulateSBMLFromString() is as follows:
+      arg0 ... SBML XML string
+      arg1 ... Simulation time
+      arg2 ... dt for each integration
+      arg3 ... print interval
+      arg4 ... will print species' value as 'amount' or not (1 == yes).
+      arg5 ... Integration method.
+               Please see libsbmlsim/methods.h for further information.
+      arg6 ... will use lazy method for newton method or not (1 == yes).
+
+  + myResult* simulateSBMLFromFile(const char* file, double sim_time, double dt,
+                                int print_interval, int print_amount,
+                                int method, int use_lazy_method);
+    simulateSBMLFromFile() will run a simulation with given SBML Model_t* object.
+    The arguments of simulateSBMLFromFile() is as follows:
+      arg0 ... SBML file to simulate
+      arg1 ... Simulation time
+      arg2 ... dt for each integration
+      arg3 ... print interval
+      arg4 ... will print species' value as 'amount' or not (1 == yes).
+      arg5 ... Integration method.
+               Please see libsbmlsim/methods.h for further information.
+      arg6 ... will use lazy method for newton method or not (1 == yes).
+
+  + Example:
+    Following code will run a simulation
+    === C code ============================
+    myResult *r = simulateSBMLFromFile("sbml.xml", 20, 0.1, 10, 0, MTHD_RUNGE_KUTTA, 0);
+    =======================================
+    for a model 'sbml.xml' to time=20 with dt=0.1, print_interval=10
+    by "4th-order Runge-Kutta Method". The result will be stored as
+    "concentration" for each species, and won't use lazy method during
+    the integration. Please call free_myResult() function when you
+    finished using myResult object and free it.
+
+[Results]
+  + void print_result(myResult*);
+    print_result() will output simulation result to stdout.
+    The arguments of print_result() is as follows:
+      arg0 ... Pointer to myResult data structure, which contains
+               simulation result.
+
+  + void write_result(myResult*, const char*);
+    write_result() will output simulation result to specified file.
+    The result file stores simulation result as Space Separated Values.
+    The arguments of write_result() is as follows:
+      arg0 ... Pointer to myResult data structure, which contains
+               simulation result.
+      arg1 ... Filename of result file.
+
+  + void write_csv(myResult*, const char*);
+    write_csv() will output simulation result to specified file.
+    The result file stores simulation result as Comma Separated Values.
+    The arguments of write_csv() is as follows:
+      arg0 ... Pointer to myResult data structure, which contains
+               simulation result.
+      arg1 ... Filename of result file.
+
+[Error handling]
+  + int myResult_isError(myResult*);
+    myResult_isError() returns 1 if the simulation caused an error
+    during the simulation. This function might be useful to check
+    whether the simulation had successfully finished or not.
+    The arguments of myResult_isError() is as follows:
+      arg0 ... Pointer to myResult data structure, which contains
+               simulation result.
+
+  + const char *myResult_getErrorMessage(myResult*);
+    myResult_getErrorMessage() returns error message if the simulation
+    caused an error during the simulation.
+    The arguments of myResult_getErrorMessage() is as follows:
+      arg0 ... Pointer to myResult data structure, which contains
+               simulation result.
+
+[Freeing result object]
+  + void free_myResult(myResult*);
+    free_myResult() frees myResult object. You have to free
+    myResult object with this function when you finished using the object.
+    The arguments of myResult_isError() is as follows:
+      arg0 ... Pointer to myResult data structure, which contains
+               simulation result.
+
+[List of integrators]
+LibSBMLSim supports following integrators (the following example code uses
+4th order Runge-Kutta as an integrator).
+- Explicit methods
+  Euler : MTHD_EULER
+  1st order Adams-Bashforth : MTHD_ADAMS_BASHFORTH_1
+  2nd order Adams-Bashforth : MTHD_ADAMS_BASHFORTH_2
+  3rd order Adams-Bashforth : MTHD_ADAMS_BASHFORTH_3
+  4th order Adams-Bashforth : MTHD_ADAMS_BASHFORTH_4
+  4th order Runge-Kutta : MTHD_RUNGE_KUTTA
+  5th order Runge-Kutta Fehlberg (variable step size): MTHD_RUNGE_KUTTA_FEHLBERG_5
+  5th order Cash-Karp (variable step size): MTHD_NAME_CASH_KARP
+
+- Implicit methods
+  Backward-Euler : MTHD_BACKWARD_EULER
+  Crank-Nicolson : MTHD_CRANK_NICOLSON
+  2nd order Adams-Moulton : MTHD_ADAMS_MOULTON_2
+  3rd order Adams-Moulton : MTHD_ADAMS_MOULTON_3
+  4th order Adams-Moulton : MTHD_ADAMS_MOULTON_4
+  2nd order Backward Difference : MTHD_BACKWARD_DIFFERENCE_2
+  3rd order Backward Difference : MTHD_BACKWARD_DIFFERENCE_3
+  4th order Backward Difference : MTHD_BACKWARD_DIFFERENCE_4
+
+[Example]
+Following code will run a simulation and output its result in CSV format.
+  === C code ============================
+  #include "libsbmlsim/libsbmlsim.h"
+
+  int main(void) {
+    /*
+     * Simulate sbml.xml to time=20 with dt=0.1, print_interval=10
+     * by 4th-order Runge-Kutta Method.
+     */
+    myResult *r = simulateSBMLFromFile("sbml.xml", 20, 0.1, 10, 0, MTHD_RUNGE_KUTTA, 0);
+    write_csv(r, "result.csv");     /* Export result as CSV file */
+    free_myResult(r);               /* Free myResult object */
+    return 0;
+  }
+  =====================================
+
+- Java, Python, Ruby, C# bindings
+  LibSBMLSim API is also provided for several language bindings.
+  Each C API is available as a method in the language bindings.
+  Freeing myResult object is automatically done by deconstuctor,
+  so you don't have to call free_myResult() method in your code.
+  Example code for each language bindings, which will run a simulation
+  with same conditions described in above C API example is as follows:
+
+  === Java ==============================
+  import jp.ac.keio.bio.fun.libsbmlsim.*;
+  ...
+  System.loadLibrary("sbmlsimj");
+  myResult r = libsbmlsim.simulateSBMLFromFile("sbml.xml", 20.0, 0.1, 10, 0, libsbmlsim.MTHD_RUNGE_KUTTA, 0);
+  libsbmlsim.write_csv(r, "result.csv");
+  =======================================
+  
+  === Python ============================
+  from libsbmlsim import *
+  r = simulateSBMLFromFile('sbml.xml', 20.0, 0.1, 10, 0, MTHD_RUNGE_KUTTA, 0)
+  write_csv(r, 'result.csv')
+  =======================================
+  
+  === Ruby ==============================
+  require 'libsbmlsim'
+  r = Libsbmlsim::simulateSBMLFromFile('sbml.xml', 20.0, 0.1, 10, 0, Libsbmlsim::MTHD_RUNGE_KUTTA, 0)
+  Libsbmlsim::write_csv(r, 'result.csv')
+  =======================================
+  
+  === C# ================================
+  using System;
+  public class Test
+  {
+    static void Main()
+      {
+          myResult result = libsbmlsim.simulateSBMLFromFile("sbml.xml", 20.0, 0.1, 10, 0, libsbmlsim.MTHD_RUNGE_KUTTA, 0);
+          libsbmlsim.write_csv(result, "test.csv");
+      }
+  }
+  =======================================
+               
+  To access a member in myResult class (ex. Species id, value of Species,
+  time, Parameters etc.) from language bindings, libSBMLSim provides
+  convenient methods to access its value, contents directly.
+  Here is an example Python code to access its contents of myResult.
+
+  === Python ==============================
+  require 'libsbmlsim'
+  r = Libsbmlsim::simulateSBMLFromFile('sbml.xml', 20.0, 0.1, 10, 0, Libsbmlsim::MTHD_RUNGE_KUTTA, 0)
+  numOfRows = result.getNumOfRows()
+  numOfSp = result.getNumOfSpecies()
+  t = result.getTimeValueAtIndex(0)
+  print t,
+  sname = result.getSpeciesNameAtIndex(0)
+  v = result.getSpeciesValueAtIndex(sname, 0)
+  print str(v),
+  =======================================
+
+  Please see the 'examples' directory for further information.
+  The 'examples' directory contains sample code for test application
+  in several programming languages (C, C++, Java, Python, Ruby, C# and Perl).
+
+Have fun!
+-- 
+LibSBMLSim development team <sbmlsim@fun.bio.keio.ac.jp>
