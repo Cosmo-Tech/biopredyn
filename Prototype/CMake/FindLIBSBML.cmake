@@ -12,18 +12,18 @@ find_path(LIBSBML_INCLUDE_DIR
   PATHS /usr/include
         /usr/local/include
         /opt/local/include
-  HINTS ${PC_LIBSBML_INCLUDEDIR} ${PC_LIBSBML_INCLUDE_DIRS} )
+  )
 
 find_library(LIBSBML_LIBRARY
   NAMES libsbml.so libsbml.dll libsbml
   PATHS /usr/lib
         /usr/local/lib
         /opt/local/lib
-  HINTS ${PC_LIBSBML_LIBDIR} ${PC_LIBSBML_LIBRARY_DIRS} )
+  )
 
 IF(LIBSBML_LIBRARY)
   SET(LIBSBML_FOUND 1)
-  MESSAGE(STATUS "Found libSBML: ${XSD_EXECUTABLE}")
+  MESSAGE(STATUS "Found libSBML: ${LIBSBML_LIBRARY}")
 ENDIF()
 
 IF(NOT LIBSBML_FOUND)

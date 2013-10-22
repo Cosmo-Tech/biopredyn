@@ -12,10 +12,10 @@ add_custom_command(OUTPUT ${OUTPUT}
   COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT}
   DEPENDS ${DEPS})
 
-add_custom_target(target ALL DEPENDS ${OUTPUT})
+add_custom_target(bpd_engine ALL DEPENDS ${OUTPUT})
 
 install(
-  CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install)"
+  CODE "execute_process(COMMAND ${PYTHON} ${SETUP_PY} install)"
   )
 
 # First test: opens a file and test whether it is SBML compliant
