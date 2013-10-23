@@ -4,20 +4,22 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
-import site
+import sys
 import os
-# Path to libsedml python package
-site.addsitedir(
-  os.path.join(
-    os.path.dirname(__file__), '../../bin/lib/python2.7/site-packages'
-  )
-)
-# Path to lisbmlsim python package
-site.addsitedir(
-  os.path.join(
-    os.path.dirname(__file__), '../../bin/share/libsbmlsim/python'
-  )
-)
+
+# Find the path libsedml Python package
+for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../../bin')):
+  for filename in f:
+    if filename == "libsedml.py":
+      sys.path.append(os.path.abspath(r))
+      break
+
+# Find the path libsbmlsim Python package
+for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../../bin')):
+  for filename in f:
+    if filename == "libsbmlsim.py":
+      sys.path.append(os.path.abspath(r))
+      break
 
 import getopt
 import sys

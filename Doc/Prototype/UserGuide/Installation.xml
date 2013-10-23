@@ -225,11 +225,9 @@
         <title>Basic packages</title>
         <programlisting>
   sudo apt-get install cmake
-  sudo apt-get install
-  cmake-curses-gui
+  sudo apt-get install cmake-curses-gui
   sudo apt-get install subversion
-  sudo apt-get
-  install git
+  sudo apt-get install git
   sudo apt-get install python2.7
         </programlisting>
       </section>
@@ -237,8 +235,7 @@
         <title>libSBML (with GNU make)</title>
         <para>Source code must be first checked-out using Subversion:</para>
         <programlisting>
-  svn checkout
-  svn://svn.code.sf.net/p/sbml/code/trunk sbml-code
+  svn checkout svn://svn.code.sf.net/p/sbml/code/trunk sbml-code
         </programlisting>
         <para>Through command line, go to the freshly checked-out directory,
         and execute the following commands:</para>
@@ -247,16 +244,14 @@
   ./configure
   --prefix="/where/to/install/libsbml" --with-python
   make
-  make
-  install
+  make install
         </programlisting>
       </section>
       <section>
         <title>libSEDML (with CMake)</title>
         <para>Source code must be first checked-out using git:</para>
         <programlisting>
-  git clone
-  https://github.com/fbergmann/libSEDML.git
+  git clone https://github.com/fbergmann/libSEDML.git
         </programlisting>
         <para>Go to the freshly checked-out directory and execute the
         following commands:</para>
@@ -456,15 +451,30 @@
           a command shell and type:
         </para>
         <programlisting>
-    sudo easy_install matplotlib
+  sudo easy_install matplotlib
         </programlisting>
       </section>
     </section>
     <section>
       <title>Windows XP 32</title>
-      <para>
-        <emphasis role="em">TODO</emphasis>
-      </para>
+      <section>
+        <title>CMake</title>
+        <para>
+          <emphasis role="em">TODO</emphasis>
+        </para>
+      </section>
+      <section>
+        <title>Microsoft Visual Studio 2010</title>
+        <para>
+          <emphasis role="em">TODO</emphasis>
+        </para>
+      </section>
+      <section>
+        <title>libSBML</title>
+        <para>
+          <emphasis role="em">TODO</emphasis>
+        </para>
+      </section>
     </section>
   </section>
   <section>
@@ -481,7 +491,7 @@
       </listitem>
       <listitem>
         <para>
-          libSEDML installation (Ubuntu 11.10): Python files are not
+          libSEDML installation (Ubuntu 11.10 and later): Python files are not
           completely installed after running the installation
           process. A
           way to complete the installation consists in

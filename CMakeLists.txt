@@ -17,6 +17,10 @@ set(
   CACHE PATH "BioPreDyn install prefix" FORCE
   )
 
+set(
+  CMAKE_BUILD_TYPE "Release"
+  )
+
 option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" OFF)
 option(BPD_GENERATE_LIBBIOPREDYN "Build libBioPreDyn library" OFF)
 option(WITH_PYTHON "Build Python wrappers for compiled libraries" ON)
