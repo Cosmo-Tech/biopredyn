@@ -15,15 +15,5 @@ add_custom_command(OUTPUT ${OUTPUT}
 add_custom_target(bpd_engine ALL DEPENDS ${OUTPUT})
 
 install(
-  CODE "execute_process(COMMAND ${PYTHON} ${SETUP_PY} install)"
+  CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install)"
   )
-
-# First test: opens a file and test whether it is SBML compliant
-add_test(SBMLComplianceTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn/main.py
-  ${CMAKE_CURRENT_SOURCE_DIR}/../data/FEBS.xml --sbml)
-
-# Second test: opens a file, test whether it is SED-ML compliant, execute it
-add_test(SedMLComplianceTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn/main.py
-  ${CMAKE_CURRENT_SOURCE_DIR}/../data/FEBS_UniformTimeCourse.xml --sedml)
