@@ -7,17 +7,24 @@
 import sys
 import os
 
-# Find the path libsedml Python package
+# Find the path to the libsedml Python package
 for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../../bin')):
   for filename in f:
     if filename == "libsedml.py":
       sys.path.append(os.path.abspath(r))
       break
 
-# Find the path libsbmlsim Python package
+# Find the path to the libsbmlsim Python package
 for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../../bin')):
   for filename in f:
     if filename == "libsbmlsim.py":
+      sys.path.append(os.path.abspath(r))
+      break
+
+# Find the path to the libnuml Python package
+for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../../bin')):
+  for filename in f:
+    if filename == "libnuml.py":
       sys.path.append(os.path.abspath(r))
       break
 
@@ -29,6 +36,7 @@ import matplotlib.pyplot as plt
 
 import libsbml
 import libsedml
+import libnuml
 import model
 import workflow
 
@@ -108,6 +116,7 @@ for o, a in opts:
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":
+    # TODO: run and plot methods are not defined in Workflow class anymore
     flow = workflow.WorkFlow(sys.argv[1])
     flow.run()
     flow.plot()

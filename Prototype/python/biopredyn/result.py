@@ -5,6 +5,7 @@
 ## @version: $Revision$
 
 import libsbmlsim
+import libnuml
 from matplotlib import pyplot as plt
 
 ## Base class for simulation results
@@ -79,6 +80,7 @@ class CopasiResult:
   # @return A list of quantity values for the input species over time.
   def get_quantities_per_species(self, species):
     quantities = []
+    # TODO
     return quantities
   
   ## Returns the list of all time steps in self.result.
@@ -86,4 +88,29 @@ class CopasiResult:
   # @return The list of time steps.
   def get_time_steps(self):
     time = []
+    # TODO
     return time
+
+## Derived class for NUML formatted results
+class NuMLResult(Result):
+  
+  ## Returns a list containing all the quantity values for the input species
+  ## over time.
+  # @param self The object pointer.
+  # @param species The species which quantity values are wanted.
+  # @param component Index of the ResultComponent to be considered; default 0.
+  # @return A list of quantity values for the input species over time.
+  def get_quantities_per_species(self, species, component=0):
+    quantities = []
+    component = self.result.getResultComponents().get(component)
+    # TODO - The "get" problem in libnuml should be solved first.
+    return quantities
+  
+  ## Returns the list of all time steps in self.result.
+  # @param self The object pointer.
+  # @return The list of time steps.
+  def get_time_steps(self):
+    time = []
+    # TODO
+    return time
+  

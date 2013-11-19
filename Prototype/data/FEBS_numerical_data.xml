@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<numl version="1" level="1" xmlns="http://www.numl.org/numl/level1/version1">
+  <ontologyTerms>
+    <ontologyTerm id="term1" term="time" sourceTermId="SBO:0000347" ontologyURI="http://www.ebi.ac.uk/sbo/" />
+    <ontologyTerm id="term2" term="concentration" sourceTermId="SBO:0000196" ontologyURI="http://www.ebi.ac.uk/sbo/" />
+  </ontologyTerms>
+  <resultComponents>
+    <resultComponent id="component1">
+      <dimensionDescription>
+        <compositeDescription name="Time" ontologyTerm="term1" indexType="double">
+          <compositeDescription name="Species" indexType="string">
+            <atomicDescription name="Concentration" ontologyTerm="term2" valueType="double" />
+          </compositeDescription>
+        </compositeDescription>
+      </dimensionDescription>
+      <dimension>
+        <compositeValue indexValue="1">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.021426</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.021426</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="2">
+          <compositeValue indexValue="C">
+            <atomicValue>0.360760</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.006760</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="3">
+          <compositeValue indexValue="C">
+            <atomicValue>0.161457</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.004460</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="4">
+          <compositeValue indexValue="C">
+            <atomicValue>0.052399</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.006420</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="5">
+          <compositeValue indexValue="C">
+            <atomicValue>0.004292</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.016978</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="6">
+          <compositeValue indexValue="C">
+            <atomicValue>0.027122</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.019513</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="7">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.018864</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.021577</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="8">
+          <compositeValue indexValue="C">
+            <atomicValue>0.009392</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.008426</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="9">
+          <compositeValue indexValue="C">
+            <atomicValue>0.032753</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.032409</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="10">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.006455</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.006578</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="11">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.034747</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.034790</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="12">
+          <compositeValue indexValue="C">
+            <atomicValue>0.000320</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.000304</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="13">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.035073</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.035079</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="14">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.017694</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.017696</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="15">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.024451</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.024452</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="16">
+          <compositeValue indexValue="C">
+            <atomicValue>0.024254</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.024254</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="17">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.005446</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.005446</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="18">
+          <compositeValue indexValue="C">
+            <atomicValue>-0.022192</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.022192</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="19">
+          <compositeValue indexValue="C">
+            <atomicValue>0.022681</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.022681</atomicValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="20">
+          <compositeValue indexValue="C">
+            <atomicValue>0.009495</atomicValue>
+          </compositeValue>
+          <compositeValue indexValue="Error">
+            <atomicValue>0.009495</atomicValue>
+          </compositeValue>
+        </compositeValue>
+      </dimension>
+    </resultComponent>
+  </resultComponents>
+</numl>
