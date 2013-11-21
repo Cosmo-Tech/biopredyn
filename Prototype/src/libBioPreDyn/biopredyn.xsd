@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Describes the structure of an operation realized by a tool given a series
   of arguments. -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:bpd="urn:BioPreDyn"
+  targetNamespace="urn:BioPreDyn">
 
   <xsd:simpleType name="ToolType">
     <xsd:restriction base="xsd:string">
@@ -14,12 +17,12 @@
 
   <xsd:complexType name="BioPreDynEngineType">
     <xsd:sequence>
-      <xsd:element name="tool" type="ToolType" />
+      <xsd:element name="tool" type="bpd:ToolType" />
       <xsd:element name="argument" minOccurs="0" maxOccurs="unbounded"
         type="xsd:anyType"/>
     </xsd:sequence>
   </xsd:complexType>
 
-  <xsd:element name="biopredyn-engine" type="BioPreDynEngineType" />
+  <xsd:element name="biopredyn-engine" type="bpd:BioPreDynEngineType" />
 
 </xsd:schema>
