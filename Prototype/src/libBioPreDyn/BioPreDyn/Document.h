@@ -1,4 +1,13 @@
+/*=========================================================================
 
+  Program: BioPreDyn Library (BioPreDyn)
+  Language: C++
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2013] BioPreDyn $
+
+=========================================================================*/
  //
  //  This file was automatically generated using XmlPlus xsd2cpp tool.
  //  Please do not edit.

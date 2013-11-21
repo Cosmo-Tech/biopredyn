@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2013] BioPreDyn $
+-->
 <!-- Describes the structure of an operation realized by a tool given a series
   of arguments. -->
 <xsd:schema
