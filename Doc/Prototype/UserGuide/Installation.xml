@@ -11,449 +11,139 @@
 <section>
   <title>Installation</title>
   <section>
-    <title>Dependencies</title>
-    <itemizedlist spacing="compact">
-      <listitem>
-        <para>
-          <ulink url="http://www.cmake.org/">CMake</ulink>: software build
-          system.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="http://git-scm.com/">git</ulink>: version control system;
-          required for cloning the libSEDML repository on GitHub.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="http://www.python.org/">Python</ulink>: version 2.7 or
-          more.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="http://sbml.org/Software/libSBML">libSBML</ulink>: library
-          for SBML file manipulation; do not forget to build the library with
-          Python bindings enabled.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="https://github.com/fbergmann/libSEDML">libSEDML</ulink>:
-          library for SED-ML file manipulation; clone the
-          <ulink url="https://github.com/fbergmann/libSEDML.git">
-          https://github.com/fbergmann/libSEDML.git</ulink> repository with git
-          and build the library with CMake, as described in the README.md file.
-          Note that libSBML is a pre-requisite for libSEDML.
-        </para>
-          </listitem>
-      <listitem>
-        <para>
-          <ulink url="http://fun.bio.keio.ac.jp/software/libsbmlsim/">liSBMLSim
-          </ulink>: library for SBML model simulation. Note that libSBML is a
-          pre-requisite for libSBMLSim installation. Dependency:
-          <itemizedlist>
-            <listitem>
-              <para>
-                <ulink url="http://swig.org">SWIG 2.0</ulink>: language
-                interfacing tool for C/C++ application. Dependency:
-                <itemizedlist spacing="compact">
-                  <listitem>
-                    <para>
-                      <ulink url="http://www.gnu.org/software/octave/">Octave
-                      </ulink>: software tool for numerical computations.
-                    </para>
-                  </listitem>
-                </itemizedlist>
-              </para>
-            </listitem>
-          </itemizedlist>
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="http://sourceforge.net/projects/opencobra/files/python/cobra/0.2.1/">
-          COBRApy</ulink>: library of tools for systems biology model analysis,
-          originally a Matlab toolbox; a Python version is now available.
-          Dependency:
-          <itemizedlist spacing="compact">
-            <listitem>
-              <para>
-                <ulink url="http://tfinley.net/software/pyglpk/">pyGLPK</ulink>
-                solver.
-              </para>
-            </listitem>
-          </itemizedlist>
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="http://www.copasi.org">COPASI</ulink> Python bindings:
-          library for the simulation and analysis of biochemical networks.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="http://www.ebi.ac.uk/~cokelaer/cellnopt/wrapper/">
-          CellNOpt.wrapper</ulink>: Python wrapper for CellNOptR, a package for
-          signalling pathways optimization in R. It requires:
-          <itemizedlist spacing="compact">
-            <listitem>
-              <para>
-                <ulink url="http://www.r-project.org/">R</ulink>
-              </para>
-            </listitem>
-            <listitem>
-              <para>
-                Windows 32 specific dependencies:
-                <itemizedlist spacing="compact">
-                  <listitem>
-                    <para>
-                      <ulink url="http://rpy.sourceforge.net/rpy2.html">rpy2
-                      </ulink>, a Python interface for R.
-                    </para>
-                  </listitem>
-                  <listitem>
-                    <para>
-                      <ulink url="http://sourceforge.net/projects/pywin32">
-                      pywin32</ulink>, a Win32 API for Python.
-                    </para>
-                  </listitem>
-                </itemizedlist>
-              </para>
-            </listitem>
-          </itemizedlist>
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <ulink url="https://pypi.python.org/pypi/bioservices">BioServices
-          </ulink>: Python library for bioinformatics web services access;
-          deliverable 1.2 of project BioPreDyn.
-        </para>
-      </listitem>
-      <listitem>
-        <para><ulink url="http://matplotlib.org/index.html">matplotlib</ulink>:
-        Python plotting library.
-        </para>
-      </listitem>
-    </itemizedlist>
-    <table id="dependency_table">
-      <caption>BioPreDyn prototype dependencies</caption>
-      <thead>
-        <tr>
-          <td>Library</td>
-          <td>Available languages</td>
-          <td>Dependencies</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>libSBML</td>
-          <td>C++, C#, Java, Matlab, Octave, Python, C, Perl, Ruby</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>libSEDML</td>
-          <td>C++, C#, Java, Python, R, Ruby</td>
-          <td>libSBML</td>
-        </tr>
-        <tr>
-          <td>libSBMLSim</td>
-          <td>C++, C#, Java, Python, Ruby</td>
-          <td>libSBML</td>
-        </tr>
-        <tr>
-          <td>openCobra</td>
-          <td>Matlab, Python</td>
-          <td>PyGLPK</td>
-        </tr>
-        <tr>
-          <td>COPASI</td>
-          <td>C++, Java, Python, Perl, .NET</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>CellNOpt</td>
-          <td>Matlab, Python, R</td>
-          <td>R, rpy2 (Windows), pywin32 (Windows)</td>
-        </tr>
-        <tr>
-          <td>BioServices</td>
-          <td>Python</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>libKiSAO</td>
-          <td>Java</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>PyGLPK</td>
-          <td>Python</td>
-          <td>GLPK, GMP</td>
-        </tr>
-        <tr>
-          <td>GLPK</td>
-          <td>C</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>GMP</td>
-          <td>C</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>rpy2</td>
-          <td>Python</td>
-          <td>R</td>
-        </tr>
-        <tr>
-          <td>pywin32</td>
-          <td>Python</td>
-          <td>-</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-  <section>
-    <title>Installation</title>
+    <title>Ubuntu 32 (11.10 or later)</title>
     <section>
-      <title>Ubuntu 32 (11.10 or later)</title>
+      <title>Dependencies</title>
       <section>
-        <title>Basic packages</title>
+        <title>CMake</title>
         <programlisting>
   sudo apt-get install cmake
   sudo apt-get install cmake-curses-gui
+        </programlisting>
+      </section>
+      <section>
+        <title>Subversion</title>
+        <programlisting>
   sudo apt-get install subversion
-  sudo apt-get install git
+        </programlisting>
+      </section>
+      <section>
+        <title>Python 2.7</title>
+        <programlisting>
   sudo apt-get install python2.7
         </programlisting>
       </section>
       <section>
-        <title>libSBML (with GNU make)</title>
-        <para>Source code must be first checked-out using Subversion:</para>
+        <title>SWIG 2.0</title>
         <programlisting>
-  svn checkout svn://svn.code.sf.net/p/sbml/code/trunk sbml-code
+  sudo apt-get install swig2.0
         </programlisting>
-        <para>Through command line, go to the freshly checked-out directory,
-        and execute the following commands:</para>
+      </section>
+      <section>
+        <title>libXML2</title>
         <programlisting>
-  cd libsbml
-  ./configure
-  --prefix="/where/to/install/libsbml" --with-python
+  sudo apt-get install libxml2
+        </programlisting>
+      </section>
+      <section>
+        <title>Autoconf</title>
+        <programlisting>
+  sudo apt-get install autoconf
+        </programlisting>
+      </section>
+      <section>
+        <title>Automake</title>
+        <programlisting>
+  sudo apt-get install automake
+        </programlisting>
+      </section>
+      <section>
+        <title>Libtool</title>
+        <programlisting>
+  sudo apt-get install libtool
+        </programlisting>
+      </section>
+      <section>
+        <title>XSLT processor</title>
+        <programlisting>
+  sudo apt-get install xsltproc
+        </programlisting>
+      </section>
+      <section>
+        <title>Expat</title>
+        <programlisting>
+  sudo apt-get install libexpat1 libexpat1-dev
+        </programlisting>
+      </section>
+      <section>
+        <title>libbzip2</title>
+        <para>Download the latest package on
+<ulink url="http://www.bzip.org/">BZIP2 official website</ulink>, then extract
+it. Go to the newly created directory and execute the following commands:
+        </para>
+        <programlisting>
   make
   make install
         </programlisting>
       </section>
       <section>
-        <title>libSEDML (with CMake)</title>
-        <para>Source code must be first checked-out using git:</para>
-        <programlisting>
-  git clone https://github.com/fbergmann/libSEDML.git
-        </programlisting>
-        <para>Go to the freshly checked-out directory and execute the
-        following commands:</para>
-        <programlisting>
-  mkdir BUILD
-  cd BUILD
-  ccmake ..
-        </programlisting>
-        <para>At this point several options require manual input:</para>
-        <itemizedlist spacing="compact">
+        <title>easy_install</title>
+        <itemizedlist>
           <listitem>
-            <para>WITH_PYTHON and WITH_SWIG have to be ON;</para>
+            <para>Download the <literal>ez_setup.py</literal> file located at:
+<ulink url="https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py">
+https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+</ulink>.</para>
           </listitem>
           <listitem>
-            <para>LIBSBML_LIBRARY should point to the libsbml.lib file
-            previously installed;</para>
-          </listitem>
-          <listitem>
-            <para>LIBSBML_INCLUDE_DIR should point to the libSBML include dir
-            (located in the libSBML install directory);</para>
-          </listitem>
-          <listitem>
-            <para>CMAKE_INSTALL_PREFIX should point to the location where
-            libSEDML will be installed (default /usr/local).</para>
+            <para>Execute the following command in the directory containing
+<literal>ez_setup.py</literal>:
+              <programlisting>
+  python ez_setup.py
+              </programlisting>
+            </para>
           </listitem>
         </itemizedlist>
-        <para>Once the required options have been set, press 'c' to configure;
-        if everything works fine, generate the code by pressing 'g'. It should
-        close the cmake interface. Execute the following commands in order to
-        finish the installation:
-          <programlisting>
-  make
-  make install
-          </programlisting>
-        </para>
-      </section>
-      <section>
-        <title>libSBMLSim (with CMake)</title>
-        <section>
-          <title>Octave</title>
-          <para>
-            Note that Octave must be installed before SWIG 2.0. Simply open a shell
-            and type:
-          </para>
-          <programlisting>
-  sudo apt-get install octave3.2
-  sudo apt-get install octave3.2-headers
-          </programlisting>
-        </section>
-        <section>
-          <title>SWIG 2.0 (or later)</title>
-          <para>
-            Download the latest package from
-            <ulink url="http://sourceforge.net/projects/swig/files/swig/">SWIG's Sourceforge repository</ulink>
-            ; extract it to the location of your choice. Open a shell, go to
-            the place were SWIG package was extracted, then type:
-          </para>
-          <programlisting>
-  ./configure
-  make
-  sudo make install
-          </programlisting>
-        </section>
-        <section>
-          <title>libSBMLSim installation</title>
-          <para>
-            libSBMLSim can now be installed: first download the source code
-            from
-            <ulink url="http://fun.bio.keio.ac.jp/software/libsbmlsim/">libSBMLSim website</ulink>
-            . Extract it to the location of your choice, then open a shell
-            and go to where the package was extracted. Type:
-          </para>
-          <programlisting>
-  mkdir build
-  cd build
-  ccmake ..
-          </programlisting>
-          <para>
-            It will open the CMake user interface; press 'c' to configure. A few
-            manual adjustments might be required, like pointing to the
-            location of a dependency. Set the WITH_PYTHON option to ON, then
-            press 'c' again, until the generation step is made available,
-            then press 'g'. The user interface closes; type:
-          </para>
-          <programlisting>
-  make
-  sudo make install
-          </programlisting>
-          <para>
-            Python bindings now have to be installed in your local Python
-            installation; type:
-          </para>
-          <programlisting>
-  cd src/bindings/python
-  python libsbmlsim.py install
-          </programlisting>
-        </section>
-      </section>
-      <section>
-        <title>COBRApy</title>
-        <para>COBRApy requires pyGLPK to be installed; easy_install is not
-        mandatory, but it makes the installation process a lot easier.</para>
-        <section>
-          <title>pyGLPK</title>
-          <itemizedlist>
-            <listitem>
-              <para>Download the latest package of pyGLPK located at:
-                <ulink url="http://www.tfinley.net/software/pyglpk/download.html">
-                  http://www.tfinley.net/software/pyglpk/download.html
-                </ulink>
-              </para>
-            </listitem>
-            <listitem>
-              <para>Extract it to the desired location;</para>
-            </listitem>
-            <listitem>
-              <para>Go to this location and execute the following commands:
-                <programlisting>
-  make
-  make test
-  make install
-                </programlisting>
-              </para>
-            </listitem>
-          </itemizedlist>
-        </section>
-        <section>
-          <title>easy_install</title>
-          <itemizedlist>
-            <listitem>
-              <para>Download the <literal>ez_setup.py</literal> file located at:
-                <ulink url="https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py">
-                https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
-                </ulink>.</para>
-            </listitem>
-            <listitem>
-              <para>Execute the following command in the directory where
-              <literal>ez_setup.py</literal> is:
-                <programlisting>
-  python ez_setup.py
-                </programlisting>
-              </para>
-            </listitem>
-          </itemizedlist>
-        </section>
-        <section>
-          <title>COBRApy installation</title>
-          <programlisting>
-  sudo easy_install cobra
-          </programlisting>
-        </section>
-      </section>
-      <section>
-        <title>COPASI</title>
-        <para>No tool is provided for building the library; see "Known
-        problems" chapter below for more information.</para>
-      </section>
-      <section>
-        <title>CellNOpt.wrapper</title>
-        <para>
-          First of all R must be installed, as CellNOpt.wrapper is
-          a Python
-          wrapper for the R library CellNOptR.
-        </para>
-        <programlisting>
-  sudo apt-get install r-base
-      </programlisting>
-        <para>
-          It can now be installed using easy_install (see
-          paragraph
-          1.2.1.4.2 for more details about easy_install
-          installation):
-        </para>
-        <programlisting>
-  easy_install cellnopt.wrapper
-        </programlisting>
-      </section>
-      <section>
-        <title>BioServices</title>
-        <para>Download the source files:</para>
-        <programlisting>
-  https://pypi.python.org/pypi/bioservices
-        </programlisting>
-        <para>
-          Extract the files, then execute the following commands in the
-          directory they were extracted to:
-        </para>
-        <programlisting>
-  sudo python setup.py install
-        </programlisting>
       </section>
       <section>
         <title>matplotlib</title>
         <para>
-          First of all easy_install should be installed (see paragraph
-          1.2.1.4.2 for installation details). When it is done, simply open
-          a command shell and type:
+First of all easy_install should be installed (see previous paragraph for
+installation details). When it is done, simply open a command shell and type:
         </para>
         <programlisting>
   sudo easy_install matplotlib
         </programlisting>
       </section>
+      <section>
+        <title>libSBML</title>
+        <para>Download the latest stable version on
+<ulink url="http://sbml.org/Software/libSBML">libSBML official website</ulink>,
+then run the installer.</para>
+      </section>
+    </section>
+    <section>
+      <title>BioPreDyn integrated software suite prototype</title>
+      <para>First of all the project source code must be checked-out using
+<literal>Subversion</literal>:</para>
+      <programlisting>
+  svn co https://thecosmocompany.com/svn/repos/SVN/BioPreDyn
+      </programlisting>
+      <para>When <literal>Subversion</literal> is done with it, go the freshly
+checked-out folder:
+      </para>
+      <programlisting>
+  cd BioPreDyn/trunk
+  mkdir BUILD
+  cd BUILD
+  cmake ..
+  make
+  make install
+  make test
+      </programlisting>
+      <para><literal>CMake</literal> options can be more finely tuned by using
+<literal>ccmake</literal> instead of <literal>cmake</literal>.
+      </para>
     </section>
     <section>
       <title>Windows XP 32</title>
