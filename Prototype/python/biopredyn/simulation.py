@@ -80,3 +80,27 @@ class UniformTimeCourse(Simulation):
   # @return self.output_start_time
   def get_output_start_time(self):
     return self.output_start_time
+  
+  ## Setter. Assign a new value to self.initial_time.
+  # @param self The object pointer.
+  # @param initial_time New value for self.initial_time.
+  def set_initial_time(self, initial_time):
+    self.initial_time = initial_time
+  
+  ## Setter. Assign a new value to self.number_of_points.
+  # @param self The object pointer.
+  # @param number_of_points New value of self.number_of_points.
+  def set_number_of_points(self, number_of_points):
+    self.number_of_points = number_of_points
+  
+  ## Setter. Assign a new value to self.output_end_time.
+  # @param self The object pointer.
+  # @param output_end_time New value of self.output_end_time.
+  def set_output_end_time(self, output_end_time):
+    self.output_end_time = output_end_time
+  
+  ## Setter. Assign a new value to self.output_start_time.
+  # @param self The object pointer.
+  # @param output_start_time New value for self.output_start_time.
+  def set_output_start_time(self):
+    self.output_start_time = output_start_time

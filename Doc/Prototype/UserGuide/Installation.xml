@@ -90,10 +90,9 @@ it. Go to the newly created directory and execute the following commands:
         <title>easy_install</title>
         <itemizedlist>
           <listitem>
-            <para>Download the <literal>ez_setup.py</literal> file located at:
-<ulink url="https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py">
-https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
-</ulink>.</para>
+            <para>Download the <literal>ez_setup.py</literal> file on the
+<ulink url="https://bitbucket.org/pypa/setuptools/downloads">
+project download page</ulink>.</para>
           </listitem>
           <listitem>
             <para>Execute the following command in the directory containing
@@ -170,50 +169,6 @@ checked-out folder:
   <section>
     <title>Known problems</title>
     <itemizedlist>
-      <listitem>
-        <para>libSBML installation (Windows XP32): linking problem
-          related to libiconv when building the library with
-          cosmo-externals (for libxml); the file encoding.h must be
-          modified in order to include &lt;libiconv/iconv.h&gt;
-          instead
-          of &lt;iconv.h&gt;.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          libSEDML installation (Ubuntu 11.10 and later): Python files are not
-          completely installed after running the installation
-          process. A
-          way to complete the installation consists in
-          manually putting
-          the required files in
-          ${INSTALL_DIR}/lib/python*/dist-packages
-          and respecting
-          the following folder hierarchy:
-          <programlisting>
-  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml.pth
-  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml/_libsedml.so
-  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml/libsedml.py
-  ${INSTALL_DIR}/lib/python*/dist-packages/libsedml.pyc
-          </programlisting>
-        </para>
-      </listitem>
-      <listitem>
-        <para>COPASI python bindings installation (Ubuntu 11.10): no
-          setup file can be found in the package, it therefore
-          cannot be
-          installed as a system library. The same solution
-          than the one
-          described for libsedml can be used (with
-          COPASI files instead
-          of libsedml files of course);
-          alternatively, Eclipse users can
-          simply link the
-          copasi*_python*_linux_x86 folder as an external
-          library
-          (in the project properties).
-        </para>
-      </listitem>
       <listitem>
         <para>
           CellNOpt.wrapper installation (Windows XP32): the CellNOpt

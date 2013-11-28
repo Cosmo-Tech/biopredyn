@@ -18,7 +18,7 @@ ADD_CUSTOM_COMMAND(
             -I${CMAKE_CURRENT_SOURCE_DIR}
             -I${LIBSBML_INCLUDE_DIR}/
             -c++
-            -python     
+            -python
             ${SWIG_EXTRA_FLAGS}      
             ${SWIG_EXTRA_ARGS}       
             -o ${CMAKE_CURRENT_BINARY_DIR}/libbiopredyn_wrap.cpp 

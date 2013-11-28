@@ -101,3 +101,11 @@ sudo easy_install matplotlib
 
 libsbml: download the latest stable version at
 http://sbml.org/Software/libSBML, install it
+
+/!\ : warning when using libiconv from the CoSMo externals.
+          Linking problem
+          related to libiconv when building the library with
+          cosmo-externals (for libxml); the file encoding.h must be
+          modified in order to include <libiconv/iconv.h>
+          instead of <iconv.h>. FRI: CMakeLists.txt should be modified
+          in order to link the correct folder.

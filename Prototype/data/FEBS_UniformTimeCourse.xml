@@ -11,7 +11,7 @@
     </uniformTimeCourse>
   </listOfSimulations>
   <listOfModels>
-    <model id="febs_model" language="urn:sedml:language:sbml" source="/home/bertrand/dev/BioPreDyn/trunk/Prototype/Data/FEBS_copasi.xml">
+    <model id="febs_model" language="urn:sedml:language:sbml" source="/home/bertrand/dev/BioPreDyn/trunk/Prototype/data/FEBS_copasi.xml">
     </model>
   </listOfModels>
   <listOfTasks>

@@ -5,7 +5,7 @@
 ## @version: $Revision$
 
 import libsbmlsim
-import model, simulation
+import model, simulation, result
 
 ## Base representation of an atomic task in a SED-ML work flow.
 class Task:
@@ -17,6 +17,9 @@ class Task:
   # Result of the execution of the task.
   ## @var simulation
   # Reference to the simulation this object is about.
+  ## @var tool
+  # Reference to the software tool with which the task encoded by this object
+  # has to be run.
   
   ## Constructor.
   # @param self The object pointer.
@@ -31,6 +34,7 @@ class Task:
       self.simulation = simulation.UniformTimeCourse(simu)
     else:
       self.simulation = simulation.Simulation(simu)
+    # TODO: set self.tool
   
   ## Default run function.
   # Uses libSBMLSim as simulation engine; encoded Task has to be a uniform
@@ -54,6 +58,7 @@ class Task:
           libsbmlsim.MTHD_RUNGE_KUTTA,
           0)
       # TODO: process the result - libNUML dependent
+      self.result = result.LibSBMLSimResult(r)
     else:
       print "TODO"
 
@@ -80,6 +85,30 @@ class Task:
   # @return self.simulation
   def get_simulation(self):
     return self.simulation
+  
+  ## Getter. Returns self.tool.
+  # @param self The object pointer.
+  # @return self.tool
+  def get_tool(self):
+    return self.tool
+  
+  ## Setter. Assign a new value to self.model.
+  # @param self The object pointer.
+  # @param model New value for self.model.
+  def set_model(self, model):
+    self.model = model
+  
+  ## Setter. Assign a new value to self.simulation.
+  # @param self The object pointer.
+  # @param simulation New value for self.simulation.
+  def set_simulation(self, simulation):
+    self.simulation = simulation
+  
+  ## Setter. Assign a new value to self.tool.
+  # @param self The object pointer.
+  # @param tool New value for self.tool.
+  def set_tool(self, tool):
+    print "TODO"
 
 ## Task-derived class representing a task executed by CellNOpt.wrapper.
 class CellNOptTask(Task):
