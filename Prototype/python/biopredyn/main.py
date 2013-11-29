@@ -113,6 +113,7 @@ for o, a in opts:
   elif o == "--sedml":
     flow = workflow.WorkFlow(sys.argv[1])
     flow.run_tasks()
+    flow.process_outputs(True)
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":

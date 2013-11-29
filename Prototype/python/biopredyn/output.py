@@ -39,7 +39,7 @@ class Plot2D(Output):
   ## Plot the result of the task associated with self.data.
   # @param self The object pointer.
   def plot_curves(self):
-    print "TODO"
+    print "Plot2D::plot_curves TODO"
   
   ## Getter. Returns self.curves.
   # @param self The object pointer.
@@ -59,12 +59,12 @@ class Plot3D(Output):
     self.id = plot_3d.getId()
     self.surfaces = []
     for p in plot_3d.getNumSurfaces():
-      self.surfaces.append(data.Curve(plot_3d.getSurface(p)))
+      self.surfaces.append(data.Surface(plot_3d.getSurface(p)))
   
   ## Plot the result of the task associated with self.data.
   # @param self The object pointer.
   def plot_surfaces(self):
-    print "TODO"
+    print "Plot3D::plot_surfaces TODO"
   
   ## Getter. Returns self.surfaces.
   # @param self The object pointer.
@@ -78,4 +78,4 @@ class Report(Output):
   ## Write the result of the task associated with self.data into a CSV file.
   # @param self The object pointer.
   def write(self):
-    print "TODO"
+    print "Report::write TODO"

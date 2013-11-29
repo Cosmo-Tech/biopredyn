@@ -108,7 +108,7 @@ class Task:
   # @param self The object pointer.
   # @param tool New value for self.tool.
   def set_tool(self, tool):
-    print "TODO"
+    print "Task::set_tool - TODO"
 
 ## Task-derived class representing a task executed by CellNOpt.wrapper.
 class CellNOptTask(Task):
@@ -116,7 +116,7 @@ class CellNOptTask(Task):
   ## Execute the task.
   # @param self The object pointer.
   def run(self):
-    print "TODO"
+    print "CellNOptTask::run - TODO"
 
 ## Task-derived class representing a task executed by openCobra.
 class CobraTask(Task):
@@ -124,7 +124,7 @@ class CobraTask(Task):
   ## Execute the task.
   # @param self The object pointer.
   def run(self):
-    print "TODO"
+    print "CobraTask::run - TODO"
 
 ## Task-derived class representing a task executed by COPASI.
 class CopasiTask(Task):

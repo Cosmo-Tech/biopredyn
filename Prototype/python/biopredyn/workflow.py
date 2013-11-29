@@ -8,18 +8,24 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 import libsedml
-import model, output, result, task
+import data, model, output, result, task, simulation
 
 ## Class for SED-ML generic work flows.
 class WorkFlow:
   ## @var address
   # Address of the SED-ML file associated with the object.
+  ## @var data_generators
+  # A list of DataGenerator elements.
+  ## @var models
+  # A list of Model elements.
   ## @var outputs
   # A list of Output elements
   ## @var sedml
   # A SED-ML document.
   ## @var tasks
   # A list of Task elements.
+  ## @var simulations
+  # A list of Simulation elements.
   
   ## Constructor.
   # @param self The object pointer.
@@ -29,23 +35,45 @@ class WorkFlow:
     reader = libsedml.SedReader()
     self.sedml = reader.readSedML(file)
     self.check()
-    self.tasks = []
     # Parsing self.sedml for task elements
+    self.tasks = []
     for t in self.sedml.getListOfTasks():
       # TODO: check whether the tools are set
       self.tasks.append(task.Task(t, self.sedml))
-    self.outputs = []
     # Parsing self.sedml for output elements
+    self.outputs = []
     for o in self.sedml.getListOfOutputs():
-      name = o.getElementName()
-      if name == "SedPlot2D":
+      o_name = o.getElementName()
+      if o_name == "SedPlot2D":
         self.outputs.append(output.Plot2D(o))
-      elif name == "SedPlot3D":
+      elif o_name == "SedPlot3D":
         self.outputs.append(output.Plot3D(o))
-      elif name == "SedReport":
+      elif o_name == "SedReport":
         self.outputs.append(output.Report(o))
       else:
         self.outputs.append(output.Output(o))
+    # Parsing self.sedml for model elements
+    self.models = []
+    for m in self.sedml.getListOfModels():
+      self.models.append(model.SBMLModel(m.getSource()))
+    # Parsing self.sedml for simulation elements
+    self.simulations = []
+    for s in self.sedml.getListOfSimulations():
+      s_name = s.getElementName()
+      if s_name == "uniformTimeCourse":
+        self.simulations.append(simulation.UniformTimeCourse(s))
+      else:
+        self.simulations.append(simulation.Simulation(s))
+    # Parsing self.sedml for data generator elements
+    self.data_generators = []
+    for d in self.sedml.getListOfDataGenerators():
+      d_name = d.getElementName()
+      if d_name == "curve":
+        self.data_generators.append(data.Curve(d, self))
+      elif d_name == "surface":
+        self.data_generators.append(data.Surface(d, self))
+      else:
+        self.data_generators.append(data.DataGenerator(d, self))
   
   ## SED-ML compliance check function.
   # Check whether self.sedml is compliant with the SED-ML standard; if
@@ -82,7 +110,7 @@ class WorkFlow:
   #   drawn in interactive mode or not.
   def process_outputs(self, interactive):
     for o in self.outputs:
-      print "TODO"
+      print "WorkFlow::process_outputs TODO"
   
   ## Getter. Returns self.address.
   # @param self The object pointer.
