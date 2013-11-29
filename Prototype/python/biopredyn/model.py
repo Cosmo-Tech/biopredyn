@@ -4,22 +4,26 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
+import libsedml
 import libsbml
 
 ## Class for SBML model manipulation.
 class SBMLModel:
   ## @var address
   # Address of the SBML file associated with the object.
+  ## @var id
+  # A unique identifier for this object.
   ## @var model
   # An SBML model.
   
   ## Constructor.
   # @param self The object pointer.
-  # @param file Address of the SBML file to be read.
-  def __init__(self, file):
+  # @param model A SED-ML model element.
+  def __init__(self, model):
     reader = libsbml.SBMLReader()
-    self.address = file
-    self.model = reader.readSBML(file)
+    self.address = model.getSource()
+    self.id = model.getId()
+    self.model = reader.readSBML(self.address)
   
   ## SBML compliance check function.
   # Checks whether self.file is compliant with the SBML standard.
@@ -53,10 +57,18 @@ class SBMLModel:
   
   ## Getter. Returns self.address.
   # @param self The object pointer.
+  # @return self.address
   def get_address(self):
     return self.address
   
+  ## Getter. Returns self.id.
+  # @param self The object pointer.
+  # @return self.id
+  def get_id(self):
+    return self.id
+  
   ## Getter. Returns self.model.
   # @param self The object pointer.
+  # @return self.model
   def get_model(self):
     return self.model

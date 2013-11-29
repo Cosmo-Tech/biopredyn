@@ -11,6 +11,8 @@ import libsedml
 class Simulation:
   ## @var algorithm
   # KiSAO identifier of the algorithm to execute.
+  ## @var id
+  # A unique identifier for this object.
   ## @var type
   # Type of simulation.
   
@@ -19,6 +21,7 @@ class Simulation:
   # @param simulation A SED-ML simulation.
   def __init__(self, simulation):
     self.algorithm = simulation.getAlgorithm().getKisaoID()
+    self.id = simulation.getId()
     self.type = simulation.getElementName()
   
   ## Getter. Returns self.algorithm.
@@ -26,6 +29,12 @@ class Simulation:
   # @return self.algorithm
   def get_algorithm(self):
     return self.algorithm
+  
+  ## Getter. Returns self.id.
+  # @param self The object pointer.
+  # @return self.id
+  def get_id(self):
+    return self.id
   
   ## Getter. Returns self.type.
   # @param self The object pointer.
@@ -51,6 +60,7 @@ class UniformTimeCourse(Simulation):
   # @param simulation A SED-ML uniform time course element.
   def __init__(self, simulation):
     self.algorithm = simulation.getAlgorithm().getKisaoID()
+    self.id = simulation.getId()
     self.type = simulation.getElementName()
     self.initial_time = simulation.getInitialTime()
     self.number_of_points = simulation.getNumberOfPoints()

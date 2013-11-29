@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 import libsedml
-import data, model, output, result, task, simulation
+import data, model, output, result, task, simulation, datagenerator
 
 ## Class for SED-ML generic work flows.
 class WorkFlow:
@@ -35,11 +35,23 @@ class WorkFlow:
     reader = libsedml.SedReader()
     self.sedml = reader.readSedML(file)
     self.check()
+    # Parsing self.sedml for model elements
+    self.models = []
+    for m in self.sedml.getListOfModels():
+      self.models.append(model.SBMLModel(m))
+    # Parsing self.sedml for simulation elements
+    self.simulations = []
+    for s in self.sedml.getListOfSimulations():
+      s_name = s.getElementName()
+      if s_name == "uniformTimeCourse":
+        self.simulations.append(simulation.UniformTimeCourse(s))
+      else:
+        self.simulations.append(simulation.Simulation(s))
     # Parsing self.sedml for task elements
     self.tasks = []
     for t in self.sedml.getListOfTasks():
       # TODO: check whether the tools are set
-      self.tasks.append(task.Task(t, self.sedml))
+      self.tasks.append(task.Task(t, self))
     # Parsing self.sedml for output elements
     self.outputs = []
     for o in self.sedml.getListOfOutputs():
@@ -52,28 +64,10 @@ class WorkFlow:
         self.outputs.append(output.Report(o))
       else:
         self.outputs.append(output.Output(o))
-    # Parsing self.sedml for model elements
-    self.models = []
-    for m in self.sedml.getListOfModels():
-      self.models.append(model.SBMLModel(m.getSource()))
-    # Parsing self.sedml for simulation elements
-    self.simulations = []
-    for s in self.sedml.getListOfSimulations():
-      s_name = s.getElementName()
-      if s_name == "uniformTimeCourse":
-        self.simulations.append(simulation.UniformTimeCourse(s))
-      else:
-        self.simulations.append(simulation.Simulation(s))
     # Parsing self.sedml for data generator elements
     self.data_generators = []
     for d in self.sedml.getListOfDataGenerators():
-      d_name = d.getElementName()
-      if d_name == "curve":
-        self.data_generators.append(data.Curve(d, self))
-      elif d_name == "surface":
-        self.data_generators.append(data.Surface(d, self))
-      else:
-        self.data_generators.append(data.DataGenerator(d, self))
+      self.data_generators.append(datagenerator.DataGenerator(d, self))
   
   ## SED-ML compliance check function.
   # Check whether self.sedml is compliant with the SED-ML standard; if
@@ -127,13 +121,24 @@ class WorkFlow:
   def get_sedml(self):
     return self.sedml
   
+  ## Getter. Returns a model referenced by the input id listed in self.models.
+  # @param self The object pointer.
+  # @param id The id of the model to be returned.
+  # @return model A Model object.
+  def get_model_by_id(self, id):
+    for m in self.models:
+      if m.get_id() == id:
+        return m
+    print("Model not found: " + id)
+    return 0
+  
   ## Getter. Returns a task referenced by the input id listed in self.tasks.
   # @param self The object pointer.
   # @param id The id of the task to be returned.
   # @return task A task object.
   def get_task_by_id(self, id):
     for t in self.tasks:
-      if t.getId() == id:
+      if t.get_id() == id:
         return t
     print("Task not found: " + id)
     return 0
@@ -143,3 +148,15 @@ class WorkFlow:
   # @return self.tasks
   def get_tasks(self):
     return self.tasks
+  
+  ## Getter. Returns a simulation referenced by the input id listed in
+  # self.simulations.
+  # @param self The object pointer.
+  # @param id The id of the simulation to be returned.
+  # @return simulation A simulation object.
+  def get_simulation_by_id(self, id):
+    for s in self.simulations:
+      if s.get_id() == id:
+        return s
+    print("Simulation not found: " + id)
+    return 0

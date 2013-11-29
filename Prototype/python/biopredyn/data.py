@@ -5,15 +5,15 @@
 ## @version: $Revision$
 
 ## Base class for N-dimensional data set description.
-class DataGenerator:
+class DataSet:
   ## @var id
   # A unique identifier.
   
   ## Constructor.
   # @param self The object pointer.
-  # @param data_generator A SED-ML dataGenerator element.
+  # @param dataset A SED-ML dataSet element.
   # @param workflow A WorkFlow object.
-  def __init__(self, data_generator, workflow):
+  def __init__(self, dataset, workflow):
     self.id = id
   
   ## Getter. Returns self.id.
@@ -21,8 +21,8 @@ class DataGenerator:
   def get_id(self):
     return self.id
 
-## DataGenerator-derived class for 2-dimensional data set description.
-class Curve(DataGenerator):
+## DataSet-derived class for 2-dimensional data set description.
+class Curve(DataSet):
   
   ## Overridden constructor.
   # @param self The object pointer.
@@ -31,8 +31,8 @@ class Curve(DataGenerator):
   def __init__(self, curve, workflow):
     print "Curve constructor - TODO"
 
-## DataGenerator-derived class for 3-dimensional data set description.
-class Surface(DataGenerator):
+## DataSet-derived class for 3-dimensional data set description.
+class Surface(DataSet):
   
   ## Overridden constructor.
   # @param self The object pointer.

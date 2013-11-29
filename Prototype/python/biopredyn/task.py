@@ -24,16 +24,12 @@ class Task:
   ## Constructor.
   # @param self The object pointer.
   # @param task A SED-ML task.
-  # @param sedfile The SED-ML file from which the input task comes from.
-  def __init__(self, task, sedfile):
+  # @param workflow The WorkFlow object this.
+  def __init__(self, task, workflow):
     self.id = task.getId()
-    self.model = model.SBMLModel(
-      sedfile.getModel(task.getModelReference()).getSource())
-    simu = sedfile.getSimulation(task.getSimulationReference())
-    if simu.getElementName() == "uniformTimeCourse":
-      self.simulation = simulation.UniformTimeCourse(simu)
-    else:
-      self.simulation = simulation.Simulation(simu)
+    self.model = workflow.get_model_by_id(task.getModelReference())
+    self.simulation = workflow.get_simulation_by_id(
+      task.getSimulationReference())
     # TODO: set self.tool
   
   ## Default run function.
