@@ -25,13 +25,26 @@ class DataGenerator:
     self.id = data_generator.getId()
     self.name = data_generator.getName()
     # Parse the input data_generator object for parameters
-    parameters = []
+    self.parameters = []
     for p in data_generator.getListOfParameters():
-      parameters.append(parameter.Parameter(p))
+      self.parameters.append(parameter.Parameter(p))
     # Parse the input data_generator object for variables
-    variables = []
+    self.variables = []
     for v in data_generator.getListOfVariables():
-      variables.append(variable.Variable(v, workflow))
+      self.variables.append(variable.Variable(v, workflow))
+  
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "  +- id=" + self.id + " name=" + self.name + "\n"
+    tree += "    +- listOfParameters\n"
+    for p in self.parameters:
+      tree += str(p)
+    tree += "    +- listOfVariables\n"
+    for v in self.variables:
+      tree += str(v)
+    return tree
   
   ## Getter. Returns self.id.
   # @param self The object pointer.

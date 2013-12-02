@@ -11,6 +11,8 @@ class Parameter:
   # A unique identifier for this object.
   ## @var name
   # Name of this object.
+  ## @var value
+  # Value of this object.
   
   ## Constructor.
   # @param self The object pointer.
@@ -18,6 +20,15 @@ class Parameter:
   def __init__(self, parameter):
     self.id = parameter.getId()
     self.name = parameter.getName()
+    self.value = parameter.getValue()
+  
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "      -- id=" + self.id + " name=" + self.name
+    tree += " value=" + self.value + "\n"
+    return tree
   
   ## Getter. Returns self.id.
   # @param self The object pointer.

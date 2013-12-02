@@ -52,22 +52,44 @@ class WorkFlow:
     for t in self.sedml.getListOfTasks():
       # TODO: check whether the tools are set
       self.tasks.append(task.Task(t, self))
-    # Parsing self.sedml for output elements
-    self.outputs = []
-    for o in self.sedml.getListOfOutputs():
-      o_name = o.getElementName()
-      if o_name == "SedPlot2D":
-        self.outputs.append(output.Plot2D(o))
-      elif o_name == "SedPlot3D":
-        self.outputs.append(output.Plot3D(o))
-      elif o_name == "SedReport":
-        self.outputs.append(output.Report(o))
-      else:
-        self.outputs.append(output.Output(o))
     # Parsing self.sedml for data generator elements
     self.data_generators = []
     for d in self.sedml.getListOfDataGenerators():
       self.data_generators.append(datagenerator.DataGenerator(d, self))
+    # Parsing self.sedml for output elements
+    self.outputs = []
+    for o in self.sedml.getListOfOutputs():
+      o_name = o.getElementName()
+      if o_name == "plot2D":
+        self.outputs.append(output.Plot2D(o, self))
+      elif o_name == "plot3D":
+        self.outputs.append(output.Plot3D(o, self))
+      elif o_name == "report":
+        self.outputs.append(output.Report(o, self))
+      else:
+        self.outputs.append(output.Output(o))
+  
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "Work flow: " + self.address + "\n"
+    tree += "+- listOfSimulations\n"
+    for s in self.simulations:
+      tree += str(s)
+    tree += "+- listOfModels\n"
+    for m in self.models:
+      tree += str(m)
+    tree += "+- listOfTasks\n"
+    for t in self.tasks:
+      tree += str(t)
+    tree += "+- listOfDataGenerators\n"
+    for d in self.data_generators:
+      tree += str(d)
+    tree += "+- listOfOutputs\n"
+    for o in self.outputs:
+      tree += str(o)
+    return tree
   
   ## SED-ML compliance check function.
   # Check whether self.sedml is compliant with the SED-ML standard; if
@@ -120,6 +142,18 @@ class WorkFlow:
   # @param self The object pointer.
   def get_sedml(self):
     return self.sedml
+  
+  ## Getter. Returns a data generator referenced by the input id listed in
+  # self.models.
+  # @param self The object pointer.
+  # @param id The id of the data generator to be returned.
+  # @return model A DataGenerator object.
+  def get_data_generator_by_id(self, id):
+    for d in self.data_generators:
+      if d.get_id() == id:
+        return d
+    print("DataGenerator not found: " + id)
+    return 0
   
   ## Getter. Returns a model referenced by the input id listed in self.models.
   # @param self The object pointer.

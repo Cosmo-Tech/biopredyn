@@ -13,6 +13,8 @@ class Task:
   # A unique identifier associated with the object.
   ## @var model
   # Reference to the model this object is about.
+  ## @var name
+  # Name of this object.
   ## @var result
   # Result of the execution of the task.
   ## @var simulation
@@ -27,10 +29,20 @@ class Task:
   # @param workflow The WorkFlow object this.
   def __init__(self, task, workflow):
     self.id = task.getId()
+    self.name = task.getName()
     self.model = workflow.get_model_by_id(task.getModelReference())
     self.simulation = workflow.get_simulation_by_id(
       task.getSimulationReference())
     # TODO: set self.tool
+  
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "  -- id=" + self.id + " name=" + self.name + "\n"
+    tree += " modelReference=" + self.model.get_id()
+    tree += " simulationReference=" + self.simulation.get_id() + "\n"
+    return tree
   
   ## Default run function.
   # Uses libSBMLSim as simulation engine; encoded Task has to be a uniform
@@ -69,6 +81,11 @@ class Task:
   # @return self.model
   def get_model(self):
     return self.model
+  
+  ## Getter. Returns self.name.
+  # @param self The object pointer.
+  def get_name(self):
+    return self.name
   
   ## Getter. Returns self.result.
   # @param self The object pointer.

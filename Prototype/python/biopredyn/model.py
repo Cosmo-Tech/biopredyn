@@ -18,7 +18,8 @@ class SBMLModel:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param model A SED-ML model element.
+  # @param model A SED-ML model element; optional.
+  # @param source The address of a SBML model file; optional.
   def __init__(self, model=None, source=None):
     reader = libsbml.SBMLReader()
     if model is not None:
@@ -27,6 +28,13 @@ class SBMLModel:
     elif source is not None:
       self.address = source
     self.model = reader.readSBML(self.address)
+  
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "  -- id=" + self.id + ": " + self.address + "\n"
+    return tree
   
   ## SBML compliance check function.
   # Checks whether self.file is compliant with the SBML standard.

@@ -37,6 +37,18 @@ class Variable:
             " element."
             )
   
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "      -- id=" + self.id + " name=" + self.name
+    if self.task is not None:
+      tree += " taskReference=" + self.task.get_id()
+      tree += " modelReference=" + self.model.get_id() + "\n"
+    else:
+      tree += " modelReference=" + self.model.get_id() + "\n"
+    return tree
+  
   ## Getter. Returns self.id.
   # @param self The object pointer.
   # @return self.id

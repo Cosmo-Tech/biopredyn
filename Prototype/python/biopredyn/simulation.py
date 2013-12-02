@@ -13,6 +13,8 @@ class Simulation:
   # KiSAO identifier of the algorithm to execute.
   ## @var id
   # A unique identifier for this object.
+  ## @var name
+  # Name of this object.
   ## @var type
   # Type of simulation.
   
@@ -22,7 +24,16 @@ class Simulation:
   def __init__(self, simulation):
     self.algorithm = simulation.getAlgorithm().getKisaoID()
     self.id = simulation.getId()
+    self.name = simulation.getName()
     self.type = simulation.getElementName()
+  
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "  -- " + self.type + " id=" + self.id + " name=" + self.name + "\n"
+    tree += "    -- algorithm=" + self.algorithm + "\n"
+    return tree
   
   ## Getter. Returns self.algorithm.
   # @param self The object pointer.
@@ -35,6 +46,11 @@ class Simulation:
   # @return self.id
   def get_id(self):
     return self.id
+  
+  ## Getter. Returns self.name.
+  # @param self The object pointer.
+  def get_name(self):
+    return self.name
   
   ## Getter. Returns self.type.
   # @param self The object pointer.
@@ -66,6 +82,19 @@ class UniformTimeCourse(Simulation):
     self.number_of_points = simulation.getNumberOfPoints()
     self.output_end_time = simulation.getOutputEndTime()
     self.output_start_time = simulation.getOutputStartTime()
+    self.name = simulation.getName()
+  
+  ## Overridden string representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "  +- " + self.type + " id=" + self.id + " name=" + self.name
+    tree += " initialTime" + str(self.initial_time)
+    tree += " numberOfPoints" + str(self.number_of_points)
+    tree += " outputEndTime" + str(self.output_end_time)
+    tree += " outputStartTime" + str(self.output_start_time) + "\n"
+    tree += "    -- algorithm=" + self.algorithm + "\n"
+    return tree
   
   ## Getter. Returns self.initial_time.
   # @param self The object pointer.
