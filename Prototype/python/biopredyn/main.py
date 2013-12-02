@@ -108,7 +108,7 @@ for o, a in opts:
     print_help()
     sys.exit(0)
   elif o == "--sbml":
-    model = model.SBMLModel(sys.argv[1])
+    model = model.SBMLModel(source=sys.argv[1])
     model.check()
   elif o == "--sedml":
     flow = workflow.WorkFlow(sys.argv[1])

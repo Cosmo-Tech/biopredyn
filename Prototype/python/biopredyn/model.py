@@ -19,10 +19,13 @@ class SBMLModel:
   ## Constructor.
   # @param self The object pointer.
   # @param model A SED-ML model element.
-  def __init__(self, model):
+  def __init__(self, model=None, source=None):
     reader = libsbml.SBMLReader()
-    self.address = model.getSource()
-    self.id = model.getId()
+    if model is not None:
+      self.id = model.getId()
+      self.address = model.getSource()
+    elif source is not None:
+      self.address = source
     self.model = reader.readSBML(self.address)
   
   ## SBML compliance check function.

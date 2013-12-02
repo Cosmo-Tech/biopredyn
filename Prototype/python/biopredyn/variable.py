@@ -23,8 +23,19 @@ class Variable:
   def __init__(self, variable, workflow):
     self.id = variable.getId()
     self.name = variable.getName()
-    self.model = workflow.get_model_by_id(variable.getModelReference())
-    self.task = workflow.get_task_by_id(variable.getTaskReference())
+    model_ref = variable.getModelReference()
+    task_ref = variable.getTaskReference()
+    if task_ref is not None:
+      self.task = workflow.get_task_by_id(variable.getTaskReference())
+      self.model = self.task.get_model()
+    elif model_ref is not None:
+      self.model = workflow.get_model_by_id(variable.getModelReference())
+    else:
+      print(
+            "Invalid variable argument; at least one of the taskReference" +
+            " or modelReference attributes must exist in the input Variable" +
+            " element."
+            )
   
   ## Getter. Returns self.id.
   # @param self The object pointer.
