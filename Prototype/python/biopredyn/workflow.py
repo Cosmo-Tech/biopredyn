@@ -4,7 +4,6 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
-from matplotlib import pyplot as plt
 import numpy as np
 
 import libsedml
@@ -12,7 +11,7 @@ import data, model, output, result, task, simulation, datagenerator
 
 ## Class for SED-ML generic work flows.
 class WorkFlow:
-  ## @var address
+  ## @var source
   # Address of the SED-ML file associated with the object.
   ## @var data_generators
   # A list of DataGenerator elements.
@@ -31,7 +30,7 @@ class WorkFlow:
   # @param self The object pointer.
   # @param file Address of the SED-ML file to be read.
   def __init__(self, file):
-    self.address = file
+    self.source = file
     reader = libsedml.SedReader()
     self.sedml = reader.readSedML(file)
     self.check()
@@ -73,20 +72,20 @@ class WorkFlow:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "Work flow: " + self.address + "\n"
-    tree += "+- listOfSimulations\n"
+    tree = "Work flow: " + self.source + "\n"
+    tree += "|-listOfSimulations\n"
     for s in self.simulations:
       tree += str(s)
-    tree += "+- listOfModels\n"
+    tree += "|-listOfModels\n"
     for m in self.models:
       tree += str(m)
-    tree += "+- listOfTasks\n"
+    tree += "|-listOfTasks\n"
     for t in self.tasks:
       tree += str(t)
-    tree += "+- listOfDataGenerators\n"
+    tree += "|-listOfDataGenerators\n"
     for d in self.data_generators:
       tree += str(d)
-    tree += "+- listOfOutputs\n"
+    tree += "|-listOfOutputs\n"
     for o in self.outputs:
       tree += str(o)
     return tree
@@ -105,43 +104,11 @@ class WorkFlow:
             str(self.sedml.getError(0).getShortMessage()))
       sys.exit(2)
     else:
-      print("Document " + self.address + " is SED-ML compliant.")
+      print("Document " + self.source + " is SED-ML compliant.")
       # check compatibility with SED-ML level 1
       print( str(self.sedml.checkCompatibility(self.sedml)) +
              " compatibility errors with SED-ML L1." )
       return self.sedml
-  
-  ## Executes the pipeline encoded in self.sedml.
-  # Each task in self.tasks is executed.
-  # libSBMLSim is used as simulation engine.
-  # @param self The object pointer.
-  def run_tasks(self):
-    # Parse the list of tasks in the input file
-    for t in self.tasks:
-      t.run()
-  
-  ## Parse self.outputs and produce the corresponding outputs.
-  # @param self The object pointer.
-  # @param interactive Boolean value stating whether the plots have to be
-  #   drawn in interactive mode or not.
-  def process_outputs(self, interactive):
-    for o in self.outputs:
-      print "WorkFlow::process_outputs TODO"
-  
-  ## Getter. Returns self.address.
-  # @param self The object pointer.
-  def get_address(self):
-    return self.address
-  
-  ## Getter. Returns self.outputs.
-  # @param self The object pointer.
-  def get_outputs(self):
-    return self.outputs
-  
-  ## Getter. Returns self.sedml.
-  # @param self The object pointer.
-  def get_sedml(self):
-    return self.sedml
   
   ## Getter. Returns a data generator referenced by the input id listed in
   # self.models.
@@ -166,6 +133,33 @@ class WorkFlow:
     print("Model not found: " + id)
     return 0
   
+  ## Getter. Returns self.outputs.
+  # @param self The object pointer.
+  def get_outputs(self):
+    return self.outputs
+  
+  ## Getter. Returns self.sedml.
+  # @param self The object pointer.
+  def get_sedml(self):
+    return self.sedml
+  
+  ## Getter. Returns a simulation referenced by the input id listed in
+  # self.simulations.
+  # @param self The object pointer.
+  # @param id The id of the simulation to be returned.
+  # @return simulation A simulation object.
+  def get_simulation_by_id(self, id):
+    for s in self.simulations:
+      if s.get_id() == id:
+        return s
+    print("Simulation not found: " + id)
+    return 0
+  
+  ## Getter. Returns self.source.
+  # @param self The object pointer.
+  def get_source(self):
+    return self.source
+  
   ## Getter. Returns a task referenced by the input id listed in self.tasks.
   # @param self The object pointer.
   # @param id The id of the task to be returned.
@@ -183,14 +177,19 @@ class WorkFlow:
   def get_tasks(self):
     return self.tasks
   
-  ## Getter. Returns a simulation referenced by the input id listed in
-  # self.simulations.
+  ## Parse self.outputs and produce the corresponding outputs.
   # @param self The object pointer.
-  # @param id The id of the simulation to be returned.
-  # @return simulation A simulation object.
-  def get_simulation_by_id(self, id):
-    for s in self.simulations:
-      if s.get_id() == id:
-        return s
-    print("Simulation not found: " + id)
-    return 0
+  # @param interactive Boolean value stating whether the plots have to be
+  #   drawn in interactive mode or not.
+  def process_outputs(self, interactive):
+    for o in self.outputs:
+      print "WorkFlow::process_outputs TODO"
+  
+  ## Executes the pipeline encoded in self.sedml.
+  # Each task in self.tasks is executed.
+  # libSBMLSim is used as simulation engine.
+  # @param self The object pointer.
+  def run_tasks(self):
+    # Parse the list of tasks in the input file
+    for t in self.tasks:
+      t.run()

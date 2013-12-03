@@ -41,7 +41,7 @@ class Variable:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "      -- id=" + self.id + " name=" + self.name
+    tree = "      |-variable id=" + self.id + " name=" + self.name
     if self.task is not None:
       tree += " taskReference=" + self.task.get_id()
       tree += " modelReference=" + self.model.get_id() + "\n"
@@ -72,3 +72,10 @@ class Variable:
   # @return self.task
   def get_task(self):
     return self.task
+  
+  ## Return the numerical results associated with this as an array, if they
+  # exist.
+  # @param self The object pointer.
+  # @return values A 1-dimensional array of numerical values.
+  def get_values(self):
+    print "TODO"

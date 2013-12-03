@@ -4,20 +4,39 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
-## Base class for N-dimensional data set description.
-class DataSet:
-  ## @var data_ref
-  # ID of a DataGenerator object.
+## Base class for data description.
+class Data:
   ## @var id
   # A unique identifier.
-  ## @var label
-  # A label for this.
   ## @var name
   # Name of this object.
   ## @var type
   # Type of output.
   
-  ## Constructor.
+  ## Getter. Returns self.id.
+  # @param self The object pointer.
+  def get_id(self):
+    return self.id
+  
+  ## Getter. Returns self.name.
+  # @param self The object pointer.
+  def get_name(self):
+    return self.name
+  
+  ## Getter. Returns self.type.
+  # @param self The object pointer.
+  # @return self.type
+  def get_type(self):
+    return self.type
+
+## Data-derived class for N-dimensional data set description.
+class DataSet(Data):
+  ## @var data_ref
+  # ID of a DataGenerator object.
+  ## @var label
+  # A label for this.
+  
+  ## Overridden constructor.
   # @param self The object pointer.
   # @param dataset A SED-ML dataSet element.
   # @param workflow A WorkFlow object.
@@ -33,38 +52,24 @@ class DataSet:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "      -- " + self.type + " id=" + self.id + " name=" + self.name
+    tree = "      |-" + self.type + " id=" + self.id + " name=" + self.name
     tree += " dataReference=" + self.data_ref + "\n"
     return tree
   
-  ## Getter. Returns self.id.
-  # @param self The object pointer.
-  def get_id(self):
-    return self.id
-  
   ## Getter. Returns self.label.
   # @param self The object pointer.
+  # @return self.label
   def get_label(self):
     return self.label
   
-  ## Getter. Returns self.name.
-  # @param self The object pointer.
-  def get_name(self):
-    return self.name
-  
   ## Getter. Returns self.data_ref.
   # @param self The object pointer.
+  # @return self.data_ref
   def get_data_ref(self):
     return self.data_ref
-  
-  ## Getter. Returns self.type.
-  # @param self The object pointer.
-  # @return self.type
-  def get_type(self):
-    return self.type
 
 ## DataSet-derived class for 2-dimensional data set description.
-class Curve(DataSet):
+class Curve(Data):
   ## @var x_data_ref
   # ID of a DataGenerator object.
   ## @var y_data_ref
@@ -95,7 +100,7 @@ class Curve(DataSet):
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "      -- " + self.type + " id=" + self.id + " name=" + self.name
+    tree = "      |-" + self.type + " id=" + self.id + " name=" + self.name
     tree += " xDataReference=" + self.x_data_ref.get_id()
     tree += " yDataReference=" + self.y_data_ref.get_id()
     tree += " logX=" + str(self.log_x)
@@ -125,9 +130,15 @@ class Curve(DataSet):
   # @return self.y_data_ref
   def get_log_y(self):
     return self.log_y
+  
+  ## Plot the data encoded in this on the input plot object.
+  # @param self The object pointer.
+  # @param plot The plot object on which this should be added.
+  def plot(self, plot):
+    print "TODO"
 
 ## DataSet-derived class for 3-dimensional data set description.
-class Surface(DataSet):
+class Surface(Data):
   ## @var x_data_ref
   # ID of a DataGenerator object.
   ## @var y_data_ref
@@ -166,7 +177,7 @@ class Surface(DataSet):
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "      -- " + self.type + " id=" + self.id + " name=" + self.name
+    tree = "      |-" + self.type + " id=" + self.id + " name=" + self.name
     tree += " xDataReference=" + self.x_data_ref.get_id()
     tree += " yDataReference=" + self.y_data_ref.get_id()
     tree += " zDataReference=" + self.z_data_ref.get_id()

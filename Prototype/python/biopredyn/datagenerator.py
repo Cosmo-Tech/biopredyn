@@ -37,11 +37,11 @@ class DataGenerator:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  +- id=" + self.id + " name=" + self.name + "\n"
-    tree += "    +- listOfParameters\n"
+    tree = "  |-dataGenerator id=" + self.id + " name=" + self.name + "\n"
+    tree += "    |-listOfParameters\n"
     for p in self.parameters:
       tree += str(p)
-    tree += "    +- listOfVariables\n"
+    tree += "    |-listOfVariables\n"
     for v in self.variables:
       tree += str(v)
     return tree

@@ -6,6 +6,7 @@
 
 import data
 import libsedml
+from matplotlib import pyplot as plt
 
 ## Base class for encoding the outputs of the current work flow.
 class Output:
@@ -28,15 +29,18 @@ class Output:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  +- " + self.type + " id=" + self.id + " name=" + self.name + "\n"
+    tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
     return tree
   
   ## Getter. Returns self.id.
+  # @param self The object pointer.
+  # @return self.id
   def get_id(self):
     return self.id
   
   ## Getter. Returns self.name.
   # @param self The object pointer.
+  # @return self.name
   def get_name(self):
     return self.name
   
@@ -67,22 +71,31 @@ class Plot2D(Output):
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  +- " + self.type + " id=" + self.id + " name=" + self.name + "\n"
-    tree += "    +- listOfCurves\n"
+    tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
+    tree += "    |-listOfCurves\n"
     for c in self.curves:
       tree += str(c)
     return tree
-  
-  ## Plot the result of the task associated with self.data.
-  # @param self The object pointer.
-  def plot_curves(self):
-    print "Plot2D::plot_curves TODO"
   
   ## Getter. Returns self.curves.
   # @param self The object pointer.
   # @return self.curves
   def get_curves(self):
     return self.curves
+  
+  ## Plot the result of the task associated with self.data.
+  # @param self The object pointer.
+  # @param interactive States whether the produced plot shoudl be interactive
+  # or not.
+  def process(self, interactive):
+    plot_2d = plt.plot()
+    if interactive:
+      plot_2d.ion()
+    for c in self.curves:
+      c.plot(plot_2d)
+    plot_2d.legend()
+    plot_2d.show()
+    plot_2d.close()
 
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
@@ -105,25 +118,27 @@ class Plot3D(Output):
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  +- " + self.type + " id=" + self.id + " name=" + self.name + "\n"
-    tree += "    +- listOfSurfaces\n"
+    tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
+    tree += "    |-listOfSurfaces\n"
     for s in self.surfaces:
       tree += str(s)
     return tree
-  
-  ## Plot the result of the task associated with self.data.
-  # @param self The object pointer.
-  def plot_surfaces(self):
-    print "Plot3D::plot_surfaces TODO"
   
   ## Getter. Returns self.surfaces.
   # @param self The object pointer.
   # @return self.surfaces
   def get_surfaces(self):
     return self.surfaces
+  
+  ## Plot the result of the task associated with self.data.
+  # @param self The object pointer.
+  def process(self):
+    print "Plot3D::plot_surfaces TODO"
 
 ## Output-derived class for reports.
 class Report(Output):
+  ## @var datasets
+  # A list of N-dimensional signals to be written in the report.
   
   ## Constructor.
   # @param self The object pointer.
@@ -133,9 +148,11 @@ class Report(Output):
     self.id = out.getId()
     self.name = out.getName()
     self.type = out.getElementName()
-    # TODO: list of DataSet objects.
+    self.datasets = []
+    for d in report.getListOfDataSets():
+      self.surfaces.append(data.DataSet(d, workflow))
   
   ## Write the result of the task associated with self.data into a CSV file.
   # @param self The object pointer.
-  def write(self):
+  def process(self):
     print "Report::write TODO"

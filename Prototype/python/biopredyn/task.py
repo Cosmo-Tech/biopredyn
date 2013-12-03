@@ -39,7 +39,7 @@ class Task:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  -- id=" + self.id + " name=" + self.name + "\n"
+    tree = "  |-task id=" + self.id + " name=" + self.name
     tree += " modelReference=" + self.model.get_id()
     tree += " simulationReference=" + self.simulation.get_id() + "\n"
     return tree
@@ -58,7 +58,7 @@ class Task:
       step = (end - start) / steps
       # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
       r = libsbmlsim.simulateSBMLFromFile(
-          self.model.get_address(),
+          self.model.get_source(),
           end,
           step,
           1,

@@ -26,7 +26,7 @@ class Parameter:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "      -- id=" + self.id + " name=" + self.name
+    tree = "      |-parameter id=" + self.id + " name=" + self.name
     tree += " value=" + self.value + "\n"
     return tree
   

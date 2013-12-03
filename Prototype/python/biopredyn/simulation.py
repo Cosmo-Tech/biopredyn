@@ -31,8 +31,8 @@ class Simulation:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  -- " + self.type + " id=" + self.id + " name=" + self.name + "\n"
-    tree += "    -- algorithm=" + self.algorithm + "\n"
+    tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
+    tree += "    |-algorithm " + self.algorithm + "\n"
     return tree
   
   ## Getter. Returns self.algorithm.
@@ -88,12 +88,12 @@ class UniformTimeCourse(Simulation):
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  +- " + self.type + " id=" + self.id + " name=" + self.name
+    tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name
     tree += " initialTime" + str(self.initial_time)
     tree += " numberOfPoints" + str(self.number_of_points)
     tree += " outputEndTime" + str(self.output_end_time)
     tree += " outputStartTime" + str(self.output_start_time) + "\n"
-    tree += "    -- algorithm=" + self.algorithm + "\n"
+    tree += "    |-algorithm " + self.algorithm + "\n"
     return tree
   
   ## Getter. Returns self.initial_time.

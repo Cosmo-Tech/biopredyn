@@ -9,7 +9,7 @@ import libsbml
 
 ## Class for SBML model manipulation.
 class SBMLModel:
-  ## @var address
+  ## @var source
   # Address of the SBML file associated with the object.
   ## @var id
   # A unique identifier for this object.
@@ -24,16 +24,16 @@ class SBMLModel:
     reader = libsbml.SBMLReader()
     if model is not None:
       self.id = model.getId()
-      self.address = model.getSource()
+      self.source = model.getSource()
     elif source is not None:
-      self.address = source
-    self.model = reader.readSBML(self.address)
+      self.source = source
+    self.model = reader.readSBML(self.source)
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "  -- id=" + self.id + ": " + self.address + "\n"
+    tree = "  |-model id=" + self.id + " source=" + self.source + "\n"
     return tree
   
   ## SBML compliance check function.
@@ -66,11 +66,11 @@ class SBMLModel:
              " compatibility errors with SBML L3v1." )
       return self.model
   
-  ## Getter. Returns self.address.
+  ## Getter. Returns self.source.
   # @param self The object pointer.
-  # @return self.address
-  def get_address(self):
-    return self.address
+  # @return self.source
+  def get_source(self):
+    return self.source
   
   ## Getter. Returns self.id.
   # @param self The object pointer.
