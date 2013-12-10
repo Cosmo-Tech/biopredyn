@@ -39,3 +39,8 @@ class Parameter:
   # @param self The object pointer.
   def get_name(self):
     return self.name
+  
+  ## Getter. Returns self.value.
+  # @param self The object pointer.
+  def get_value(self):
+    return self.value

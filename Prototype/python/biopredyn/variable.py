@@ -67,6 +67,13 @@ class Variable:
   def get_model(self):
     return self.model
   
+  ## Returns the number of time points of the numerical results produced by
+  # self.task.
+  # @param self The object pointer.
+  # @return The number of time points.
+  def get_number_of_points(self):
+    return self.task.get_simulation().get_number_of_points()
+  
   ## Getter. Returns self.task.
   # @param self The object pointer.
   # @return self.task
@@ -78,4 +85,9 @@ class Variable:
   # @param self The object pointer.
   # @return values A 1-dimensional array of numerical values.
   def get_values(self):
-    print "TODO"
+    values = []
+    if self.id.upper() == "TIME":
+      values = self.task.get_result().get_time_steps()
+    else:
+      values = self.task.get_result().get_quantities_per_species(self.id)
+    return values

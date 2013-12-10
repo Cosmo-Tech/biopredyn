@@ -183,7 +183,7 @@ class WorkFlow:
   #   drawn in interactive mode or not.
   def process_outputs(self, interactive):
     for o in self.outputs:
-      print "WorkFlow::process_outputs TODO"
+      o.process(interactive)
   
   ## Executes the pipeline encoded in self.sedml.
   # Each task in self.tasks is executed.

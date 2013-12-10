@@ -88,14 +88,14 @@ class Plot2D(Output):
   # @param interactive States whether the produced plot shoudl be interactive
   # or not.
   def process(self, interactive):
-    plot_2d = plt.plot()
+    plot_2d = plt.figure(self.id)
     if interactive:
-      plot_2d.ion()
+      plt.ion()
     for c in self.curves:
       c.plot(plot_2d)
-    plot_2d.legend()
-    plot_2d.show()
-    plot_2d.close()
+    plt.legend()
+    plt.show()
+    plt.close()
 
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):

@@ -4,6 +4,8 @@
 ## @copyright: $Copyright: [2013] BioPreDyn $
 ## @version: $Revision$
 
+from matplotlib import pyplot as plt
+
 ## Base class for data description.
 class Data:
   ## @var id
@@ -135,7 +137,16 @@ class Curve(Data):
   # @param self The object pointer.
   # @param plot The plot object on which this should be added.
   def plot(self, plot):
-    print "TODO"
+    # Set the scale of the plot
+    if self.log_x:
+      plt.xscale('log')
+    if self.log_y:
+      plt.yscale('log')
+    # Plot the values
+    plt.plot(
+      self.x_data_ref.get_values(),
+      self.y_data_ref.get_values(),
+      label=self.name)
 
 ## DataSet-derived class for 3-dimensional data set description.
 class Surface(Data):
@@ -221,3 +232,9 @@ class Surface(Data):
   # @return self.z_data_ref
   def get_log_z(self):
     return self.log_z
+  
+  ## Plot the data encoded in this on the input plot object.
+  # @param self The object pointer.
+  # @param plot The plot object on which this should be added.
+  def plot(self, plot):
+    print "TODO"
