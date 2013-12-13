@@ -113,12 +113,8 @@ for o, a in opts:
   elif o == "--sedml":
     flow = workflow.WorkFlow(sys.argv[1])
     flow.run_tasks()
-    flow.process_outputs(True)
-    print flow
+    flow.process_outputs()
   elif o == "--cobra":
     print("Something will happen with cobrapy here soon.")
   elif o == "--copasi":
-    # TODO: run and plot methods are not defined in Workflow class anymore
-    flow = workflow.WorkFlow(sys.argv[1])
-    flow.run()
-    flow.plot()
+    print("Something will happen with COPASI here soon.")

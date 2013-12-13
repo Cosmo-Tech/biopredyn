@@ -81,7 +81,7 @@
     </dataGenerator>
   </listOfDataGenerators>
   <listOfOutputs>
-    <plot2D id="plot2D" name="concentrations_vs_time">
+    <plot2D id="plot_1" name="concentrations_vs_time">
       <listOfCurves>
         <curve id="curve1" name="E_vs_Time" logX="false" logY="false" xDataReference="datagenerator_1" yDataReference="datagenerator_2">
         </curve>
@@ -93,9 +93,9 @@
         </curve>
       </listOfCurves>
     </plot2D>
-    <plot2D id="plot2D" name="enzyme_quantity_vs_time">
+    <plot2D id="plot_2" name="enzyme_quantity_vs_time">
       <listOfCurves>
-        <curve id="curve1" name="Enzyme_quantity_vs_Time" logX="false" logY="false" xDataReference="datagenerator_1" yDataReference="datagenerator_6">
+        <curve id="curve5" name="Enzyme_quantity_vs_Time" logX="false" logY="false" xDataReference="datagenerator_1" yDataReference="datagenerator_6">
         </curve>
       </listOfCurves>
     </plot2D>

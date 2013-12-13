@@ -1,10 +1,10 @@
 /**
 * Begin svn Header
-* $Rev: 49 $:	Revision of last commit
+* $Rev: 52 $:	Revision of last commit
 * $Author: josephodada@gmail.com $:	Author of last commit
-* $Date: 2013-10-29 18:05:14 +0100 (Tue, 29 Oct 2013) $:	Date of last commit
+* $Date: 2013-12-09 17:01:56 +0100 (Mon, 09 Dec 2013) $:	Date of last commit
 * $HeadURL: http://numl.googlecode.com/svn/trunk/libnuml/src/numl/ResultComponent.cpp $
-* $Id: ResultComponent.cpp 49 2013-10-29 17:05:14Z josephodada@gmail.com $
+* $Id: ResultComponent.cpp 52 2013-12-09 16:01:56Z josephodada@gmail.com $
 * End svn Header
 * ****************************************************************************
 * This file is part of libNUML.  Please visit http://code.google.com/p/numl/for more
@@ -114,6 +114,19 @@ ResultComponent::~ResultComponent ()
 }
 
 /*
+ * @return the NUMLTypeCode_t of this NUML object or NUML_UNKNOWN
+ * (default).
+ *
+ * @see getElementName()
+ */
+
+NUMLTypeCode_t
+ResultComponent::getTypeCode () const
+{
+	return NUML_RESULTCOMPONENT;
+}
+
+/*
  * @return the name of this element ie "resultComponent".
  */
 const string&
@@ -206,14 +219,11 @@ ResultComponent::createDimensionDescription ()
 	}
 	catch (...)
 	{
-		/* here we do not create a default object as the level/version must
-		 * match the parent object
-		 *
-		 * so do nothing
-		 */
+		// here we do not create a default object as the level/version must match the parent object
+
 	}
 
-	/* if the NUMLList is empty it doesnt know its parent */
+	// if the NUMLList is empty it doesnt know its parent
 	if (mDimensionDescription.size() == 0)
 	{
 		mDimensionDescription.setNUMLDocument(this->getNUMLDocument());
@@ -404,7 +414,7 @@ NMBase::getAnnotationString ()
 NUMLTypeCode_t
 ResultComponents::getItemTypeCode () const
 {
-  return NUML_RESULTCOMPONENTS;
+  return NUML_RESULTCOMPONENT;
 }
 
 
@@ -550,5 +560,19 @@ ResultComponents::createObject (XMLInputStream& stream)
   return object;
 }
 /** @endcond doxygen-libnuml-internal */
+
+LIBNUML_EXTERN
+DimensionDescription_t *
+ResultComponent_createDimensionDescription(ResultComponent_t *rComp)
+{
+  return rComp->createDimensionDescription();
+}
+
+LIBNUML_EXTERN
+CompositeDescription_t *
+ResultComponent_createCompositeDescription(ResultComponent_t *rComp)
+{
+  return rComp->createCompositeDescription();
+}
 
 LIBNUML_CPP_NAMESPACE_END

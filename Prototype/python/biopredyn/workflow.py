@@ -179,11 +179,9 @@ class WorkFlow:
   
   ## Parse self.outputs and produce the corresponding outputs.
   # @param self The object pointer.
-  # @param interactive Boolean value stating whether the plots have to be
-  #   drawn in interactive mode or not.
-  def process_outputs(self, interactive):
+  def process_outputs(self):
     for o in self.outputs:
-      o.process(interactive)
+      o.process()
   
   ## Executes the pipeline encoded in self.sedml.
   # Each task in self.tasks is executed.

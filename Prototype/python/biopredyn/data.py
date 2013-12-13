@@ -5,6 +5,7 @@
 ## @version: $Revision$
 
 from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 ## Base class for data description.
 class Data:
@@ -135,15 +136,15 @@ class Curve(Data):
   
   ## Plot the data encoded in this on the input plot object.
   # @param self The object pointer.
-  # @param plot The plot object on which this should be added.
+  # @param plot The matplotlib object on which this should be added.
   def plot(self, plot):
     # Set the scale of the plot
     if self.log_x:
-      plt.xscale('log')
+      plot.xscale('log')
     if self.log_y:
-      plt.yscale('log')
+      plot.yscale('log')
     # Plot the values
-    plt.plot(
+    plot.plot(
       self.x_data_ref.get_values(),
       self.y_data_ref.get_values(),
       label=self.name)
@@ -235,6 +236,18 @@ class Surface(Data):
   
   ## Plot the data encoded in this on the input plot object.
   # @param self The object pointer.
-  # @param plot The plot object on which this should be added.
+  # @param plot The matplotlib object on which this should be added.
   def plot(self, plot):
-    print "TODO"
+    # Set the scale of the plot
+    if self.log_x:
+      plot.xscale('log')
+    if self.log_y:
+      plot.yscale('log')
+    if self.log_y:
+      plot.zscale('log')
+    # Plot the values
+    plot.scatter(
+      self.x_data_ref.get_values(),
+      self.y_data_ref.get_values(),
+      zs=self.z_data_ref.get_values()
+      )

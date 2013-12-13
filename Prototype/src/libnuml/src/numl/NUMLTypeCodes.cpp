@@ -1,10 +1,10 @@
 /**
 * Begin svn Header
-* $Rev: 29 $:	Revision of last commit
+* $Rev: 51 $:	Revision of last commit
 * $Author: josephodada@gmail.com $:	Author of last commit
-* $Date: 2013-04-25 11:57:46 +0200 (Thu, 25 Apr 2013) $:	Date of last commit
+* $Date: 2013-12-04 17:29:20 +0100 (Wed, 04 Dec 2013) $:	Date of last commit
 * $HeadURL: http://numl.googlecode.com/svn/trunk/libnuml/src/numl/NUMLTypeCodes.cpp $
-* $Id: NUMLTypeCodes.cpp 29 2013-04-25 09:57:46Z josephodada@gmail.com $
+* $Id: NUMLTypeCodes.cpp 51 2013-12-04 16:29:20Z josephodada@gmail.com $
 * End svn Header
 * ****************************************************************************
 * This file is part of libNUML.  Please visit http://code.google.com/p/numl/for more
@@ -31,7 +31,7 @@ static
 const char* NUML_TYPE_CODE_STRINGS[] =
 {
     "(Unknown NUML Type)"
-  ,"Document"
+  , "Document"
   , "OntologyTerms"
   , "OntologyTerm"
   , "ResultComponent"

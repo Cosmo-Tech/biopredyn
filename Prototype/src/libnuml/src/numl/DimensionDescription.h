@@ -1,10 +1,10 @@
 /**
 * Begin svn Header
-* $Rev: 40 $:	Revision of last commit
+* $Rev: 51 $:	Revision of last commit
 * $Author: josephodada@gmail.com $:	Author of last commit
-* $Date: 2013-06-26 12:38:36 +0200 (Wed, 26 Jun 2013) $:	Date of last commit
+* $Date: 2013-12-04 17:29:20 +0100 (Wed, 04 Dec 2013) $:	Date of last commit
 * $HeadURL: http://numl.googlecode.com/svn/trunk/libnuml/src/numl/DimensionDescription.h $
-* $Id: DimensionDescription.h 40 2013-06-26 10:38:36Z josephodada@gmail.com $
+* $Id: DimensionDescription.h 51 2013-12-04 16:29:20Z josephodada@gmail.com $
 * End svn Header
 * ****************************************************************************
 * This file is part of libNUML.  Please visit http://code.google.com/p/numl/for more
@@ -176,7 +176,7 @@ public:
 	*
 	* @see getElementName()
 	*/
-	virtual NUMLTypeCode_t getTypeCode () const { return NUML_DIMENSION; };
+	virtual NUMLTypeCode_t getTypeCode () const { return NUML_DIMENSIONDESCRIPTION; };
 
 
 	/**

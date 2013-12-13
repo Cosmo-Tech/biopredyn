@@ -47,28 +47,6 @@ class LibSBMLSimResult(Result):
     for i in range(self.result.getNumOfRows()):
       time.append(self.result.getTimeValueAtIndex(i))
     return time
-  
-  ## Plots all the time series stored in self.result on a single 2D plot
-  # @param self The object pointer.
-  # @param interactive Boolean value stating whether the plots have to be
-  #   drawn in interactive mode or not.
-  def plot2D_all(self, interactive):
-    time = self.get_time_steps()
-    if interactive:
-      plt.ion()
-    for i in range(self.result.getNumOfSpecies()):
-      name = self.result.getSpeciesNameAtIndex(i)
-      plt.plot(time, self.get_quantities_per_species(name), label=name)
-    plt.legend()
-    plt.show()
-    plt.close()
-  
-  ## Write the content of self.result in a file at the input location
-  # @param self The object pointer.
-  # @param path Path to the folder where the output file will be written
-  # (including the file name).
-  def write(self, path):
-    libsbmlsim.write_result(self.result, path)
 
 ## Derived class for COPASI simulation runs.
 class CopasiResult:

@@ -1,10 +1,10 @@
 /**
 * Begin svn Header
-* $Rev: 49 $:	Revision of last commit
+* $Rev: 51 $:	Revision of last commit
 * $Author: josephodada@gmail.com $:	Author of last commit
-* $Date: 2013-10-29 18:05:14 +0100 (Tue, 29 Oct 2013) $:	Date of last commit
+* $Date: 2013-12-04 17:29:20 +0100 (Wed, 04 Dec 2013) $:	Date of last commit
 * $HeadURL: http://numl.googlecode.com/svn/trunk/libnuml/src/numl/NMBase.h $
-* $Id: NMBase.h 49 2013-10-29 17:05:14Z josephodada@gmail.com $
+* $Id: NMBase.h 51 2013-12-04 16:29:20Z josephodada@gmail.com $
 * End svn Header
 * ****************************************************************************
 * This file is part of libNUML.  Please visit http://code.google.com/p/numl/for more
@@ -564,6 +564,24 @@ public:
    */
   unsigned int getVersion () const;
 
+  /**
+     * Returns the libnuml type code for this object.
+     *
+     * This method may return the type code of this NUML object, or it may
+     * return @link NUMLTypeCode_t#NUML_UNKNOWN NUML_UNKNOWN@endlink.  This
+     * is because subclasses of NMBase are not required to implement this
+     * method to return a type code.  This method is meant primarily for the
+     * LibNUML C interface, in which class and subclass information is not
+     * readily available.
+     *
+     * @return the @if clike #NUMLTypeCode_t value@else NUML object type code@endif@~
+     * of this NUML object or
+     * @link NUMLTypeCode_t#NUML_UNKNOWNNUML_UNKNOWN@endlink (the default).
+     *
+     * @see getElementName()
+     * @see getPackageName()
+     */
+ //   virtual int getTypeCode () const;
 
   /**
    * Returns the libNUML type code for this object.

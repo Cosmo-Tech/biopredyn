@@ -54,6 +54,8 @@ class Output:
 class Plot2D(Output):
   ## @var curves
   # A list of 2-dimensional signals to be plotted on the output.
+  ## @var plot
+  # A matplotlib figure.
   
   ## Overridden constructor.
   # @param self The object pointer.
@@ -83,24 +85,27 @@ class Plot2D(Output):
   def get_curves(self):
     return self.curves
   
+  ## Getter. Returns self.plot.
+  # @param self The object pointer.
+  # @return self.plot
+  def get_plot(self):
+    return self.plot
+  
   ## Plot the result of the task associated with self.data.
   # @param self The object pointer.
-  # @param interactive States whether the produced plot shoudl be interactive
-  # or not.
-  def process(self, interactive):
-    plot_2d = plt.figure(self.id)
-    if interactive:
-      plt.ion()
+  def process(self):
+    self.plot = plt.figure()
+    ax = self.plot.add_subplot(111)
     for c in self.curves:
-      c.plot(plot_2d)
-    plt.legend()
-    plt.show()
-    plt.close()
+      c.plot(ax)
+    ax.legend()
 
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
   ## @var surfaces
   # A list of 3-dimensional signals to be plotted on the output.
+  ## @var plot
+  # A matplotlib figure.
   
   ## Overridden constructor.
   # @param self The object pointer.
@@ -124,6 +129,12 @@ class Plot3D(Output):
       tree += str(s)
     return tree
   
+  ## Getter. Returns self.plot.
+  # @param self The object pointer.
+  # @return self.plot
+  def get_plot(self):
+    return self.plot
+  
   ## Getter. Returns self.surfaces.
   # @param self The object pointer.
   # @return self.surfaces
@@ -133,7 +144,16 @@ class Plot3D(Output):
   ## Plot the result of the task associated with self.data.
   # @param self The object pointer.
   def process(self):
-    print "Plot3D::plot_surfaces TODO"
+    self.plot = plt.figure(self.id)
+    ax = self.plot.add_subplot(111, projection='3d')
+    for s in self.surfaces:
+      s.plot(ax)
+    ax.legend()
+  
+  ## Show self.plot in a matplotlib window.
+  # @param self The object pointer.
+  def show_plot(self):
+    self.plot.show()
 
 ## Output-derived class for reports.
 class Report(Output):
@@ -150,9 +170,9 @@ class Report(Output):
     self.type = out.getElementName()
     self.datasets = []
     for d in report.getListOfDataSets():
-      self.surfaces.append(data.DataSet(d, workflow))
+      self.datasets.append(data.DataSet(d, workflow))
   
   ## Write the result of the task associated with self.data into a CSV file.
   # @param self The object pointer.
   def process(self):
-    print "Report::write TODO"
+    print "Report::process TODO"

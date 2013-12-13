@@ -1,10 +1,10 @@
 /**
 * Begin svn Header
-* $Rev: 25 $:	Revision of last commit
+* $Rev: 51 $:	Revision of last commit
 * $Author: josephodada@gmail.com $:	Author of last commit
-* $Date: 2013-04-24 18:03:01 +0200 (Wed, 24 Apr 2013) $:	Date of last commit
+* $Date: 2013-12-04 17:29:20 +0100 (Wed, 04 Dec 2013) $:	Date of last commit
 * $HeadURL: http://numl.googlecode.com/svn/trunk/libnuml/src/numl/Tuple.h $
-* $Id: Tuple.h 25 2013-04-24 16:03:01Z josephodada@gmail.com $
+* $Id: Tuple.h 51 2013-12-04 16:29:20Z josephodada@gmail.com $
 * End svn Header
 * ****************************************************************************
 * This file is part of libNUML.  Please visit http://code.google.com/p/numl/for more
@@ -118,7 +118,7 @@ public:
 	*
 	* @see getElementName()
 	*/
-	virtual NUMLTypeCode_t getTypeCode () const { return NUML_NUMLLIST; };
+	virtual NUMLTypeCode_t getTypeCode () const { return NUML_TUPLE; };
 
 
 	/**
