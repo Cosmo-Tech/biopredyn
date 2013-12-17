@@ -17,6 +17,7 @@ find_path(LIBSBML_INCLUDE_DIR
 find_library(LIBSBML_LIBRARY
   NAMES libsbml.so libsbml.dll libsbml
   PATHS /usr/lib
+        /usr/lib64
         /usr/local/lib
         /opt/local/lib
   )
