@@ -83,15 +83,15 @@ class DataGenerator:
       results.append(self.math)
     # SymPy substitution - variables
     for v in self.variables:
-      id = v.get_id()
+      v_id = v.get_id()
       values = v.get_values()
       for n in range(num_time_points):
-        results[n] = results[n].subs(id, values[n])
+        results[n] = results[n].subs(v_id, values[n])
     # SymPy substitution - parameters
     for p in self.parameters:
-      id = p.get_id()
+      p_id = p.get_id()
       for n in range(num_time_points):
-        results[n] = results[n].subs(id, p.get_value())
+        results[n] = results[n].subs(p_id, p.get_value())
     return results
   
   ## Transform the input MathML mathematical expression into a SymPy

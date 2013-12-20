@@ -22,7 +22,7 @@ set(
   )
 
 option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" OFF)
-option(BPD_GENERATE_LIBBIOPREDYN "Build libBioPreDyn library" ON)
+option(BPD_GENERATE_LIBBIOPREDYN "Build libBioPreDyn library" OFF)
 option(WITH_PYTHON "Build Python wrappers for compiled libraries" ON)
 
 if (PYTHONINTERP_FOUND AND PYTHON_LIBRARIES)
