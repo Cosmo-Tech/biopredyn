@@ -1,3 +1,5 @@
+# coding=utf-8
+
 ## @package biopredyn
 ## @author: $Author$
 ## @date: $Date$
@@ -141,5 +143,5 @@ class UniformTimeCourse(Simulation):
   ## Setter. Assign a new value to self.output_start_time.
   # @param self The object pointer.
   # @param output_start_time New value for self.output_start_time.
-  def set_output_start_time(self):
+  def set_output_start_time(self, output_start_time):
     self.output_start_time = output_start_time

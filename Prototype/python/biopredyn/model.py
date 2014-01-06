@@ -1,3 +1,5 @@
+# coding=utf-8
+
 ## @package biopredyn
 ## @author: $Author$
 ## @date: $Date$
