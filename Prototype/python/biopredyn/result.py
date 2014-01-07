@@ -83,7 +83,7 @@ class NuMLResult(Result):
   def get_quantities_per_species(self, species, component=0):
     quantities = []
     component = self.result.getResultComponents().get(component)
-    # TODO - The "get" problem in libnuml should be solved first.
+    # TODO
     return quantities
   
   ## Returns the list of all time steps in self.result.
