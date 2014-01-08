@@ -9,6 +9,7 @@ find_library(LIBBZIP2_LIBRARY
   NAMES libbz2.so libbz2
   PATHS /lib/x86_64-linux-gnu/
         /usr/lib/x86_64-linux-gnu/
+        /usr/lib/i386-linux-gnu/
         /usr/lib/
         /usr/lib64/
         /usr/local/lib/ )
