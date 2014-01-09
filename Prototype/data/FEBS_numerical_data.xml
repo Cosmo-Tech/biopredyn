@@ -7,14 +7,17 @@
   <resultComponents>
     <resultComponent id="component1">
       <dimensionDescription>
-        <compositeDescription name="Time" ontologyTerm="term1" indexType="double">
-          <compositeDescription name="Species" indexType="string">
-            <atomicDescription name="Concentration" ontologyTerm="term2" valueType="double" />
+        <compositeDescription name="Index" indexType="double">
+          <compositeDescription name="Series" indexType="string">
+            <atomicDescription name="Value" valueType="double" />
           </compositeDescription>
         </compositeDescription>
       </dimensionDescription>
       <dimension>
         <compositeValue indexValue="1">
+          <compositeValue indexValue="time">
+            <atomicValue>1</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.021426</atomicValue>
           </compositeValue>
@@ -23,6 +26,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="2">
+          <compositeValue indexValue="time">
+            <atomicValue>2</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.360760</atomicValue>
           </compositeValue>
@@ -31,6 +37,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="3">
+          <compositeValue indexValue="time">
+            <atomicValue>3</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.161457</atomicValue>
           </compositeValue>
@@ -39,6 +48,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="4">
+          <compositeValue indexValue="time">
+            <atomicValue>4</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.052399</atomicValue>
           </compositeValue>
@@ -47,6 +59,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="5">
+          <compositeValue indexValue="time">
+            <atomicValue>5</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.004292</atomicValue>
           </compositeValue>
@@ -55,6 +70,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="6">
+          <compositeValue indexValue="time">
+            <atomicValue>6</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.027122</atomicValue>
           </compositeValue>
@@ -63,6 +81,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="7">
+          <compositeValue indexValue="time">
+            <atomicValue>7</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.018864</atomicValue>
           </compositeValue>
@@ -71,6 +92,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="8">
+          <compositeValue indexValue="time">
+            <atomicValue>8</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.009392</atomicValue>
           </compositeValue>
@@ -79,6 +103,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="9">
+          <compositeValue indexValue="time">
+            <atomicValue>9</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.032753</atomicValue>
           </compositeValue>
@@ -87,6 +114,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="10">
+          <compositeValue indexValue="time">
+            <atomicValue>10</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.006455</atomicValue>
           </compositeValue>
@@ -95,6 +125,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="11">
+          <compositeValue indexValue="time">
+            <atomicValue>11</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.034747</atomicValue>
           </compositeValue>
@@ -103,6 +136,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="12">
+          <compositeValue indexValue="time">
+            <atomicValue>12</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.000320</atomicValue>
           </compositeValue>
@@ -111,6 +147,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="13">
+          <compositeValue indexValue="time">
+            <atomicValue>13</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.035073</atomicValue>
           </compositeValue>
@@ -119,6 +158,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="14">
+          <compositeValue indexValue="time">
+            <atomicValue>14</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.017694</atomicValue>
           </compositeValue>
@@ -127,6 +169,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="15">
+          <compositeValue indexValue="time">
+            <atomicValue>15</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.024451</atomicValue>
           </compositeValue>
@@ -135,6 +180,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="16">
+          <compositeValue indexValue="time">
+            <atomicValue>16</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.024254</atomicValue>
           </compositeValue>
@@ -143,6 +191,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="17">
+          <compositeValue indexValue="time">
+            <atomicValue>17</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.005446</atomicValue>
           </compositeValue>
@@ -151,6 +202,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="18">
+          <compositeValue indexValue="time">
+            <atomicValue>18</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>-0.022192</atomicValue>
           </compositeValue>
@@ -159,6 +213,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="19">
+          <compositeValue indexValue="time">
+            <atomicValue>19</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.022681</atomicValue>
           </compositeValue>
@@ -167,6 +224,9 @@
           </compositeValue>
         </compositeValue>
         <compositeValue indexValue="20">
+          <compositeValue indexValue="time">
+            <atomicValue>21</atomicValue>
+          </compositeValue>
           <compositeValue indexValue="C">
             <atomicValue>0.009495</atomicValue>
           </compositeValue>

@@ -67,9 +67,10 @@ class Task:
           0,
           libsbmlsim.MTHD_RUNGE_KUTTA,
           0)
-      # TODO: process the result - libNUML dependent
-      self.result = result.LibSBMLSimResult(r)
+      self.result = result.Result()
+      self.result.import_from_libsbmlsim(r)
     else:
+      # TODO: other types of simulation
       print "TODO"
 
   ## Getter. Returns self.id.

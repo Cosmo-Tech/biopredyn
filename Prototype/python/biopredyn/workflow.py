@@ -181,9 +181,13 @@ class WorkFlow:
   
   ## Parse self.outputs and produce the corresponding outputs.
   # @param self The object pointer.
-  def process_outputs(self):
+  # @param show Boolean value stating whether the output must be shown, if
+  # possible.
+  def process_outputs(self, show):
     for o in self.outputs:
       o.process()
+      if o.__class__.__name__ == "Plot2D" or o.__class__.__name__ == "Plot3D":
+        o.show_plot()
   
   ## Executes the pipeline encoded in self.sedml.
   # Each task in self.tasks is executed.

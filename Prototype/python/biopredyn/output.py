@@ -101,6 +101,11 @@ class Plot2D(Output):
     for c in self.curves:
       c.plot(ax)
     ax.legend()
+  
+  ## Show self.plot in a matplotlib window.
+  # @param self The object pointer.
+  def show_plot(self):
+    self.plot.show()
 
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
