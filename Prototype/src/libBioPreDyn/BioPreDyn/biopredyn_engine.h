@@ -5,7 +5,7 @@
   $Author$
   $Date$
   $Revision$
-  $Copyright: [2013] BioPreDyn $
+  $Copyright: [2013-2014] BioPreDyn $
 
 =========================================================================*/
  //

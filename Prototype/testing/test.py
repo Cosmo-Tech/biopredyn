@@ -3,7 +3,7 @@
 ## @package biopredyn
 ## @author: $Author$
 ## @date: $Date$
-## @copyright: $Copyright$
+## @copyright: $Copyright: [2013-2014] BioPreDyn $
 ## @version: $Revision$
 
 import sys
@@ -59,8 +59,6 @@ HELP_MESSAGE = "Test file for BioPreDyn project; contains all tests."
 # Optional parameters.
 HELP_OPTION = {
 "help"    : [  "Display this help message."],
-"cobra"   : [  "Not available yet."],
-"copasi"  : [  "Not available yet."],
 "sbml"    : [  "Open the input file as an SBML model; SBML compliance will " +
               "be checked."],
 "sedml"   : [  "Open the input SED-ML model file, execute its tasks using " +
@@ -112,7 +110,7 @@ def print_help_argument(arg, listhelplines):
 # main
 try:
   opts, args = getopt.getopt(sys.argv[2:], "", [
-      'help', 'cobra', 'copasi', 'sbml', 'sedml', 'numl'])
+      'help', 'sbml', 'sedml', 'numl'])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type main.py --help for more information" )
@@ -139,8 +137,4 @@ for o, a in opts:
       if str.lower(i) != "time":
         ax.plot(res.get_time_steps(), res.get_quantities_per_species(i))
     plot.show()
-  elif o == "--cobra":
-    print("Something will happen with cobrapy here soon.")
-  elif o == "--copasi":
-    print("Something will happen with COPASI here soon.")
 
