@@ -29,6 +29,17 @@ class Result:
   def __init__(self):
     self.result = dict()
   
+  ## Returns the number of time series in self.result; potential "time" series
+  ## are not counted as time series.
+  # @param self The object pointer.
+  # @return The numbr of time series in self.result.
+  def get_number_of_series(self):
+    number = 0;
+    for i in self.result:
+      if str.lower(i) != "time":
+        number = number + 1
+    return number
+  
   ## Returns a list containing all the quantity values for the input species
   ## over time.
   # @param self The object pointer.
@@ -94,7 +105,7 @@ class Result:
   # @param file Address of a NuML file.
   # @param component Index of the resultComponent to be considered; default 0.
   def import_from_numl_file(self, file, component=0):
-    reader = NUMLReader()
+    reader = libnuml.NUMLReader()
     doc = reader.readNUMLFromFile(file)
     if doc.getNumErrors() > 0:
       print("Error code " + str(doc.getError(0).getErrorId()) +
@@ -110,5 +121,5 @@ class Result:
       # Populating values
       for i in dim:
         for v in i:
-          self.results[v.getIndexValue()].append(
+          self.result[v.getIndexValue()].append(
             v.getAtomicValue().getDoubleValue())

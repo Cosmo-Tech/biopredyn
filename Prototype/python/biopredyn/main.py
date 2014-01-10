@@ -33,26 +33,14 @@ for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../../bin')):
 import getopt
 import sys
 import textwrap
-import numpy as np
-import matplotlib.pyplot as plt
 
-import libsbml
-import libsedml
-import libnuml
-import model
-import workflow
-
-COMMAND_SYNTAX_MESSAGE = 'python main.py /path/to/input/file [options]'
+COMMAND_SYNTAX_MESSAGE = 'python main.py [options]'
 
 HELP_MESSAGE = "This program is a prototype for the BioPreDyn software suite developed within the scope of the BioPreDyn FP7 project; it applies an analysis pattern to an SBML model defining a biological system."
 
 # Optional parameters.
 HELP_OPTION = {
 "help"    : [  "Display this help message."],
-"cobra"   : [  "Open the input file using the cobrapy library."],
-"copasi"  : [  "Open the input SED-ML file and execute its tasks using the Copasi library."],
-"sbml"    : [  "Open the input file as an SBML model; SBML compliance will be checked."],
-"sedml"   : [  "Open the input SED-ML model file and execute its tasks using the libSBMLSim library."],
 }
 
 HELP_KEYWORD_SIZE = 16   # Left column
@@ -96,8 +84,7 @@ def print_help_argument(arg, listhelplines):
 
 # main
 try:
-  opts, args = getopt.getopt(sys.argv[2:], "", [
-      'help', 'cobra', 'copasi', 'sbml', 'sedml'])
+  opts, args = getopt.getopt(sys.argv[2:], "", ['help'])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type main.py --help for more information" )
@@ -109,14 +96,3 @@ for o, a in opts:
   if o == "--help":
     print_help()
     sys.exit(0)
-  elif o == "--sbml":
-    model = model.SBMLModel(source=sys.argv[1])
-    model.check()
-  elif o == "--sedml":
-    flow = workflow.WorkFlow(sys.argv[1])
-    flow.run_tasks()
-    flow.process_outputs(True)
-  elif o == "--cobra":
-    print("Something will happen with cobrapy here soon.")
-  elif o == "--copasi":
-    print("Something will happen with COPASI here soon.")
