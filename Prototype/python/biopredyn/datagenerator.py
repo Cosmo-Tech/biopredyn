@@ -71,6 +71,12 @@ class DataGenerator:
   def get_name(self):
     return self.name
   
+  ## Returns the number of time points in the variables used by this.
+  # @param self The object pointer.
+  # @return The number of time points in the variables used by this.
+  def get_number_of_points(self):
+    return self.variables[0].get_number_of_points()
+  
   ## Evaluate the values encoded by this and returned them as a 1-dimensional
   # array of numerical values.
   # @param self The object pointer.
@@ -78,7 +84,7 @@ class DataGenerator:
   def get_values(self):
     # The number of time points to be considered must be known
     # It is assumed that all the variables have the same number of time points
-    num_time_points = self.variables[0].get_task().get_simulation().get_number_of_points()
+    num_time_points = self.variables[0].get_number_of_points()
     results = []
     # Initialization 
     for i in range(num_time_points):

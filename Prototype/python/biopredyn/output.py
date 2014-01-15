@@ -8,7 +8,7 @@
 
 import io
 import data
-import libsedml
+import libsedml, libnuml
 from matplotlib import pyplot as plt
 
 ## Base class for encoding the outputs of the current work flow.
@@ -181,17 +181,18 @@ class Report(Output):
       self.datasets.append(data.DataSet(d, workflow))
   
   ## Write the result of the task associated with self.data into a report file.
+  ## The report format depends on the extension of the input file: if it ends
+  ## with '.csv', it will be a CSV file, if it ends with '.xml', it will be a
+  ## NuML file.
   # @param self The object pointer.
   # @param filename Where to write the report file.
-  # @param format String value defining the report format. Possible values are
-  # 'csv' and 'numl' (default 'csv').
-  def process(self, filename, format="csv"):
-    if (str.lower(format) == 'csv'):
+  def process(self, filename):
+    if (filename.endswith('.csv')):
       self.write_as_csv(filename)
-    elif (str.lower(format) == 'numl'):
+    elif (filename.endswith('.xml')):
       self.write_as_numl(filename)
     else:
-      print("Error: invalid report format. Possible formats are: csv, numl.")
+      print("Error: invalid report format. Possible formats are: .csv, .xml")
       sys.exit(2)
   
   ## Write the result of the task associated with self.data into a CSV file.
@@ -209,4 +210,27 @@ class Report(Output):
   # @param self The object pointer.
   # @param filename Where to write the NuML file.
   def write_as_numl(self, filename):
-    print "TODO"
+    # Create a new NuML document and complete it
+    doc = libnuml.NUMLDocument()
+    # Add a ResultComponent
+    comp = doc.createResultComponent()
+    comp.setId(self.name)
+    # Add the default DimensionDescription
+    comp_desc = comp.createCompositeDescription()
+    comp_desc.setName("Index")
+    comp_desc.setIndexType("double")
+    series_desc = comp_desc.createCompositeDescription()
+    series_desc.setName("Series")
+    series_desc.setIndexType("string")
+    at_desc = series_desc.createAtomicDescription()
+    at_desc.setName("Value")
+    at_desc.setValueType("double")
+    # Create indices
+    for i in range(self.datasets[0].get_number_of_points()):
+      value = comp.createCompositeValue()
+      value.setIndexValue(str(i))
+    # Populate the indices with values
+    for d in self.datasets:
+      d.write_as_numl(comp.getDimension())
+    writer = libnuml.NUMLWriter()
+    writer.writeNUML(doc, filename)

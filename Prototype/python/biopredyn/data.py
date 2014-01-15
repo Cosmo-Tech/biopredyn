@@ -67,6 +67,12 @@ class DataSet(Data):
   def get_label(self):
     return self.label
   
+  ## Returns the number of time points in self.data_ref.
+  # @param self The object poitner.
+  # @return The number of time points in self.data_ref.
+  def get_number_of_points(self):
+    return self.data_ref.get_number_of_points()
+  
   ## Getter. Returns self.data_ref.
   # @param self The object pointer.
   # @return self.data_ref
@@ -84,6 +90,18 @@ class DataSet(Data):
     for v in values:
       file.write(str(v) + u',')
     file.write(u'\n')
+  
+  ## Write the data encoded in the input Dimension object; each data
+  ## value is written in the composite value corresponding to its index.
+  # @param self The object pointer.
+  # @param comp A Dimension instance.
+  def write_as_numl(self, dim):
+    values = self.data_ref.get_values()
+    for i in range(len(values)):
+      comp = dim.get(i).createCompositeValue()
+      comp.setIndexValue(self.name)
+      value = comp.createAtomicValue()
+      value.setValue(str(values[i]))
 
 ## DataSet-derived class for 2-dimensional data set description.
 class Curve(Data):
