@@ -72,6 +72,18 @@ class DataSet(Data):
   # @return self.data_ref
   def get_data_ref(self):
     return self.data_ref
+  
+  ## Write the data encoded in this at the end of the input file; data is
+  ## written as comma-separated values, as follows:
+  ## self.name,0.23,2.56,2.1e-9,[...],5.23
+  # @param self The object pointer.
+  # @param file A writable .csv file.
+  def write_as_csv(self, file):
+    file.write(self.name + u',')
+    values = self.data_ref.get_values()
+    for v in values:
+      file.write(str(v) + u',')
+    file.write(u'\n')
 
 ## DataSet-derived class for 2-dimensional data set description.
 class Curve(Data):

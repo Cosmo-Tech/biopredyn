@@ -51,21 +51,24 @@ import libnuml
 import model
 import workflow
 import result
+import resources
 
-COMMAND_SYNTAX_MESSAGE = 'python main.py /path/to/input/file [options]'
+COMMAND_SYNTAX_MESSAGE = 'python test.py [options]'
 
 HELP_MESSAGE = "Test file for BioPreDyn project; contains all tests."
 
 # Optional parameters.
 HELP_OPTION = {
-"help"    : [  "Display this help message."],
-"sbml"    : [  "Open the input file as an SBML model; SBML compliance will " +
-              "be checked."],
-"sedml"   : [  "Open the input SED-ML model file, execute its tasks using " +
-              "the libSBMLSim library, process its graphical outputs and " +
-              "display them."],
-"numl"    : [  "Open the input NuML result file, import it in a Result " +
-              "object and plot its content."],
+"-h, --help"   : [  "Display this help message."],
+"--sbml"       : [  "Open the input file as an SBML model; SBML compliance" +
+                  "will be checked."],
+"--sedml"      : [  "Open the input SED-ML model file, execute its tasks " +
+                  "using the libSBMLSim library, process its graphical " +
+                  "outputs and display them."],
+"--numl"       : [  "Open the input NuML result file, import it in a Result " +
+                  "object and plot its content."],
+"-o, --output" : [  "Open the input NuML result file, import it in a Result " +
+                  "object and plot its content."],
 }
 
 HELP_KEYWORD_SIZE = 16   # Left column
@@ -101,7 +104,7 @@ def print_help_argument(arg, listhelplines):
     for line in lines:
       # First line: Print arg name.
       if firstLine:
-        print ('--' + arg).ljust(HELP_KEYWORD_SIZE) + line
+        print (arg).ljust(HELP_KEYWORD_SIZE) + line
         firstLine = False
       else:
         print ''.ljust(HELP_KEYWORD_SIZE) + line
@@ -109,32 +112,44 @@ def print_help_argument(arg, listhelplines):
 
 # main
 try:
-  opts, args = getopt.getopt(sys.argv[2:], "", [
-      'help', 'sbml', 'sedml', 'numl'])
+  opts, args = getopt.getopt(sys.argv[1:], 'o:', [
+      'help', 'sbml=', 'sedml=', 'numl=', 'output='])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type main.py --help for more information" )
   print( msg )
   sys.exit(2)
 
+output = None
+
 for o, a in opts:
-  if o == "--help":
+  if o in ("--help", "-h"):
     print_help()
     sys.exit(0)
-  elif o == "--sbml":
-    model = model.SBMLModel(source=sys.argv[1])
+  elif o in ("--output", "-o"):
+    output = a
+
+# Installing resource manager
+user = "dashuser-biopredyn"
+password = "Nie8eir2"
+manager = resources.ResourceManager()
+manager.add_password("https://thecosmocompany.com/svn/repos/SVN/BioPreDyn",
+                     user, password)
+
+for o, a in opts:
+  if o == "--sbml":
+    model = model.SBMLModel(manager, source=a)
     model.check()
   elif o == "--sedml":
-    flow = workflow.WorkFlow(sys.argv[1])
+    flow = workflow.WorkFlow(a, res_man=manager)
     flow.run_tasks()
-    flow.process_outputs(True)
+    flow.process_outputs(True, output)
   elif o == "--numl":
     res = result.Result()
-    res.import_from_numl_file(sys.argv[1])
+    res.import_from_numl_file(a, manager)
     plot = plt.figure("numl_test")
     ax = plot.add_subplot(111)
     for i in res.get_result():
       if str.lower(i) != "time":
         ax.plot(res.get_time_steps(), res.get_quantities_per_species(i))
     plot.show()
-

@@ -6,6 +6,7 @@
 ## @copyright: $Copyright: [2013-2014] BioPreDyn $
 ## @version: $Revision$
 
+import io
 import data
 import libsedml
 from matplotlib import pyplot as plt
@@ -172,14 +173,40 @@ class Report(Output):
   # @param report A SedReport object.
   # @param workflow A WorkFlow object.
   def __init__(self, report, workflow):
-    self.id = out.getId()
-    self.name = out.getName()
-    self.type = out.getElementName()
+    self.id = report.getId()
+    self.name = report.getName()
+    self.type = report.getElementName()
     self.datasets = []
     for d in report.getListOfDataSets():
       self.datasets.append(data.DataSet(d, workflow))
   
+  ## Write the result of the task associated with self.data into a report file.
+  # @param self The object pointer.
+  # @param filename Where to write the report file.
+  # @param format String value defining the report format. Possible values are
+  # 'csv' and 'numl' (default 'csv').
+  def process(self, filename, format="csv"):
+    if (str.lower(format) == 'csv'):
+      self.write_as_csv(filename)
+    elif (str.lower(format) == 'numl'):
+      self.write_as_numl(filename)
+    else:
+      print("Error: invalid report format. Possible formats are: csv, numl.")
+      sys.exit(2)
+  
   ## Write the result of the task associated with self.data into a CSV file.
   # @param self The object pointer.
-  def process(self):
-    print "Report::process TODO"
+  # @param filename Where to write the CSV file.
+  def write_as_csv(self, filename):
+    # Open a file at the given location
+    f = io.open(filename, 'wt')
+    f.write(self.name + u'\n')
+    for d in self.datasets:
+      d.write_as_csv(f)
+    f.close()
+  
+  ## Write the result of the task associated with self.data into a NuML file.
+  # @param self The object pointer.
+  # @param filename Where to write the NuML file.
+  def write_as_numl(self, filename):
+    print "TODO"

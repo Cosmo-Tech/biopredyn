@@ -99,19 +99,5 @@
         </curve>
       </listOfCurves>
     </plot2D>
-    <report id="report_1" name="time_series">
-      <listOfDataSets>
-        <dataSet id="data1" name="Time" dataReference="datagenerator_1">
-        </dataSet>
-        <dataSet id="data2" name="E" dataReference="datagenerator_2">
-        </dataSet>
-        <dataSet id="data3" name="S" dataReference="datagenerator_3">
-        </dataSet>
-        <dataSet id="data4" name="C" dataReference="datagenerator_4">
-        </dataSet>
-        <dataSet id="data5" name="P" dataReference="datagenerator_5">
-        </dataSet>
-      </listOfDataSets>
-    </report>
   </listOfOutputs>
 </sedML>

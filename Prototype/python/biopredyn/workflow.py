@@ -7,9 +7,9 @@
 ## @version: $Revision$
 
 import numpy as np
-
+import sys, os
 import libsedml
-import data, model, output, result, task, simulation, datagenerator
+import data, model, output, result, task, simulation, datagenerator, resources
 
 ## Class for SED-ML generic work flows.
 class WorkFlow:
@@ -20,7 +20,9 @@ class WorkFlow:
   ## @var models
   # A list of Model elements.
   ## @var outputs
-  # A list of Output elements
+  # A list of Output elements.
+  ## @var resource_manager
+  # Resource manager for the current work flow.
   ## @var sedml
   # A SED-ML document.
   ## @var tasks
@@ -30,16 +32,22 @@ class WorkFlow:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param file Address of the SED-ML file to be read.
-  def __init__(self, file):
-    self.source = file
+  # @param source Address of the SED-ML file to be read.
+  # @param res_man A ResourceManager instance; optional (default None).
+  def __init__(self, source, res_man=None):
+    self.source = source
+    if res_man == None:
+      self.resource_manager = resources.ResourceManager()
+    else:
+      self.resource_manager = res_man
+    file = self.resource_manager.get_resource(self.source)
     reader = libsedml.SedReader()
-    self.sedml = reader.readSedML(file)
+    self.sedml = reader.readSedMLFromString(file.read())
     self.check()
     # Parsing self.sedml for model elements
     self.models = []
     for m in self.sedml.getListOfModels():
-      self.models.append(model.SBMLModel(model=m))
+      self.models.append(model.SBMLModel(self.resource_manager, model=m))
     # Parsing self.sedml for simulation elements
     self.simulations = []
     for s in self.sedml.getListOfSimulations():
@@ -183,11 +191,19 @@ class WorkFlow:
   # @param self The object pointer.
   # @param show Boolean value stating whether the output must be shown, if
   # possible.
-  def process_outputs(self, show):
+  # @param filename Where to write the potential report file (default None).
+  def process_outputs(self, show, filename=None):
+    if filename == None:
+      filename = os.path.join(os.path.dirname(__file__), 'output.csv')
     for o in self.outputs:
-      o.process()
       if o.__class__.__name__ == "Plot2D" or o.__class__.__name__ == "Plot3D":
+        o.process()
         o.show_plot()
+      elif o.__class__.__name__ == "Report":
+        o.process(filename)
+      else:
+        sys.exit("Error: invalid output type. Possible output types are: " +
+              "Plot2D, Plot3D, Report")
   
   ## Executes the pipeline encoded in self.sedml.
   # Each task in self.tasks is executed.

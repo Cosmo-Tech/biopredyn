@@ -18,18 +18,22 @@ class SBMLModel:
   ## @var model
   # An SBML model.
   
-  ## Constructor.
+  ## Constructor; one of the two argument 'model' or 'source' must be passed to
+  ## the constructor.
   # @param self The object pointer.
-  # @param model A SED-ML model element; optional.
-  # @param source The address of a SBML model file; optional.
-  def __init__(self, model=None, source=None):
+  # @param manager An instance of ResourceManager.
+  # @param model A SED-ML model element; optional (default None).
+  # @param source The address of a SBML model file; optional (default None).
+  def __init__(self, manager, model=None, source=None):
     reader = libsbml.SBMLReader()
     if model is not None:
       self.id = model.getId()
       self.source = model.getSource()
     elif source is not None:
       self.source = source
-    self.model = reader.readSBML(self.source)
+    file = manager.get_resource(self.source)
+    self.model = reader.readSBMLFromString(file.read())
+
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.

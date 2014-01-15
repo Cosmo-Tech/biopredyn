@@ -102,11 +102,13 @@ class Result:
   ##
   ## This file should contain only one resultComponent
   # @param self The object pointer.
-  # @param file Address of a NuML file.
+  # @param address Address of a NuML file.
+  # @param manager A ResourceManager instance.
   # @param component Index of the resultComponent to be considered; default 0.
-  def import_from_numl_file(self, file, component=0):
+  def import_from_numl_file(self, address, manager, component=0):
+    file = manager.get_resource(address)
     reader = libnuml.NUMLReader()
-    doc = reader.readNUMLFromFile(file)
+    doc = reader.readNUMLFromString(file.read())
     if doc.getNumErrors() > 0:
       print("Error code " + str(doc.getError(0).getErrorId()) +
             " when opening file: " +

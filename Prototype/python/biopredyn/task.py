@@ -59,8 +59,8 @@ class Task:
       # number_of_points is defined between these two points:
       step = (end - start) / steps
       # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
-      r = libsbmlsim.simulateSBMLFromFile(
-          self.model.get_source(),
+      r = libsbmlsim.simulateSBMLFromString(
+          self.model.get_model().toSBML(),
           end,
           step,
           1,
