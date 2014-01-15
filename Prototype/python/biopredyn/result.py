@@ -58,7 +58,10 @@ class Result:
   # @param self The object pointer.
   # @return The list of time steps.
   def get_time_steps(self):
-    return self.result["time"]
+    for t in self.result:
+      if str.lower(t) == "time":
+        return self.result[t]
+    sys.exit("Error: no time series found.")
   
   ## Import numerical values from the output of a libSBMLSim simulation and
   ## store them in self.result.
