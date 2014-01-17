@@ -71,8 +71,8 @@ class Result:
   # @param address Address of a CSV file (either .csv or .txt).
   # @param manager A ResourceManager instance.
   # @param separator A string indicating the type of separator to be expected
-  # between the data values; possible values are ',', ' ', '\t', ';', '|' and
-  # ':' (default '\t').
+  # between the data values; possible values are ',', ' ', '\\t', ';', '|' and
+  # ':' (default '\\t').
   # @param alignment String value indicating the way data is aligned in the
   # input file; possible values are 'row' and 'column' (default 'row').
   # @param header_size Integer value indicating the size of the file header in

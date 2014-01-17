@@ -11,6 +11,8 @@ import libsbml
 from sympy import *
 import variable, parameter
 
+## Data generation class, used for creating outputs from task results in a
+## SED-ML work flow.
 class DataGenerator:
   ## @var id
   # A unique identifier for this object.

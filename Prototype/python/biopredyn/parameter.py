@@ -8,6 +8,7 @@
 
 import libsedml
 
+## Base representation of a model parameter in a SED-ML work flow.
 class Parameter:
   ## @var id
   # A unique identifier for this object.
@@ -18,7 +19,7 @@ class Parameter:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param variable A SED-ML parameter element.
+  # @param parameter A SED-ML parameter element.
   def __init__(self, parameter):
     self.id = parameter.getId()
     self.name = parameter.getName()

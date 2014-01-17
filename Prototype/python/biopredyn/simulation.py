@@ -8,8 +8,8 @@
 
 import libsedml
 
-## Description of the execution of an algorithm, independent from the model or
-## data set it has to be run with.
+## Base representation of the execution of an algorithm, independent from the
+## model or data set it has to be run with.
 class Simulation:
   ## @var algorithm
   # KiSAO identifier of the algorithm to execute.
@@ -60,7 +60,7 @@ class Simulation:
   def get_type(self):
     return self.type
 
-## Derived class for uniform time course simulations.
+## Simulation-derived class for uniform time course simulations.
 class UniformTimeCourse(Simulation):
   ## @var initial_time
   # Time point where the simulation begins.

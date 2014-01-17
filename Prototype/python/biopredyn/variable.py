@@ -8,6 +8,7 @@
 
 import libsedml
 
+## Base representation of a model variable in a SED-ML work flow.
 class Variable:
   ## @var id
   # A unique identifier for this object.

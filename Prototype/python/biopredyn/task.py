@@ -21,9 +21,6 @@ class Task:
   # Result of the execution of the task.
   ## @var simulation
   # Reference to the simulation this object is about.
-  ## @var tool
-  # Reference to the software tool with which the task encoded by this object
-  # has to be run.
   
   ## Constructor.
   # @param self The object pointer.

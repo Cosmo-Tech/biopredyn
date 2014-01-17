@@ -94,7 +94,7 @@ class DataSet(Data):
   ## Write the data encoded in the input Dimension object; each data
   ## value is written in the composite value corresponding to its index.
   # @param self The object pointer.
-  # @param comp A Dimension instance.
+  # @param dim A Dimension instance.
   def write_as_numl(self, dim):
     values = self.data_ref.get_values()
     for i in range(len(values)):
@@ -103,7 +103,7 @@ class DataSet(Data):
       value = comp.createAtomicValue()
       value.setValue(str(values[i]))
 
-## DataSet-derived class for 2-dimensional data set description.
+## Data-derived class for 2-dimensional data set description.
 class Curve(Data):
   ## @var x_data_ref
   # ID of a DataGenerator object.
@@ -181,7 +181,7 @@ class Curve(Data):
       self.y_data_ref.get_values(),
       label=self.name)
 
-## DataSet-derived class for 3-dimensional data set description.
+## Data-derived class for 3-dimensional data set description.
 class Surface(Data):
   ## @var x_data_ref
   # ID of a DataGenerator object.
@@ -201,7 +201,7 @@ class Surface(Data):
   
   ## Overridden constructor.
   # @param self The object pointer.
-  # @param curve A SED-ML surface element.
+  # @param surface A SED-ML surface element.
   # @param workflow A WorkFlow object.
   def __init__(self, surface, workflow):
     self.id = surface.getId()
