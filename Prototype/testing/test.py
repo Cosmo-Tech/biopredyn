@@ -43,7 +43,8 @@ import getopt
 import sys
 import textwrap
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 import libsbml
 import libsedml
@@ -69,6 +70,8 @@ HELP_OPTION = {
                   "object and plot its content."],
 "-o, --output" : [  "Open the input NuML result file, import it in a Result " +
                   "object and plot its content."],
+"--csv"        : [  "Open the input CSV result file, import it in a Result " +
+                  "object and plot its content."]
 }
 
 HELP_KEYWORD_SIZE = 16   # Left column
@@ -113,7 +116,7 @@ def print_help_argument(arg, listhelplines):
 # main
 try:
   opts, args = getopt.getopt(sys.argv[1:], 'o:', [
-      'help', 'sbml=', 'sedml=', 'numl=', 'output='])
+      'help', 'sbml=', 'sedml=', 'numl=', 'output=', 'csv='])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type main.py --help for more information" )
@@ -152,4 +155,12 @@ for o, a in opts:
     for i in res.get_result():
       if str.lower(i) != "time":
         ax.plot(res.get_time_steps(), res.get_quantities_per_species(i))
+    plot.show()
+  elif o == "--csv":
+    res = result.Result()
+    res.import_from_csv_file(a, manager)
+    values = res.get_result()
+    plot = plt.figure("csv_test")
+    ax = plot.add_subplot(111, projection='3d')
+    ax.scatter(values["series_1"], values["series_2"], zs = values["series_3"])
     plot.show()

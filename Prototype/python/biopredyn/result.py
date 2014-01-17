@@ -9,10 +9,11 @@
 import libsbmlsim
 import libnuml
 from matplotlib import pyplot as plt
+import array
 
 ## Base class for simulation results
 class Result:
-  ## @var result 
+  ## @var result
   # Pointer to the output of a simulation run. Results are always stored as
   # a dictionary where keys are names and values are arrays, for instance:
   #
@@ -63,6 +64,53 @@ class Result:
         return self.result[t]
     sys.exit("Error: no time series found.")
   
+  ## Import numerical values from a CSV file and store them in self.result. The
+  ## way data is stored in the file (row or column wise) is specified by the
+  ## 'alignement' argument.
+  # @param self The object pointer.
+  # @param address Address of a CSV file (either .csv or .txt).
+  # @param manager A ResourceManager instance.
+  # @param separator A string indicating the type of separator to be expected
+  # between the data values; possible values are ',', ' ', '\t', ';', '|' and
+  # ':' (default '\t').
+  # @param alignment String value indicating the way data is aligned in the
+  # input file; possible values are 'row' and 'column' (default 'row').
+  # @param header_size Integer value indicating the size of the file header in
+  # number of lines (default 0).
+  def import_from_csv_file(self, address, manager, separator='\t',
+    alignment='row', header_size=0):
+    if not separator in (',', ' ', '\t', ';', '|', ':'):
+      sys.exit("Invalid separator: " + separator + "\n" +
+               "Possible values are: ',', ' ', '\t', ';', '|' and ':'.")
+    if address.endswith('csv') or address.endswith('txt'):
+      file = manager.get_resource(address)
+      # Skipping potential header
+      for h in range(header_size):
+        file.readline()
+      if alignment == 'row':
+        for line in file:
+          ls = line.split(separator)
+          name = str(ls.pop(0))
+          f_ls = [float(i) for i in ls]
+          self.result[name] = f_ls
+      elif alignment == 'column':
+        # Initializing items
+        names = file.readline().split(separator)
+        for n in names:
+          self.result[n.rstrip('\n')] = []
+        # Filling the values
+        for line in file:
+          l = line.rstrip('\n')
+          values = l.split(separator)
+          for v in range(len(values)):
+            self.result[names[v]].append(float(values(v)))
+      else:
+        file.close()
+        sys.exit("Invalid alignment: " + alignment + "\n" +
+                 "Possible values are: 'row', 'column'.")
+    else:
+      sys.exit("Invalid file format.")
+  
   ## Import numerical values from the output of a libSBMLSim simulation and
   ## store them in self.result.
   # @param self The object pointer.
@@ -109,22 +157,25 @@ class Result:
   # @param manager A ResourceManager instance.
   # @param component Index of the resultComponent to be considered; default 0.
   def import_from_numl_file(self, address, manager, component=0):
-    file = manager.get_resource(address)
-    reader = libnuml.NUMLReader()
-    doc = reader.readNUMLFromString(file.read())
-    if doc.getNumErrors() > 0:
-      print("Error code " + str(doc.getError(0).getErrorId()) +
-            " when opening file: " +
-            str(doc.getError(0).getShortMessage()))
-      sys.exit(2)
+    if address.endswith('xml'):
+      file = manager.get_resource(address)
+      reader = libnuml.NUMLReader()
+      doc = reader.readNUMLFromString(file.read())
+      if doc.getNumErrors() > 0:
+        print("Error code " + str(doc.getError(0).getErrorId()) +
+              " when opening file: " +
+              str(doc.getError(0).getShortMessage()))
+        sys.exit(2)
+      else:
+        # Process the file normally
+        dim = doc.getResultComponents().get(component).getDimension()
+        # Acquiring keys and initializing values
+        for k in dim.get(0):
+          self.result[k.getIndexValue()] = []
+        # Populating values
+        for i in dim:
+          for v in i:
+            self.result[v.getIndexValue()].append(
+              v.getAtomicValue().getDoubleValue())
     else:
-      # Process the file normally
-      dim = doc.getResultComponents().get(component).getDimension()
-      # Acquiring keys and initializing values
-      for k in dim.get(0):
-        self.result[k.getIndexValue()] = []
-      # Populating values
-      for i in dim:
-        for v in i:
-          self.result[v.getIndexValue()].append(
-            v.getAtomicValue().getDoubleValue())
+      sys.exit("Invalid file format.")
