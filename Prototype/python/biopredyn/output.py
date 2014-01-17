@@ -7,7 +7,7 @@
 ## @version: $Revision$
 
 import io
-import data
+import signals
 import libsedml, libnuml
 from matplotlib import pyplot as plt
 
@@ -70,7 +70,7 @@ class Plot2D(Output):
     self.type = plot_2d.getElementName()
     self.curves = []
     for p in plot_2d.getListOfCurves():
-      self.curves.append(data.Curve(p, workflow))
+      self.curves.append(signals.Curve(p, workflow))
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -125,7 +125,7 @@ class Plot3D(Output):
     self.type = plot_3d.getElementName()
     self.surfaces = []
     for s in plot_3d.getListOfSurfaces():
-      self.surfaces.append(data.Surface(s, workflow))
+      self.surfaces.append(signals.Surface(s, workflow))
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -178,7 +178,7 @@ class Report(Output):
     self.type = report.getElementName()
     self.datasets = []
     for d in report.getListOfDataSets():
-      self.datasets.append(data.DataSet(d, workflow))
+      self.datasets.append(signals.DataSet(d, workflow))
   
   ## Write the result of the task associated with self.data into a report file.
   ## The report format depends on the extension of the input file: if it ends

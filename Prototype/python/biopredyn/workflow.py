@@ -9,7 +9,7 @@
 import numpy as np
 import sys, os
 import libsedml
-import data, model, output, result, task, simulation, datagenerator, resources
+import model, output, result, task, simulation, datagenerator, resources
 
 ## Class for SED-ML generic work flows.
 class WorkFlow:

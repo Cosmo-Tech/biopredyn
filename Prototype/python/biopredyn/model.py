@@ -8,6 +8,7 @@
 
 import libsedml
 import libsbml
+import sys
 
 ## Class for SBML model manipulation.
 class SBMLModel:
