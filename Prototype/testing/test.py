@@ -8,7 +8,6 @@
 
 import sys
 import os
-import matplotlib.pyplot as plt
 
 # Find the path to the libsedml Python package
 for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../bin')):
@@ -40,7 +39,6 @@ for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
       break
 
 import getopt
-import sys
 import textwrap
 import numpy as np
 from matplotlib import pyplot as plt

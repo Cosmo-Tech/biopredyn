@@ -4,5 +4,4 @@ from distutils.core import setup
 
 setup(name="biopredyn",
       version="${PACKAGE_VERSION}",
-      package_dir={ "":"${CMAKE_CURRENT_SOURCE_DIR}"},
-      packages=["biopredyn"])
+      packages=["${CMAKE_CURRENT_SOURCE_DIR}/biopredyn"])

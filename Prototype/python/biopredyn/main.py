@@ -31,7 +31,6 @@ for r, d, f in os.walk(os.path.join(os.path.dirname(__file__), '../../bin')):
       break
 
 import getopt
-import sys
 import textwrap
 
 COMMAND_SYNTAX_MESSAGE = 'python main.py [options]'
