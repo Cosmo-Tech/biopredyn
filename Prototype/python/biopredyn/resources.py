@@ -7,9 +7,9 @@
 ## @version: $Revision$
 
 import sys
+import os
 import urllib
 import urllib2
-import urlparse
 import getpass
 
 ## Class for managing external resources, whether they are located via local
@@ -40,34 +40,32 @@ class ResourceManager:
   # @param url A valid URL.
   # @return A resource file.
   def get_resource(self, url):
-    parsed = urlparse.urlparse(url)
-    if parsed.scheme == '':
-      # Try to open as a local path
-      try:
-        handle = urllib.urlopen(parsed.geturl())
-        return handle
-      except IOError as e:
-        print "Error " + str(e.errno) + ": " + e.strerror
-        sys.exit(1)
+    # Try to open as a local path
+    try:
+      handle = urllib.urlopen(urllib.pathname2url(url))
+      return handle
+    except IOError as e:
+      pass
+    # Case where input URL is not a local path
+    try:
+      handle = self.opener.open(url)
+      return handle
+    except IOError as e:
+      pass
+    if not hasattr(e, 'code') or e.code != 401:
+      print "Error " + str(e.errno) + ": " + str(e.strerror)
+      sys.exit(1)
+    # Case where login / password are unknown
     else:
+      username = str(raw_input("Username for " + url + ": "))
+      password = getpass.getpass()
+      self.manager.add_password(None, url, username, password)
       try:
-        handle = self.opener.open(parsed.geturl())
+        handle = self.opener.open(url)
         return handle
-      except IOError as e:
-        pass
-      if not hasattr(e, 'code') or e.code != 401:
+      except IOError as err:
         print "Error " + str(e.errno) + ": " + str(e.strerror)
         sys.exit(1)
-      else:
-        username = str(raw_input("Username for " + parsed.geturl() + ": "))
-        password = getpass.getpass()
-        self.manager.add_password(None, url, username, password)
-        try:
-          handle = self.opener.open(parsed.geturl())
-          return handle
-        except IOError as err:
-          print "Error " + str(e.errno) + ": " + str(e.strerror)
-          sys.exit(1)
   
   ## For testing purposes; install self.opener.
   # @param self The object pointer.
