@@ -1,7 +1,20 @@
 # coding=utf-8
 
+## @package biopredyn
+## @author: $Author$
+## @date: $Date$
+## @copyright: $Copyright: [2013-2014] BioPreDyn $
+## @version: $Revision$
+
+import sys
 from distutils.core import setup
 
-setup(name="biopredyn",
-      version="${PACKAGE_VERSION}",
-      packages=["${CMAKE_CURRENT_SOURCE_DIR}/biopredyn"])
+if sys.platform == "win32":
+  setup(name="biopredyn",
+        version="${PACKAGE_VERSION}",
+        packages=["${CMAKE_CURRENT_SOURCE_DIR}/biopredyn"])
+else:
+  setup(name="biopredyn",
+        version="${PACKAGE_VERSION}",
+        package_dir={"":"${CMAKE_CURRENT_SOURCE_DIR}"},
+        packages=["biopredyn"])
