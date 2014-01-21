@@ -8,7 +8,8 @@ else(MSVC)
   #  add_definitions(-Wall -Wextra -ansi -pedantic -fno-strict-aliasing)
   add_definitions(-Wall -Wextra -fno-strict-aliasing)
 endif(MSVC)
-set(CMAKE_C_FLAGS "-O2")
+# BioPreDyn patch
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
 
 # build mode
 if(NOT CMAKE_BUILD_TYPE)
