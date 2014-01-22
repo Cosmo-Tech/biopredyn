@@ -3,11 +3,17 @@ add_test(SBMLComplianceTest ${PYTHON_EXECUTABLE}
   ${CMAKE_CURRENT_SOURCE_DIR}/test.py
   --sbml ${CMAKE_CURRENT_SOURCE_DIR}/../data/FEBS.xml)
 
-# Opens a file, test whether it is SED-ML compliant, execute it, display
+# Opens a file, test whether it is SED-ML compliant, execute it, display 2D
 # graphical output
 add_test(GraphicalOutputTest ${PYTHON_EXECUTABLE}
   ${CMAKE_CURRENT_SOURCE_DIR}/test.py
   --sedml ${CMAKE_CURRENT_SOURCE_DIR}/FEBS_test_graphical_output.xml)
+
+# Opens a file, test whether it is SED-ML compliant, execute it, display 3D
+# graphical output
+add_test(GraphicalOutput3DTest ${PYTHON_EXECUTABLE}
+  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
+  --sedml ${CMAKE_CURRENT_SOURCE_DIR}/FEBS_test_3D_graphical_output.xml)
 
 # Opens a CSV result file and plot its content with matplotlib.
 add_test(CSVFileImportTest ${PYTHON_EXECUTABLE}
