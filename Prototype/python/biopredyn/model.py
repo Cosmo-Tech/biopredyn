@@ -9,6 +9,8 @@
 import libsedml
 import libsbml
 import sys
+import urlparse
+from bioservices import BioModels
 
 ## Class for SBML model manipulation.
 class SBMLModel:
@@ -26,15 +28,16 @@ class SBMLModel:
   # @param model A SED-ML model element; optional (default None).
   # @param source The address of a SBML model file; optional (default None).
   def __init__(self, manager, model=None, source=None):
-    reader = libsbml.SBMLReader()
-    if model is not None:
-      self.id = model.getId()
-      self.source = model.getSource()
-    elif source is not None:
-      self.source = source
-    file = manager.get_resource(self.source)
-    self.model = reader.readSBMLFromString(file.read())
-
+    if (model is None) and (source is None):
+      sys.exit("Error: one of the input arguments 'model' or 'source' must" +
+               " be passed to the constructor.")
+    else:
+      if model is not None:
+        self.id = model.getId()
+        self.source = model.getSource()
+      elif source is not None:
+        self.source = source
+      file = self.retrieve_model(manager)
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -90,3 +93,19 @@ class SBMLModel:
   # @return self.model
   def get_model(self):
     return self.model
+  
+  ## Retrieve the SBML model encoded in self.source and store it in self.model.
+  # @param self The object pointer.
+  # @param manager A ResourceManager instance.
+  def retrieve_model(self, manager):
+    reader = libsbml.SBMLReader()
+    url = urlparse.urlparse(self.source)
+    if url.scheme == 'urn':
+      # Case where the model is identified by a BioModels URN
+      split = self.source.split(':')
+      s = BioModels()
+      file = s.getModelSBMLById(split.pop())
+      self.model = reader.readSBMLFromString(file.encode('utf_8'))
+    else:
+      file = manager.get_resource(self.source)
+      self.model = reader.readSBMLFromString(file.read())

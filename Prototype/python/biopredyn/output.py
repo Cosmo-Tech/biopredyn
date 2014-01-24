@@ -107,7 +107,7 @@ class Plot2D(Output):
   # @param self The object pointer.
   def show_plot(self):
     self.plot.show()
-
+  
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
   ## @var surfaces

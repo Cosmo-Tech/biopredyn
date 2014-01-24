@@ -85,6 +85,10 @@ The latest version of swigwin can be downloaded from
 http://www.swig.org/download.html. Unzip it then add the folder containing
 swig.exe to the Path environment variable.
 
+Windows: install easy_install too.
+
+Windows: easy_install bioservices
+
 sudo apt-get install autoconf
 sudo apt-get install automake
 sudo apt-get install libtool
