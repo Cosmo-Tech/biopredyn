@@ -7,6 +7,9 @@
   </listOfSimulations>
   <listOfModels>
     <model id="edelstein" language="urn:sedml:language:sbml" source="urn:miriam:biomodels.db:BIOMD0000000001">
+      <listOfChanges>
+        <changeAttribute target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='B']/@initialAmount" newValue="1.66058e-05" />
+      </listOfChanges>
     </model>
   </listOfModels>
   <listOfTasks>
@@ -25,7 +28,7 @@
     </dataGenerator>
     <dataGenerator id="data_1" name="IL_data">
       <listOfVariables>
-        <variable id="IL" name="IL" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='IL']">
+        <variable id="IL" name="IL" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='IL']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -34,7 +37,7 @@
     </dataGenerator>
     <dataGenerator id="data_2" name="AL_data">
       <listOfVariables>
-        <variable id="AL" name="AL" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='AL']">
+        <variable id="AL" name="AL" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='AL']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -43,7 +46,7 @@
     </dataGenerator>
     <dataGenerator id="data_3" name="A_data">
       <listOfVariables>
-        <variable id="A" name="A" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='A']">
+        <variable id="A" name="A" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='A']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -52,7 +55,7 @@
     </dataGenerator>
     <dataGenerator id="data_4" name="BL_data">
       <listOfVariables>
-        <variable id="BL" name="BL" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='BL']">
+        <variable id="BL" name="BL" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='BL']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -61,7 +64,7 @@
     </dataGenerator>
     <dataGenerator id="data_5" name="B_data">
       <listOfVariables>
-        <variable id="B" name="B" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='B']">
+        <variable id="B" name="B" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='B']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -70,7 +73,7 @@
     </dataGenerator>
     <dataGenerator id="data_6" name="DLL_data">
       <listOfVariables>
-        <variable id="DLL" name="DLL" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='DLL']">
+        <variable id="DLL" name="DLL" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='DLL']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -79,7 +82,7 @@
     </dataGenerator>
     <dataGenerator id="data_7" name="D_data">
       <listOfVariables>
-        <variable id="D" name="D" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='D']">
+        <variable id="D" name="D" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='D']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -88,7 +91,7 @@
     </dataGenerator>
     <dataGenerator id="data_8" name="ILL_data">
       <listOfVariables>
-        <variable id="ILL" name="ILL" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='ILL']">
+        <variable id="ILL" name="ILL" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='ILL']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -97,7 +100,7 @@
     </dataGenerator>
     <dataGenerator id="data_9" name="DL_data">
       <listOfVariables>
-        <variable id="DL" name="DL" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='DL']">
+        <variable id="DL" name="DL" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='DL']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -106,7 +109,7 @@
     </dataGenerator>
     <dataGenerator id="data_10" name="I_data">
       <listOfVariables>
-        <variable id="I" name="I" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='I']">
+        <variable id="I" name="I" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='I']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -115,7 +118,7 @@
     </dataGenerator>
     <dataGenerator id="data_11" name="ALL_data">
       <listOfVariables>
-        <variable id="ALL" name="ALL" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='edelstein']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='ALL']">
+        <variable id="ALL" name="ALL" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='ALL']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">

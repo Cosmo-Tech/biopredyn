@@ -1,0 +1,140 @@
+# coding=utf-8
+
+## @package biopredyn
+## @author: $Author$
+## @date: $Date$
+## @copyright: $Copyright: [2013-2014] BioPreDyn $
+## @version: $Revision$
+
+import sys
+import os
+import unittest
+
+# Find the path to the libsedml Python package
+for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
+  '${CMAKE_BINARY_DIR}/Prototype/src')):
+  for filename in f:
+    if filename == "libsedml.py":
+      sys.path.append(os.path.abspath(r))
+      break
+
+# Find the path to the libsbmlsim Python package
+for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
+  '${CMAKE_BINARY_DIR}/Prototype/src')):
+  for filename in f:
+    if filename == "libsbmlsim.py":
+      sys.path.append(os.path.abspath(r))
+      break
+
+# Find the path to the libnuml Python package
+for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
+  '${CMAKE_BINARY_DIR}/Prototype/src')):
+  for filename in f:
+    if filename == "libnuml.py":
+      sys.path.append(os.path.abspath(r))
+      break
+
+# Find the path to the biopredyn Python package
+for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
+  '${CMAKE_BINARY_DIR}/Prototype/python')):
+  for filename in f:
+    if filename == "main.py":
+      sys.path.append(os.path.abspath(r))
+      break
+
+import numpy as np
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+import libsbml
+import libsedml
+import libnuml
+import model
+import workflow
+import result
+import resources
+
+## Base class for BioPreDyn test cases.
+class GenericTestCase(unittest.TestCase):
+  
+  def setUp(self):
+    user = "dashuser-biopredyn"
+    password = "Nie8eir2"
+    self.manager = resources.ResourceManager()
+    self.manager.add_password(
+      "https://thecosmocompany.com/svn/repos/SVN/BioPreDyn", user, password)
+
+## GenericTestCase derived class for SBML related tests.
+class SBMLTestCase(GenericTestCase):
+  
+  def test_local_import(self):
+    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    mod = model.Model(self.manager, source=local)
+    self.assertTrue(mod.check(), 'Error in test_local_import')
+  
+  def test_server_import(self):
+    mod = model.Model(self.manager,
+      source='https://thecosmocompany.com/svn/repos/SVN/BioPreDyn/trunk/Prototype/data/FEBS_copasi.xml')
+    self.assertTrue(mod.check(), 'Error in test_server_import')
+  
+  def test_biomodels_import(self):
+    mod = model.Model(self.manager,
+      source='urn:miriam:biomodels.db:BIOMD0000000001')
+    self.assertTrue(mod.check(), 'Error in test_biomodels_import')
+
+## GenericTestCase derived class for SED-ML related tests.
+class SEDMLTestCase(GenericTestCase):
+  
+  def test_libsbmlsim_time_course(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml',
+      res_man=self.manager)
+    flow.run_tasks()
+    self.assertEqual(
+      len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201,
+      "Error in test_libsbmlsim_time_course")
+
+## GenericTestCase derived class for Output related tests
+class OutputTestCase(GenericTestCase):
+  
+  def test_graphical_output(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml',
+      res_man=self.manager)
+    flow.run_tasks()
+    flow.process_outputs(True)
+  
+  def test_3D_graphical_output(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_3D_graphical_output.xml',
+      res_man=self.manager)
+    flow.run_tasks()
+    flow.process_outputs(True)
+  
+  def test_csv_report(self):
+    flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
+      res_man=self.manager)
+    flow.run_tasks()
+    flow.process_outputs(True, '${CMAKE_CURRENT_BINARY_DIR}/test_output.csv')
+  
+  def test_numl_report(self):
+    flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
+      res_man=self.manager)
+    flow.run_tasks()
+    flow.process_outputs(True, '${CMAKE_CURRENT_BINARY_DIR}/test_output.xml')
+
+## GenericTestCase derived class for Result related tests
+class ResultTestCase(GenericTestCase):
+  
+  def test_csv_import(self):
+    res = result.Result()
+    res.import_from_csv_file(
+      '${CMAKE_CURRENT_SOURCE_DIR}/3D_data.csv', self.manager)
+  
+  def test_numl_import(self):
+    res = result.Result()
+    res.import_from_numl_file(
+      '${CMAKE_CURRENT_SOURCE_DIR}/FEBS_numerical_data.xml', self.manager)
+
+if __name__ == '__main__':
+    unittest.main()

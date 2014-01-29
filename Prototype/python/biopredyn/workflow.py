@@ -47,7 +47,7 @@ class WorkFlow:
     # Parsing self.sedml for model elements
     self.models = []
     for m in self.sedml.getListOfModels():
-      self.models.append(model.SBMLModel(self.resource_manager, model=m))
+      self.models.append(model.Model(self.resource_manager, model=m))
     # Parsing self.sedml for simulation elements
     self.simulations = []
     for s in self.sedml.getListOfSimulations():

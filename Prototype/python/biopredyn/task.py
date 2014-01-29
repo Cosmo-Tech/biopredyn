@@ -57,7 +57,7 @@ class Task:
       step = (end - start) / steps
       # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
       r = libsbmlsim.simulateSBMLFromString(
-          self.model.get_model().toSBML(),
+          self.model.get_sbml_doc().toSBML(),
           end,
           step,
           1,

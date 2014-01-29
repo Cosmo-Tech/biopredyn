@@ -1,41 +1,32 @@
-# Opens a SBML file and test whether it is SBML compliant
-add_test(SBMLComplianceTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --sbml ${CMAKE_CURRENT_SOURCE_DIR}/../data/FEBS.xml)
+set(TEST_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/test.py.in)
+set(TEST_PY ${CMAKE_CURRENT_BINARY_DIR}/test.py)
 
-# Imports a model from BioModels and simulate it
-add_test(BioModelsImportTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --sedml ${CMAKE_CURRENT_SOURCE_DIR}/FEBS_test_URN_model.xml)
+configure_file(${TEST_PY_IN} ${TEST_PY})
 
-# Displays the result of a work flow as a 2D plot
-add_test(GraphicalOutputTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --sedml ${CMAKE_CURRENT_SOURCE_DIR}/FEBS_test_graphical_output.xml)
+# SBML related tests
+add_test(SBMLLocalImportTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} SBMLTestCase.test_local_import)
+add_test(SBMLServerImportTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} SBMLTestCase.test_server_import)
+add_test(SBMLBioModelsImportTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} SBMLTestCase.test_biomodels_import)
 
-# Displays the result of a work flow as a 3D plot
-add_test(GraphicalOutput3DTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --sedml ${CMAKE_CURRENT_SOURCE_DIR}/FEBS_test_3D_graphical_output.xml)
+# SEDML related tests
+add_test(SEDMLLibSBMLSimTimeCourseTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} SEDMLTestCase.test_libsbmlsim_time_course)
 
-# Opens a CSV result file and plot its content with matplotlib.
-add_test(CSVFileImportTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --csv ${CMAKE_CURRENT_SOURCE_DIR}/3D_data.csv)
+# Output related tests
+add_test(OutputGraphicalOutputTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} OutputTestCase.test_graphical_output)
+add_test(Output3DGraphicalOutputTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} OutputTestCase.test_3D_graphical_output)
+add_test(OutputCSVReportTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} OutputTestCase.test_csv_report)
+add_test(OutputNUMLReportTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} OutputTestCase.test_numl_report)
 
-# Exports the result of a work flow as a CSV report
-add_test(CSVReportTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --sedml ${CMAKE_CURRENT_SOURCE_DIR}/FEBS_test_report.xml
-  -o ${CMAKE_CURRENT_BINARY_DIR}/test_output.csv)
-
-# Exports the result of a work flow as a NuML result file
-add_test(NuMLReportTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --sedml ${CMAKE_CURRENT_SOURCE_DIR}/FEBS_test_report.xml
-  -o ${CMAKE_CURRENT_BINARY_DIR}/test_output.xml)
-
-# Opens a NuML result file and plot its content with matplotlib.
-add_test(NuMLFileImportTest ${PYTHON_EXECUTABLE}
-  ${CMAKE_CURRENT_SOURCE_DIR}/test.py
-  --numl ${CMAKE_CURRENT_SOURCE_DIR}/../data/FEBS_numerical_data.xml)
+# Result related tests
+add_test(ResultCSVImportTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} ResultTestCase.test_csv_import)
+add_test(ResultNUMLImportTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} ResultTestCase.test_numl_import)
