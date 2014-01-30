@@ -70,17 +70,17 @@ class SBMLTestCase(GenericTestCase):
   def test_local_import(self):
     local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
     mod = model.Model(self.manager, source=local)
-    self.assertTrue(mod.check(), 'Error in test_local_import')
+    self.assertTrue(mod.check())
   
   def test_server_import(self):
     mod = model.Model(self.manager,
       source='https://thecosmocompany.com/svn/repos/SVN/BioPreDyn/trunk/Prototype/data/FEBS_copasi.xml')
-    self.assertTrue(mod.check(), 'Error in test_server_import')
+    self.assertTrue(mod.check())
   
   def test_biomodels_import(self):
     mod = model.Model(self.manager,
       source='urn:miriam:biomodels.db:BIOMD0000000001')
-    self.assertTrue(mod.check(), 'Error in test_biomodels_import')
+    self.assertTrue(mod.check())
 
 ## GenericTestCase derived class for SED-ML related tests.
 class SEDMLTestCase(GenericTestCase):
@@ -91,8 +91,7 @@ class SEDMLTestCase(GenericTestCase):
       res_man=self.manager)
     flow.run_tasks()
     self.assertEqual(
-      len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201,
-      "Error in test_libsbmlsim_time_course")
+      len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201)
 
 ## GenericTestCase derived class for Output related tests
 class OutputTestCase(GenericTestCase):
@@ -135,6 +134,22 @@ class ResultTestCase(GenericTestCase):
     res = result.Result()
     res.import_from_numl_file(
       '${CMAKE_CURRENT_SOURCE_DIR}/FEBS_numerical_data.xml', self.manager)
+
+## GenericTestCase derived class for XPath related tests
+class XPathTestCase(GenericTestCase):
+  
+  def test_read_value(self):
+    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    mod = model.Model(self.manager, source=local)
+    value = mod.evaluate_xpath(
+      '/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id="k2"]/@value')
+    self.assertEqual(float(value[0]), 0.8)
+  
+  def test_return_node_list(self):
+    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    mod = model.Model(self.manager, source=local)
+    list = mod.evaluate_xpath('//sbml:reaction')
+    self.assertEqual(len(list), 3)
 
 if __name__ == '__main__':
     unittest.main()

@@ -30,3 +30,9 @@ add_test(ResultCSVImportTest ${PYTHON_EXECUTABLE}
   ${TEST_PY} ResultTestCase.test_csv_import)
 add_test(ResultNUMLImportTest ${PYTHON_EXECUTABLE}
   ${TEST_PY} ResultTestCase.test_numl_import)
+
+# XPath related tests
+add_test(XPathReadValueTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} XPathTestCase.test_read_value)
+add_test(XPathReturnNodeListTest ${PYTHON_EXECUTABLE}
+  ${TEST_PY} XPathTestCase.test_return_node_list)

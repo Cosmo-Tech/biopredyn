@@ -9,7 +9,6 @@
 import libsedml
 import libsbml
 from lxml import etree
-from StringIO import StringIO
 import sys
 import urlparse
 from bioservices import BioModels
@@ -91,7 +90,7 @@ class Model:
   # @param self The object pointer.
   # @param xpath An XPath expression related to self.tree.
   def evaluate_xpath(self, xpath):
-    return self.tree.xpath(xpath, self.namespaces)
+    return self.tree.xpath(xpath, namespaces=self.namespaces)
   
   ## Getter. Returns self.source.
   # @param self The object pointer.
@@ -128,7 +127,11 @@ class Model:
     doc = self.get_sbml_doc()
     ns = doc.getNamespaces()
     for n in range(ns.getLength()):
-      self.namespaces[ns.getPrefix(n)] = ns.getURI(n)
+      if not ns.getPrefix(n) and ('sbml' in ns.getURI(n)):
+        # Case where no prefix is provided for SBML namespace
+        self.namespaces['sbml'] = ns.getURI(n)
+      else:
+        self.namespaces[ns.getPrefix(n)] = ns.getURI(n)
   
   ## Retrieves the SBML document encoded in self.source and stores it as a XML
   ## tree in self.tree.
