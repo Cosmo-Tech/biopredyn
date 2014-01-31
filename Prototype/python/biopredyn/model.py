@@ -12,6 +12,7 @@ from lxml import etree
 import sys
 import urlparse
 from bioservices import BioModels
+import change
 
 ## Class for SedML model manipulation.
 class Model:
