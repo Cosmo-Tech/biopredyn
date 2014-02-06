@@ -13,7 +13,7 @@ set(
   )
 
 set(
-  CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/Prototype/bin/"
+  CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install/"
   CACHE PATH "BioPreDyn install prefix" FORCE
   )
 

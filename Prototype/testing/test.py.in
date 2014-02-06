@@ -12,7 +12,7 @@ import unittest
 
 # Find the path to the libsedml Python package
 for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
-  '${CMAKE_BINARY_DIR}/Prototype/src')):
+  '${CMAKE_BINARY_DIR}/install')):
   for filename in f:
     if filename == "libsedml.py":
       sys.path.append(os.path.abspath(r))
@@ -20,7 +20,7 @@ for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
 
 # Find the path to the libsbmlsim Python package
 for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
-  '${CMAKE_BINARY_DIR}/Prototype/src')):
+  '${CMAKE_BINARY_DIR}/install')):
   for filename in f:
     if filename == "libsbmlsim.py":
       sys.path.append(os.path.abspath(r))
@@ -28,7 +28,7 @@ for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
 
 # Find the path to the libnuml Python package
 for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
-  '${CMAKE_BINARY_DIR}/Prototype/src')):
+  '${CMAKE_BINARY_DIR}/install')):
   for filename in f:
     if filename == "libnuml.py":
       sys.path.append(os.path.abspath(r))

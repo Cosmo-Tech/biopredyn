@@ -14,6 +14,9 @@ add_custom_command(OUTPUT ${OUTPUT}
 
 add_custom_target(bpd_engine ALL DEPENDS ${OUTPUT})
 
+# Testing installation
+add_test(BioPreDynPackageInstall ${PYTHON_EXECUTABLE} ${SETUP_PY} install)
+
 install(
   CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install)"
   )

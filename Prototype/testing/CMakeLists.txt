@@ -1,38 +1,32 @@
 set(TEST_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/test.py.in)
 set(TEST_PY ${CMAKE_CURRENT_BINARY_DIR}/test.py)
+set(SETUP_PY ${CMAKE_BINARY_DIR}/Prototype/python/setup.py)
 
 configure_file(${TEST_PY_IN} ${TEST_PY})
 
+macro(bpdAddTest test_name class)
+  add_test(${test_name} ${PYTHON_EXECUTABLE} ${TEST_PY} ${class})
+  set_tests_properties(${test_name} PROPERTIES DEPENDS PackageInstall)
+endmacro()
+
 # SBML related tests
-add_test(SBMLLocalImportTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} SBMLTestCase.test_local_import)
-add_test(SBMLServerImportTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} SBMLTestCase.test_server_import)
-add_test(SBMLBioModelsImportTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} SBMLTestCase.test_biomodels_import)
+bpdAddTest(SBMLLocalImportTest SBMLTestCase.test_local_import)
+bpdAddTest(SBMLServerImportTest SBMLTestCase.test_server_import)
+bpdAddTest(SBMLBioModelsImportTest SBMLTestCase.test_biomodels_import)
 
 # SEDML related tests
-add_test(SEDMLLibSBMLSimTimeCourseTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} SEDMLTestCase.test_libsbmlsim_time_course)
+bpdAddTest(SEDMLLibSBMLSimTimeCourseTest SEDMLTestCase.test_libsbmlsim_time_course)
 
 # Output related tests
-add_test(OutputGraphicalOutputTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} OutputTestCase.test_graphical_output)
-add_test(Output3DGraphicalOutputTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} OutputTestCase.test_3D_graphical_output)
-add_test(OutputCSVReportTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} OutputTestCase.test_csv_report)
-add_test(OutputNUMLReportTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} OutputTestCase.test_numl_report)
+bpdAddTest(OutputGraphicalOutputTest OutputTestCase.test_graphical_output)
+bpdAddTest(Output3DGraphicalOutputTest OutputTestCase.test_3D_graphical_output)
+bpdAddTest(OutputCSVReportTest OutputTestCase.test_csv_report)
+bpdAddTest(OutputNUMLReportTest OutputTestCase.test_numl_report)
 
 # Result related tests
-add_test(ResultCSVImportTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} ResultTestCase.test_csv_import)
-add_test(ResultNUMLImportTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} ResultTestCase.test_numl_import)
+bpdAddTest(ResultCSVImportTest ResultTestCase.test_csv_import)
+bpdAddTest(ResultNUMLImportTest ResultTestCase.test_numl_import)
 
 # XPath related tests
-add_test(XPathReadValueTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} XPathTestCase.test_read_value)
-add_test(XPathReturnNodeListTest ${PYTHON_EXECUTABLE}
-  ${TEST_PY} XPathTestCase.test_return_node_list)
+bpdAddTest(XPathReadValueTest XPathTestCase.test_read_value)
+bpdAddTest(XPathReturnNodeListTest XPathTestCase.test_return_node_list)
