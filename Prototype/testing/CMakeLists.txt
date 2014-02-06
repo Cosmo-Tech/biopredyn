@@ -6,7 +6,7 @@ configure_file(${TEST_PY_IN} ${TEST_PY})
 
 macro(bpdAddTest test_name class)
   add_test(${test_name} ${PYTHON_EXECUTABLE} ${TEST_PY} ${class})
-  set_tests_properties(${test_name} PROPERTIES DEPENDS PackageInstall)
+  set_tests_properties(${test_name} PROPERTIES DEPENDS BioPreDynPackageInstall)
 endmacro()
 
 # SBML related tests

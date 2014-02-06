@@ -48,7 +48,3 @@ class ChangeAttribute(Change):
   # @param value String value.
   def __init__(self, value):
     self.value = value
-
-## Change-derived class for adding XML code.
-class AddXML(Change):
-  ##
