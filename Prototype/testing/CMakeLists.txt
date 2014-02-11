@@ -27,8 +27,10 @@ bpdAddTest(ResultCSVImportTest ResultTestCase.test_csv_import)
 bpdAddTest(ResultNUMLImportTest ResultTestCase.test_numl_import)
 
 # XPath related tests
+bpdAddTest(XPathUnresolvedXPathTest XPathTestCase.test_unresolved_xpath)
 bpdAddTest(XPathReadValueTest XPathTestCase.test_read_value)
 bpdAddTest(XPathReturnNodeListTest XPathTestCase.test_return_node_list)
 
 # Change related tests
 bpdAddTest(ChangeAttributeValueTest ChangeTestCase.test_attribute_value)
+bpdAddTest(ChangeRemoveXMLTest ChangeTestCase.test_remove_xml)

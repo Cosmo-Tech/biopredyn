@@ -58,7 +58,7 @@ class Model:
           elif c.getElementName() == "addXML":
             print "TODO"
           elif c.getElementName() == "removeXML":
-            print "TODO"
+            self.changes.append(change.RemoveXML(c, self))
       elif source is not None:
         self.source = source
       self.init_tree()
@@ -112,8 +112,15 @@ class Model:
   ## of self.tree, if any.
   # @param self The object pointer.
   # @param xpath An XPath expression related to self.tree.
+  # @return target A list containing the elements of self.tree matching the
+  # input xpath.
   def evaluate_xpath(self, xpath):
-    return self.tree.xpath(xpath, namespaces=self.namespaces)
+    target = self.tree.xpath(xpath, namespaces=self.namespaces)
+    if len(target) > 0:
+      return target
+    else:
+      sys.exit("XPath error: " + xpath + " could not be resolved in " +
+               self.source)
   
   ## Getter. Returns self.source.
   # @param self The object pointer.

@@ -138,6 +138,12 @@ class ResultTestCase(GenericTestCase):
 ## GenericTestCase derived class for XPath related tests
 class XPathTestCase(GenericTestCase):
   
+  def test_unresolved_xpath(self):
+    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    mod = model.Model(self.manager, source=local)
+    self.assertRaises(SystemExit, mod.evaluate_xpath,
+      '/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id="bad_id"]/@value')
+  
   def test_read_value(self):
     local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
     mod = model.Model(self.manager, source=local)
@@ -153,6 +159,16 @@ class XPathTestCase(GenericTestCase):
 
 ## GenericTestCase derived class for Change related tests
 class ChangeTestCase(GenericTestCase):
+  
+  def test_remove_xml(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_remove_xml.xml',
+      res_man=self.manager)
+    pre_change = flow.get_model_by_id('edelstein').get_sbml_doc().getModel().getNumSpecies()
+    self.assertEqual(pre_change, 12)
+    flow.get_model_by_id('edelstein').apply_changes()
+    post_change = flow.get_model_by_id('edelstein').get_sbml_doc().getModel().getNumSpecies()
+    self.assertEqual(post_change, 11)
   
   def test_attribute_value(self):
     flow = workflow.WorkFlow(

@@ -10,10 +10,38 @@ from sympy import *
 
 ## Base representation of a model pre-processing operation in a SED-ML workflow.
 class Change:
+  ## @var id
+  # ID of the Change element.
+  ## @var name
+  # Name of the Change element.
   ## @var target
   # XPath expression pointing the element to be impacted by the change.
   ## @var model
   # Reference to the model to be modified by the change.
+  
+  ## Getter for self.id.
+  # @param self The object pointer.
+  # @return self.id
+  def get_id(self):
+    return self.id
+  
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
+  
+  ## Getter for self.name.
+  # @param self The object pointer.
+  # @return self.name
+  def get_name(self):
+    return self.name
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
   
   ## Getter for self.model.
   # @param self The object pointer.
@@ -41,6 +69,10 @@ class Change:
 
 ## Change-derived class for changes computed with MathML expressions.
 class ComputeChange(Change):
+  ## @var id
+  # ID of the Change element.
+  ## @var name
+  # Name of the Change element.
   ## @var variables
   # A list of Variable objects.
   ## @var parameters
@@ -57,6 +89,8 @@ class ComputeChange(Change):
   # @param compute_change A SED-ML computeChange element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, compute_change, model):
+    self.id = compute_change.getId()
+    self.name = compute_change.getName()
     self.target = compute_change.getTarget()
     self.model = model
     self.variables = []
@@ -83,6 +117,10 @@ class ComputeChange(Change):
 
 ## Change-derived class for changing attribute values.
 class ChangeAttribute(Change):
+  ## @var id
+  # ID of the Change element.
+  ## @var name
+  # Name of the Change element.
   ## @var value
   # Value to be given to the changed attribute.
   ## @var target
@@ -95,6 +133,8 @@ class ChangeAttribute(Change):
   # @param change_attribute A SED-ML changeAttribute element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, change_attribute, model):
+    self.id = change_attribute.getId()
+    self.name = change_attribute.getName()
     self.model = model
     self.target = change_attribute.getTarget()
     self.value = change_attribute.getNewValue()
@@ -126,6 +166,10 @@ class ChangeAttribute(Change):
 
 ## Change-derived class for adding a piece of XML code.
 class AddXML(Change):
+  ## @var id
+  # ID of the Change element.
+  ## @var name
+  # Name of the Change element.
   ## @var xml
   # A piece of XML code.
   ## @var target
@@ -137,7 +181,8 @@ class AddXML(Change):
   # @param self The object pointer.
   # @param add_xml A SED-ML addXML element.
   def __init__(self, add_xml):
-    print "TODO"
+    self.id = add_xml.getId()
+    self.name = add_xml.getName()
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
@@ -158,6 +203,10 @@ class AddXML(Change):
 
 ## Change-derived class for replacing a piece of XML code.
 class ChangeXML(Change):
+  ## @var id
+  # ID of the Change element.
+  ## @var name
+  # Name of the Change element.
   ## @var xml
   # A piece of XML code.
   ## @var target
@@ -169,7 +218,8 @@ class ChangeXML(Change):
   # @param self The object pointer.
   # @param change_xml A SED-ML changeXML element.
   def __init__(self, change_xml):
-    print "TODO"
+    self.id = change_xml.getId()
+    self.name = change_xml.getName()
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
@@ -190,6 +240,10 @@ class ChangeXML(Change):
 
 ## Change-derived class for removing a piece of XML code.
 class RemoveXML(Change):
+  ## @var id
+  # ID of the Change element.
+  ## @var name
+  # Name of the Change element.
   ## @var target
   # XPath expression pointing the element to be impacted by the change.
   ## @var model
@@ -198,10 +252,24 @@ class RemoveXML(Change):
   ## Constructor.
   # @param self The object pointer.
   # @param remove_xml A SED-ML removeXML element.
-  def __init__(self, remove_xml):
+  # @param model Reference to the Model object to be changed.
+  def __init__(self, remove_xml, model):
+    self.id = remove_xml.getId()
+    self.name = remove_xml.getName()
+    self.model = model
     self.target = remove_xml.getTarget()
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
   def apply(self):
-    print "TODO"
+    # self.target should not point to an attribute
+    if self.target.split('/')[-1].startswith('@'):
+      print(
+            "XPath error: " + self.target + " points to an attribute instead " +
+            "of a node."
+            )
+    else:
+      target = self.model.evaluate_xpath(self.target)
+      # target is removed by its parent
+      parent = target[0].getparent()
+      parent.remove(target[0])
