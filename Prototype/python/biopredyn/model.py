@@ -24,6 +24,10 @@ class Model:
   # Dictionary of namespaces defining the associated SBML model.
   ## @var tree
   # XML tree representation of a SBML model.
+  ## @var changes
+  # A list of changes to be applied to the model before it runs.
+  ## @var resource_manager
+  # Resource manager for the current work flow.
   
   ## Constructor; one of the two argument 'model' or 'source' must be passed to
   ## the constructor.
@@ -39,13 +43,25 @@ class Model:
       sys.exit("Error: one of the input arguments 'model' or 'source' must" +
                " be passed to the constructor.")
     else:
+      self.resource_manager = manager
       if model is not None:
         self.id = model.getId()
         self.source = model.getSource()
-        # TODO: populate list of changes
+        self.changes = []
+        for c in model.getListOfChanges():
+          if c.getElementName() == "changeAttribute":
+            self.changes.append(change.ChangeAttribute(c, self))
+          elif c.getElementName() == "computeChange":
+            self.changes.append(change.ComputeChange(c, self))
+          elif c.getElementName() == "changeXML":
+            print "TODO"
+          elif c.getElementName() == "addXML":
+            print "TODO"
+          elif c.getElementName() == "removeXML":
+            print "TODO"
       elif source is not None:
         self.source = source
-      self.init_tree(manager)
+      self.init_tree()
       self.init_namespaces()
   
   ## String representation of this. Displays it as a hierarchy.
@@ -54,6 +70,12 @@ class Model:
   def __str__(self):
     tree = "  |-model id=" + self.id + " source=" + self.source + "\n"
     return tree
+  
+  ## Sequentially apply all changes in the model.
+  # @param self The object pointer.
+  def apply_changes(self):
+    for c in self.changes:
+      c.apply()
   
   ## SBML compliance check function.
   # Checks whether self.file is compliant with the SBML standard.
@@ -137,8 +159,7 @@ class Model:
   ## Retrieves the SBML document encoded in self.source and stores it as a XML
   ## tree in self.tree.
   # @param self The object pointer.
-  # @param manager A ResourceManager instance.
-  def init_tree(self, manager):
+  def init_tree(self):
     url = urlparse.urlparse(self.source)
     if url.scheme == 'urn':
       # Case where the model is identified by a BioModels URN
@@ -147,5 +168,5 @@ class Model:
       doc = s.getModelSBMLById(split.pop())
       self.tree = etree.fromstring(doc.encode('utf8'))
     else:
-      file = manager.get_resource(self.source)
+      file = self.resource_manager.get_resource(self.source)
       self.tree = etree.parse(file)

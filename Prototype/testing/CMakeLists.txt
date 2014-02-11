@@ -1,6 +1,5 @@
 set(TEST_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/test.py.in)
 set(TEST_PY ${CMAKE_CURRENT_BINARY_DIR}/test.py)
-set(SETUP_PY ${CMAKE_BINARY_DIR}/Prototype/python/setup.py)
 
 configure_file(${TEST_PY_IN} ${TEST_PY})
 
@@ -30,3 +29,6 @@ bpdAddTest(ResultNUMLImportTest ResultTestCase.test_numl_import)
 # XPath related tests
 bpdAddTest(XPathReadValueTest XPathTestCase.test_read_value)
 bpdAddTest(XPathReturnNodeListTest XPathTestCase.test_return_node_list)
+
+# Change related tests
+bpdAddTest(ChangeAttributeValueTest ChangeTestCase.test_attribute_value)

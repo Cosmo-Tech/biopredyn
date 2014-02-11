@@ -8,7 +8,7 @@
   <listOfModels>
     <model id="edelstein" language="urn:sedml:language:sbml" source="urn:miriam:biomodels.db:BIOMD0000000001">
       <listOfChanges>
-        <changeAttribute target="/sbml:sbml/sbml:model[@id='edelstein']/sbml:listOfSpecies[1]/sbml:species[@id='B']/@initialAmount" newValue="1.66058e-05" />
+        <changeAttribute target="/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount" newValue="1.66058e-05" />
       </listOfChanges>
     </model>
   </listOfModels>

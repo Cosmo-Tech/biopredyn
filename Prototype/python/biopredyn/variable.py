@@ -16,23 +16,43 @@ class Variable:
   # Reference to the Model object this refers to.
   ## @var name
   # Name of this object.
+  ## @var target
+  # XPath expression pointing to the element this variable refers to in
+  # self.model.
   ## @var task
   # Reference to the Task object this refers to.
   
-  ## Constructor.
+  ## Constructor. Depending on the content of the input variable, one of the
+  ## input workflow or model arguments must exist.
   # @param self The object pointer.
   # @param variable A SED-ML variable element.
-  # @param workflow A WorkFlow object.
-  def __init__(self, variable, workflow):
+  # @param workflow A WorkFlow object (default None).
+  # @param model A Model object (default None).
+  def __init__(self, variable, workflow=None, model=None):
     self.id = variable.getId()
     self.name = variable.getName()
+    self.target = variable.getTarget()
     model_ref = variable.getModelReference()
     task_ref = variable.getTaskReference()
     if task_ref is not None:
-      self.task = workflow.get_task_by_id(variable.getTaskReference())
-      self.model = self.task.get_model()
+      if workflow is not None:
+        self.task = workflow.get_task_by_id(variable.getTaskReference())
+        self.model = self.task.get_model()
+      else:
+        print(
+              "Error: workflow cannot be null when input Variable object" +
+              "contains a taskReference attribute."
+              )
     elif model_ref is not None:
-      self.model = workflow.get_model_by_id(variable.getModelReference())
+      if model is not None:
+        self.model = model
+      elif workflow is not None:
+        self.model = workflow.get_model_by_id(variable.getModelReference())
+      else:
+        print(
+              "Error: at least one of the workflow or model input arguments" +
+              " must exist."
+              )
     else:
       print(
             "Invalid variable argument; at least one of the taskReference" +
@@ -76,6 +96,12 @@ class Variable:
   # @return The number of time points.
   def get_number_of_points(self):
     return self.task.get_simulation().get_number_of_points()
+  
+  ## Getter for self.target.
+  # @param self The object pointer.
+  # @return self.target
+  def get_target(self):
+    return self.target
   
   ## Getter. Returns self.task.
   # @param self The object pointer.

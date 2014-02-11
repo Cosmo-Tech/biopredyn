@@ -39,7 +39,7 @@ class DataGenerator:
     # Parse the input data_generator object for variables
     self.variables = []
     for v in data_generator.getListOfVariables():
-      self.variables.append(variable.Variable(v, workflow))
+      self.variables.append(variable.Variable(v, workflow=workflow))
     self.math = self.parse_math_expression(data_generator.getMath())
   
   ## String representation of this. Displays it as a hierarchy.

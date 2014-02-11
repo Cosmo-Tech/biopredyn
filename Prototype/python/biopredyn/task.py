@@ -48,6 +48,8 @@ class Task:
   # time course.
   # @param self The object pointer.
   def run(self):
+    # First of all changes must be applied to the model
+    self.model.apply_changes()
     if ( self.simulation.get_type() == "uniformTimeCourse" ):
       steps = self.simulation.get_number_of_points()
       start = self.simulation.get_output_start_time()
@@ -69,6 +71,8 @@ class Task:
     else:
       # TODO: other types of simulation
       print "TODO"
+    # Model is reinitialized
+    self.model.init_tree()
 
   ## Getter. Returns self.id.
   # @param self The object pointer.

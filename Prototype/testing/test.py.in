@@ -151,5 +151,17 @@ class XPathTestCase(GenericTestCase):
     list = mod.evaluate_xpath('//sbml:reaction')
     self.assertEqual(len(list), 3)
 
+## GenericTestCase derived class for Change related tests
+class ChangeTestCase(GenericTestCase):
+  
+  def test_attribute_value(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_attribute.xml',
+      res_man=self.manager)
+    flow.get_model_by_id('edelstein').apply_changes()
+    attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
+    self.assertEqual(float(attr_value[0]), 1.66058e-05)
+
 if __name__ == '__main__':
     unittest.main()
