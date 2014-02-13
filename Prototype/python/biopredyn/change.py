@@ -7,6 +7,8 @@
 ## @version: $Revision$
 
 from sympy import *
+import libsbml
+import variable, parameter
 
 ## Base representation of a model pre-processing operation in a SED-ML workflow.
 class Change:
@@ -18,6 +20,14 @@ class Change:
   # XPath expression pointing the element to be impacted by the change.
   ## @var model
   # Reference to the model to be modified by the change.
+  
+  ## String representation of this. Displays it as a hierarchy.
+  # @param self The object pointer.
+  # @return A string representing this as a hierarchy.
+  def __str__(self):
+    tree = "      |-" + self.type + " id=" + self.id + " name=" + self.name
+    tree += " target=" + self.target + "\n"
+    return tree
   
   ## Getter for self.id.
   # @param self The object pointer.
@@ -87,15 +97,16 @@ class ComputeChange(Change):
   ## Constructor.
   # @param self The object pointer.
   # @param compute_change A SED-ML computeChange element.
+  # @param workflow A WorkFlow object.
   # @param model Reference to the Model object to be changed.
-  def __init__(self, compute_change, model):
+  def __init__(self, compute_change, workflow, model):
     self.id = compute_change.getId()
     self.name = compute_change.getName()
     self.target = compute_change.getTarget()
     self.model = model
     self.variables = []
     for v in compute_change.getListOfVariables():
-      self.variables.append(variable.Variable(v, model=self.model))
+      self.variables.append(variable.Variable(v, workflow))
     self.parameters = []
     for p in compute_change.getListOfParameters():
       self.parameters.append(parameter.Parameter(p))
@@ -104,7 +115,26 @@ class ComputeChange(Change):
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
   def apply(self):
-    print "TODO"
+    result = self.math
+    # SymPy substitution - variables
+    for v in self.variables:
+      v_id = v.get_id()
+      value = v.get_xpath_value()
+      result = result.subs(v_id, value)
+    # SymPy substitution - parameters
+    for p in self.parameters:
+      p_id = p.get_id()
+      result = result.subs(p_id, p.get_value())
+    # Target attribute is changed in self.model
+    if self.target.split('/')[-1].startswith('@'):
+      # Case where self.target points to an attribute
+      splt = self.target.rsplit('/', 1)
+      node = self.model.evaluate_xpath(splt[0])
+      node[0].set(splt[1].lstrip('@'), str(result))
+    else:
+      # Case where self.target points to an element
+      node = self.model.evaluate_xpath(self.target)
+      node.text = str(result)
   
   ## Transform the input MathML mathematical expression into a SymPy
   # expression.

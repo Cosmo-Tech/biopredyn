@@ -47,7 +47,8 @@ class WorkFlow:
     # Parsing self.sedml for model elements
     self.models = []
     for m in self.sedml.getListOfModels():
-      self.models.append(model.Model(self.resource_manager, model=m))
+      self.models.append(
+        model.Model(self.resource_manager, model=m, workflow=self))
     # Parsing self.sedml for simulation elements
     self.simulations = []
     for s in self.sedml.getListOfSimulations():
@@ -147,6 +148,12 @@ class WorkFlow:
   # @param self The object pointer.
   def get_outputs(self):
     return self.outputs
+  
+  ## Getter for self.resource_manager.
+  # @param self The object pointer.
+  # @return self.resource_manager
+  def get_resource_manager(self):
+    return self.resource_manager
   
   ## Getter. Returns self.sedml.
   # @param self The object pointer.

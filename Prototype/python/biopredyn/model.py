@@ -37,14 +37,16 @@ class Model:
   # provided, this will be initialized as an element of a SED-ML workflow (the
   # list of changes will be initialized); if not, this will be initialized as
   # a stand-alone SBML model using the input source (if provided).
+  # @param workflow A WorkFlow object; required if a SED-ML model is provided
+  # (default None).
   # @param source The address of a SBML model file; optional (default None).
-  def __init__(self, manager, model=None, source=None):
-    if (model is None) and (source is None):
-      sys.exit("Error: one of the input arguments 'model' or 'source' must" +
-               " be passed to the constructor.")
+  def __init__(self, manager, model=None, workflow=None, source=None):
+    if (model is None or workflow is None) and (source is None):
+      sys.exit("Error: either 'model' and 'workflow' or 'source' input " +
+               "arguments must be passed to the constructor.")
     else:
       self.resource_manager = manager
-      if model is not None:
+      if model is not None and workflow is not None:
         self.id = model.getId()
         self.source = model.getSource()
         self.changes = []
@@ -52,7 +54,7 @@ class Model:
           if c.getElementName() == "changeAttribute":
             self.changes.append(change.ChangeAttribute(c, self))
           elif c.getElementName() == "computeChange":
-            self.changes.append(change.ComputeChange(c, self))
+            self.changes.append(change.ComputeChange(c, workflow, self))
           elif c.getElementName() == "changeXML":
             print "TODO"
           elif c.getElementName() == "addXML":
@@ -69,6 +71,9 @@ class Model:
   # @return A string representing this as a hierarchy.
   def __str__(self):
     tree = "  |-model id=" + self.id + " source=" + self.source + "\n"
+    tree += "    |-listOfChanges\n"
+    for c in self.changes:
+      tree += str(c)
     return tree
   
   ## Sequentially apply all changes in the model.

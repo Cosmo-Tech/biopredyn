@@ -178,6 +178,15 @@ class ChangeTestCase(GenericTestCase):
     attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
     self.assertEqual(float(attr_value[0]), 1.66058e-05)
+  
+  def test_compute_value(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_compute_change.xml',
+      res_man=self.manager)
+    flow.get_model_by_id('edelstein').apply_changes()
+    attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
+    self.assertEqual(float(attr_value[0]), 1.66057788110262e-05)
 
 if __name__ == '__main__':
     unittest.main()

@@ -33,4 +33,5 @@ bpdAddTest(XPathReturnNodeListTest XPathTestCase.test_return_node_list)
 
 # Change related tests
 bpdAddTest(ChangeAttributeValueTest ChangeTestCase.test_attribute_value)
+bpdAddTest(ChangeComputeValueTest ChangeTestCase.test_compute_value)
 bpdAddTest(ChangeRemoveXMLTest ChangeTestCase.test_remove_xml)
