@@ -13,14 +13,16 @@ import model, simulation, result
 class Task:
   ## @var id
   # A unique identifier associated with the object.
-  ## @var model
-  # Reference to the model this object is about.
+  ## @var model_id
+  # ID of the model this object is about.
   ## @var name
   # Name of this object.
   ## @var result
   # Result of the execution of the task.
-  ## @var simulation
-  # Reference to the simulation this object is about.
+  ## @var simulation_id
+  # ID of the simulation this object is about.
+  ## @var workflow
+  # Reference to the WorkFlow object this belongs to.
   
   ## Constructor.
   # @param self The object pointer.
@@ -29,18 +31,17 @@ class Task:
   def __init__(self, task, workflow):
     self.id = task.getId()
     self.name = task.getName()
-    self.model = workflow.get_model_by_id(task.getModelReference())
-    self.simulation = workflow.get_simulation_by_id(
-      task.getSimulationReference())
-    # TODO: set self.tool
+    self.workflow = workflow
+    self.model_id = task.getModelReference()
+    self.simulation_id = task.getSimulationReference()
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
     tree = "  |-task id=" + self.id + " name=" + self.name
-    tree += " modelReference=" + self.model.get_id()
-    tree += " simulationReference=" + self.simulation.get_id() + "\n"
+    tree += " modelReference=" + self.model_id
+    tree += " simulationReference=" + self.simulation_id + "\n"
     return tree
   
   ## Default run function.
@@ -48,18 +49,20 @@ class Task:
   # time course.
   # @param self The object pointer.
   def run(self):
+    model = self.get_model()
+    simulation = self.get_simulation()
     # First of all changes must be applied to the model
-    self.model.apply_changes()
-    if ( self.simulation.get_type() == "uniformTimeCourse" ):
-      steps = self.simulation.get_number_of_points()
-      start = self.simulation.get_output_start_time()
-      end = self.simulation.get_output_end_time()
+    model.apply_changes()
+    if ( simulation.get_type() == "uniformTimeCourse" ):
+      steps = simulation.get_number_of_points()
+      start = simulation.get_output_start_time()
+      end = simulation.get_output_end_time()
       # "step" is computed with respect to the output start / end times, as
       # number_of_points is defined between these two points:
       step = (end - start) / steps
       # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
       r = libsbmlsim.simulateSBMLFromString(
-          self.model.get_sbml_doc().toSBML(),
+          model.get_sbml_doc().toSBML(),
           end,
           step,
           1,
@@ -72,7 +75,7 @@ class Task:
       # TODO: other types of simulation
       print "TODO"
     # Model is reinitialized
-    self.model.init_tree()
+    model.init_tree()
 
   ## Getter. Returns self.id.
   # @param self The object pointer.
@@ -80,11 +83,17 @@ class Task:
   def get_id(self):
     return self.id
   
-  ## Getter. Returns self.model.
+  ## Returns the Model objet of self.workflow which id is self.model_id.
   # @param self The object pointer.
-  # @return self.model
+  # @return A Model object.
   def get_model(self):
-    return self.model
+    return self.workflow.get_model_by_id(self.model_id)
+  
+  ## Getter. Returns self.model_id.
+  # @param self The object pointer.
+  # @return self.model_id
+  def get_model_id(self):
+    return self.model_id
   
   ## Getter. Returns self.name.
   # @param self The object pointer.
@@ -97,11 +106,18 @@ class Task:
   def get_result(self):
     return self.result
   
-  ## Getter. Returns self.simulation.
+  ## Returns the Simulation objet of self.workflow which id is
+  ## self.simulation_id.
   # @param self The object pointer.
-  # @return self.simulation
+  # @return A Simulation object.
   def get_simulation(self):
-    return self.simulation
+    return self.workflow.get_simulation_by_id(self.simulation_id)
+  
+  ## Getter. Returns self.simulation_id.
+  # @param self The object pointer.
+  # @return self.simulation_id
+  def get_simulation_id(self):
+    return self.simulation_id
   
   ## Getter. Returns self.tool.
   # @param self The object pointer.
@@ -109,17 +125,17 @@ class Task:
   def get_tool(self):
     return self.tool
   
-  ## Setter. Assign a new value to self.model.
+  ## Setter. Assign a new value to self.model_id.
   # @param self The object pointer.
-  # @param model New value for self.model.
-  def set_model(self, model):
-    self.model = model
+  # @param model_id New value for self.model_id.
+  def set_model_id(self, model_id):
+    self.model_id = model_id
   
-  ## Setter. Assign a new value to self.simulation.
+  ## Setter. Assign a new value to self.simulation_id.
   # @param self The object pointer.
-  # @param simulation New value for self.simulation.
-  def set_simulation(self, simulation):
-    self.simulation = simulation
+  # @param simulation_id New value for self.simulation_id.
+  def set_simulation_id(self, simulation_id):
+    self.simulation_id = simulation_id
   
   ## Setter. Assign a new value to self.tool.
   # @param self The object pointer.
