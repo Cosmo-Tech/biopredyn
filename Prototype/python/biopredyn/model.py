@@ -56,9 +56,9 @@ class Model:
           elif c.getElementName() == "computeChange":
             self.changes.append(change.ComputeChange(c, workflow, self))
           elif c.getElementName() == "changeXML":
-            print "TODO"
+            self.changes.append(change.ChangeXML(c, self))
           elif c.getElementName() == "addXML":
-            print "TODO"
+            self.changes.append(change.AddXML(c, self))
           elif c.getElementName() == "removeXML":
             self.changes.append(change.RemoveXML(c, self))
       elif source is not None:

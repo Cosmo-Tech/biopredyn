@@ -7,6 +7,7 @@
 ## @version: $Revision$
 
 from sympy import *
+from lxml import etree
 import libsbml
 import variable, parameter
 
@@ -210,14 +211,28 @@ class AddXML(Change):
   ## Constructor.
   # @param self The object pointer.
   # @param add_xml A SED-ML addXML element.
-  def __init__(self, add_xml):
+  # @param model Reference to the Model object to be changed.
+  def __init__(self, add_xml, model):
     self.id = add_xml.getId()
     self.name = add_xml.getName()
+    self.model = model
+    self.target = add_xml.getTarget()
+    self.xml = add_xml.getNewXML()
   
-  ## Compute the new value of self.target and change it in the model.
+  ## Add self.xml as a sibling of self.target in self.model; then remove
+  ## self.target from self.model.
   # @param self The object pointer.
   def apply(self):
-    print "TODO"
+    # self.target should not point to an attribute
+    if self.target.split('/')[-1].startswith('@'):
+      print(
+            "XPath error: " + self.target + " points to an attribute instead " +
+            "of a node."
+            )
+    else:
+      target = self.model.evaluate_xpath(self.target)
+      new_element = etree.Element(self.xml)
+      target[0].addnext(new_element)
   
   ## Getter for self.xml.
   # @param self The object pointer.
@@ -247,14 +262,30 @@ class ChangeXML(Change):
   ## Constructor.
   # @param self The object pointer.
   # @param change_xml A SED-ML changeXML element.
-  def __init__(self, change_xml):
+  # @param model Reference to the Model object to be changed.
+  def __init__(self, change_xml, model):
     self.id = change_xml.getId()
     self.name = change_xml.getName()
+    self.model = model
+    self.target = change_xml.getTarget()
+    self.xml = change_xml.getNewXML()
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
   def apply(self):
-    print "TODO"
+    # self.target should not point to an attribute
+    if self.target.split('/')[-1].startswith('@'):
+      print(
+            "XPath error: " + self.target + " points to an attribute instead " +
+            "of a node."
+            )
+    else:
+      target = self.model.evaluate_xpath(self.target)
+      new_element = etree.Element(self.xml)
+      target[0].append(new_element)
+      # target is removed by its parent
+      parent = target[0].getparent()
+      parent.remove(target[0])
   
   ## Getter for self.xml.
   # @param self The object pointer.
