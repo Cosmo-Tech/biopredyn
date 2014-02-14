@@ -25,7 +25,7 @@
     </dataGenerator>
     <dataGenerator id="datagenerator_2" name="E_datagenerator">
       <listOfVariables>
-        <variable id="species_1" name="E" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_1']">
+        <variable id="species_1" name="E" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='Model_1']/sbml:listOfSpecies[1]/sbml:species[@id='species_1']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -34,7 +34,7 @@
     </dataGenerator>
     <dataGenerator id="datagenerator_3" name="S_datagenerator">
       <listOfVariables>
-        <variable id="species_2" name="S" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_2']">
+        <variable id="species_2" name="S" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='Model_1']/sbml:listOfSpecies[1]/sbml:species[@id='species_2']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -43,7 +43,7 @@
     </dataGenerator>
     <dataGenerator id="datagenerator_4" name="C_datagenerator">
       <listOfVariables>
-        <variable id="species_3" name="C" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_3']">
+        <variable id="species_3" name="C" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='Model_1']/sbml:listOfSpecies[1]/sbml:species[@id='species_3']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -52,7 +52,7 @@
     </dataGenerator>
     <dataGenerator id="datagenerator_5" name="P_datagenerator">
       <listOfVariables>
-        <variable id="species_4" name="P" taskReference="task_1" target="/www.sbml.org_sbml_level2_version4:sbml/www.sbml.org_sbml_level2_version4:model[@id='Model_1']/www.sbml.org_sbml_level2_version4:listOfSpecies[1]/www.sbml.org_sbml_level2_version4:species[@id='species_4']">
+        <variable id="species_4" name="P" taskReference="task_1" target="/sbml:sbml/sbml:model[@id='Model_1']/sbml:listOfSpecies[1]/sbml:species[@id='species_4']">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -63,15 +63,15 @@
   <listOfOutputs>
     <report id="report_1" name="time_series">
       <listOfDataSets>
-        <dataSet id="data1" name="Time" dataReference="datagenerator_1">
+        <dataSet id="data1" label="Time" dataReference="datagenerator_1">
         </dataSet>
-        <dataSet id="data2" name="E" dataReference="datagenerator_2">
+        <dataSet id="data2" label="E" dataReference="datagenerator_2">
         </dataSet>
-        <dataSet id="data3" name="S" dataReference="datagenerator_3">
+        <dataSet id="data3" label="S" dataReference="datagenerator_3">
         </dataSet>
-        <dataSet id="data4" name="C" dataReference="datagenerator_4">
+        <dataSet id="data4" label="C" dataReference="datagenerator_4">
         </dataSet>
-        <dataSet id="data5" name="P" dataReference="datagenerator_5">
+        <dataSet id="data5" label="P" dataReference="datagenerator_5">
         </dataSet>
       </listOfDataSets>
     </report>

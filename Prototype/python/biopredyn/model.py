@@ -92,8 +92,8 @@ class Model:
   def check(self):
     doc = self.get_sbml_doc()
     if doc.getNumErrors() > 0:
-      print("Error code " + str(doc.getError(0).getErrorId()) +
-            " when opening file: " +
+      print("Error code " + str(doc.getError(0).getErrorId()) + " at line " +
+            str(doc.getError(0).getLine()) + " when opening file: " +
             str(doc.getError(0).getShortMessage()))
       return False
     else:

@@ -59,7 +59,7 @@ class DataSet(Data):
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "      |-" + self.type + " id=" + self.id + " name=" + self.name
+    tree = "      |-" + self.type + " id=" + self.id + " label=" + self.label
     tree += " dataReference=" + self.data_id + "\n"
     return tree
   
@@ -93,7 +93,7 @@ class DataSet(Data):
   # @param self The object pointer.
   # @param file A writable .csv file.
   def write_as_csv(self, file):
-    file.write(self.name + u',')
+    file.write(self.label + u',')
     values = self.get_data_gen().get_values()
     for v in values:
       file.write(str(v) + u',')
@@ -107,7 +107,7 @@ class DataSet(Data):
     values = self.get_data_gen().get_values()
     for i in range(len(values)):
       comp = dim.get(i).createCompositeValue()
-      comp.setIndexValue(self.name)
+      comp.setIndexValue(self.label)
       value = comp.createAtomicValue()
       value.setValue(str(values[i]))
 

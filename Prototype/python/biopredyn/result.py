@@ -162,8 +162,8 @@ class Result:
       reader = libnuml.NUMLReader()
       doc = reader.readNUMLFromString(file.read())
       if doc.getNumErrors() > 0:
-        print("Error code " + str(doc.getError(0).getErrorId()) +
-              " when opening file: " +
+        print("Error code " + str(doc.getError(0).getErrorId()) + " at line " +
+              str(doc.getError(0).getLine()) + " when opening file: " +
               str(doc.getError(0).getShortMessage()))
         sys.exit(2)
       else:

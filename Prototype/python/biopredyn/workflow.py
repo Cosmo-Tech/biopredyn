@@ -111,6 +111,7 @@ class WorkFlow:
   def check(self):
     if self.sedml.getNumErrors() > 0:
       print("Error code " + str(self.sedml.getError(0).getErrorId()) +
+            " at line " + str(self.sedml.getError(0).getLine()) + 
             " when opening file: " +
             str(self.sedml.getError(0).getShortMessage()))
       sys.exit(2)

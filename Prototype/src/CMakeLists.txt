@@ -1,9 +1,13 @@
 find_package(LIBSBML REQUIRED)
 find_package(LIBBZIP2 REQUIRED)
 
-add_subdirectory(libsedml)
-add_subdirectory(libsbmlsim-1.1.0)
-add_subdirectory(libnuml)
+set( LIBSEDML_VERSION libsedml-0.2.1 )
+set( LIBSBMLSIM_VERSION libsbmlsim-1.1.0 )
+set( LIBNUML_VERSION libnuml-1.0.1 )
+
+add_subdirectory( ${LIBSEDML_VERSION} )
+add_subdirectory( ${LIBSBMLSIM_VERSION} )
+add_subdirectory( ${LIBNUML_VERSION} )
 
 if (BPD_GENERATE_LIBBIOPREDYN)
   # Parsing library for biopredyn.xsd based XML files

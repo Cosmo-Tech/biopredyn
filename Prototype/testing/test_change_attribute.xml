@@ -127,7 +127,7 @@
     </dataGenerator>
   </listOfDataGenerators>
   <listOfOutputs>
-    <plot2D id="2D_plot_all" name="concentrations">
+    <plot2D id="plot_1" name="concentrations">
       <listOfCurves>
         <curve id="curve1" name="IL" logX="false" logY="false" xDataReference="time_steps" yDataReference="data_1">
         </curve>
