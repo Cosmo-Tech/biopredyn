@@ -10,33 +10,35 @@ import sys
 import os
 import unittest
 
+# Where to look for biopredyn package depends on the operating system
+if sys.platform == "win32":
+  biopredyn_path = '${CMAKE_SOURCE_DIR}/Prototype/python'
+else:
+  biopredyn_path = '${CMAKE_BINARY_DIR}/Prototype/python'
+
 # Find the path to the libsedml Python package
-for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
-  '${CMAKE_BINARY_DIR}/install')):
+for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
   for filename in f:
     if filename == "libsedml.py":
       sys.path.append(os.path.abspath(r))
       break
 
 # Find the path to the libsbmlsim Python package
-for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
-  '${CMAKE_BINARY_DIR}/install')):
+for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
   for filename in f:
     if filename == "libsbmlsim.py":
       sys.path.append(os.path.abspath(r))
       break
 
 # Find the path to the libnuml Python package
-for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
-  '${CMAKE_BINARY_DIR}/install')):
+for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
   for filename in f:
     if filename == "libnuml.py":
       sys.path.append(os.path.abspath(r))
       break
 
 # Find the path to the biopredyn Python package
-for r, d, f in os.walk(os.path.join(os.path.dirname(__file__),
-  '${CMAKE_BINARY_DIR}/Prototype/python')):
+for r, d, f in os.walk(biopredyn_path):
   for filename in f:
     if filename == "main.py":
       sys.path.append(os.path.abspath(r))
@@ -164,11 +166,13 @@ class ChangeTestCase(GenericTestCase):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_remove_xml.xml',
       res_man=self.manager)
-    pre_change = flow.get_model_by_id('edelstein').get_sbml_doc().getModel().getNumSpecies()
-    self.assertEqual(pre_change, 12)
+    pre_change = flow.get_model_by_id('edelstein').evaluate_xpath(
+      '//sbml:species')
+    self.assertEqual(len(pre_change), 12)
     flow.get_model_by_id('edelstein').apply_changes()
-    post_change = flow.get_model_by_id('edelstein').get_sbml_doc().getModel().getNumSpecies()
-    self.assertEqual(post_change, 11)
+    post_change = flow.get_model_by_id('edelstein').evaluate_xpath(
+      '//sbml:species')
+    self.assertEqual(len(post_change), 11)
   
   def test_attribute_value(self):
     flow = workflow.WorkFlow(
@@ -187,6 +191,27 @@ class ChangeTestCase(GenericTestCase):
     attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
     self.assertEqual(float(attr_value[0]), 1.66057788110262e-05)
+  
+  def test_add_xml(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_add_xml.xml',
+      res_man=self.manager)
+    flow.get_model_by_id('edelstein').apply_changes()
+    name = flow.get_model_by_id('edelstein').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='Z']/@name")
+    self.assertEqual(str(name[0]), 'fake_species')
+  
+  def test_change_xml(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_xml.xml',
+      res_man=self.manager)
+    flow.get_model_by_id('edelstein').apply_changes()
+    name = flow.get_model_by_id('edelstein').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='Z']/@name")
+    self.assertEqual(str(name[0]), 'fake_species')
+    removed_species = flow.get_model_by_id('edelstein').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']")
+    self.assertEqual(len(removed_species), 0)
 
 if __name__ == '__main__':
     unittest.main()

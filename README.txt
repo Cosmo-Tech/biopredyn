@@ -89,6 +89,10 @@ Windows: install easy_install too.
 
 Windows: easy_install bioservices
 
+Windows: lxml
+  download latest package at https://pypi.python.org/pypi/lxml/
+  (lxml-X.Y.Z.win32-py2.7.exe) and install it
+
 sudo apt-get install autoconf
 sudo apt-get install automake
 sudo apt-get install libtool
