@@ -84,21 +84,26 @@ class WorkFlow:
   # @return A string representing this as a hierarchy.
   def __str__(self):
     tree = "Work flow: " + self.source + "\n"
-    tree += "|-listOfSimulations\n"
-    for s in self.simulations:
-      tree += str(s)
-    tree += "|-listOfModels\n"
-    for m in self.models:
-      tree += str(m)
-    tree += "|-listOfTasks\n"
-    for t in self.tasks:
-      tree += str(t)
-    tree += "|-listOfDataGenerators\n"
-    for d in self.data_generators:
-      tree += str(d)
-    tree += "|-listOfOutputs\n"
-    for o in self.outputs:
-      tree += str(o)
+    if len(self.simulations) > 0:
+      tree += "|-listOfSimulations\n"
+      for s in self.simulations:
+        tree += str(s)
+    if len(self.models) > 0:
+      tree += "|-listOfModels\n"
+      for m in self.models:
+        tree += str(m)
+    if len(self.tasks) > 0:
+      tree += "|-listOfTasks\n"
+      for t in self.tasks:
+        tree += str(t)
+    if len(self.data_generators) > 0:
+      tree += "|-listOfDataGenerators\n"
+      for d in self.data_generators:
+        tree += str(d)
+    if len(self.outputs) > 0:
+      tree += "|-listOfOutputs\n"
+      for o in self.outputs:
+        tree += str(o)
     return tree
   
   ## SED-ML compliance check function.
@@ -112,14 +117,14 @@ class WorkFlow:
     if self.sedml.getNumErrors() > 0:
       print("Error code " + str(self.sedml.getError(0).getErrorId()) +
             " at line " + str(self.sedml.getError(0).getLine()) + 
-            " when opening file: " +
+            " when opening file " + str(self.source) + ": " +
             str(self.sedml.getError(0).getShortMessage()))
       sys.exit(2)
     else:
       print("Document " + self.source + " is SED-ML compliant.")
       # check compatibility with SED-ML level 1
       print( str(self.sedml.checkCompatibility(self.sedml)) +
-             " compatibility errors with SED-ML L1." )
+        " compatibility errors with SED-ML." )
       return self.sedml
   
   ## Getter. Returns a data generator referenced by the input id listed in

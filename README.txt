@@ -93,6 +93,10 @@ Windows: lxml
   download latest package at https://pypi.python.org/pypi/lxml/
   (lxml-X.Y.Z.win32-py2.7.exe) and install it
 
+Windows: PySide
+  download the latest package (PySide-X.Y.Z.win32-py2.7.exe) at
+  http://qt-project.org/wiki/PySide_Binaries_Windows and install it.
+
 sudo apt-get install autoconf
 sudo apt-get install automake
 sudo apt-get install libtool
