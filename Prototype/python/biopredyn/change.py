@@ -213,11 +213,12 @@ class AddXML(Change):
   # @param add_xml A SED-ML addXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, add_xml, model):
+    print add_xml.__class__
     self.id = add_xml.getId()
     self.name = add_xml.getName()
     self.model = model
-    self.target = add_xml.getTarget()
     self.xml = add_xml.getNewXML()
+    self.target = add_xml.getTarget()
   
   ## Add self.xml as a sibling of self.target in self.model; then remove
   ## self.target from self.model.
@@ -264,6 +265,7 @@ class ChangeXML(Change):
   # @param change_xml A SED-ML changeXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, change_xml, model):
+    print change_xml.__class__
     self.id = change_xml.getId()
     self.name = change_xml.getName()
     self.model = model
@@ -315,6 +317,7 @@ class RemoveXML(Change):
   # @param remove_xml A SED-ML removeXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, remove_xml, model):
+    print remove_xml.__class__
     self.id = remove_xml.getId()
     self.name = remove_xml.getName()
     self.model = model

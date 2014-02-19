@@ -238,6 +238,13 @@ void
 SedChangeXML::writeElements (XMLOutputStream& stream) const
 {
 	SedChange::writeElements(stream);
+	if (isSetNewXML() == true)
+	{
+		stream.startElement("newXML");
+		stream << *mNewXML;
+		stream.endElement("newXML");
+
+	}
 }
 
 
@@ -313,6 +320,34 @@ SedChangeXML::readAttributes (const XMLAttributes& attributes,
 
 /** @cond doxygen-libsbml-internal */
 
+bool
+SedChangeXML::readOtherXML (XMLInputStream& stream)
+{
+	bool          read = false;
+	const string& name = stream.peek().getName();
+
+	if (name == "newXML")
+	{
+		const XMLToken& token = stream.next();
+		stream.skipText();
+		mNewXML = new XMLNode(stream);
+		stream.skipPastEnd(token);
+		read = true;
+	}
+
+	if (SedChange::readOtherXML(stream))
+	{
+		read = true;
+	}
+	return read;
+}
+
+
+/** @endcond doxygen-libsbml-internal */
+
+
+/** @cond doxygen-libsbml-internal */
+
 /*
  * Write values of XMLAttributes to the output stream.
  */
@@ -320,9 +355,6 @@ SedChangeXML::readAttributes (const XMLAttributes& attributes,
 SedChangeXML::writeAttributes (XMLOutputStream& stream) const
 {
 	SedChange::writeAttributes(stream);
-
-	if (isSetNewXML() == true)
-		stream.writeAttribute("newXML", getPrefix(), mNewXML);
 
 }
 
