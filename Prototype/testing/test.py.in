@@ -83,6 +83,11 @@ class SBMLTestCase(GenericTestCase):
     mod = model.Model(self.manager,
       source='urn:miriam:biomodels.db:BIOMD0000000001')
     self.assertTrue(mod.check())
+  
+  def test_write_model(self):
+    mod = model.Model(self.manager,
+      source='urn:miriam:biomodels.db:BIOMD0000000001')
+    mod.write_sbml('${CMAKE_CURRENT_BINARY_DIR}/test_write_model.xml')
 
 ## GenericTestCase derived class for SED-ML related tests.
 class SEDMLTestCase(GenericTestCase):
@@ -198,20 +203,20 @@ class ChangeTestCase(GenericTestCase):
       res_man=self.manager)
     flow.get_model_by_id('edelstein').apply_changes()
     name = flow.get_model_by_id('edelstein').evaluate_xpath(
-      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='Z']/@name")
+      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/species[@id='Z']/@name")
     self.assertEqual(str(name[0]), 'fake_species')
   
   def test_change_xml(self):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_change_xml.xml',
       res_man=self.manager)
-    flow.get_model_by_id('edelstein').apply_changes()
-    name = flow.get_model_by_id('edelstein').evaluate_xpath(
-      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='Z']/@name")
+    mod = flow.get_model_by_id('edelstein')
+    mod.apply_changes()
+    name = mod.evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/species[@id='Z']/@name")
     self.assertEqual(str(name[0]), 'fake_species')
-    removed_species = flow.get_model_by_id('edelstein').evaluate_xpath(
+    self.assertRaises(SystemExit, mod.evaluate_xpath,
       "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']")
-    self.assertEqual(len(removed_species), 0)
 
 if __name__ == '__main__':
     unittest.main()

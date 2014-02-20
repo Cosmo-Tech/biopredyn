@@ -12,6 +12,7 @@ endmacro()
 bpdAddTest(SBMLLocalImportTest SBMLTestCase.test_local_import)
 bpdAddTest(SBMLServerImportTest SBMLTestCase.test_server_import)
 bpdAddTest(SBMLBioModelsImportTest SBMLTestCase.test_biomodels_import)
+bpdAddTest(SBMLWriteModelTest SBMLTestCase.test_write_model)
 
 # SEDML related tests
 bpdAddTest(SEDMLLibSBMLSimTimeCourseTest SEDMLTestCase.test_libsbmlsim_time_course)

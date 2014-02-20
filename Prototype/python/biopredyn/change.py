@@ -213,15 +213,13 @@ class AddXML(Change):
   # @param add_xml A SED-ML addXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, add_xml, model):
-    print add_xml.__class__
     self.id = add_xml.getId()
     self.name = add_xml.getName()
     self.model = model
-    self.xml = add_xml.getNewXML()
+    self.xml = add_xml.getNewXML().toXMLString()
     self.target = add_xml.getTarget()
   
-  ## Add self.xml as a sibling of self.target in self.model; then remove
-  ## self.target from self.model.
+  ## Add self.xml as a child of self.target in self.model.
   # @param self The object pointer.
   def apply(self):
     # self.target should not point to an attribute
@@ -232,8 +230,8 @@ class AddXML(Change):
             )
     else:
       target = self.model.evaluate_xpath(self.target)
-      new_element = etree.Element(self.xml)
-      target[0].addnext(new_element)
+      new_element = etree.XML(self.xml)
+      target[0].append(new_element)
   
   ## Getter for self.xml.
   # @param self The object pointer.
@@ -265,12 +263,11 @@ class ChangeXML(Change):
   # @param change_xml A SED-ML changeXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, change_xml, model):
-    print change_xml.__class__
     self.id = change_xml.getId()
     self.name = change_xml.getName()
     self.model = model
     self.target = change_xml.getTarget()
-    self.xml = change_xml.getNewXML()
+    self.xml = change_xml.getNewXML().toXMLString()
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
@@ -283,10 +280,9 @@ class ChangeXML(Change):
             )
     else:
       target = self.model.evaluate_xpath(self.target)
-      new_element = etree.Element(self.xml)
-      target[0].append(new_element)
-      # target is removed by its parent
+      new_element = etree.XML(self.xml)
       parent = target[0].getparent()
+      parent.append(new_element)
       parent.remove(target[0])
   
   ## Getter for self.xml.
@@ -317,7 +313,6 @@ class RemoveXML(Change):
   # @param remove_xml A SED-ML removeXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, remove_xml, model):
-    print remove_xml.__class__
     self.id = remove_xml.getId()
     self.name = remove_xml.getName()
     self.model = model

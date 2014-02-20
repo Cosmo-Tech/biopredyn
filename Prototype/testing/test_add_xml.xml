@@ -5,7 +5,7 @@
       <listOfChanges>
         <addXML target="/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies">
           <newXML>
-            <species id="Z" initialAmount="0" name="fake_species" compartment="fake_compartment" />
+            <species id="Z" initialAmount="0" name="fake_species" compartment="fake_compartment"/>
           </newXML>
         </addXML>
       </listOfChanges>

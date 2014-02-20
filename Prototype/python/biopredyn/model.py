@@ -182,3 +182,17 @@ class Model:
     else:
       file = self.resource_manager.get_resource(self.source)
       self.tree = etree.parse(file)
+  
+  ## Print a string representation of self.tree.
+  # @param self The object pointer.
+  def print_tree(self):
+    print etree.tostringlist(self.tree, pretty_print=True)
+  
+  ## Write self.tree as a SBML document at the input 'filename' location.
+  # @param self The object pointer.
+  # @param filename Absolute path to the location where the output file should
+  # be written.
+  def write_sbml(self, filename):
+    writer = libsbml.SBMLWriter()
+    doc = self.get_sbml_doc()
+    writer.writeSBMLToFile(doc, filename)
