@@ -49,10 +49,22 @@ class Simulation:
   def get_id(self):
     return self.id
   
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
+  
   ## Getter. Returns self.name.
   # @param self The object pointer.
   def get_name(self):
     return self.name
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
   
   ## Getter. Returns self.type.
   # @param self The object pointer.

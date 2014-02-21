@@ -125,6 +125,18 @@ class Task:
   def get_tool(self):
     return self.tool
   
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
+  
   ## Setter. Assign a new value to self.model_id.
   # @param self The object pointer.
   # @param model_id New value for self.model_id.

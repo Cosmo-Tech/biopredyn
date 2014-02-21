@@ -133,11 +133,23 @@ class Model:
   def get_source(self):
     return self.source
   
+  ## Setter for self.source.
+  # @param self The object pointer.
+  # @param id New value for self.source.
+  def set_source(self, source):
+    self.source = source
+  
   ## Getter. Returns self.id.
   # @param self The object pointer.
   # @return self.id
   def get_id(self):
     return self.id
+  
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
   
   ## Converts self.tree as a SBMLDocument object and return it.
   # @param self The object pointer.
@@ -153,6 +165,12 @@ class Model:
   # @return self.tree
   def get_tree(self):
     return self.tree
+  
+  ## Setter for self.tree.
+  # @param self The object pointer.
+  # @param tree New value for self.tree.
+  def set_tree(self, tree):
+    self.tree = tree
   
   ## Extracts namespaces from self.tree and stores them as a dictionary in
   ## self.namespaces.

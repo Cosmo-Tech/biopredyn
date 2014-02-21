@@ -23,10 +23,22 @@ class Data:
   def get_id(self):
     return self.id
   
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
+  
   ## Getter. Returns self.name.
   # @param self The object pointer.
   def get_name(self):
     return self.name
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
   
   ## Getter. Returns self.type.
   # @param self The object pointer.
@@ -69,6 +81,12 @@ class DataSet(Data):
   def get_label(self):
     return self.label
   
+  ## Setter for self.label.
+  # @param self The object pointer.
+  # @param label New value for self.label.
+  def set_label(self, label):
+    self.label = label
+  
   ## Returns the number of time points in self.data_ref.
   # @param self The object poitner.
   # @return The number of time points in self.data_ref.
@@ -86,6 +104,12 @@ class DataSet(Data):
   # @return self.data_id
   def get_data_id(self):
     return self.data_id
+  
+  ## Setter for self.data_id.
+  # @param self The object pointer.
+  # @param data_id New value for self.data_id.
+  def set_data_id(self, data_id):
+    self.data_id = data_id
   
   ## Write the data encoded in this at the end of the input file; data is
   ## written as comma-separated values, as follows:
@@ -157,6 +181,12 @@ class Curve(Data):
   def get_x_data_id(self):
     return self.x_data_id
   
+  ## Setter for self.x_data_id.
+  # @param self The object pointer.
+  # @param x_data_id New value for self.x_data_id.
+  def set_x_data_id(self, x_data_id):
+    self.x_data_id = x_data_id
+  
   ## Returns the DataGenerator object of self.workflow which ID is
   ## self.x_data_id.
   # @param self The object pointer.
@@ -169,6 +199,12 @@ class Curve(Data):
   # @return self.y_data_id
   def get_y_data_id(self):
     return self.y_data_id
+  
+  ## Setter for self.y_data_id.
+  # @param self The object pointer.
+  # @param y_data_id New value for self.id.
+  def set_id(self, y_data_id):
+    self.y_data_id = y_data_id
   
   ## Returns the DataGenerator object of self.workflow which ID is
   ## self.y_data_id.
@@ -183,11 +219,23 @@ class Curve(Data):
   def get_log_x(self):
     return self.log_x
   
+  ## Setter for self.log_x.
+  # @param self The object pointer.
+  # @param log_x New value for self.log_x.
+  def set_log_x(self, log_x):
+    self.log_x = log_x
+  
   ## Getter. Returns self.log_y.
   # @param self The object pointer.
   # @return self.y_data_ref
   def get_log_y(self):
     return self.log_y
+  
+  ## Setter for self.log_y.
+  # @param self The object pointer.
+  # @param log_y New value for self.log_y.
+  def set_log_y(self, log_y):
+    self.log_y = log_y
   
   ## Plot the data encoded in this on the input plot object.
   # @param self The object pointer.
@@ -266,6 +314,12 @@ class Surface(Data):
   def get_x_data_id(self):
     return self.x_data_id
   
+  ## Setter for self.x_data_id.
+  # @param self The object pointer.
+  # @param x_data_id New value for self.x_data_id.
+  def set_x_data_id(self, x_data_id):
+    self.x_data_id = x_data_id
+  
   ## Returns the DataGenerator object of self.workflow which ID is
   ## self.y_data_id.
   # @param self The object pointer.
@@ -278,6 +332,12 @@ class Surface(Data):
   # @return self.y_data_id
   def get_y_data_id(self):
     return self.y_data_id
+  
+  ## Setter for self.y_data_id.
+  # @param self The object pointer.
+  # @param y_data_id New value for self.y_data_id.
+  def set_y_data_id(self, y_data_id):
+    self.y_data_id = y_data_id
   
   ## Returns the DataGenerator object of self.workflow which ID is
   ## self.z_data_id.
@@ -292,11 +352,23 @@ class Surface(Data):
   def get_z_data_id(self):
     return self.z_data_id
   
+  ## Setter for self.z_data_id.
+  # @param self The object pointer.
+  # @param z_data_id New value for self.z_data_id.
+  def set_z_data_id(self, z_data_id):
+    self.z_data_id = z_data_id
+  
   ## Getter. Returns self.log_x.
   # @param self The object pointer.
   # @return self.x_data_ref
   def get_log_x(self):
     return self.log_x
+  
+  ## Setter for self.log_x.
+  # @param self The object pointer.
+  # @param log_x New value for self.log_x.
+  def set_id(self, log_x):
+    self.log_x = log_x
   
   ## Getter. Returns self.log_y.
   # @param self The object pointer.
@@ -304,11 +376,23 @@ class Surface(Data):
   def get_log_y(self):
     return self.log_y
   
+  ## Setter for self.log_y.
+  # @param self The object pointer.
+  # @param log_y New value for self.log_y.
+  def set_log_y(self, log_y):
+    self.log_y = log_y
+  
   ## Getter. Returns self.log_z.
   # @param self The object pointer.
   # @return self.z_data_ref
   def get_log_z(self):
     return self.log_z
+  
+  ## Setter for self.log_z.
+  # @param self The object pointer.
+  # @param log_z New value for self.log_z.
+  def set_log_z(self, log_z):
+    self.log_z = log_z
   
   ## Plot the data encoded in this on the input plot object.
   # @param self The object pointer.

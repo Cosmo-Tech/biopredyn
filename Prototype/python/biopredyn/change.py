@@ -145,6 +145,18 @@ class ComputeChange(Change):
   def parse_math_expression(self, mathml):
     math = sympify(libsbml.formulaToString(mathml))
     return math
+  
+  ## Getter for self.math.
+  # @param self The object pointer.
+  # @return self.math
+  def get_math(self):
+    return self.math
+  
+  ## Setter for self.math.
+  # @param self The object pointer.
+  # @param math A SymPy expression.
+  def set_math(self, math):
+    self.math = math
 
 ## Change-derived class for changing attribute values.
 class ChangeAttribute(Change):
