@@ -1,10 +1,11 @@
-# coding=utf-8
+#!/usr/bin/env python
 
 ## @package biopredyn
-## @author: $Author$
-## @date: $Date$
-## @copyright: $Copyright: [2013-2014] BioPreDyn $
-## @version: $Revision$
+## $Author$
+## $Date$
+## $Copyright: 2014, The CoSMo Company, All Rights Reserved $
+## $License$
+## $Revision$
 
 import libsbmlsim
 import model, simulation, result
