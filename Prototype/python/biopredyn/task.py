@@ -4,20 +4,51 @@
 ## $Author$
 ## $Date$
 ## $Copyright: 2014, The CoSMo Company, All Rights Reserved $
-## $License$
+## $License: BSD 3-Clause $
 ## $Revision$
 
 import libsbmlsim
 import model, simulation, result
 
 ## Base representation of an atomic task in a SED-ML work flow.
-class Task:
+class AbstractTask:
   ## @var id
   # A unique identifier associated with the object.
-  ## @var model_id
-  # ID of the model this object is about.
   ## @var name
   # Name of this object.
+
+  ## Constructor.
+  # @param task A SED-ML task.
+  def __init__(self, task):
+    self.id = task.getId()
+    self.name = task.getName()
+
+  ## Getter. Returns self.id.
+  # @param self The object pointer.
+  # @return self.id
+  def get_id(self):
+    return self.id
+  
+  ## Getter. Returns self.name.
+  # @param self The object pointer.
+  def get_name(self):
+    return self.name
+  
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
+
+class Task(AbstractTask):
+  ## @var model_id
+  # ID of the model this object is about.
   ## @var result
   # Result of the execution of the task.
   ## @var simulation_id
@@ -30,8 +61,7 @@ class Task:
   # @param task A SED-ML task.
   # @param workflow The WorkFlow object this.
   def __init__(self, task, workflow):
-    self.id = task.getId()
-    self.name = task.getName()
+    super().__init__(task)
     self.workflow = workflow
     self.model_id = task.getModelReference()
     self.simulation_id = task.getSimulationReference()
@@ -77,12 +107,6 @@ class Task:
       print "TODO"
     # Model is reinitialized
     model.init_tree()
-
-  ## Getter. Returns self.id.
-  # @param self The object pointer.
-  # @return self.id
-  def get_id(self):
-    return self.id
   
   ## Returns the Model objet of self.workflow which id is self.model_id.
   # @param self The object pointer.
@@ -95,11 +119,6 @@ class Task:
   # @return self.model_id
   def get_model_id(self):
     return self.model_id
-  
-  ## Getter. Returns self.name.
-  # @param self The object pointer.
-  def get_name(self):
-    return self.name
   
   ## Getter. Returns self.result.
   # @param self The object pointer.
@@ -126,18 +145,6 @@ class Task:
   def get_tool(self):
     return self.tool
   
-  ## Setter for self.id.
-  # @param self The object pointer.
-  # @param id New value for self.id.
-  def set_id(self, id):
-    self.id = id
-  
-  ## Setter for self.name.
-  # @param self The object pointer.
-  # @param name New value for self.name.
-  def set_name(self, name):
-    self.name = name
-  
   ## Setter. Assign a new value to self.model_id.
   # @param self The object pointer.
   # @param model_id New value for self.model_id.
@@ -155,47 +162,3 @@ class Task:
   # @param tool New value for self.tool.
   def set_tool(self, tool):
     print "Task::set_tool - TODO"
-
-## Task-derived class representing a task executed by CellNOpt.wrapper.
-class CellNOptTask(Task):
-
-  ## Execute the task.
-  # @param self The object pointer.
-  def run(self):
-    print "CellNOptTask::run - TODO"
-
-## Task-derived class representing a task executed by openCobra.
-class CobraTask(Task):
-
-  ## Execute the task.
-  # @param self The object pointer.
-  def run(self):
-    print "CobraTask::run - TODO"
-
-## Task-derived class representing a task executed by COPASI.
-class CopasiTask(Task):
-
-  ## Execute the task.
-  # @param self The object pointer.
-  def run(self):
-    # TODO: direct copy/paste from the not-so-long dead CopasiFlow class; to
-    # be fixed.
-    if ( sed_simulation.getElementName() == "uniformTimeCourse" ):
-      cop_task = cop_datamodel.addTask(COPASI.CCopasiTask.timeCourse)
-      cop_problem = cop_task.getProblem()
-      # Required parameters are set from values in the input SED-ML file
-      cop_problem.setDuration( sed_simulation.getOutputEndTime() -
-                       sed_simulation.getOutputStartTime() )
-      cop_problem.setStepNumber(sed_simulation.getNumberOfPoints())
-      cop_problem.setOutputStartTime(sed_simulation.getOutputStartTime())
-      cop_problem.setTimeSeriesRequested(True)
-      # Deterministic method is chosen
-      # TODO: acquire it from KiSAO value in SED-ML file
-      cop_task.setMethodType(COPASI.CCopasiMethod.deterministic)
-      # Run
-      cop_task.process(True)
-      # Save the results
-      self.series = cop_task.getTimeSeries()
-    else:
-      # TODO: case of a generic simulation element
-      print("Something to be done with Simulation element here")
