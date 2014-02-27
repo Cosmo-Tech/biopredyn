@@ -10,7 +10,7 @@
 import libsbmlsim
 import model, simulation, result
 
-## Base representation of an atomic task in a SED-ML work flow.
+## Abstract representation of an atomic task in a SED-ML work flow.
 class AbstractTask:
   ## @var id
   # A unique identifier associated with the object.
@@ -46,6 +46,7 @@ class AbstractTask:
   def set_name(self, name):
     self.name = name
 
+## AbstractTask-derived class for atomic executable tasks in SED-ML work flows.
 class Task(AbstractTask):
   ## @var model_id
   # ID of the model this object is about.
@@ -61,7 +62,7 @@ class Task(AbstractTask):
   # @param task A SED-ML task.
   # @param workflow The WorkFlow object this.
   def __init__(self, task, workflow):
-    super().__init__(task)
+    AbstractTask.__init__(self, task)
     self.workflow = workflow
     self.model_id = task.getModelReference()
     self.simulation_id = task.getSimulationReference()
@@ -162,3 +163,25 @@ class Task(AbstractTask):
   # @param tool New value for self.tool.
   def set_tool(self, tool):
     print "Task::set_tool - TODO"
+
+## AbstractTask-derived class for nested loops of tasks in SED-ML work flows.
+class RepeatedTask(AbstractTask):
+  ## @var workflow
+  # Reference to the WorkFlow object this belongs to.
+  ## @var changes
+  # A list of Change objects.
+  ## @var ranges
+  # A list of Range objects.
+  ## @var subtasks
+  # A list of AbstractTask objects.
+  
+  ## Constructor.
+  # @param self The object pointer.
+  # @param task A SED-ML repeatedTask element.
+  # @param workflow 
+  def __init__(self, task, workflow):
+    AbstractTask.__init__(self, task)
+    self.workflow = workflow
+    self.changes = []
+    self.ranges = []
+    self.subtasks = []

@@ -95,8 +95,7 @@ class SEDMLTestCase(GenericTestCase):
   
   def test_libsbmlsim_time_course(self):
     flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml',
-      res_man=self.manager)
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
     flow.run_tasks()
     self.assertEqual(
       len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201)
@@ -106,27 +105,25 @@ class OutputTestCase(GenericTestCase):
   
   def test_graphical_output(self):
     flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml',
-      res_man=self.manager)
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
     flow.run_tasks()
     flow.process_outputs(True)
   
   def test_3D_graphical_output(self):
     flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_3D_graphical_output.xml',
-      res_man=self.manager)
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_3D_graphical_output.xml', self.manager)
     flow.run_tasks()
     flow.process_outputs(True)
   
   def test_csv_report(self):
     flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
-      res_man=self.manager)
+      self.manager)
     flow.run_tasks()
     flow.process_outputs(True, '${CMAKE_CURRENT_BINARY_DIR}/test_output.csv')
   
   def test_numl_report(self):
     flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
-      res_man=self.manager)
+      self.manager)
     flow.run_tasks()
     flow.process_outputs(True, '${CMAKE_CURRENT_BINARY_DIR}/test_output.xml')
 
@@ -171,7 +168,7 @@ class ChangeTestCase(GenericTestCase):
   def test_remove_xml(self):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_remove_xml.xml',
-      res_man=self.manager)
+      self.manager)
     pre_change = flow.get_model_by_id('edelstein').evaluate_xpath(
       '//sbml:species')
     self.assertEqual(len(pre_change), 12)
@@ -182,8 +179,7 @@ class ChangeTestCase(GenericTestCase):
   
   def test_attribute_value(self):
     flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_attribute.xml',
-      res_man=self.manager)
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_attribute.xml', self.manager)
     flow.get_model_by_id('edelstein').apply_changes()
     attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
@@ -191,8 +187,7 @@ class ChangeTestCase(GenericTestCase):
   
   def test_compute_value(self):
     flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_compute_change.xml',
-      res_man=self.manager)
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_compute_change.xml', self.manager)
     flow.get_model_by_id('edelstein').apply_changes()
     attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
@@ -200,8 +195,7 @@ class ChangeTestCase(GenericTestCase):
   
   def test_add_xml(self):
     flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_add_xml.xml',
-      res_man=self.manager)
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_add_xml.xml', self.manager)
     flow.get_model_by_id('edelstein').apply_changes()
     name = flow.get_model_by_id('edelstein').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/species[@id='Z']/@name")
@@ -209,8 +203,7 @@ class ChangeTestCase(GenericTestCase):
   
   def test_change_xml(self):
     flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_xml.xml',
-      res_man=self.manager)
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_xml.xml', self.manager)
     mod = flow.get_model_by_id('edelstein')
     mod.apply_changes()
     name = mod.evaluate_xpath(

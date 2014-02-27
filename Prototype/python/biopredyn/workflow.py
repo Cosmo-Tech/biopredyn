@@ -34,13 +34,10 @@ class WorkFlow:
   ## Constructor.
   # @param self The object pointer.
   # @param source Address of the SED-ML file to be read.
-  # @param res_man A ResourceManager instance; optional (default None).
-  def __init__(self, source, res_man=None):
+  # @param res_man A ResourceManager instance.
+  def __init__(self, source, res_man):
     self.source = source
-    if res_man == None:
-      self.resource_manager = resources.ResourceManager()
-    else:
-      self.resource_manager = res_man
+    self.resource_manager = res_man
     file = self.resource_manager.get_resource(self.source)
     reader = libsedml.SedReader()
     self.sedml = reader.readSedMLFromString(file.read())
