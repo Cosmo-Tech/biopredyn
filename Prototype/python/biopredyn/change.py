@@ -345,3 +345,15 @@ class RemoveXML(Change):
       # target is removed by its parent
       parent = target[0].getparent()
       parent.remove(target[0])
+
+## ComputeChange-derived class for RepeatedTask change elements.
+class SetValue(ComputeChange):
+  ## @var range
+  # ID of a Range object from the parent RepeatedTask element.
+  
+  ## Constructor.
+  # @param self The object pointer.
+  # @param setvalue A SED-ML setValue element.
+  def __init__(self, setvalue):
+    if setvalue.isSetRange():
+      self.range = setvalue.getRange()

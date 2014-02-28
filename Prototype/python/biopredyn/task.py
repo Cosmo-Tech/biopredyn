@@ -183,5 +183,54 @@ class RepeatedTask(AbstractTask):
     AbstractTask.__init__(self, task)
     self.workflow = workflow
     self.changes = []
+    for c in task.getListOfTaskChanges():
+      print "TODO"
     self.ranges = []
+    for r in task.getListOfRanges():
+      r_name = r.getElementName()
+      if r_name == "functionalRange":
+        self.ranges.append(range.FunctionalRange(r, workflow, task))
+      elif r_name == "uniformRange":
+        self.ranges.append(range.UniformRange(r))
+      elif r_name == "vectorRange":
+        self.ranges.append(range.VectorRange(r))
+      else:
+        self.ranges.append(range.Range(r))
     self.subtasks = []
+    for s in task.getListOfSubTasks():
+      self.subtasks.append(SubTask(s, workflow))
+  
+  ## Getter. Returns a range referenced by the input id listed in self.ranges.
+  # @param self The object pointer.
+  # @param id The id of the range to be returned.
+  # @return range A range object.
+  def get_range_by_id(self, id):
+    for r in self.range:
+      if r.get_id() == id:
+        return r
+    print("Range not found: " + id)
+    return 0
+
+## Base-class for RepeatedTask element sub-tasks.
+class SubTask:
+  ## @var order
+  # Order of execution of this object (relatively to the SubTask objects of the
+  # same RepeatedTask object).
+  ## @var task_id
+  # ID of the AbstractTask object this object refers to.
+  ## @var workflow
+  # Reference to the WorkFlow object this object belongs to.
+  
+  ## Constructor.
+  # @param self The object pointer.
+  # @param subtask A SED-ML subTask element.
+  # @param workflow A WorkFlow object.
+  def __init__(self, subtask, workflow):
+    self.order = subtask.getOrder()
+    self.task_id = subtask.getTask()
+    self.workflow = workflow
+  
+  ## Calls the Task object of self.workflow which id is self.task_id.
+  # @param self The object pointer.
+  def run(self):
+    self.workflow.get_task_by_id(self.task_id).run()
