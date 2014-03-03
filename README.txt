@@ -1,65 +1,3 @@
-BioPreDyn prototype installation
-
-1. Ubuntu (11.10 or later)
-1.1 Dependencies
-1.1.1 CMake
-sudo apt-get install cmake
-sudo apt-get install cmake-curses-gui
-
-1.1.2 Subversion
-sudo apt-get install subversion
-
-1.1.3 Python
-sudo apt-get install python2.7
-
-1.1.4 SWIG
-sudo apt-get install swig2.0
-
-1.1.5 libXML2
-sudo apt-get install libxml2
-
-1.1.6 Autoconf
-sudo apt-get install autoconf
-
-1.1.7 Automake
-sudo apt-get install automake
-
-1.1.8 Libtool
-sudo apt-get install libtool
-
-1.1.9 XSLT processor
-sudo apt-get install xsltproc
-
-1.1.10 Expat
-sudo apt-get install libexpat1 libexpat1-dev
-
-1.1.11 libbzip2
-Download the latest package from http://www.bzip.org/, extract it. Go to the
-newly created directory then type the following commands:
-make
-make install
-
-1.1.12 easy_install
-Download ez_setup.py from https://bitbucket.org/pypa/setuptools/downloads then
-execute the following command in the folder containing the file:
-sudo python ez_setup.py
-
-1.1.13 matplotlib
-sudo easy_install matplotlib
-
-1.1.14 libSBML
-Download the latest stable version at http://sbml.org/Software/libSBML, then
-run the installer.
-
-1.2 Package
-
-mkdir build
-cd build
-cmake ..
-make
-make install
-make test
-
 2. Windows 7 (32 bits)
 2.1 Dependencies
 2.1.1 CMake
@@ -93,7 +31,13 @@ Windows: lxml
   download latest package at https://pypi.python.org/pypi/lxml/
   (lxml-X.Y.Z.win32-py2.7.exe) and install it
 
-Windows: PySide
+2.1.6 PySide
+
+2.1.6.1 Qt
+  download the Qt4.8 library corresponding to your operating system on
+  http://qt-project.org/downloads and install it.
+
+2.1.6.2 PySide
   download the latest package (PySide-X.Y.Z.win32-py2.7.exe) at
   http://qt-project.org/wiki/PySide_Binaries_Windows and install it.
 
