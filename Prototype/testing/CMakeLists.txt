@@ -41,3 +41,5 @@ bpdAddTest(ChangeChangeXMLTest ChangeTestCase.test_change_xml)
 
 # RepeatedTask related tests
 bpdAddTest(RepeatedTaskUniformRangeTest RepeatedTaskTestCase.test_uniform_range)
+bpdAddTest(RepeatedTaskVectorRangeTest RepeatedTaskTestCase.test_vector_range)
+bpdAddTest(RepeatedTaskFunctionalRangeTest RepeatedTaskTestCase.test_functional_range)

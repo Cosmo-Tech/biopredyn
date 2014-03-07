@@ -10,6 +10,8 @@
 
 import libsbml
 import numpy as np
+from sympy import *
+import variable
 
 ## Base class for expressing ranges in SED-ML repeatedTask elements.
 class Range:

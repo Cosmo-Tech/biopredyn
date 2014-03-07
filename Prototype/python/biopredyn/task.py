@@ -212,7 +212,7 @@ class RepeatedTask(AbstractTask):
     for r in task.getListOfRanges():
       r_name = r.getElementName()
       if r_name == "functionalRange":
-        self.ranges.append(ranges.FunctionalRange(r, workflow, task))
+        self.ranges.append(ranges.FunctionalRange(r, workflow, self))
       elif r_name == "uniformRange":
         self.ranges.append(ranges.UniformRange(r))
       elif r_name == "vectorRange":
