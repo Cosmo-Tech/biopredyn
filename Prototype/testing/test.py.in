@@ -99,7 +99,7 @@ class SEDMLTestCase(GenericTestCase):
       '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
     flow.run_tasks()
     self.assertEqual(
-      len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201)
+      len(flow.get_task_by_id('task_1').get_result(0).get_time_steps()), 201)
 
 ## GenericTestCase derived class for Output related tests
 class OutputTestCase(GenericTestCase):
@@ -212,6 +212,16 @@ class ChangeTestCase(GenericTestCase):
     self.assertEqual(str(name[0]), 'fake_species')
     self.assertRaises(SystemExit, mod.evaluate_xpath,
       "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']")
+
+## GenericTestCase derived class for RepeatedTask related tests
+class RepeatedTaskTestCase(GenericTestCase):
+
+  def test_uniform_range(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_uniform.xml',
+      self.manager)
+    flow.get_task_by_id("task_2").run()
+    flow.process_outputs(True)
 
 if __name__ == '__main__':
     unittest.main()

@@ -38,3 +38,6 @@ bpdAddTest(ChangeComputeValueTest ChangeTestCase.test_compute_value)
 bpdAddTest(ChangeRemoveXMLTest ChangeTestCase.test_remove_xml)
 bpdAddTest(ChangeAddXMLTest ChangeTestCase.test_add_xml)
 bpdAddTest(ChangeChangeXMLTest ChangeTestCase.test_change_xml)
+
+# RepeatedTask related tests
+bpdAddTest(RepeatedTaskUniformRangeTest RepeatedTaskTestCase.test_uniform_range)

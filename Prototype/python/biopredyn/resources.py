@@ -65,7 +65,7 @@ class ResourceManager:
       try:
         handle = self.opener.open(url)
         return handle
-      except IOError as err:
+      except IOError as e:
         print "Error " + str(e.errno) + ": " + str(e.strerror)
         sys.exit(1)
   

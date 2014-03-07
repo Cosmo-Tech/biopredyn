@@ -59,8 +59,13 @@ class WorkFlow:
     # Parsing self.sedml for task elements
     self.tasks = []
     for t in self.sedml.getListOfTasks():
-      # TODO: check whether the tools are set
-      self.tasks.append(task.Task(t, self))
+      t_name = t.getElementName()
+      if t_name == "task":
+        self.tasks.append(task.Task(t, self))
+      elif t_name == "repeatedTask":
+        self.tasks.append(task.RepeatedTask(t, self))
+      else:
+        self.tasks.append(task.AbstractTask(t))
     # Parsing self.sedml for data generator elements
     self.data_generators = []
     for d in self.sedml.getListOfDataGenerators():

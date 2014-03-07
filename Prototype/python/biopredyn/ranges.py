@@ -89,7 +89,7 @@ class FunctionalRange(Range):
   
   ## Computes and returns the value encoded by the element for the current
   ## iteration of self.task. Overrides Range.get_value.
-  # @param self The obbject pointer.
+  # @param self The object pointer.
   # @param iteration Current iteration of self.task.
   # @return result A numerical value.
   def get_value(self, iteration):
@@ -148,6 +148,7 @@ class UniformRange(Range):
     if self.type == 'linear':
       step = (self.end - self.start) / self.number_of_points
       factor = 0
+      value = 0
       while value < self.end:
         value = self.start + factor * step
         self.values.append(value)
@@ -160,6 +161,7 @@ class UniformRange(Range):
         end = np.log10(self.end)
         step = (end - start) / self.number_of_points
         factor = 0
+        value = 0
         while value < end:
           value = start + factor * step
           self.values.append(10**value)

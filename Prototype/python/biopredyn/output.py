@@ -12,6 +12,7 @@ import io
 import signals
 import libsedml, libnuml
 from matplotlib import pyplot as plt
+import colorsys
 
 ## Base class for encoding the outputs of the current work flow.
 class Output:
@@ -113,9 +114,13 @@ class Plot2D(Output):
   def process(self):
     self.plot = plt.figure()
     ax = self.plot.add_subplot(111)
+    step = 1.0 / len(self.curves)
+    hue = 0.0
     for c in self.curves:
-      c.plot(ax)
-    ax.legend()
+      rgb = colorsys.hsv_to_rgb(hue, 0.75, 1.0)
+      c.plot(ax, rgb)
+      hue += step
+    ax.autoscale()
   
   ## Show self.plot in a matplotlib window.
   # @param self The object pointer.
@@ -230,19 +235,26 @@ class Report(Output):
     comp = doc.createResultComponent()
     comp.setId(self.name)
     # Add the default DimensionDescription
-    comp_desc = comp.createCompositeDescription()
-    comp_desc.setName("Index")
-    comp_desc.setIndexType("double")
-    series_desc = comp_desc.createCompositeDescription()
+    iter_desc = comp.createCompositeDescription()
+    iter_desc.setName("Iteration")
+    iter_desc.setIndexType("double")
+    ind_desc = iter_desc.createCompositeDescription()
+    ind_desc.setName("Index")
+    ind_desc.setIndexType("double")
+    series_desc = ind_desc.createCompositeDescription()
     series_desc.setName("Series")
     series_desc.setIndexType("string")
     at_desc = series_desc.createAtomicDescription()
     at_desc.setName("Value")
     at_desc.setValueType("double")
-    # Create indices
-    for i in range(self.datasets[0].get_number_of_points()):
-      value = comp.createCompositeValue()
-      value.setIndexValue(str(i))
+    # Create iterations and indices
+    num_indices = self.datasets[0].get_number_of_points()
+    for s in range(self.datasets[0].get_number_of_series()):
+      s_value = comp.createCompositeValue()
+      s_value.setIndexValue(str(s))
+      for i in range(num_indices):
+        i_value = s_value.createCompositeValue()
+        i_value.setIndexValue(str(i))
     # Populate the indices with values
     for d in self.datasets:
       d.write_as_numl(comp.getDimension())

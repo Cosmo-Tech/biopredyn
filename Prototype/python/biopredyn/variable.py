@@ -96,6 +96,13 @@ class Variable:
     task = self.workflow.get_task_by_id(self.task_id)
     return task.get_simulation().get_number_of_points()
   
+  ## Returns the number of result series stored in the Task object of
+  ## self.workflow which ID is self.task_id.
+  # @param self The object pointer.
+  # @return An integer value.
+  def get_number_of_series(self):
+    return self.workflow.get_task_by_id(self.task_id).get_number_of_series()
+  
   ## Getter for self.target.
   # @param self The object pointer.
   # @return self.target
@@ -114,17 +121,20 @@ class Variable:
   def get_task_id(self):
     return self.task_id
   
-  ## Return the numerical results associated with this as an array, if they
-  # exist.
+  ## Return the numerical values corresponding to the Result object at index in
+  ## the Task object of self.workflow which ID is self.task_id. If self.id
+  ## indicates a time series, returns the time steps associated with this same
+  ## Task object instead.
   # @param self The object pointer.
+  # @param index An integer.
   # @return values A 1-dimensional array of numerical values.
-  def get_values(self):
+  def get_values(self, index):
     task = self.get_task()
     values = []
     if self.id.upper() == "TIME":
-      values = task.get_result().get_time_steps()
+      values = task.get_result(0).get_time_steps()
     else:
-      values = task.get_result().get_quantities_per_species(self.id)
+      values = task.get_result(index).get_quantities_per_species(self.id)
     return values
   
   ## Return the numerical value pointed by self.target in the Model object

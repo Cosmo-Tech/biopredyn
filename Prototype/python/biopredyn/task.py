@@ -9,7 +9,7 @@
 ## $Revision$
 
 import libsbmlsim
-import model, simulation, result
+import model, simulation, result, change, ranges
 
 ## Abstract representation of an atomic task in a SED-ML work flow.
 class AbstractTask:
@@ -51,7 +51,7 @@ class AbstractTask:
 class Task(AbstractTask):
   ## @var model_id
   # ID of the model this object is about.
-  ## @var result
+  ## @var results
   # Result of the execution of the task.
   ## @var simulation_id
   # ID of the simulation this object is about.
@@ -67,6 +67,7 @@ class Task(AbstractTask):
     self.workflow = workflow
     self.model_id = task.getModelReference()
     self.simulation_id = task.getSimulationReference()
+    self.results = []
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -102,13 +103,12 @@ class Task(AbstractTask):
           0,
           libsbmlsim.MTHD_RUNGE_KUTTA,
           0)
-      self.result = result.Result()
-      self.result.import_from_libsbmlsim(r)
+      res = result.Result()
+      res.import_from_libsbmlsim(r)
+      self.results.append(res)
     else:
       # TODO: other types of simulation
       print "TODO"
-    # Model is reinitialized
-    model.init_tree()
   
   ## Returns the Model objet of self.workflow which id is self.model_id.
   # @param self The object pointer.
@@ -122,11 +122,24 @@ class Task(AbstractTask):
   def get_model_id(self):
     return self.model_id
   
-  ## Getter. Returns self.result.
+  ## Returns the number of series in self.results.
   # @param self The object pointer.
-  # @return self.result
-  def get_result(self):
-    return self.result
+  # @return The length of self.results.
+  def get_number_of_series(self):
+    return len(self.results)
+  
+  ## Returns the object of self.results at index.
+  # @param self The object pointer.
+  # @param index An integer value.
+  # @return A Result object.
+  def get_result(self, index):
+    return self.results[index]
+  
+  ## Getter. Returns self.results.
+  # @param self The object pointer.
+  # @return self.results
+  def get_results(self):
+    return self.results
   
   ## Returns the Simulation objet of self.workflow which id is
   ## self.simulation_id.
@@ -171,8 +184,14 @@ class RepeatedTask(AbstractTask):
   # Reference to the WorkFlow object this belongs to.
   ## @var changes
   # A list of Change objects.
+  ## @var master_range
+  # Reference to the reference Range object in self.ranges; it cannot be a
+  # FunctionalRange, as it should define a number of iterations.
   ## @var ranges
   # A list of Range objects.
+  ## @var reset_model
+  # Boolean value stating whether the model should be reset between two
+  # repetitions of the task.
   ## @var subtasks
   # A list of AbstractTask objects.
   
@@ -183,34 +202,67 @@ class RepeatedTask(AbstractTask):
   def __init__(self, task, workflow):
     AbstractTask.__init__(self, task)
     self.workflow = workflow
+    self.reset_model = task.getResetModel()
+    self.master_range = task.getRangeId()
     self.changes = []
     for c in task.getListOfTaskChanges():
-      print "TODO"
+      # Change objects in RepeatedTask objects can only be SetValue objects
+      self.changes.append(change.SetValue(c, self, workflow))
     self.ranges = []
     for r in task.getListOfRanges():
       r_name = r.getElementName()
       if r_name == "functionalRange":
-        self.ranges.append(range.FunctionalRange(r, workflow, task))
+        self.ranges.append(ranges.FunctionalRange(r, workflow, task))
       elif r_name == "uniformRange":
-        self.ranges.append(range.UniformRange(r))
+        self.ranges.append(ranges.UniformRange(r))
       elif r_name == "vectorRange":
-        self.ranges.append(range.VectorRange(r))
+        self.ranges.append(ranges.VectorRange(r))
       else:
-        self.ranges.append(range.Range(r))
+        self.ranges.append(ranges.Range(r))
     self.subtasks = []
     for s in task.getListOfSubTasks():
       self.subtasks.append(SubTask(s, workflow))
+    self.subtasks.sort()
   
   ## Getter. Returns a range referenced by the input id listed in self.ranges.
   # @param self The object pointer.
   # @param id The id of the range to be returned.
   # @return range A range object.
   def get_range_by_id(self, id):
-    for r in self.range:
+    for r in self.ranges:
       if r.get_id() == id:
         return r
     print("Range not found: " + id)
     return 0
+  
+  ## Run the repeated task.
+  # The following operations are executed at each iteration defined by
+  # self.master_range:
+  #  1. If self.reset_model is True, the model is reset.
+  #  2. Each SetValue change in self.changes is executed.
+  #  3. Each SubTask in self.subtasks is executed.
+  # @param self The object pointer.
+  def run(self):
+    num_iter = len(self.get_range_by_id(self.master_range).get_values())
+    # Main loop
+    for i in range(num_iter):
+      # 1. Models initialization
+      if self.reset_model == True:
+        # All model references in self.subtasks are retrieved
+        models = []
+        for s in self.subtasks:
+          model_ref = s.get_task().get_model_id()
+          if model_ref not in models:
+            models.append(model_ref)
+        # All models are reset
+        for m in models:
+          self.workflow.get_model_by_id(m).init_tree()
+      # 2. Changes are executed
+      for c in self.changes:
+        c.apply(i)
+      # 3. Sub-tasks are executed
+      for t in self.subtasks:
+        t.run()
 
 ## Base-class for RepeatedTask element sub-tasks.
 class SubTask:
@@ -231,7 +283,53 @@ class SubTask:
     self.task_id = subtask.getTask()
     self.workflow = workflow
   
+  ## Comparison operator (order wise).
+  # @param self The object pointer.
+  # @param other A SubTask object.
+  # @return -1 if self.get_order() is smaller than other.get_order(), 1 if
+  # self.get_order() is greater, 0 otherwise.
+  def __cmp__(self, other):
+    self_order = float(self.get_order())
+    other_order = float(other.get_order())
+    if self_order < other_order:
+      return -1
+    elif self_order > other_order:
+      return 1
+    else:
+      return 0
+  
+  ## Getter for self.order.
+  # @param self The object pointer.
+  # @return self.order
+  def get_order(self):
+    return self.order
+  
+  ## Returns the Task object in self.workflow which ID is self.task_id, if it
+  ## exists.
+  # @param self The object pointer.
+  # @return An AbstractTask object.
+  def get_task(self):
+    return self.workflow.get_task_by_id(self.task_id)
+  
+  ## Getter for self.task_id.
+  # @param self The object pointer.
+  # @return self.task_id
+  def get_task_id(self):
+    return self.task_id
+  
   ## Calls the Task object of self.workflow which id is self.task_id.
   # @param self The object pointer.
   def run(self):
-    self.workflow.get_task_by_id(self.task_id).run()
+    self.get_task().run()
+  
+  ## Setter for self.order.
+  # @param self The object pointer.
+  # @param order New value for self.order.
+  def set_order(self, order):
+    self.order = order
+  
+  ## Setter for self.task_id.
+  # @param self The object pointer.
+  # @param task_id New value for self.task_id.
+  def set_task_id(self, task_id):
+    self.task_id = task_id

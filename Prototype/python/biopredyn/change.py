@@ -24,6 +24,14 @@ class Change:
   ## @var model
   # Reference to the model to be modified by the change.
   
+  ## Constructor.
+  # @param self The object pointer.
+  # @param change A SED-ML change element.
+  def __init__(self, change):
+    self.id = change.getId()
+    self.name = change.getName()
+    self.target = change.getTarget()
+  
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
@@ -103,9 +111,7 @@ class ComputeChange(Change):
   # @param workflow A WorkFlow object.
   # @param model Reference to the Model object to be changed.
   def __init__(self, compute_change, workflow, model):
-    self.id = compute_change.getId()
-    self.name = compute_change.getName()
-    self.target = compute_change.getTarget()
+    Change.__init__(self, compute_change)
     self.model = model
     self.variables = []
     for v in compute_change.getListOfVariables():
@@ -178,10 +184,8 @@ class ChangeAttribute(Change):
   # @param change_attribute A SED-ML changeAttribute element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, change_attribute, model):
-    self.id = change_attribute.getId()
-    self.name = change_attribute.getName()
+    Change.__init__(self, change_attribute)
     self.model = model
-    self.target = change_attribute.getTarget()
     self.value = change_attribute.getNewValue()
   
   ## Set the value of self.target to self.value in self.model.
@@ -227,11 +231,9 @@ class AddXML(Change):
   # @param add_xml A SED-ML addXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, add_xml, model):
-    self.id = add_xml.getId()
-    self.name = add_xml.getName()
+    Change.__init__(self, add_xml)
     self.model = model
     self.xml = add_xml.getNewXML().toXMLString()
-    self.target = add_xml.getTarget()
   
   ## Add self.xml as a child of self.target in self.model.
   # @param self The object pointer.
@@ -277,10 +279,8 @@ class ChangeXML(Change):
   # @param change_xml A SED-ML changeXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, change_xml, model):
-    self.id = change_xml.getId()
-    self.name = change_xml.getName()
+    Change.__init__(self, change_xml)
     self.model = model
-    self.target = change_xml.getTarget()
     self.xml = change_xml.getNewXML().toXMLString()
   
   ## Compute the new value of self.target and change it in the model.
@@ -327,10 +327,8 @@ class RemoveXML(Change):
   # @param remove_xml A SED-ML removeXML element.
   # @param model Reference to the Model object to be changed.
   def __init__(self, remove_xml, model):
-    self.id = remove_xml.getId()
-    self.name = remove_xml.getName()
+    Change.__init__(self, remove_xml)
     self.model = model
-    self.target = remove_xml.getTarget()
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
@@ -347,14 +345,134 @@ class RemoveXML(Change):
       parent = target[0].getparent()
       parent.remove(target[0])
 
-## ComputeChange-derived class for RepeatedTask change elements.
-class SetValue(ComputeChange):
+## Class for RepeatedTask change elements; does not inherit from Change, as it
+## works differently from the other changes..
+class SetValue:
+  ## @var id
+  # ID of the Change element.
+  ## @var math
+  # A Sympy expression.
+  ## @var model_id
+  # ID of the model to be modified by this.
+  ## @var name
+  # Name of the Change element.
+  ## @var parameters
+  # A list of Parameter objects.
   ## @var range
   # ID of a Range object from the parent RepeatedTask element.
+  ## @var target
+  # XPath expression pointing the element to be impacted by the change.
+  ## @var variables
+  # A list of Variable objects.
+  ## @var workflow
+  # A WorkFlow object.
   
   ## Constructor.
   # @param self The object pointer.
   # @param setvalue A SED-ML setValue element.
-  def __init__(self, setvalue):
+  # @param task A RepeatedTask object.
+  # @param workflow A WorkFlow object.
+  def __init__(self, setvalue, task, workflow):
+    self.id = setvalue.getId()
+    self.name = setvalue.getName()
+    self.target = setvalue.getTarget()
+    self.task = task
+    self.workflow = workflow
     if setvalue.isSetRange():
       self.range = setvalue.getRange()
+    self.model_id = setvalue.getModelReference()
+    self.variables = []
+    for v in setvalue.getListOfVariables():
+      self.variables.append(variable.Variable(v, workflow))
+    self.parameters = []
+    for p in setvalue.getListOfParameters():
+      self.parameters.append(parameter.Parameter(p))
+    self.math = self.parse_math_expression(setvalue.getMath())
+  
+  ## Compute the new value of self.target and change it in self.model.
+  # @param self The object pointer.
+  # @param iteration Current iteration of self.task.
+  def apply(self, iteration):
+    model = self.workflow.get_model_by_id(self.model_id)
+    result = self.math
+    # SymPy substitution - range
+    if self.range is not None:
+      range = self.task.get_range_by_id(self.range)
+      r_value = range.get_value(iteration)
+      result = result.subs(self.range, r_value)
+    # SymPy substitution - variables
+    for v in self.variables:
+      v_id = v.get_id()
+      value = v.get_xpath_value()
+      result = result.subs(v_id, value)
+    # SymPy substitution - parameters
+    for p in self.parameters:
+      p_id = p.get_id()
+      result = result.subs(p_id, p.get_value())
+    # Target attribute is changed in model
+    if self.target.split('/')[-1].startswith('@'):
+      # Case where self.target points to an attribute
+      splt = self.target.rsplit('/', 1)
+      node = model.evaluate_xpath(splt[0])
+      node[0].set(splt[1].lstrip('@'), str(result))
+    else:
+      # Case where self.target points to an element
+      node = model.evaluate_xpath(self.target)
+      node.text = str(result)
+  
+  ## Getter for self.id.
+  # @param self The object pointer.
+  # @return self.id
+  def get_id(self):
+    return self.id
+  
+  ## Getter for self.model_id.
+  # @param self The object pointer.
+  # @return self.model_id
+  def get_model_id(self):
+    return self.model_id
+  
+  ## Getter for self.name.
+  # @param self The object pointer.
+  # @return self.name
+  def get_name(self):
+    return self.name
+  
+  ## Getter for self.target.
+  # @param self The object pointer.
+  # @return self.target
+  def get_target(self):
+    return self.target
+  
+  ## Transform the input MathML mathematical expression into a SymPy
+  # expression.
+  # @param self The object pointer.
+  # @param mathml A MathML expression.
+  # @return math A SymPy expression.
+  def parse_math_expression(self, mathml):
+    math = sympify(libsbml.formulaToString(mathml))
+    return math
+  
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
+  
+  ## Setter for self.model_id.
+  # @param self The object pointer.
+  # @param model_id New value for self.model_id.
+  def set_model_id(self, model_id):
+    self.model_id = model_id
+  
+  ## Setter for self.target.
+  # @param self The object pointer.
+  # @param target New value for self.target.
+  def set_target(self, target):
+    self.target = target

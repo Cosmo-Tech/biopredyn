@@ -99,29 +99,41 @@ class DataGenerator:
   def get_number_of_points(self):
     return self.variables[0].get_number_of_points()
   
+  ## Returns the number of time series in the variables used by this.
+  # @param self The object pointer.
+  # @return The number of time series in the variables used by this.
+  def get_number_of_series(self):
+    return self.variables[0].get_number_of_series()
+  
   ## Evaluate the values encoded by this and returned them as a 1-dimensional
   # array of numerical values.
   # @param self The object pointer.
   # @return results A 1-dimensional array of numerical values.
   def get_values(self):
-    # The number of time points to be considered must be known
-    # It is assumed that all the variables have the same number of time points
+    # The number of time points to be considered must be known; it is assumed
+    # that all the variables have the same number of time points
     num_time_points = self.variables[0].get_number_of_points()
+    # The number of time series of all variables must be known too; it is also
+    # assumed that all variables have the same number of time series
+    num_series = self.variables[0].get_number_of_series()
     results = []
-    # Initialization 
-    for i in range(num_time_points):
-      results.append(self.math)
-    # SymPy substitution - variables
-    for v in self.variables:
-      v_id = v.get_id()
-      values = v.get_values()
-      for n in range(num_time_points):
-        results[n] = results[n].subs(v_id, values[n])
-    # SymPy substitution - parameters
-    for p in self.parameters:
-      p_id = p.get_id()
-      for n in range(num_time_points):
-        results[n] = results[n].subs(p_id, p.get_value())
+    for t in range(num_series):
+      # Initialization 
+      res = []
+      for i in range(num_time_points):
+        res.append(self.math)
+      # SymPy substitution - variables
+      for v in self.variables:
+        v_id = v.get_id()
+        values = v.get_values(t)
+        for n in range(num_time_points):
+          res[n] = res[n].subs(v_id, values[n])
+      # SymPy substitution - parameters
+      for p in self.parameters:
+        p_id = p.get_id()
+        for n in range(num_time_points):
+          res[n] = res[n].subs(p_id, p.get_value())
+      results.append(res)
     return results
   
   ## Transform the input MathML mathematical expression into a SymPy

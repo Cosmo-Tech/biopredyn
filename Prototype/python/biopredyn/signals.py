@@ -9,6 +9,7 @@
 ## $Revision$
 
 from matplotlib import pyplot as plt
+from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
 
 ## Base class for data description.
@@ -95,6 +96,12 @@ class DataSet(Data):
   def get_number_of_points(self):
     return self.get_data_gen().get_number_of_points()
   
+  ## Returns the number of time series in self.data_ref.
+  # @param self The object pointer.
+  # @return The number of time series in self.data_ref.
+  def get_number_of_series(self):
+    return self.get_data_gen().get_number_of_series()
+  
   ## Returns the DataGenerator object of self.workflow which ID is self.data_id.
   # @param self The object pointer.
   # @return A DataGenerator object.
@@ -115,27 +122,33 @@ class DataSet(Data):
   
   ## Write the data encoded in this at the end of the input file; data is
   ## written as comma-separated values, as follows:
-  ## self.name,0.23,2.56,2.1e-9,[...],5.23
+  ## self.name:iteration,0.23,2.56,2.1e-9,[...],5.23
   # @param self The object pointer.
   # @param file A writable .csv file.
   def write_as_csv(self, file):
-    file.write(self.label + u',')
-    values = self.get_data_gen().get_values()
-    for v in values:
-      file.write(str(v) + u',')
-    file.write(u'\n')
+    iter = 0
+    for v in self.get_data_gen().get_values():
+      file.write(self.label + u':' + str(iter) + u',')
+      for num in v:
+        file.write(str(num) + u',')
+      file.write(u'\n')
+      iter += 1
   
-  ## Write the data encoded in the input Dimension object; each data
-  ## value is written in the composite value corresponding to its index.
+  ## Write the data encoded in the input Dimension object.
+  # Each data value is written in the composite value corresponding to its
+  # iteration and index. It is assumed that all the series have the same number
+  # of time points.
   # @param self The object pointer.
   # @param dim A Dimension instance.
   def write_as_numl(self, dim):
-    values = self.get_data_gen().get_values()
-    for i in range(len(values)):
-      comp = dim.get(i).createCompositeValue()
-      comp.setIndexValue(self.label)
-      value = comp.createAtomicValue()
-      value.setValue(str(values[i]))
+    data_gen = self.get_data_gen()
+    values = data_gen.get_values()
+    for i in range(data_gen.get_number_of_series()):
+      for v in range(data_gen.get_number_of_points()):
+        comp = dim.get(i).get(v).createCompositeValue()
+        comp.setIndexValue(self.label)
+        value = comp.createAtomicValue()
+        value.setValue(str(values[i][v]))
 
 ## Data-derived class for 2-dimensional data set description.
 class Curve(Data):
@@ -242,17 +255,22 @@ class Curve(Data):
   ## Plot the data encoded in this on the input plot object.
   # @param self The object pointer.
   # @param plot The matplotlib object on which this should be added.
-  def plot(self, plot):
+  # @param col A 3-tuple representing a RGB color.
+  def plot(self, plot, col):
     # Set the scale of the plot
     if self.log_x:
       plot.xscale('log')
     if self.log_y:
       plot.yscale('log')
+    # Process the values
+    values = []
+    for x in self.get_x_data_gen().get_values():
+      for y in self.get_y_data_gen().get_values():
+        values.append(zip(x,y))
+    lines = LineCollection(values)
+    lines.set_color(col)
     # Plot the values
-    plot.plot(
-      self.get_x_data_gen().get_values(),
-      self.get_y_data_gen().get_values(),
-      label=self.name)
+    plot.add_collection(lines)
 
 ## Data-derived class for 3-dimensional data set description.
 class Surface(Data):
@@ -408,8 +426,7 @@ class Surface(Data):
     if self.log_y:
       plot.zscale('log')
     # Plot the values
-    plot.scatter(
-      self.get_x_data_gen().get_values(),
-      self.get_y_data_gen().get_values(),
-      zs=self.get_z_data_gen().get_values()
-      )
+    for x in self.get_x_data_gen().get_values():
+      for y in self.get_x_data_gen().get_values():
+        for z in self.get_z_data_gen().get_values():
+          plot.scatter(x, y, zs=z)
