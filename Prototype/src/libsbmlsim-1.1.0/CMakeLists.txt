@@ -8,7 +8,7 @@ else(MSVC)
   #  add_definitions(-Wall -Wextra -ansi -pedantic -fno-strict-aliasing)
   add_definitions(-Wall -Wextra -fno-strict-aliasing)
 endif(MSVC)
-# BioPreDyn patch
+# BioPreDyn patch - not overwriting global CMAKE_C_FLAGS settings anymore
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
 
 # build mode
