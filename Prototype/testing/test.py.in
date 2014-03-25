@@ -18,6 +18,13 @@ if sys.platform == "win32":
 else:
   biopredyn_path = '${CMAKE_BINARY_DIR}/Prototype/python'
 
+# Find the path to the libsbml Python package
+for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
+  for filename in f:
+    if filename == "libsbml.py":
+      sys.path.append(os.path.abspath(r))
+      break
+
 # Find the path to the libsedml Python package
 for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
   for filename in f:
