@@ -1,7 +1,7 @@
 # - Find LIBSBML
 # This module finds an installed SBML library.  It sets the following
 # variables:
-#  LIBSBML_FOUND - set to true if XSD is found
+#  LIBSBML_FOUND - set to true if libSBML is found
 #  LIBSBML_INCLUDE_DIR - libSBML include directory
 #  LIBSBML_LIBRARY - libSBML library
 
