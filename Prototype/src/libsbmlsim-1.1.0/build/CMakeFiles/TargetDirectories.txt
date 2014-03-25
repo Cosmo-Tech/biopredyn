@@ -1,5 +1,0 @@
-/home/bertrand/Soft/libsbmlsim-1.1.0/build/src/bindings/python/CMakeFiles/_libsbmlsim.dir
-/home/bertrand/Soft/libsbmlsim-1.1.0/build/src/CMakeFiles/sbmlsim.dir
-/home/bertrand/Soft/libsbmlsim-1.1.0/build/src/CMakeFiles/sbmlsim-static.dir
-/home/bertrand/Soft/libsbmlsim-1.1.0/build/src/CMakeFiles/simulateSBML.dir
-/home/bertrand/Soft/libsbmlsim-1.1.0/build/src/CMakeFiles/test.dir

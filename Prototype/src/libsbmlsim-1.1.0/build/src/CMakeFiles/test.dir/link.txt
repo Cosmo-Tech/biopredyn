@@ -1,1 +1,0 @@
-/usr/bin/cc  -O2 -O3 -DNDEBUG    CMakeFiles/test.dir/test.c.o  -o test -rdynamic libsbmlsim.so /usr/local/lib/libsbml.so /usr/local/lib/libbz2.a -Wl,-rpath,/home/bertrand/Soft/libsbmlsim-1.1.0/build/src:/usr/local/lib 
