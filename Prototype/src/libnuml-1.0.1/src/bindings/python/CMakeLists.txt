@@ -100,6 +100,8 @@ if (MSVC)
   add_definitions(/bigobj)
 endif(MSVC)
 
+# BioPreDyn patch - Changed name of the binding targets so that they do not
+# overlap with the the ones from libSEDML and libSBML
 add_library(numl_binding_python_lib SHARED libnuml_wrap.cpp)
 add_dependencies( numl_binding_python_lib numl_binding_python_swig) 
 
@@ -116,7 +118,8 @@ else()
 	endif()
 endif()
 
-target_link_libraries(numl_binding_python_lib ${LIBNUML_LIBRARY}-static ${PYTHON_LIBRARIES})
+# BioPreDyn patch - linking libNuMLwrappers with libSBML wrappers
+target_link_libraries(numl_binding_python_lib sbml_binding_python_lib ${LIBNUML_LIBRARY}-static ${PYTHON_LIBRARIES})
 
 # 
 # Determine the python installation directory
