@@ -18,6 +18,9 @@ if sys.platform == "win32":
 else:
   biopredyn_path = '${CMAKE_BINARY_DIR}/Prototype/python'
 
+# FIXME: dependencies should be installed where Python can find them, along
+# with biopredyn package.
+
 # Find the path to the libsbml Python package
 for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
   for filename in f:
@@ -49,7 +52,7 @@ for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
 # Find the path to the biopredyn Python package
 for r, d, f in os.walk(biopredyn_path):
   for filename in f:
-    if filename == "main.py":
+    if filename == "workflow.py":
       sys.path.append(os.path.abspath(r))
       break
 
@@ -60,10 +63,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import libsbml
 import libsedml
 import libnuml
-import model
-import workflow
-import result
-import resources
+import model, workflow, result, resources
 
 ## Base class for BioPreDyn test cases.
 class GenericTestCase(unittest.TestCase):
@@ -115,25 +115,27 @@ class OutputTestCase(GenericTestCase):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
     flow.run_tasks()
-    flow.process_outputs(True)
+    flow.process_outputs(test=True)
   
   def test_3D_graphical_output(self):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_3D_graphical_output.xml', self.manager)
     flow.run_tasks()
-    flow.process_outputs(True)
+    flow.process_outputs(test=True)
   
   def test_csv_report(self):
     flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
       self.manager)
     flow.run_tasks()
-    flow.process_outputs(True, '${CMAKE_CURRENT_BINARY_DIR}/test_output.csv')
+    flow.process_outputs(test=True,
+      filename='${CMAKE_CURRENT_BINARY_DIR}/test_output.csv')
   
   def test_numl_report(self):
     flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
       self.manager)
     flow.run_tasks()
-    flow.process_outputs(True, '${CMAKE_CURRENT_BINARY_DIR}/test_output.xml')
+    flow.process_outputs(test=True,
+      filename='${CMAKE_CURRENT_BINARY_DIR}/test_output.xml')
 
 ## GenericTestCase derived class for Result related tests
 class ResultTestCase(GenericTestCase):
@@ -228,21 +230,21 @@ class RepeatedTaskTestCase(GenericTestCase):
       '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_uniform.xml',
       self.manager)
     flow.get_task_by_id("task_2").run()
-    flow.process_outputs(True)
+    flow.process_outputs(test=True)
 
   def test_vector_range(self):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_vector.xml',
       self.manager)
     flow.get_task_by_id("task_2").run()
-    flow.process_outputs(True)
+    flow.process_outputs(test=True)
 
   def test_functional_range(self):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_functional.xml',
       self.manager)
     flow.get_task_by_id("task_2").run()
-    flow.process_outputs(True)
+    flow.process_outputs(test=True)
 
 if __name__ == '__main__':
     unittest.main()

@@ -122,11 +122,6 @@ class Plot2D(Output):
       hue += step
     ax.autoscale()
   
-  ## Show self.plot in a matplotlib window.
-  # @param self The object pointer.
-  def show_plot(self):
-    self.plot.show()
-  
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
   ## @var surfaces
@@ -176,11 +171,6 @@ class Plot3D(Output):
     for s in self.surfaces:
       s.plot(ax)
     ax.legend()
-  
-  ## Show self.plot in a matplotlib window.
-  # @param self The object pointer.
-  def show_plot(self):
-    self.plot.show()
 
 ## Output-derived class for reports.
 class Report(Output):

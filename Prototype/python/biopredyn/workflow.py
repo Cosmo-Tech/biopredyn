@@ -12,6 +12,7 @@ import numpy as np
 import sys, os
 import libsedml
 import model, output, result, task, simulation, datagenerator, resources
+from matplotlib import pyplot as plt
 
 ## Class for SED-ML generic work flows.
 class WorkFlow:
@@ -206,21 +207,25 @@ class WorkFlow:
   
   ## Parse self.outputs and produce the corresponding outputs.
   # @param self The object pointer.
-  # @param show Boolean value stating whether the output must be shown, if
-  # possible.
+  # @param test Boolean value stating whether this function was called from a
+  # test (in which case the plot must be closed). Default False.
   # @param filename Where to write the potential report file (default None).
-  def process_outputs(self, show, filename=None):
+  def process_outputs(self, test=False, filename=None):
+    if test:
+      plt.ion()
     if filename == None:
       filename = os.path.join(os.path.dirname(__file__), 'output.csv')
     for o in self.outputs:
       if o.__class__.__name__ == "Plot2D" or o.__class__.__name__ == "Plot3D":
         o.process()
-        o.show_plot()
       elif o.__class__.__name__ == "Report":
         o.process(filename)
       else:
         sys.exit("Error: invalid output type. Possible output types are: " +
               "Plot2D, Plot3D, Report")
+    plt.show()
+    if test:
+      plt.close()
   
   ## Executes the pipeline encoded in self.sedml.
   # Each task in self.tasks is executed.
