@@ -14,49 +14,42 @@ Run the executable and follow the instructions.
 Download Apache Subversion from http://www.visualsvn.com/downloads/, run the
 installer and follow the instructions.
 
-2.1.4 Python 2.7
-Download the Windows installer from http://www.python.org/download/, run it
-and follow the instructions.
-
-2.1.5 SWIG
+2.1.4 SWIG
 The latest version of swigwin can be downloaded from
 http://www.swig.org/download.html. Unzip it then add the folder containing
 swig.exe to the Path environment variable.
 
-Windows: install easy_install too.
+2.1.5 Python
+Download the Windows installer from http://www.python.org/download/, run it
+and follow the instructions.
 
-Windows: easy_install bioservices
-
-Windows: lxml
-  download latest package at https://pypi.python.org/pypi/lxml/
-  (lxml-X.Y.Z.win32-py2.7.exe) and install it
-
-2.1.6 PySide
-
-2.1.6.1 Qt
-  download the Qt4.8 library corresponding to your operating system on
-  http://qt-project.org/downloads and install it.
-
-2.1.6.2 PySide
-  download the latest package (PySide-X.Y.Z.win32-py2.7.exe) at
-  http://qt-project.org/wiki/PySide_Binaries_Windows and install it.
-
-sudo apt-get install autoconf
-sudo apt-get install automake
-sudo apt-get install libtool
-sudo apt-get install xsltproc
-sudo apt-get install libexpat1 libexpat1-dev
-
-libbzip2: download the latest package from http://www.bzip.org/, extract it,
-then do a make / make install
-
+2.1.5.1 Python dependencies
+2.1.5.1.1 easy_install
 easy_install: download ez_setup.py from
-https://bitbucket.org/pypa/setuptools/downloads then: sudo python ez_setup.py
+https://bitbucket.org/pypa/setuptools/downloads then:
+- execute ez_setup.py with Python
+- add <path/to/python27>/Scripts to the Path
 
-sudo easy_install matplotlib
+2.1.5.1.2 Numpy
+Download it at http://sourceforge.net/projects/numpy/files/NumPy/1.8.1/numpy-1.8.1-win32-superpack-python2.7.exe/download
+- install it.
 
-libsbml: download the latest stable version at
-http://sbml.org/Software/libSBML, install it
+2.1.5.1.3 Matplotlib
+Download the installer for the last version (matplotlib-X.Y.Z.win32-py2.7.exe)
+on https://github.com/matplotlib/matplotlib/downloads/; install it.
+
+2.1.5.1.4 Other
+easy_install easydev
+easy_install bioservices
+easy_install lxml
+easy_install PySide
+
+2.1.6 bzip2
+Download the latest bzip2-X.Y.Z-setup.exe from http://sourceforge.net/projects/gnuwin32/files/bzip2/
+and install it.
+
+libbzip2: download the latest tarball from http://www.bzip.org/downloads.html,
+extract it, then do a make / make install
 
 /!\ : warning when using libiconv from the CoSMo externals.
           Linking problem
