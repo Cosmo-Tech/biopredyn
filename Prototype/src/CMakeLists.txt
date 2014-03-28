@@ -1,5 +1,3 @@
-find_package(LIBBZIP2 REQUIRED)
-
 set( LIBSBML_VERSION libsbml-5.8.0 )
 set( LIBSBMLSIM_VERSION libsbmlsim-1.1.0 )
 set( LIBNUML_VERSION libnuml-1.0.1 )
