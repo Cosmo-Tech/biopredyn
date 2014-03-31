@@ -48,6 +48,11 @@ easy_install PySide
 Download the latest bzip2-X.Y.Z-setup.exe from http://sourceforge.net/projects/gnuwin32/files/bzip2/
 and install it.
 
+2.1.7 libXML2
+Download the latest version (libxml2-X.Y.Z.win32.zip) at
+http://xmlsoft.org/sources/win32/ and extract it. Add <path/to/libxml2>/include
+to the environment path.
+
 libbzip2: download the latest tarball from http://www.bzip.org/downloads.html,
 extract it, then do a make / make install
 
