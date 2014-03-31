@@ -9,34 +9,47 @@
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section>
-  <title>
-    Usage
-  </title>
+  <title>Usage</title>
+  <para>Once the BioPreDyn prototype is installed, it can be used to run
+numerical experiments encoded as SEDML files. Simply open a shell or a
+command prompt, navigate to the folder where the prototype is installed, and
+type the following commands:</para>
   <programlisting>
-  python main.py /path/to/input/file [options]
+  cd build/install/bin
   </programlisting>
-  <para>
-    Options can be:
+  <para>This folder contains a main.py file which can be used to run the
+prototype. To do so, one can use the following syntax:
   </para>
+  <programlisting>
+python main.py [options]
+  </programlisting>
+  <para>Depending on the option(s) chosen by the user, various operations can be
+done. Valid options are listed below:</para>
   <itemizedlist>
     <listitem>
-      <para><literal>--help</literal>: Display this help message.</para>
+      <para><literal>--sedml [path/to/file.xml]</literal>: opens the input SEDML
+file, executes the tasks it contains and process its outputs. Graphical outputs
+are displayed, if any; path/to/file.xml must point to a valid SEDML file.</para>
     </listitem>
     <listitem>
-      <para><literal>--cobra</literal>: Open the input file using the cobrapy
-      library.</para>
+      <para><literal>--output [path/to/output.csv]</literal>: write the result
+of a numerical experiment (if any) to the input location as a CSV file. This
+option should be used only when the opened SEDML file contains one or more
+“report” elements.</para>
     </listitem>
     <listitem>
-      <para><literal>--copasi</literal>: Open the input SED-ML file and execute
-      its tasks using the Copasi library.</para>
+      <para><literal>--output [path/to/output.xml]</literal>: identical to the
+previous one, except that the result is exported as a NuML file instead.</para>
     </listitem>
     <listitem>
-      <para><literal>--sbml</literal>: Open the input file as an SBML model;
-      SBML compliance will be checked.</para>
+      <para><literal>--csv [path/to/file.csv]</literal>: opens the input CSV
+file and plot its content; path/to/file.csv must point to a valid CSV file.
+      </para>
     </listitem>
     <listitem>
-      <para><literal>--sedml</literal>: Open the input file as an SED-ML model;
-      SED-ML compliance will be checked.</para>
+      <para><literal>--numl [path/to/file.xml]</literal>: opens the input NuML
+file and plot its content; path/to/file.xml must point to a valid NuML file.
+      </para>
     </listitem>
   </itemizedlist>
 </section>
