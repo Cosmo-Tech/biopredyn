@@ -191,11 +191,34 @@ and install it.
       </section>
     </section>
     <section>
-      <title>bzip2</title>
-      <para>Download the latest bzip2-X.Y.Z-setup.exe from
-<ulink url="http://sourceforge.net/projects/gnuwin32/files/bzip2/">bzip2 download page</ulink>
-and install it. 
-      </para>
+      <title>GnuWin32</title>
+      <para>The dependencies of this category must be installed in the same
+folder; it is done automatically for the first two ones (as win32 installers
+exist), it has to be done manually for the last one.</para>
+      <section>
+        <title>bzip2</title>
+        <para>Download the latest bzip2-X.Y.Z-setup.exe from
+  <ulink url="http://sourceforge.net/projects/gnuwin32/files/bzip2/">bzip2 download page</ulink>
+  and install it. Add [path/to/GnuWin32]/include and [path/to/GnuWin32]/lib to the
+  environment Path variable.
+        </para>
+      </section>
+      <section>
+        <title>libiconv</title>
+        <para>Download the latest libiconv-X.Y.Z-1.exe from
+  <ulink url="http://sourceforge.net/projects/gnuwin32/files/libiconv/1.9.2-1/">libiconv download page</ulink>
+  and install it. As it will install in the same repository than bzip2, it is not
+  necessary to change the path.
+        </para>
+      </section>
+      <section>
+        <title>libXML2</title>
+        <para>Download the latest version (libxml2-X.Y.Z.win32.zip) at the
+  <ulink url="http://xmlsoft.org/sources/win32/">XMLSoft download page</ulink>
+  and extract it. The resulting library folders (i.e. bin, include and bin) must
+  be merged with the ones in GnuWin32 (see bzip2 paragraph above).
+        </para>
+      </section>
     </section>
     <section>
       <title>Doxygen</title>

@@ -19,6 +19,7 @@ set(
 
 set(
   CMAKE_BUILD_TYPE "Release"
+  CACHE PATH "CMake build type" FORCE
   )
 
 if(NOT WIN32)
