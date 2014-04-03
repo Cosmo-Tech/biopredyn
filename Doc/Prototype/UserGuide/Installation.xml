@@ -28,6 +28,12 @@
         </programlisting>
       </section>
       <section>
+        <title>libXML2</title>
+        <programlisting>
+  sudo apt-get install libxml2 libxml2-dev libxslt1-dev
+        </programlisting>
+      </section>
+      <section>
         <title>Python 2.7</title>
         <programlisting>
   sudo apt-get install python2.7
@@ -41,9 +47,10 @@
         <section>
           <title>Other Python dependencies</title>
           <programlisting>
-  sudo apt-get install python-numpy
-  sudo apt-get install python-matplotlib
-  sudo apt-get install python-sympy
+  sudo pip install numpy
+  sudo pip install matplotlib
+  sudo pip install sympy
+  sudo pip install pandas
   sudo pip install bioservices
   sudo pip install lxml
   sudo apt-get install python-pyside
@@ -54,12 +61,6 @@
         <title>SWIG 2.0</title>
         <programlisting>
   sudo apt-get install swig2.0
-        </programlisting>
-      </section>
-      <section>
-        <title>libXML2</title>
-        <programlisting>
-  sudo apt-get install libxml2 libxml2-dev
         </programlisting>
       </section>
       <section>
@@ -274,13 +275,14 @@ solution explorer tree, then choose "Build" in the contextual menu</para>
       <para>Alternatively, if the correct <literal>CMake</literal> generator
 was used to generate <literal>Makefiles</literal>, <literal>NMake</literal> can
 be used instead of <literal>Microsoft Visual Studio</literal>. Simply type the
-followng commands after <literal>CMake</literal> generation:</para>
+following commands after <literal>CMake</literal> generation:</para>
       <programlisting>
   nmake
   ctest
       </programlisting>
-      <para><literal>CMake</literal> options can be more finely tuned by using
-<literal>ccmake</literal> instead of <literal>cmake</literal>.
+      <para><literal>CMake</literal> options can be more finely tuned in
+<literal>CMake</literal> graphical user interface by typing the command
+<literal>cmake-gui</literal> instead of <literal>cmake</literal>.
       </para>
     </section>
   </section>
