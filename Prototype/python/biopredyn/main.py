@@ -14,7 +14,7 @@ import textwrap
 import libsbml
 import libsedml
 import libnuml
-import model, workflow, result, resources
+from biopredyn import model, workflow, result, resources
 
 COMMAND_SYNTAX_MESSAGE = 'python main.py [options]'
 
