@@ -8,8 +8,8 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
-import libsedml
 import libsbml
+import libsedml
 from lxml import etree
 import sys
 import urlparse

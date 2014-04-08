@@ -135,18 +135,7 @@ endif()
 # BioPreDyn patch - linking libSEDML wrappers to libSBML wrappers
 target_link_libraries(sedml_binding_python_lib sbml_binding_python_lib ${LIBSEDML_LIBRARY}-static ${PYTHON_LIBRARIES})
 
-# 
-# Determine the python installation directory
-#
-set(PYTHON_PACKAGE_INSTALL_DIR)
-if (UNIX OR CYGWIN) 
-  execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "import sys;import platform; sys.stdout.write(platform.python_version()[:3])"
-    OUTPUT_VARIABLE PYTHON_VERSION)
-  set(PYTHON_PACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/python${PYTHON_VERSION}/site-packages)
-else()
-  set(PYTHON_PACKAGE_INSTALL_DIR ${MISC_PREFIX}bindings/python)
-endif()
-
+# BioPreDyn patch - removed PYTHON_PACKAGE_INSTALL_DIR determination
 INSTALL(TARGETS sedml_binding_python_lib DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libsedml )
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libsedml.pth" "libsedml\n")

@@ -201,18 +201,7 @@ endif()
 
 target_link_libraries(sbml_binding_python_lib ${LIBSBML_LIBRARY}-static ${PYTHON_LIBRARIES})
 
-# 
-# Determine the python installation directory
-#
-set(PYTHON_PACKAGE_INSTALL_DIR)
-if (UNIX OR CYGWIN) 
-  execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "import sys;import platform; sys.stdout.write(platform.python_version()[:3])"
-    OUTPUT_VARIABLE PYTHON_VERSION)
-  set(PYTHON_PACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/python${PYTHON_VERSION}/site-packages)
-else()
-  set(PYTHON_PACKAGE_INSTALL_DIR ${MISC_PREFIX}bindings/python)
-endif()
-
+# BioPreDyn patch - removed PYTHON_PACKAGE_INSTALL_DIR determination
 INSTALL(TARGETS sbml_binding_python_lib DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libsbml )
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libsbml.pth" "libsbml\n")

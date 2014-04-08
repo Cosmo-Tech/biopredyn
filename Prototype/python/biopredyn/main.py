@@ -9,52 +9,6 @@
 ## $Revision$
 
 import sys
-import os
-
-# Where to look for biopredyn package depends on the operating system
-if sys.platform == "win32":
-  biopredyn_path = '${CMAKE_SOURCE_DIR}/Prototype/python'
-else:
-  biopredyn_path = '${CMAKE_BINARY_DIR}/Prototype/python'
-
-# FIXME: dependencies should be installed where Python can find them, along
-# with biopredyn package.
-
-# Find the path to the libsbml Python package
-for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
-  for filename in f:
-    if filename == "libsbml.py":
-      sys.path.append(os.path.abspath(r))
-      break
-
-# Find the path to the libsedml Python package
-for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
-  for filename in f:
-    if filename == "libsedml.py":
-      sys.path.append(os.path.abspath(r))
-      break
-
-# Find the path to the libsbmlsim Python package
-for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
-  for filename in f:
-    if filename == "libsbmlsim.py":
-      sys.path.append(os.path.abspath(r))
-      break
-
-# Find the path to the libnuml Python package
-for r, d, f in os.walk('${CMAKE_BINARY_DIR}/install'):
-  for filename in f:
-    if filename == "libnuml.py":
-      sys.path.append(os.path.abspath(r))
-      break
-
-# Find the path to the biopredyn Python package
-for r, d, f in os.walk(biopredyn_path):
-  for filename in f:
-    if filename == "workflow.py":
-      sys.path.append(os.path.abspath(r))
-      break
-
 import getopt
 import textwrap
 import libsbml

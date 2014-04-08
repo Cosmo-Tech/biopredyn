@@ -13,9 +13,21 @@ set(
   )
 
 set(
-  CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install/"
+  CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install"
   CACHE PATH "BioPreDyn install prefix" FORCE
   )
+
+# Determining Python user installation directory
+execute_process(
+  COMMAND "${PYTHON_EXECUTABLE}" -c "import sys;import site;sys.stdout.write(site.USER_SITE)"
+  OUTPUT_VARIABLE PYTHON_USER_SITE)
+set(PYTHON_PACKAGE_INSTALL_DIR)
+set(
+  PYTHON_PACKAGE_INSTALL_DIR "${PYTHON_USER_SITE}"
+  CACHE PATH "Python libraries local install path" FORCE
+  )
+
+message("${PYTHON_PACKAGE_INSTALL_DIR}")
 
 set(
   CMAKE_BUILD_TYPE "Release"

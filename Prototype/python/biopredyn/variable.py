@@ -8,6 +8,7 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
+import libsbml
 import libsedml
 
 ## Base representation of a model variable in a SED-ML work flow.

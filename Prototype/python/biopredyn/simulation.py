@@ -8,6 +8,7 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
+import libsbml
 import libsedml
 
 ## Base representation of the execution of an algorithm, independent from the

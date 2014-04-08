@@ -121,18 +121,7 @@ endif()
 # BioPreDyn patch - linking libNuMLwrappers with libSBML wrappers
 target_link_libraries(numl_binding_python_lib sbml_binding_python_lib ${LIBNUML_LIBRARY}-static ${PYTHON_LIBRARIES})
 
-# 
-# Determine the python installation directory
-#
-set(PYTHON_PACKAGE_INSTALL_DIR)
-if (UNIX OR CYGWIN) 
-  execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "import sys;import platform; sys.stdout.write(platform.python_version()[:3])"
-    OUTPUT_VARIABLE PYTHON_VERSION)
-  set(PYTHON_PACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/python${PYTHON_VERSION}/site-packages)
-else()
-  set(PYTHON_PACKAGE_INSTALL_DIR ${MISC_PREFIX}bindings/python)
-endif()
-
+# BioPreDyn patch - removed PYTHON_PACKAGE_INSTALL_DIR determination
 INSTALL(TARGETS numl_binding_python_lib DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libnuml )
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/libnuml.pth" "libnuml\n")

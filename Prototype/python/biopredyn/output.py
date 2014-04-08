@@ -10,6 +10,7 @@
 
 import io
 import signals
+import libsbml
 import libsedml, libnuml
 from matplotlib import pyplot as plt
 import colorsys

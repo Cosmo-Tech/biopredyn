@@ -10,6 +10,7 @@
 
 import numpy as np
 import sys, os
+import libsbml
 import libsedml
 import model, output, result, task, simulation, datagenerator, resources
 from matplotlib import pyplot as plt

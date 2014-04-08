@@ -16,6 +16,7 @@ if sys.platform == "win32":
         version="${PACKAGE_VERSION}",
         packages=["${CMAKE_CURRENT_SOURCE_DIR}/biopredyn"])
 else:
+  # BioPreDyn package installation
   setup(name="biopredyn",
         version="${PACKAGE_VERSION}",
         package_dir={"":"${CMAKE_CURRENT_SOURCE_DIR}"},
