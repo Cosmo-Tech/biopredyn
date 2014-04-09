@@ -55,7 +55,7 @@ class Variable:
   # @return A string representing this as a hierarchy.
   def __str__(self):
     tree = "      |-variable id=" + self.id + " name=" + self.name
-    if self.task is not None:
+    if self.task_id is not None:
       tree += " taskReference=" + self.task_id + "\n"
     else:
       tree += " modelReference=" + self.model_id + "\n"
