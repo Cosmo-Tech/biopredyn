@@ -27,8 +27,6 @@ set(
   CACHE PATH "Python libraries local install path" FORCE
   )
 
-message("${PYTHON_PACKAGE_INSTALL_DIR}")
-
 set(
   CMAKE_BUILD_TYPE "Release"
   CACHE PATH "CMake build type" FORCE
