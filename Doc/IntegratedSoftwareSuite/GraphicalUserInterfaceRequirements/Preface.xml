@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="GUIRequirementsPreface">
+  <title>Preface</title>
+  <section id="GUIRequirementsPurpose">
+    <title>Purpose of this document</title>
+    <para>This document aims at summarizing the requirements for the graphical
+    user interface (GUI) of the <literal>BioPreDyn</literal> integrated software
+    suite (deliverables 3.4, 7.2 and 8.3). It lists the main specifications for
+    the GUI as expressed by the BioPreDyn consortium members.
+    </para>
+    <para>This document does not describe the chosen implementation; this will
+    be detailed in the GUI design notes.</para>
+  </section>
+  <section id="GUIRequirementsAudience">
+    <title>Audience</title>
+    <para>This document is primarily intended to developers willing to
+    understand the choices made during the <literal>BioPreDyn</literal> software
+    suite design stage. It is particularly useful for maintenance and
+    modification purposes.</para>
+  </section>
+  <section id="GUIRequirementsOrganization">
+    <title>Organization</title>
+    <para>This guide is divided into four main sections:</para>
+    <itemizedlist>
+      <listitem>
+        <formalpara>
+          <title>Introduction</title>
+          <para>A short introduction to the project context, and how the current
+          document fits in the global picture.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Requirements</title>
+          <para>Description of the main requirements for the BioPreDyn software
+          suite GUI, along with proposals for several components of the
+          interface.
+          </para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>References</title>
+          <para>Material related to the project, and more specifically the GUI
+          design.</para>
+        </formalpara>
+      </listitem>
+    </itemizedlist>
+  </section>
+</section>

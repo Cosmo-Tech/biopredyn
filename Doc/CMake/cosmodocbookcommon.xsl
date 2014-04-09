@@ -4,7 +4,7 @@
   $Author$
   $Date$
   $Revision$
-  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
 -->
 <!--
 This files contains the common dodbook setting for the entire CoSMo DocBook documentation

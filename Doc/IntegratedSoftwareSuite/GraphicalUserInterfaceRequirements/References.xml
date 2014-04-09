@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="GUIRequirementsReferences">
+  <title>References</title>
+  <itemizedlist>
+    <listitem>
+      <para>Digest of the specifications provided by Evolva for the deliverable
+      7.2:
+      <ulink url="https://thecosmocompany.com/biopredyn-trac/wiki/Deliverables/D7.2_Prototype_software_for_testing/Doc/EvolvaRequirementsDigest"/>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        <ulink url="https://thecosmocompany.com/BioPreDyn-doc/IntegratedSoftwareSuite/IntegratedSoftwareSuiteRequirementsGuide/">
+          BioPreDyn software suite requirements guide
+        </ulink>
+      </para>
+    </listitem>
+    <listitem>
+      <para>Meeting minutes</para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <ulink url="https://thecosmocompany.com/biopredyn-trac/wiki/Deliverables/D7.2_Prototype_software_for_testing/Minutes/20131009_BaselMeeting">
+              2013/10/09 - CSM @ EV
+            </ulink>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <ulink url="https://thecosmocompany.com/biopredyn-trac/wiki/Deliverables/D7.2_Prototype_software_for_testing/Minutes/20131024_SkypeMeeting">
+              2013/10/24 - CSM, EV, UNIMAN @ Teleconference
+            </ulink>
+          </para>
+        </listitem>
+      </itemizedlist>
+    </listitem>
+  </itemizedlist>
+</section>

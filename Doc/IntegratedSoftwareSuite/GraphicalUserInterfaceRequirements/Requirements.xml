@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="GUIRequirementsMain">
+  <title>Requirements</title>
+  <para>
+    This chapter lists the requirements for the deliverable 7.2
+    graphical user interface. As an early version of the final deliverable,
+    only a subset of the final features will be made available to the user in
+    deliverable 7.2; this is reflected in the proposed user interface, which
+    is designed with respect to these features.
+  </para>
+  <section>
+    <title>Prototype basic features</title>
+    <orderedlist spacing="compact">
+      <listitem>
+        <para>
+          Open a work flow.
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>Choose a work flow file on disk and load it in
+                memory.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Display a work flow.
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>Display all the elements of the work flow (models,
+                tasks, data generators, outputs...)
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Execute a work flow.
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>Tasks contained by the work flow are executed
+                sequentially, using the tools associated with each one
+                of them.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Display "displayable" outputs.
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>2D / 3D plots.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Write reports on disk.
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>Choice of the export format(s).
+              </para>
+            </listitem>
+            <listitem>
+              <para>Choice of the location.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+      <listitem>
+        <para>Change the tool associated with a Task.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Change the value of an argument used by a Task.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Save a work flow.
+          <itemizedlist spacing="compact">
+            <listitem>
+              <para>Choice of the location.
+              </para>
+            </listitem>
+            <listitem>
+              <para>Opened file can be overwritten, or a new file can
+                be specified.
+              </para>
+            </listitem>
+            <listitem>
+              <para>Write the work flow file on disk with all the
+                modifications made by the user.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+    </orderedlist>
+  </section>
+  <section>
+    <title>
+      Proposed interface
+    </title>
+    <para />
+    <section>
+      <title>
+        Main window
+      </title>
+      <para>
+        This window opens when the BioPreDyn prototype is executed.
+      </para>
+      <mediaobject id="MainWindowProposal">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%"
+            fileref="Sketches/draft_gui_main.png" format="PNG"
+            scalefit="1" width="100%" />
+        </imageobject>
+        <caption>Requirements [1]: proposed interface for the main window
+        </caption>
+      </mediaobject>
+      <orderedlist spacing="compact">
+        <listitem>
+          <para>
+            Menu bar - gives access to every feature available to the
+            user through specialized drop menus, more specifically:
+            <itemizedlist spacing="compact">
+              <listitem>
+                <para>The 'File' menu gives access to basic file
+                  handling options (open/save a file, export results).
+                </para>
+              </listitem>
+              <listitem>
+                <para>The 'Edit' menu gives access to work flow
+                  element editing actions.
+                </para>
+              </listitem>
+              <listitem>
+                <para>Etc.
+                </para>
+              </listitem>
+            </itemizedlist>
+          </para>
+        </listitem>
+        <listitem>
+          <para>Tool bar - displays shortcut buttons to commonly used
+            features such as opening a new work flow, saving the
+            current work flow, executing the current work flow, etc.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Status bar - displays information related to the
+            ongoing operation. For instance, while opening a work flow
+            file, it could display this message: "Opening work flow."
+          </para>
+        </listitem>
+        <listitem>
+          <para>Tab panel - displays each displayable output in a
+            separate tab. Basic graphical manipulation should be made
+            available to the user (zoom in, zoom out, etc).
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Tree view - displays work flows as hierarchical trees. A
+            tree can be collapsed or extended via its nodes or its
+            contextual menu (accessed by right-clicking it). Specific
+            contextual menus give access to element related content:
+            <itemizedlist spacing="compact">
+              <listitem>
+                <para>Task element contextual menu gives access to the
+                  "Modify task" action; clicking it makes the task
+                  editing window popping up (see below).
+                </para>
+              </listitem>
+              <listitem>
+                <para>Simulation element contextual menu gives access
+                  to the "Modify simulation" action; clicking it makes
+                  the simulation editing window popping up.
+                </para>
+              </listitem>
+            </itemizedlist>
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section>
+      <title>
+        Task editing window
+      </title>
+      <para>
+        This window pops up when the "Modify task" action is triggered; it
+        allows the user to change the values of Task element
+        parameters.
+      </para>
+      <mediaobject id="TaskEditingProposal">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%"
+            fileref="Sketches/draft_gui_task_editor.png" format="PNG"
+            scalefit="1" width="50%" />
+        </imageobject>
+        <caption>Requirements [2]: proposed interface for the task editing
+        window
+        </caption>
+      </mediaobject>
+      <orderedlist spacing="compact">
+        <listitem>
+          <para>Drop-list displaying the possible values of the
+            modelReference field in the current Task element; only the
+            names of the models listed in the current work flow's
+            listOfModels element are available in this list.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Drop-list displaying the possible values of the
+            simulationReference field in the current Task element;
+            only the names of the simulations listed in the current
+            work flow's listOfSimulations element are available in
+            this list.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Drop-list displaying the tools available for executing
+            the operation encoded by the current Task element. Only
+            the tools currently installed on the user's machine (and
+            made available to the BioPreDyn prototype application
+            programming interface) are displayed in this list.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Cancellation button. Discard all the changes made to
+            the current Task element since this window was opened and
+            close it.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Confirmation button. Apply all the changes made to the
+            current Task element since this window was opened and
+            close it.
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section>
+      <title>
+        Simulation editing window
+      </title>
+      <para>
+        This window pops up when the "Modify simulation" action is triggered;
+        it allows the user to change the values of Simulation element
+        parameters. Since the number of parameters associated with a
+        Simulation element changes (depending on the encoded algorithm
+        - a parameter estimation will require a different set of
+        parameters than a uniform time course).
+      </para>
+      <mediaobject id="SimulationEditingProposal">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%"
+            fileref="Sketches/draft_gui_simulation_editor.png" format="PNG"
+            scalefit="1" width="50%" />
+        </imageobject>
+        <caption>Requirements [3]: proposed interface for the simulation editing
+        window
+        </caption>
+      </mediaobject>
+      <orderedlist spacing="compact">
+        <listitem>
+          <para>Cancellation button. Discard all the changes made to
+            the current Simulation element since this window was
+            opened and close it.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Confirmation button. Apply all the changes made to the
+            current Simulation element since this window was opened
+            and close it.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Editable text field. Constrains the input depending on
+            the expected parameter type (the text field associated
+            with an integer parameter will only accept an integer).
+          </para>
+        </listitem>
+        <listitem>
+          <para>Drop-list for restricted parameters (boolean,
+            enumeration...). Only displays the legal options for the
+            associated parameter.
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+</section>

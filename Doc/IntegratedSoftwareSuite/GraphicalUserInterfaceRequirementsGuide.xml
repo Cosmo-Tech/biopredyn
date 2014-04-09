@@ -7,12 +7,11 @@
   $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
 -->
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
 []>
-<article id="PrototypeUserGuide">
+<article id="GraphicalUserInterfaceRequirementsGuide">
   <articleinfo>
-    <title>BioPreDyn software suite prototype - Deliverable 7.2 - User guide
-    </title>
+    <title>Graphical user interface (GUI) requirements</title>
     <subjectset>
       <subject>
         <subjectterm>BioPreDyn</subjectterm>
@@ -35,17 +34,17 @@
     </authorgroup>
     <pubdate>2014</pubdate>
     <abstract>
-      <para>This document is the user guide for the BioPreDyn software suite
-      prototype (deliverable 7.2).
+      <para>This document summarizes the requirements for the GUI of
+      the BioPreDyn integrated software suite (deliverable 3.4 / 7.2 / 8.3).
       </para>
     </abstract>
   </articleinfo>
-  <xi:include href="UserGuide/Preface.xml"
+  <xi:include href="GraphicalUserInterfaceRequirements/Preface.xml"
   xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="UserGuide/Introduction.xml"
+  <xi:include href="GraphicalUserInterfaceRequirements/Introduction.xml"
   xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="UserGuide/Installation.xml"
+  <xi:include href="GraphicalUserInterfaceRequirements/Requirements.xml"
   xmlns:xi="http://www.w3.org/2001/XInclude" />
-  <xi:include href="UserGuide/Usage.xml"
+  <xi:include href="GraphicalUserInterfaceRequirements/References.xml"
   xmlns:xi="http://www.w3.org/2001/XInclude" />
 </article>

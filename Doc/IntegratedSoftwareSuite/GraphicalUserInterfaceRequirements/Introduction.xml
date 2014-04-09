@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="GUIRequirementsIntroduction">
+  <title>Introduction</title>
+  <para>The <ulink url="http://www.biopredyn.eu/">BioPreDyn</ulink> project
+  aims at standardizing the data regression process in systems biology.
+  After the requirements detailed in the
+  <ulink url="https://thecosmocompany.com/BioPreDyn-doc/IntegratedSoftwareSuite/IntegratedSoftwareSuiteRequirementsGuide/">
+  integrated software suite requirements guide</ulink>,
+  <ulink url="http://sed-ml.org/">SED-ML</ulink> was chosen as a representation
+  for such a work flow.</para>
+  <para>In order to be as user-friendly as possible, deliverables 7.2 / 3.4 / 
+  8.3 need to be given a graphical user interface. This document describes the
+  requirements for such a graphical user interface.</para>
+</section>

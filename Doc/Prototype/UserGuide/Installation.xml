@@ -4,14 +4,14 @@
   $Author$
   $Date$
   $Revision$
-  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
 -->
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section>
   <title>Installation</title>
   <section>
-    <title>Ubuntu 32-bit / 64-bit (11.10 or later)</title>
+    <title>Debian / Ubuntu</title>
     <section>
       <title>Dependencies</title>
       <section>

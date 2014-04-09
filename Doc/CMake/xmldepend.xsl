@@ -4,7 +4,7 @@
   $Author$
   $Date$
   $Revision$
-  $Copyright: [2010-2013] The CoSMo Company, All Rights Reserved $
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
 -->
 <xsl:stylesheet
   version="1.0"
