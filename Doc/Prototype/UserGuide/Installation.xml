@@ -36,7 +36,7 @@
       <section>
         <title>Python 2.7</title>
         <programlisting>
-  sudo apt-get install python2.7
+  sudo apt-get install python2.7 python2.7-dev
         </programlisting>
         <section>
           <title>pip</title>
