@@ -182,21 +182,21 @@ class RepeatedTaskTestCase(GenericTestCase):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_uniform.xml',
       self.manager)
-    flow.get_task_by_id("task_2").run()
+    flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
   def test_vector_range(self):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_vector.xml',
       self.manager)
-    flow.get_task_by_id("task_2").run()
+    flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
   def test_functional_range(self):
     flow = workflow.WorkFlow(
       '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_functional.xml',
       self.manager)
-    flow.get_task_by_id("task_2").run()
+    flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
 if __name__ == '__main__':

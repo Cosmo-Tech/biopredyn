@@ -16,7 +16,7 @@
     <task id="task_1" name="task_1" modelReference="febs_model"
       simulationReference="simulation_1">
     </task>
-    <repeatedTask id="task_2" resetModel="true" range="current">
+    <repeatedTask id="task_2" resetModel="false" range="current">
       <listOfRanges>
         <uniformRange id="current" start="5" end="7" numberOfPoints="4" type="linear" />
       </listOfRanges>

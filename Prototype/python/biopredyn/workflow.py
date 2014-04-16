@@ -233,6 +233,6 @@ class WorkFlow:
   # libSBMLSim is used as simulation engine.
   # @param self The object pointer.
   def run_tasks(self):
-    # Parse the list of tasks in the input file
+    # Parse the list of tasks in the input file; by default model changes apply
     for t in self.tasks:
-      t.run()
+      t.run(True)

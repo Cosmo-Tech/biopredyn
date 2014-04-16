@@ -82,11 +82,14 @@ class Task(AbstractTask):
   # Uses libSBMLSim as simulation engine; encoded Task has to be a uniform
   # time course.
   # @param self The object pointer.
-  def run(self):
+  # @param apply_changes Boolean value; if true, changes of the model apply
+  # before the simulation run, otherwise they do not.
+  def run(self, apply_changes):
     model = self.get_model()
     simulation = self.get_simulation()
     # First of all changes must be applied to the model
-    model.apply_changes()
+    if apply_changes:
+      model.apply_changes()
     if ( simulation.get_type() == "uniformTimeCourse" ):
       steps = simulation.get_number_of_points()
       start = simulation.get_output_start_time()
@@ -242,7 +245,9 @@ class RepeatedTask(AbstractTask):
   #  2. Each SetValue change in self.changes is executed.
   #  3. Each SubTask in self.subtasks is executed.
   # @param self The object pointer.
-  def run(self):
+  # @param apply_changes Boolean value; if true, changes of the model apply
+  # before each sub task simulation run, otherwise they do not.
+  def run(self, apply_changes):
     num_iter = len(self.get_range_by_id(self.master_range).get_values())
     # Main loop
     for i in range(num_iter):
@@ -257,12 +262,14 @@ class RepeatedTask(AbstractTask):
         # All models are reset
         for m in models:
           self.workflow.get_model_by_id(m).init_tree()
+      else:
+        apply_changes = False
       # 2. Changes are executed
       for c in self.changes:
         c.apply(i)
       # 3. Sub-tasks are executed
       for t in self.subtasks:
-        t.run()
+        t.run(apply_changes)
 
 ## Base-class for RepeatedTask element sub-tasks.
 class SubTask:
@@ -319,8 +326,10 @@ class SubTask:
   
   ## Calls the Task object of self.workflow which id is self.task_id.
   # @param self The object pointer.
-  def run(self):
-    self.get_task().run()
+  # @param apply_changes Boolean value; if true, changes of the model apply
+  # before the simulation run, otherwise they do not.
+  def run(self, apply_changes):
+    self.get_task().run(apply_changes)
   
   ## Setter for self.order.
   # @param self The object pointer.
