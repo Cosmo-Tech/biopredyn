@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+[]>
+<article id="TrainingGuide">
+  <articleinfo>
+    <title>BioPreDyn software practical session</title>
+    <subtitle>The Systems Biology Modelling Cycle - May 15th 2014</subtitle>
+    <subjectset>
+      <subject>
+        <subjectterm>BioPreDyn</subjectterm>
+      </subject>
+    </subjectset>
+    <keywordset>
+      <keyword>CoSMo</keyword>
+      <keyword>Project</keyword>
+      <keyword>Systems biology</keyword>
+      <keyword>BioPreDyn</keyword>
+      <keyword>Training</keyword>
+    </keywordset>
+    <authorgroup>
+      <author>
+        <firstname>Eric</firstname>
+        <surname>Boix</surname>
+        <affiliation>
+          <orgname>The CoSMo company</orgname>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Bertrand</firstname>
+        <surname>Moreau</surname>
+        <affiliation>
+          <orgname>The CoSMo company</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+  </articleinfo>
+  <xi:include href="Training/Introduction.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="Training/BasicSimulation.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="Training/PostProcessing.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="Training/PreProcessing.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="Training/RepeatingTasks.xml"
+  xmlns:xi="http://www.w3.org/2001/XInclude" />
+</article>

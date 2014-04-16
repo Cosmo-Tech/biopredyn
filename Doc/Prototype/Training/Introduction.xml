@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  $Author$
+  $Date$
+  $Revision$
+  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section>
+  <title>Introduction</title>
+  <para>This guide contains tutorials for the <literal>BioPreDyn</literal>
+  software suite (version 0.1.0); it is assumed that the
+  <literal>BioPreDyn</literal> software suite is installed on the machine, along
+  with its dependencies. If not, please follow the instructions of the
+  <ulink url="https://thecosmocompany.com/BioPreDyn-doc/Prototype/PrototypeUserGuide/">
+  prototype user guide</ulink>.</para>
+</section>
