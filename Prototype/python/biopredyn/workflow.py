@@ -156,6 +156,11 @@ class WorkFlow:
     print("Model not found: " + id)
     return 0
   
+  ## Getter. Returns self.models.
+  # @param self The object pointer.
+  def get_models(self):
+    return self.models
+  
   ## Getter. Returns self.outputs.
   # @param self The object pointer.
   def get_outputs(self):

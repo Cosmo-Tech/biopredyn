@@ -129,6 +129,12 @@ class Model:
       sys.exit("XPath error: " + xpath + " could not be resolved in " +
                self.source)
   
+  ## Getter. Returns self.changes.
+  # @param self The object pointer.
+  # @return self.changes
+  def get_changes(self):
+    return self.changes
+  
   ## Getter. Returns self.source.
   # @param self The object pointer.
   # @return self.source
