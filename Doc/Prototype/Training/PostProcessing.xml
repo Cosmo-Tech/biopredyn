@@ -8,19 +8,239 @@
 -->
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<section>
+<section id="TrainingPostProcessing">
   <title>Post-processing</title>
-  <para></para>
-  <section>
+  <para>In this chapter, ways to visualize the results of
+  <literal>SED-ML</literal> experiments will be added to the work flow written
+  in <link linkend="TrainingBasicSimulation">the first chapter</link>.</para>
+  <section id="TrainingDisplayingResults">
     <title>Displaying results</title>
-    <para></para>
+    <itemizedlist>
+      <listitem>
+        <para>In <literal>SED-ML</literal>, post-processing operations on
+        simulation results are described using <literal>DataGenerator</literal>
+        elements. In order to add <literal>DataGenerator</literal> elements to
+        the <literal>workflow.xml</literal> experiment, add the following code
+        after the <literal>listOfTasks</literal> block:
+        </para>
+        <programlisting language="xml"><![CDATA[
+<listOfDataGenerators>
+  <dataGenerator id="datagenerator_1" name="time_datagenerator">
+    <listOfVariables>
+      <variable id="Time" name="time" taskReference="task_1"
+        symbol="urn:sedml:symbol:time">
+      </variable>
+    </listOfVariables>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <ci>Time</ci>
+    </math>
+  </dataGenerator>
+  <dataGenerator id="datagenerator_2" name="E_datagenerator">
+    <listOfVariables>
+      <variable id="sp_E" name="sp_E" taskReference="task_1"
+        target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_E']">
+      </variable>
+    </listOfVariables>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <ci>sp_E</ci>
+    </math>
+  </dataGenerator>
+  <dataGenerator id="datagenerator_3" name="S_datagenerator">
+    <listOfVariables>
+      <variable id="sp_S" name="sp_S" taskReference="task_1"
+        target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_S']">
+      </variable>
+    </listOfVariables>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <ci>sp_S</ci>
+    </math>
+  </dataGenerator>
+  <dataGenerator id="datagenerator_4" name="C_datagenerator">
+    <listOfVariables>
+      <variable id="sp_C" name="sp_C" taskReference="task_1"
+        target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_C']">
+      </variable>
+    </listOfVariables>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <ci>sp_C</ci>
+    </math>
+  </dataGenerator>
+  <dataGenerator id="datagenerator_5" name="P_datagenerator">
+    <listOfVariables>
+      <variable id="sp_P" name="sp_P" taskReference="task_1"
+        target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_P']">
+      </variable>
+    </listOfVariables>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <ci>sp_P</ci>
+    </math>
+  </dataGenerator>
+</listOfDataGenerators>
+        ]]>
+        </programlisting>
+        <para>This block defines five data generators: one for the simulation
+        time points (named <literal>time_datagenerator</literal>), and four for
+        variables of interest in the <literal>FEBS_antimony.xml</literal>
+        model: enzyme concentration (<literal>E_datagenerator</literal>),
+        substrate concentration (<literal>S_datagenerator</literal>), complex
+        concentration (<literal>C_datagenerator</literal>) and product
+        concentration (<literal>P_datagenerator</literal>). Note the use of
+        <literal>XPath</literal> for targeting variables in the model, and the
+        <literal>MathML</literal> block describing the post-processing operation
+        itself. In this case, the data generators simply return the values of
+        the monitored variables.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Data generators do nothing by themselves; in order to visualize
+        their output, add the following code after the
+        <literal>listOfDataGenerators</literal> block:
+        </para>
+        <programlisting><![CDATA[
+<listOfOutputs>
+  <plot2D id="plot_1" name="concentrations_vs_time">
+    <listOfCurves>
+      <curve id="curve1" name="E_vs_Time" logX="false" logY="false"
+        xDataReference="datagenerator_1" yDataReference="datagenerator_2">
+      </curve>
+      <curve id="curve2" name="S_vs_Time" logX="false" logY="false"
+        xDataReference="datagenerator_1" yDataReference="datagenerator_3">
+      </curve>
+      <curve id="curve3" name="C_vs_Time" logX="false" logY="false"
+        xDataReference="datagenerator_1" yDataReference="datagenerator_4">
+      </curve>
+      <curve id="curve4" name="P_vs_Time" logX="false" logY="false"
+        xDataReference="datagenerator_1" yDataReference="datagenerator_5">
+      </curve>
+    </listOfCurves>
+  </plot2D>
+</listOfOutputs>
+        ]]></programlisting>
+        <para>
+        This block defines the outputs of the experiment; in this case, it
+        describes a 2-dimensional plot displaying four curves (one for each
+        variable of interest versus time).
+        </para>
+      </listitem>
+      <listitem>
+        <para>Run the experiment:</para>
+        <programlisting>python main.py --sedml workflow.xml</programlisting>
+      </listitem>
+    </itemizedlist>
+    <para>When calling the <literal>main.py</literal> script with the
+    <literal>--sedml</literal> flag, the experiment is executed as follows:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>First all the tasks listed in <literal>listOfTasks</literal> are
+        run.</para>
+      </listitem>
+      <listitem>
+        <para>Then all the outputs listed in <literal>listOfOutputs</literal>
+        are processed.</para>
+      </listitem>
+    </itemizedlist>
+    <para>In this case, a <literal>matplotlib</literal> window should pop-up and
+    display the plot described by <literal>plot_1</literal>:</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="70%" contentdepth="100%" align="center" scalefit="1"
+        fileref="Sketches/training_2_1.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
-  <section>
+  <section id="TrainingWritingResults">
     <title>Writing results</title>
-    <para></para>
+    <para>Experiment results can also be exported as data files. Simply remove
+    the <literal>plot2D</literal> block in the <literal>listOfOutputs</literal>
+    block and replace it by the following code:</para>
+    <programlisting language="xml"><![CDATA[
+<report id="report_1" name="time_series">
+  <listOfDataSets>
+    <dataSet id="data1" label="Time" dataReference="datagenerator_1">
+    </dataSet>
+    <dataSet id="data2" label="E" dataReference="datagenerator_2">
+    </dataSet>
+    <dataSet id="data3" label="S" dataReference="datagenerator_3">
+    </dataSet>
+    <dataSet id="data4" label="C" dataReference="datagenerator_4">
+    </dataSet>
+    <dataSet id="data5" label="P" dataReference="datagenerator_5">
+    </dataSet>
+  </listOfDataSets>
+</report>
+    ]]></programlisting>
+    <para>It describes a report where all values encoded by the data generators
+    will be written. The command for writing an output file is slighty
+    different, since an address for the output file is required:</para>
+    <programlisting>
+python main.py --sedml workflow.xml -o output.csv
+    </programlisting>
+    <para>
+    The format of the exported data depends on the extension of the output file;
+    in this case, data will be exported in a CSV file. For exporting it as a
+    <literal>NuML</literal> file, the command would be:</para>
+    <programlisting>
+python main.py --sedml workflow.xml -o output.xml
+    </programlisting>
   </section>
-  <section>
+  <section id="TrainingProcessingData">
     <title>Processing data</title>
-    <para></para>
+    <para>Data generators can generate more complex data, based on mathematical
+    operations. Return the <literal>workflow.xml</literal> file to its state at
+    the end of the <link linkend="TrainingDisplayingResults">Displaying results
+    chapter</link> and modify it as follows:</para>
+    <itemizedlist>
+      <listitem>
+        <para>Append a new data generator to the current list in the
+        <literal>listOfDataGenerators</literal> block:</para>
+        <programlisting language="xml"><![CDATA[
+<dataGenerator id="datagenerator_6" name="E_C_datagenerator">
+  <listOfVariables>
+    <variable id="sp_E" name="sp_E" taskReference="task_1"
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_E']">
+    </variable>
+    <variable id="sp_C" name="sp_C" taskReference="task_1"
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_C']">
+    </variable>
+  </listOfVariables>
+  <math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+      <plus />
+      <ci>sp_E</ci>
+      <ci>sp_C</ci>
+    </apply>
+  </math>
+</dataGenerator>
+        ]]></programlisting>
+        <para>This data generator references two variables and returns the sum
+        of their values. In this case, the enzyme and complex concentrations are
+        summed.</para>
+      </listitem>
+      <listitem>
+        <para>Add a new curve displaying this new data generator in the
+        <literal>listOfCurves</literal> block of <literal>plot_1</literal>:
+        </para>
+        <programlisting language="xml"><![CDATA[
+<curve id="curve5" name="E_C_vs_Time" logX="false" logY="false"
+  xDataReference="datagenerator_1" yDataReference="datagenerator_6">
+</curve>
+        ]]></programlisting>
+      </listitem>
+      <listitem>
+        <para>Run the experiment:</para>
+        <programlisting>
+python main.py --sedml workflow.xml
+        </programlisting>
+      </listitem>
+    </itemizedlist>
+    <para>A new curve appears on <literal>plot_1</literal>, displaying the sum
+    of enzyme and complex concentrations (which is constant):</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="70%" contentdepth="100%" align="center" scalefit="1"
+        fileref="Sketches/training_2_3.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
 </section>

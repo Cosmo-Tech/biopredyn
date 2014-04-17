@@ -8,15 +8,138 @@
 -->
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<section>
+<section id="TrainingParameterSweep">
   <title>Parameter sweep</title>
-  <para></para>
-  <section>
+  <para><literal>SED-ML level 1 version 2</literal> introduced the concept of
+  repeated tasks, making the description of parameter sweep experiments easier.
+  </para>
+  <section id="TrainingVectorOfValues">
     <title>Vector of values</title>
-    <para></para>
+    <para>Parameter sweep are parameterized using range of values; in this first
+    example, a simple vector is used:</para>
+    <itemizedlist>
+      <listitem>
+        <para>In the <literal>workflow.xml</literal> file from the
+        <link linkend="TrainingChangingInitialValues">Changing initial values
+        chapter</link>, add the following node in the
+        <literal>listOfTasks</literal> block:</para>
+        <programlisting language="xml"><![CDATA[
+<repeatedTask id="task_2" resetModel="false" range="current">
+  <listOfRanges>
+    <vectorRange id="current">
+      <value>0.112</value>
+      <value>0.162</value>
+      <value>0.262</value>
+      <value>0.312</value>
+    </vectorRange>
+  </listOfRanges>
+  <listOfChanges>
+    <setValue target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k3']/@value"
+      range="current" modelReference="febs_model">
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <ci> current </ci>
+      </math>
+    </setValue>
+  </listOfChanges>
+  <listOfSubTasks>
+    <subTask order="1" task="task_1" />
+  </listOfSubTasks>
+</repeatedTask>
+        ]]></programlisting>
+        <para>This <literal>repeatedTask</literal> iteratively changes the value
+        of <literal>k3</literal> in the target model and execute the simulation
+        encoded in <literal>task_1</literal>. <literal>k3</literal> will take
+        all the values listed in the <literal>vectorRange</literal> named
+        <literal>current</literal>. Note the use of a <literal>MathML</literal>
+        block in the <literal>setValue</literal> node; mathematical constructs
+        (similar to the ones used in <literal>computeChange</literal> nodes) can
+        be defined here.</para>
+      </listitem>
+      <listitem>
+        <para>Run the experiment:</para>
+        <programlisting>
+python main.py --sedml workflow.xml
+        </programlisting>
+      </listitem>
+    </itemizedlist>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="70%" contentdepth="100%" align="center" scalefit="1"
+        fileref="Sketches/training_4_1.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
-  <section>
+  <section id="TrainingFunctionalRanges">
     <title>Functional ranges</title>
-    <para></para>
+    <para>Parameter sweep can </para>
+    <itemizedlist>
+      <listitem>
+        <para>Replace the <literal>repeatedTask</literal> node written in the
+        <link linkend="TrainingVectorOfValues">previous paragraph</link> by the
+        following node:</para>
+        <programlisting language="xml"><![CDATA[
+<repeatedTask id="task_2" resetModel="false" range="shift">
+  <listOfRanges>
+    <uniformRange id="shift" start="0.0" end="0.5" numberOfPoints="4" type="linear" />
+    <functionalRange id="current" range="shift">
+      <listOfVariables>
+        <variable id="k3" name="p_k3" modelReference="febs_model"
+          target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k3']/@value"/>
+      </listOfVariables>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <apply>
+          <plus/>
+          <ci> shift </ci>
+          <ci> k3 </ci>
+        </apply>
+      </math>
+    </functionalRange>
+  </listOfRanges>
+  <listOfChanges>
+    <setValue target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k3']/@value"
+      range="current" modelReference="febs_model">
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <ci> current </ci>
+      </math>
+    </setValue>
+  </listOfChanges>
+  <listOfSubTasks>
+    <subTask order="1" task="task_1" />
+  </listOfSubTasks>
+</repeatedTask>
+        ]]></programlisting>
+        <para>This <literal>repeatedTask</literal>, like the previous one,
+        iteratively run the task identified as <literal>task_1</literal>; it
+        uses two ranges to compute the values of <literal>k3</literal>:
+          <itemizedlist>
+            <listitem>
+              <para>A linear <literal>uniformRange</literal> taking four
+              values between 0 and 0.5</para>
+            </listitem>
+            <listitem>
+              <para>A <literal>functionalRange</literal> using the values
+              returned by the previous <literal>uniformRange</literal> to apply
+              a shift to the value of <literal>k3</literal>, meaning
+              <literal>task_1</literal> will be iteratively executed with
+              <literal>k3</literal> being equal to <literal>k3</literal>,
+              <literal>k3 + 0.125</literal>, <literal>k3 + 0.25</literal>, etc.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </listitem>
+      <listitem>
+        <para>Run the experiment:</para>
+        <programlisting>
+python main.py --sedml workflow.xml
+        </programlisting>
+      </listitem>
+    </itemizedlist>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="70%" contentdepth="100%" align="center" scalefit="1"
+        fileref="Sketches/training_4_2.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
 </section>

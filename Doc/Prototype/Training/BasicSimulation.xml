@@ -8,12 +8,49 @@
 -->
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<section>
+<section id="TrainingBasicSimulation">
   <title>Basic simulation</title>
   <itemizedlist>
     <listitem>
       <para>In the <literal>BioPreDyn</literal> package, navigate to
-      <literal>build/install/bin</literal>:</para>
+      <literal>build/install/bin</literal> and create a new
+      <literal>XML</literal> file <literal>workflow.xml</literal>.
+      </para>
+    </listitem>
+    <listitem>
+      <para>Open it with your favourite XML editor and write the following code:
+      </para>
+      <programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<sedML xmlns="http://sed-ml.org/sed-ml/level1/version2" level="1" version="2">
+  <listOfSimulations>
+    <uniformTimeCourse id="simulation_1" name="simulation_1"
+      initialTime="0.0" outputStartTime="0.0" outputEndTime="20.0"
+      numberOfPoints="200">
+      <algorithm kisaoID="KISAO:0000032" />
+    </uniformTimeCourse>
+  </listOfSimulations>
+  <listOfModels>
+    <model id="febs_model" language="urn:sedml:language:sbml"
+      source="FEBS_antimony.xml">
+    </model>
+  </listOfModels>
+  <listOfTasks>
+    <task id="task_1" name="task_1" modelReference="febs_model"
+      simulationReference="simulation_1">
+    </task>
+  </listOfTasks>
+</sedML>
+      ]]></programlisting>
+      <para>This <literal>SED-ML</literal> file describes the execution of a
+      time course simulation on a model described in the local file
+      <literal>FEBS_antimony.xml</literal>.
+      </para>
+    </listitem>
+    <listitem>
+      <para>Execute it by typing the following command:
+      <programlisting>python main.py --sedml workflow.xml</programlisting>
+      </para>
     </listitem>
   </itemizedlist>
 </section>

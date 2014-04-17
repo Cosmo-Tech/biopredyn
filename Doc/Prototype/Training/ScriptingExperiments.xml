@@ -8,7 +8,36 @@
 -->
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<section>
+<section id="TrainingScriptingExperiments">
   <title>Scripting experiments</title>
-  <para></para>
+  <para>All the tutorials described in the above chapters use the default
+  <literal>main.py</literal> module when running the experiment. However, once
+  installed, the <literal>BioPreDyn</literal> software suite can be used as any
+  Python library in order to develop <literal>SED-ML</literal> file manipulation
+  scripts.</para>
+  <para>The <literal>Python</literal> script below, for instance, exports
+  <literal>SBML</literal> files modified by the work flow before executing it:
+  </para>
+  <programlisting language="python">
+from biopredyn import resources, workflow
+
+rm = resources.ResourceManager() # Mandatory resource manager
+wf = workflow.WorkFlow('training_3_3.xml', rm)
+
+for m in wf.get_models():
+  m.apply_changes()
+  m.write_sbml(m.get_id() + "_changed.xml")
+  m.init_tree() # Model reset
+
+# Work flow execution
+wf.run_tasks()
+wf.process_outputs()
+  </programlisting>
+  <para>This script can only be executed if the <literal>BioPreDyn</literal>
+  software suite is installed, meaning all the required libraries are in the
+  <literal>Python</literal> path.</para>
+  <para>The complete <literal>BioPreDyn</literal> software suite
+  <acronym>API</acronym> (<literal>doxygen</literal> generated) is available on
+  <ulink url="https://thecosmocompany.com/BioPreDyn-doxygen/">the project
+  development wiki</ulink>.</para>
 </section>

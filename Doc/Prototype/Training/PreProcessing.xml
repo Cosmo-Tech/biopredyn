@@ -8,19 +8,136 @@
 -->
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<section>
+<section id="TrainingPreprocessing">
   <title>Preprocessing</title>
-  <para></para>
-  <section>
+  <para>Models can be preprocessed using the <literal>Change</literal> feature
+  in SED-ML.
+  </para>
+  <section id="TrainingChangingInitialValues">
     <title>Changing initial values</title>
-    <para></para>
+    <para>Initial values can be set to a different value before the execution
+    of a task:</para>
+    <itemizedlist>
+      <listitem>
+        <para>Back to the <literal>workflow.xml</literal> file from the
+        <link linkend="TrainingDisplayingResults">Displaying results chapter</link>,
+        add the following code in the <literal>model</literal> block:
+        </para>
+        <programlisting language="xml"><![CDATA[
+<listOfChanges>
+  <changeAttribute target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k1']/@value" newValue="0.683" />
+  <changeAttribute target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k2']/@value" newValue="0.312" />
+  <changeAttribute target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k3']/@value" newValue="0.212" />
+</listOfChanges>
+        ]]></programlisting>
+        <para>It sets the values of three parameters of the model (
+        <literal>k1</literal>, <literal>k2</literal> and <literal>k3</literal>,
+        identified by <literal>XPath</literal> strings).</para>
+      </listitem>
+      <listitem>
+        <para>Run the experiment:</para>
+        <programlisting>
+python main.py --sedml workflow.xml
+        </programlisting>
+      </listitem>
+    </itemizedlist>
+    <para>Model changes apply before the task referencing the model is executed,
+    therefore modifying the results of the experiment:
+    </para>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="70%" contentdepth="100%" align="center" scalefit="1"
+        fileref="Sketches/training_3_1.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
-  <section>
+  <section id="TrainingComputingChanges">
     <title>Computing changes</title>
-    <para></para>
+    <para>Initial values in the model can be changed using mathematical rules,
+    using model variables or user defined parameters:</para>
+    <itemizedlist>
+      <listitem>
+        <para>In the <literal>workflow.xml</literal> file, replace the third
+        <literal>changeAttribute</literal> node (the one setting the value of
+        <literal>k3</literal>) by the following code:</para>
+        <programlisting language="xml"><![CDATA[
+<computeChange target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k3']/@value">
+  <listOfVariables>
+    <variable id="k1" name="k1" modelReference="febs_model" target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k1']/@value" />
+    <variable id="k2" name="k2" modelReference="febs_model" target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k2']/@value" />
+  </listOfVariables>
+  <listOfParameters>
+    <parameter id="k" name="denominator" value="2.0" />
+  </listOfParameters>
+  <math xmlns="http://www.w3.org/1998/Math/MathML">
+    <apply>
+      <divide />
+      <apply>
+        <plus />
+        <ci>k1</ci>
+        <ci>k2</ci>
+      </apply>
+      <ci>k</ci>
+    </apply>
+  </math>
+</computeChange>
+        ]]></programlisting>
+        <para>This <literal>computeChange</literal> node computes a new value
+        for the target <literal>k3</literal> using two model variables (parameters
+        <literal>k1</literal> and <literal>k2</literal>) and a pre-defined
+        parameter <literal>k</literal> which value is 2.0. As the order of the
+        changes matters, and the <literal>changeAttribute</literal> elements for
+        <literal>k1</literal> and <literal>k2</literal> were kept, their new
+        values are used.</para>
+        <para>Variables used in the computation are not limited to variables
+        from the target model: variables from other models can be used
+        too.</para>
+      </listitem>
+      <listitem>
+        <para>Run the experiment:</para>
+        <programlisting>
+python main.py --sedml workflow.xml
+        </programlisting>
+      </listitem>
+    </itemizedlist>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="70%" contentdepth="100%" align="center" scalefit="1"
+        fileref="Sketches/training_3_2.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
-  <section>
+  <section id="TrainingChangingTheModel">
     <title>Changing the model</title>
-    <para></para>
+    <para>Whole parts of the model can be changed in the model file, using
+    the <literal>addXML</literal>, <literal>removeXML</literal> or
+    <literal>changeXML</literal> elements in the <literal>SED-ML</literal> file.
+    For instance, disabling a reaction can be done as follows:</para>
+    <itemizedlist>
+      <listitem>
+        <para>Add the following node in the <literal>listOfChanges</literal>
+        block of the work flow file:</para>
+        <programlisting language="xml"><![CDATA[
+<removeXML target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfReactions/sbml:reaction[@id='_J1']" />
+        ]]></programlisting>
+        <para>This <literal>removeXML</literal> node removes the reaction
+        identified as <literal>_J1</literal> in the model. This change is not
+        propagated to the <literal>FEBS_antimony.xml</literal> file; it only
+        happens in memory.
+        </para>
+      </listitem>
+      <listitem>
+        <para>Run the experiment:</para>
+        <programlisting>
+python main.py --sedml workflow.xml
+        </programlisting>
+      </listitem>
+    </itemizedlist>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="70%" contentdepth="100%" align="center" scalefit="1"
+        fileref="Sketches/training_3_3.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
 </section>
