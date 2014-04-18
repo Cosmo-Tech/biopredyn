@@ -32,7 +32,8 @@
         ]]></programlisting>
         <para>It sets the values of three parameters of the model (
         <literal>k1</literal>, <literal>k2</literal> and <literal>k3</literal>,
-        identified by <literal>XPath</literal> strings).</para>
+        identified by <ulink url="http://www.w3schools.com/xpath/">XPath</ulink>
+        strings).</para>
       </listitem>
       <listitem>
         <para>Run the experiment:</para>
@@ -63,8 +64,10 @@ python main.py --sedml workflow.xml
         <programlisting language="xml"><![CDATA[
 <computeChange target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k3']/@value">
   <listOfVariables>
-    <variable id="k1" name="k1" modelReference="febs_model" target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k1']/@value" />
-    <variable id="k2" name="k2" modelReference="febs_model" target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k2']/@value" />
+    <variable id="k1" name="k1" modelReference="febs_model"
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k1']/@value" />
+    <variable id="k2" name="k2" modelReference="febs_model"
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfParameters/sbml:parameter[@id='k2']/@value" />
   </listOfVariables>
   <listOfParameters>
     <parameter id="k" name="denominator" value="2.0" />

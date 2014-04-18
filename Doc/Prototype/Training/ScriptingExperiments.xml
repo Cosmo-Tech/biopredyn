@@ -11,7 +11,7 @@
 <section id="TrainingScriptingExperiments">
   <title>Scripting experiments</title>
   <para>All the tutorials described in the above chapters use the default
-  <literal>main.py</literal> module when running the experiment. However, once
+  <literal>main.py</literal> module when running an experiment. However, once
   installed, the <literal>BioPreDyn</literal> software suite can be used as any
   Python library in order to develop <literal>SED-ML</literal> file manipulation
   scripts.</para>
@@ -37,7 +37,9 @@ wf.process_outputs()
   software suite is installed, meaning all the required libraries are in the
   <literal>Python</literal> path.</para>
   <para>The complete <literal>BioPreDyn</literal> software suite
-  <acronym>API</acronym> (<literal>doxygen</literal> generated) is available on
+  <acronym>API</acronym> (
+  <ulink url="http://www.stack.nl/~dimitri/doxygen/">doxygen</ulink> generated)
+  is available on
   <ulink url="https://thecosmocompany.com/BioPreDyn-doxygen/">the project
   development wiki</ulink>.</para>
 </section>

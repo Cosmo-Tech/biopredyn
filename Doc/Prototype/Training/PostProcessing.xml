@@ -157,7 +157,8 @@
     <programlisting language="xml"><![CDATA[
 <report id="report_1" name="time_series">
   <listOfDataSets>
-    <dataSet id="data1" label="Time" dataReference="datagenerator_1">
+    <dataSet id="data1" label="Time"
+      dataReference="datagenerator_1">
     </dataSet>
     <dataSet id="data2" label="E" dataReference="datagenerator_2">
     </dataSet>

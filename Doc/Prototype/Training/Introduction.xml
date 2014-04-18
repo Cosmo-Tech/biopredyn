@@ -16,4 +16,13 @@
   with its dependencies. If not, please follow the instructions of the
   <ulink url="https://thecosmocompany.com/BioPreDyn-doc/Prototype/PrototypeUserGuide/">
   prototype user guide</ulink>.</para>
+  <para>All the tutorials use a simple model of enzymatic reaction as a
+  reference model. This model, described in
+  <ulink url="http://www.ncbi.nlm.nih.gov/pubmed/19215296">
+  Ashyraliyev <emphasis>et al.</emphasis> (2009)</ulink>, was written
+  using <ulink url="http://antimony.sourceforge.net/">QTAntimony</ulink>. Its
+  source code can be found at
+  <literal>Prototype/data/training/FEBS_antimony.xml</literal> in the
+  <literal>BioPreDyn</literal> software sources, along with all the work flow
+  files described below.</para>
 </section>

@@ -71,7 +71,8 @@ python main.py --sedml workflow.xml
   </section>
   <section id="TrainingFunctionalRanges">
     <title>Functional ranges</title>
-    <para>Parameter sweep can </para>
+    <para>Parameter sweep can be parameterized using more sophisticated ranges:
+    </para>
     <itemizedlist>
       <listitem>
         <para>Replace the <literal>repeatedTask</literal> node written in the
@@ -80,7 +81,8 @@ python main.py --sedml workflow.xml
         <programlisting language="xml"><![CDATA[
 <repeatedTask id="task_2" resetModel="false" range="shift">
   <listOfRanges>
-    <uniformRange id="shift" start="0.0" end="0.5" numberOfPoints="4" type="linear" />
+    <uniformRange id="shift" start="0.0" end="0.5"
+      numberOfPoints="4" type="linear" />
     <functionalRange id="current" range="shift">
       <listOfVariables>
         <variable id="k3" name="p_k3" modelReference="febs_model"
@@ -122,7 +124,7 @@ python main.py --sedml workflow.xml
               a shift to the value of <literal>k3</literal>, meaning
               <literal>task_1</literal> will be iteratively executed with
               <literal>k3</literal> being equal to <literal>k3</literal>,
-              <literal>k3 + 0.125</literal>, <literal>k3 + 0.25</literal>, etc.
+              <literal>k3+0.125</literal>, <literal>k3+0.25</literal>, etc.
               </para>
             </listitem>
           </itemizedlist>
