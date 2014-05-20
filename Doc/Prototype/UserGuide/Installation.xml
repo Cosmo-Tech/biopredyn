@@ -22,9 +22,9 @@
         </programlisting>
       </section>
       <section>
-        <title>Subversion</title>
+        <title>Git</title>
         <programlisting>
-  sudo apt-get install subversion
+  sudo apt-get install git
         </programlisting>
       </section>
       <section>
@@ -85,13 +85,13 @@
     <section>
       <title>BioPreDyn integrated software suite prototype</title>
       <para>First of all the project source code must be checked-out using
-<literal>Subversion</literal>:</para>
+<literal>Git</literal>. Open a command shell, navigate to the folder where the
+<literal>BioPreDyn</literal> software should be installed and type:</para>
       <programlisting>
-  svn co https://thecosmocompany.com/svn/repos/SVN/BioPreDyn/trunk biopredyn
+  git clone https://github.com/bmoreau/biopredyn.git
       </programlisting>
-      <para>If required, use <emphasis role="bold">dashuser-biopredyn</emphasis>
-as a login and <emphasis role="bold">Nie8eir2</emphasis> as a password.
-When <literal>Subversion</literal> is done with it, open a shell, navigate to
+      <para>
+When <literal>Git</literal> is done with it, open a shell, navigate to
 the freshly checked-out biopredyn folder and type:
       </para>
       <programlisting>
@@ -112,22 +112,23 @@ the freshly checked-out biopredyn folder and type:
     <section>
       <title>CMake</title>
       <para>Download the latest stable version from the
-<ulink url="http://www.cmake.org/cmake/resources/software.html">CMake download page</ulink>
-then run the installer and follow the instructions.
+<ulink url="http://www.cmake.org/cmake/resources/software.html">CMake download
+page</ulink> then run the installer and follow the instructions.
       </para>
     </section>
     <section>
       <title>Microsoft Visual Studio 2010</title>
       <para>Download Visual C++ 2010 Express from the
-<ulink url="http://www.visualstudio.com/en-us/downloads/download-visual-studio-vs#DownloadFamilies_4">Visual Studio download page</ulink>
-then run the executable and follow the instructions. 
+<ulink url="http://www.visualstudio.com/en-us/downloads/download-visual-studio-vs#DownloadFamilies_4">
+Visual Studio download page</ulink> then run the executable and follow the
+instructions. 
       </para>
     </section>
     <section>
       <title>Subversion</title>
-      <para>Download Apache Subversion from the
-<ulink url="http://www.visualsvn.com/downloads/">VisualSVN download page</ulink>,
-run the installer and follow the instructions. 
+      <para>Download the latest Windows installer from the
+<ulink url="http://git-scm.com/downloads">Git project download page</ulink>,
+run the installer and follow the instructions.
       </para>
     </section>
     <section>
@@ -139,7 +140,7 @@ variable.
       </para>
     </section>
     <section>
-      <title>Python</title>
+      <title>Python 2.7</title>
       <para>Download the Windows installer from the
 <ulink url="http://www.python.org/download/">Python download page</ulink>, run
 it and follow the instructions.
@@ -147,9 +148,9 @@ it and follow the instructions.
       <section>
         <title>easy_install</title>
         <para>Download ez_setup.py from the
-<ulink url="https://bitbucket.org/pypa/setuptools/downloads">setuptools download page</ulink>
-then open a command prompt, navigate to the folder where ez_setup.py was
-downloaded and type: 
+<ulink url="https://bitbucket.org/pypa/setuptools/downloads">setuptools download
+page</ulink> then open a command prompt, navigate to the folder where
+ez_setup.py was downloaded and type: 
         </para>
         <programlisting>
   python ez_setup.py
@@ -167,16 +168,16 @@ C:\Python27) and type:
       <section>
         <title>NumPy</title>
         <para>Download the win32 installer at the
-<ulink url="http://sourceforge.net/projects/numpy/files/NumPy/1.8.1/numpy-1.8.1-win32-superpack-python2.7.exe/download">NumPy download page</ulink>
-and install it. 
+<ulink url="http://sourceforge.net/projects/numpy/files/NumPy/1.8.1/numpy-1.8.1-win32-superpack-python2.7.exe/download">
+NumPy download page</ulink> and install it. 
         </para>
       </section>
       <section>
         <title>matplotlib</title>
         <para>Download the installer for the last version
 (matplotlib-X.Y.Z.win32-py2.7.exe) at the
-<ulink url="https://github.com/matplotlib/matplotlib/downloads/">matplotlib download page</ulink>
-and install it.
+<ulink url="https://github.com/matplotlib/matplotlib/downloads/">matplotlib
+download page</ulink> and install it.
         </para>
       </section>
       <section>
@@ -199,54 +200,64 @@ exist), it has to be done manually for the last one.</para>
       <section>
         <title>bzip2</title>
         <para>Download the latest bzip2-X.Y.Z-setup.exe from
-  <ulink url="http://sourceforge.net/projects/gnuwin32/files/bzip2/">bzip2 download page</ulink>
-  and install it. Add [path/to/GnuWin32]/include and [path/to/GnuWin32]/lib to the
-  environment Path variable.
+<ulink url="http://sourceforge.net/projects/gnuwin32/files/bzip2/">bzip2 
+download page</ulink> and install it. Add [path/to/GnuWin32]/include and
+[path/to/GnuWin32]/lib to the environment Path variable.
         </para>
       </section>
       <section>
         <title>libiconv</title>
         <para>Download the latest libiconv-X.Y.Z-1.exe from
-  <ulink url="http://sourceforge.net/projects/gnuwin32/files/libiconv/1.9.2-1/">libiconv download page</ulink>
-  and install it. As it will install in the same repository than bzip2, it is not
-  necessary to change the path.
+<ulink url="http://sourceforge.net/projects/gnuwin32/files/libiconv/1.9.2-1/">
+libiconv download page</ulink> and install it. As it will install in the same
+repository than bzip2, it is not necessary to change the path.
         </para>
       </section>
       <section>
         <title>libXML2</title>
         <para>Download the latest version (libxml2-X.Y.Z.win32.zip) at the
-  <ulink url="http://xmlsoft.org/sources/win32/">XMLSoft download page</ulink>
-  and extract it. The resulting library folders (i.e. bin, include and bin) must
-  be merged with the ones in GnuWin32 (see bzip2 paragraph above).
+<ulink url="http://xmlsoft.org/sources/win32/">XMLSoft download page</ulink>
+and extract it. The resulting library folders (i.e. bin, include and lib) must
+be manually merged with the ones in GnuWin32 (see bzip2 paragraph above).
+        </para>
+        <para>After this last package is installed, the <literal>GnuWin32
+</literal> folder hierarchy should look like (with additional folders
+potentially existing around):
+          <programlisting>
+  .
+  |-- bin
+  |-- include
+  |   `-- libxml
+  `-- lib
+          </programlisting>
         </para>
       </section>
     </section>
     <section>
       <title>Doxygen</title>
       <para>Download the latest binary package (doxygen-X.Y.Z-setup.exe) at the
-<ulink url="http://www.stack.nl/~dimitri/doxygen/download.html">Doxygen download page</ulink>
-and install it.
+<ulink url="http://www.stack.nl/~dimitri/doxygen/download.html">Doxygen download
+page</ulink> and install it.
       </para>
     </section>
     <section>
       <title>Graphviz</title>
       <para>Download the latest installer (graphviz-X.Y.msi) at the
-<ulink url="http://www.graphviz.org/Download_windows.php">Graphviz download page</ulink>
-and execute it. 
+<ulink url="http://www.graphviz.org/Download_windows.php">Graphviz download page
+</ulink> and execute it. 
       </para>
     </section>
     <section>
       <title>BioPreDyn integrated software suite prototype</title>
       <para>First of all the project source code must be checked-out using
-<literal>Subversion</literal>:</para>
+<literal>Git</literal>. Open a command shell, navigate to the folder where the
+<literal>BioPreDyn</literal> software should be installed and type:</para>
       <programlisting>
-  svn co https://thecosmocompany.com/svn/repos/SVN/BioPreDyn/trunk biopredyn
+  git clone https://github.com/bmoreau/biopredyn.git
       </programlisting>
-      <para>If required, use <emphasis role="bold">dashuser-biopredyn</emphasis>
-as a login and <emphasis role="bold">Nie8eir2</emphasis> as a password. When
-<literal>Subversion</literal> is done with it, open a Visual Studio Command
-Prompt (2010), then navigate to the freshly checked-out biopredyn folder and
-type:
+      <para>When <literal>Git</literal> is done with it, open a Visual Studio
+Command Prompt (2010), then navigate to the freshly checked-out biopredyn folder
+and type:
       </para>
       <programlisting>
   mkdir BUILD
