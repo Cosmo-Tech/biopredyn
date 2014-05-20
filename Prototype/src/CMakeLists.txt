@@ -12,8 +12,3 @@ add_subdirectory( ${LIBSBML_VERSION} )
 add_subdirectory( ${LIBSEDML_VERSION} )
 add_subdirectory( ${LIBSBMLSIM_VERSION} )
 add_subdirectory( ${LIBNUML_VERSION} )
-
-if (BPD_GENERATE_LIBBIOPREDYN)
-  # Parsing library for biopredyn.xsd based XML files
-  add_subdirectory(libBioPreDyn)
-endif()
