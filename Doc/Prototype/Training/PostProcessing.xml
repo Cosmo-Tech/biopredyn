@@ -96,7 +96,7 @@
         their output, add the following code after the
         <literal>listOfDataGenerators</literal> block:
         </para>
-        <programlisting><![CDATA[
+        <programlisting language="xml"><![CDATA[
 <listOfOutputs>
   <plot2D id="plot_1" name="concentrations_vs_time">
     <listOfCurves>
