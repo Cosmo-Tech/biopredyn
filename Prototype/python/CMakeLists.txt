@@ -4,6 +4,7 @@ set(SETUP_PY_IN ${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in)
 set(SETUP_PY ${CMAKE_CURRENT_BINARY_DIR}/setup.py)
 set(DEPS ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn/__init__.py)
 set(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/build/timestamp)
+set(COBRA_SETUP_PY ${CMAKE_CURRENT_SOURCE_DIR}/cobrapy/setup.py)
 
 configure_file(${SETUP_PY_IN} ${SETUP_PY})
 
@@ -17,6 +18,7 @@ add_custom_target(bpd_engine ALL DEPENDS ${OUTPUT})
 # Testing installation
 add_test(BioPreDynPackageInstall ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_install.cmake)
 
+# biopredyn installation
 install(
   CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --user)"
   )
