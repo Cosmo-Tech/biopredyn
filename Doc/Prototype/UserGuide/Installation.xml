@@ -100,6 +100,7 @@ the freshly checked-out biopredyn folder and type:
   cd BUILD
   cmake ..
   make
+  make install
   make test
       </programlisting>
       <para><literal>CMake</literal> options can be more finely tuned by using
