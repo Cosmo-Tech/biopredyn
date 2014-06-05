@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sedML xmlns="http://sed-ml.org/sed-ml/level1/version2" level="1" version="2">
+  <listOfSimulations>
+    <steadyState id="fba_1" name="fba_1">
+      <algorithm kisaoID="KISAO:0000437">
+        <algorithmParameter id="objective_function_1" kisaoID="KISAO:0000201" value="R_Biomass_Ecoli_core_w_GAM"/>
+        <algorithmParameter id="objective_sense_1" kisaoID="KISAO:0000201" value="maximize"/>
+      </algorithm>
+    </steadyState>
+  </listOfSimulations>
+  <listOfModels>
+    <model id="e_coli_core" language="urn:sedml:language:sbml" source="https://github.com/bmoreau/biopredyn/blob/master/Prototype/testing/ecoli_core_model.xml">
+    </model>
+  </listOfModels>
+  <listOfTasks>
+    <task id="task_1" name="task_1" modelReference="e_coli_core" simulationReference="fba_1">
+    </task>
+  </listOfTasks>
+</sedML>
