@@ -103,7 +103,7 @@ manager.add_password("https://thecosmocompany.com/svn/repos/SVN/BioPreDyn",
 
 for o, a in opts:
   if o == "--sbml":
-    model = model.SBMLModel(manager, source=a)
+    model = model.Model(manager, source=a)
     model.check()
   elif o == "--sedml":
     flow = workflow.WorkFlow(a, res_man=manager)

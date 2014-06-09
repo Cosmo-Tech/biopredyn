@@ -8,7 +8,6 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
-import libsbmlsim
 import model, simulation, result, change, ranges
 
 ## Abstract representation of an atomic task in a SED-ML work flow.
@@ -19,10 +18,12 @@ class AbstractTask:
   # Name of this object.
 
   ## Constructor.
+  # @param self The object pointer.
   # @param task A SED-ML task.
   def __init__(self, task):
     self.id = task.getId()
     self.name = task.getName()
+    self.tool = None
 
   ## Getter. Returns self.id.
   # @param self The object pointer.
@@ -35,6 +36,12 @@ class AbstractTask:
   def get_name(self):
     return self.name
   
+  ## Getter. Returns self.tool.
+  # @param self The object pointer.
+  # @return self.tool
+  def get_tool(self):
+    return self.tool
+  
   ## Setter for self.id.
   # @param self The object pointer.
   # @param id New value for self.id.
@@ -46,6 +53,12 @@ class AbstractTask:
   # @param name New value for self.name.
   def set_name(self, name):
     self.name = name
+  
+  ## Setter. Assign a new value to self.tool.
+  # @param self The object pointer.
+  # @param tool New value for self.tool.
+  def set_tool(self, tool):
+    print "Task::set_tool - TODO"
 
 ## AbstractTask-derived class for atomic executable tasks in SED-ML work flows.
 class Task(AbstractTask):
@@ -78,40 +91,18 @@ class Task(AbstractTask):
     tree += " simulationReference=" + self.simulation_id + "\n"
     return tree
   
-  ## Default run function.
-  # Uses libSBMLSim as simulation engine; encoded Task has to be a uniform
-  # time course.
+  ## Run self.simulation on self.model using self.tool as a simulation engine.
+  ## Results are appended to self.results.
   # @param self The object pointer.
   # @param apply_changes Boolean value; if true, changes of the model apply
   # before the simulation run, otherwise they do not.
   def run(self, apply_changes):
     model = self.get_model()
-    simulation = self.get_simulation()
-    # First of all changes must be applied to the model
+    # Changes must be applied to the model
     if apply_changes:
       model.apply_changes()
-    if ( simulation.get_type() == "uniformTimeCourse" ):
-      steps = simulation.get_number_of_points()
-      start = simulation.get_output_start_time()
-      end = simulation.get_output_end_time()
-      # "step" is computed with respect to the output start / end times, as
-      # number_of_points is defined between these two points:
-      step = (end - start) / steps
-      # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
-      r = libsbmlsim.simulateSBMLFromString(
-          model.get_sbml_doc().toSBML(),
-          end,
-          step,
-          1,
-          0,
-          libsbmlsim.MTHD_RUNGE_KUTTA,
-          0)
-      res = result.Result()
-      res.import_from_libsbmlsim(r)
-      self.results.append(res)
-    else:
-      # TODO: other types of simulation
-      print "TODO"
+    res = self.get_simulation().run(model, self.tool)
+    self.results.append(res)
   
   ## Returns the Model objet of self.workflow which id is self.model_id.
   # @param self The object pointer.
@@ -157,12 +148,6 @@ class Task(AbstractTask):
   def get_simulation_id(self):
     return self.simulation_id
   
-  ## Getter. Returns self.tool.
-  # @param self The object pointer.
-  # @return self.tool
-  def get_tool(self):
-    return self.tool
-  
   ## Setter. Assign a new value to self.model_id.
   # @param self The object pointer.
   # @param model_id New value for self.model_id.
@@ -174,12 +159,6 @@ class Task(AbstractTask):
   # @param simulation_id New value for self.simulation_id.
   def set_simulation_id(self, simulation_id):
     self.simulation_id = simulation_id
-  
-  ## Setter. Assign a new value to self.tool.
-  # @param self The object pointer.
-  # @param tool New value for self.tool.
-  def set_tool(self, tool):
-    print "Task::set_tool - TODO"
 
 ## AbstractTask-derived class for nested loops of tasks in SED-ML work flows.
 class RepeatedTask(AbstractTask):

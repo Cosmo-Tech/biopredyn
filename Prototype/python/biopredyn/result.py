@@ -32,6 +32,16 @@ class Result:
   def __init__(self):
     self.result = dict()
   
+  ## Returns the value of all fluxes in self.result as a vector of values.
+  # @param self The object pointer.
+  # @return The vector of fluxes, without growth_rate.
+  def get_fluxes(self):
+    vector = []
+    for f in self.result:
+      if str(f) != "growth_rate":
+        vector.append(self.result[f])
+    return vector
+  
   ## Returns the number of time series in self.result; potential "time" series
   ## are not counted as time series.
   # @param self The object pointer.
@@ -65,6 +75,16 @@ class Result:
       if str.lower(t) == "time":
         return self.result[t]
     sys.exit("Error: no time series found.")
+  
+  ## Import numerical values from the output of a cobrapy flux balance analysis
+  ## and store them in self.result. The resulting growth rate is stored as the
+  ## value of the 'growth_rate' key.
+  # @param self The object pointer.
+  # @param solution Solution of a cobrapy FBA.
+  def import_from_cobrapy_fba(self, solution):
+    self.result["growth_rate"] = [solution.f]
+    for p in solution.x_dict.iteritems():
+      self.result[p[0]] = [p[1]]
   
   ## Import numerical values from a CSV file and store them in self.result. The
   ## way data is stored in the file (row or column wise) is specified by the

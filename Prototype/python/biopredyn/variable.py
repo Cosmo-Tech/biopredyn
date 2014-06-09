@@ -19,6 +19,10 @@ class Variable:
   # ID of the Model object this refers to.
   ## @var name
   # Name of this object.
+  ## @var symbol
+  # URN symbol for implicit variable representation. So far only two symbols
+  # are used in BioPreDyn: urn:sedml:symbol:time (for time steps) and
+  # urn:sedml:symbol:fluxes (for flux balance analysis results).
   ## @var target
   # XPath expression pointing to the element this variable refers to in
   # self.model.
@@ -30,13 +34,14 @@ class Variable:
   ## Constructor. Depending on the content of the input variable, one of the
   ## input workflow or model arguments must exist.
   # @param self The object pointer.
-  # @param variable A SED-ML variable element.
+  # @param variable A libsedml.SedVariable object.
   # @param workflow A WorkFlow object.
   def __init__(self, variable, workflow):
     self.id = variable.getId()
     self.name = variable.getName()
     self.target = variable.getTarget()
     self.workflow = workflow
+    self.symbol = variable.getSymbol()
     if variable.isSetTaskReference():
       # DataGenerator case
       self.task_id = variable.getTaskReference()
@@ -104,6 +109,12 @@ class Variable:
   def get_number_of_series(self):
     return self.workflow.get_task_by_id(self.task_id).get_number_of_series()
   
+  ## Getter. Returns self.symbol.
+  # @param self The object pointer.
+  # @return self.symbol
+  def get_symbol(self):
+    return self.symbol
+  
   ## Getter for self.target.
   # @param self The object pointer.
   # @return self.target
@@ -123,17 +134,21 @@ class Variable:
     return self.task_id
   
   ## Return the numerical values corresponding to the Result object at index in
-  ## the Task object of self.workflow which ID is self.task_id. If self.id
+  ## the Task object of self.workflow which ID is self.task_id. If self.symbol
   ## indicates a time series, returns the time steps associated with this same
-  ## Task object instead.
+  ## Task object instead. If self.symbol indicates a vector of fluxes, the Task
+  ## object is encoding a flux balance analysis; in this case the resulting
+  ## vector of fluxes is returned.
   # @param self The object pointer.
   # @param index An integer.
   # @return values A 1-dimensional array of numerical values.
   def get_values(self, index):
     task = self.get_task()
     values = []
-    if self.id.upper() == "TIME":
+    if self.symbol == "urn:sedml:symbol:time":
       values = task.get_result(0).get_time_steps()
+    elif self.symbol == "urn:sedml:symbol:fluxes":
+      values = task.get_result(index).get_fluxes()
     else:
       values = task.get_result(index).get_quantities_per_species(self.id)
     return values
@@ -147,3 +162,39 @@ class Variable:
     target = model.evaluate_xpath(self.target)
     value = float(target[0])
     return value
+  
+  ## Setter for self.id.
+  # @param self The object pointer.
+  # @param id New value for self.id.
+  def set_id(self, id):
+    self.id = id
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
+  
+  ## Setter for self.target.
+  # @param self The object pointer.
+  # @param target New value for self.target.
+  def set_target(self, target):
+    self.target = target
+  
+  ## Setter for self.symbol.
+  # @param self The object pointer.
+  # @param symbol New value for self.symbol.
+  def set_symbol(self, symbol):
+    self.symbol = symbol
+  
+  ## Setter for self.task_id.
+  # @param self The object pointer.
+  # @param task_id New value for self.task_id.
+  def set_task_id(self, task_id):
+    self.task_id = task_id
+  
+  ## Setter for self.model_id.
+  # @param self The object pointer.
+  # @param model_id New value for self.model_id.
+  def set_model_id(self, model_id):
+    self.model_id = model_id

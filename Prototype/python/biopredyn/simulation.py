@@ -10,6 +10,9 @@
 
 import libsbml
 import libsedml
+import libsbmlsim
+import algorithm, result
+from cobra.io.sbml import create_cobra_model_from_sbml_doc
 
 ## Base representation of the execution of an algorithm, independent from the
 ## model or data set it has to be run with.
@@ -27,7 +30,7 @@ class Simulation:
   # @param self The object pointer.
   # @param simulation A SED-ML simulation.
   def __init__(self, simulation):
-    self.algorithm = simulation.getAlgorithm().getKisaoID()
+    self.algorithm = algorithm.Algorithm(simulation.getAlgorithm())
     self.id = simulation.getId()
     self.name = simulation.getName()
     self.type = simulation.getElementName()
@@ -37,7 +40,7 @@ class Simulation:
   # @return A string representing this as a hierarchy.
   def __str__(self):
     tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
-    tree += "    |-algorithm " + self.algorithm + "\n"
+    tree += "    |-algorithm " + self.algorithm.get_kisao_id() + "\n"
     return tree
   
   ## Getter. Returns self.algorithm.
@@ -75,6 +78,63 @@ class Simulation:
   def get_type(self):
     return self.type
 
+## Simulation-derived class for one step simulations.
+class OneStep(Simulation):
+  ## @var step
+  # Value of the time step to be considered.
+
+  ## Overridden constructor.
+  # @param self The object pointer.
+  # @param simulation A SED-ML 'one step' element.
+  def __init__(self, simulation):
+    Simulation.__init__(self, simulation)
+    self.step = simulation.getStep()
+
+  ## Getter. Returns self.step.
+  # @param self The object pointer.
+  # @return self.step
+  def get_step(self):
+    return self.step
+
+  ## Run the simulation encoded in self on the input model using the input tool.
+  # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param tool Name of the tool to use as simulation engine (string).
+  def run(self, model, tool):
+    # TODO
+    return 0
+  
+  ## Setter for self.step.
+  # @param self The object pointer.
+  # @param step New value for self.step.
+  def set_step(self, step):
+    self.step = step
+
+## Simulation-derived class for steady state simulations.
+class SteadyState(Simulation):
+
+  ## Run the simulation encoded in self on the input model using the input tool.
+  # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param tool Name of the tool to use as simulation engine (string).
+  def run(self, model, tool):
+    # Case where the encoded simulation is a FBA - TODO other SteadyState cases
+    if self.algorithm.get_kisao_id() == "KISAO:0000437":
+      # Run a basic FBA with cobrapy
+      cobra_model = create_cobra_model_from_sbml_doc(model.get_sbml_doc())
+      # Optional model parameters are set - TODO KiSAO: suggest new parameters
+      obj = self.algorithm.get_parameter_by_name('objective_function')
+      sense = self.algorithm.get_parameter_by_name('objective_sense')
+      if obj is not None:
+        cobra_model.change_objective([obj.get_value()])
+      if sense is not None:
+        cobra_model.optimize(objective_sense=sense.get_value())
+      else:
+        cobra_model.optimize()
+    res = result.Result()
+    res.import_from_cobrapy_fba(cobra_model.solution)
+    return res
+
 ## Simulation-derived class for uniform time course simulations.
 class UniformTimeCourse(Simulation):
   ## @var initial_time
@@ -92,14 +152,11 @@ class UniformTimeCourse(Simulation):
   # @param self The object pointer.
   # @param simulation A SED-ML uniform time course element.
   def __init__(self, simulation):
-    self.algorithm = simulation.getAlgorithm().getKisaoID()
-    self.id = simulation.getId()
-    self.type = simulation.getElementName()
+    Simulation.__init__(self, simulation)
     self.initial_time = simulation.getInitialTime()
     self.number_of_points = simulation.getNumberOfPoints()
     self.output_end_time = simulation.getOutputEndTime()
     self.output_start_time = simulation.getOutputStartTime()
-    self.name = simulation.getName()
   
   ## Overridden string representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -110,7 +167,7 @@ class UniformTimeCourse(Simulation):
     tree += " numberOfPoints" + str(self.number_of_points)
     tree += " outputEndTime" + str(self.output_end_time)
     tree += " outputStartTime" + str(self.output_start_time) + "\n"
-    tree += "    |-algorithm " + self.algorithm + "\n"
+    tree += "    |-algorithm " + self.algorithm.get_kisao_id() + "\n"
     return tree
   
   ## Getter. Returns self.initial_time.
@@ -136,6 +193,33 @@ class UniformTimeCourse(Simulation):
   # @return self.output_start_time
   def get_output_start_time(self):
     return self.output_start_time
+
+  ## Run the simulation encoded in self on the input model using the input tool,
+  ## and returns its output as a biopredyn.result.Result object.
+  # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param tool Name of the tool to use as simulation engine (string).
+  # @return A biopredyn.result.Result object.
+  def run(self, model, tool):
+    steps = self.get_number_of_points()
+    start = self.get_output_start_time()
+    end = self.get_output_end_time()
+    # "step" is computed with respect to the output start / end times, as
+    # number_of_points is defined between these two points:
+    step = (end - start) / steps
+    # TODO: handle tool selection
+    # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
+    r = libsbmlsim.simulateSBMLFromString(
+        model.get_sbml_doc().toSBML(),
+        end,
+        step,
+        1,
+        0,
+        libsbmlsim.MTHD_RUNGE_KUTTA,
+        0)
+    res = result.Result()
+    res.import_from_libsbmlsim(r)
+    return res
   
   ## Setter. Assign a new value to self.initial_time.
   # @param self The object pointer.

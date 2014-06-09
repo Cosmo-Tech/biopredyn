@@ -56,6 +56,10 @@ class WorkFlow:
       s_name = s.getElementName()
       if s_name == "uniformTimeCourse":
         self.simulations.append(simulation.UniformTimeCourse(s))
+      elif s_name == "oneStep":
+        self.simulations.append(simulation.OneStep(s))
+      elif s_name == "steadyState":
+        self.simulations.append(simulation.SteadyState(s))
       else:
         self.simulations.append(simulation.Simulation(s))
     # Parsing self.sedml for task elements

@@ -55,10 +55,11 @@ class Algorithm:
   # @param id ID of the object to be returned in self.parameters.
   # @return An AlgorithmParameter object.
   def get_parameter_by_id(self, id):
+    res = None
     for p in self.parameters:
        if (p.get_id() == id):
-          return p
-    raise NameError('No AlgorithmParameter with ID ' + name + ' was found.')
+          res = p
+    return res
 
   ## Getter. Returns the first AlgorithmParameter object with the input name in
   ## self.parameters.
@@ -66,10 +67,11 @@ class Algorithm:
   # @param name Name of the object to be returned in self.parameters.
   # @return An AlgorithmParameter object.
   def get_parameter_by_name(self, name):
+    res = None
     for p in self.parameters:
        if (p.get_name() == name):
-          return p
-    raise NameError('No AlgorithmParameter named ' + name + ' was found.')
+          res = p
+    return res
 
   ## Getter. Returns self.parameters.
   # @param self The object pointer.
