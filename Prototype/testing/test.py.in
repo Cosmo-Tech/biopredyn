@@ -205,8 +205,8 @@ class SteadyStateTestCase(GenericTestCase):
     task = flow.get_task_by_id("task_1")
     task.run(True)
     self.assertEqual(
-      task.get_result(0).get_result()['growth_rate'],
-      0.32006432479451496)
+      task.get_result(0).get_result()['growth_rate'][0],
+      0.3800079722752917)
 
 if __name__ == '__main__':
     unittest.main()
