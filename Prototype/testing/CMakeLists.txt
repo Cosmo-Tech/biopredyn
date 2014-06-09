@@ -43,3 +43,6 @@ bpdAddTest(ChangeChangeXMLTest ChangeTestCase.test_change_xml)
 bpdAddTest(RepeatedTaskUniformRangeTest RepeatedTaskTestCase.test_uniform_range)
 bpdAddTest(RepeatedTaskVectorRangeTest RepeatedTaskTestCase.test_vector_range)
 bpdAddTest(RepeatedTaskFunctionalRangeTest RepeatedTaskTestCase.test_functional_range)
+
+# SteadyState related tests
+bpdAddTest(SteadyStateCobrapyFBA SteadyStateTestCase.test_fba_cobrapy)

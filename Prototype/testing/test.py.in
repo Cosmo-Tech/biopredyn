@@ -22,11 +22,7 @@ from biopredyn import model, workflow, result, resources
 class GenericTestCase(unittest.TestCase):
   
   def setUp(self):
-    user = "dashuser-biopredyn"
-    password = "Nie8eir2"
     self.manager = resources.ResourceManager()
-    self.manager.add_password(
-      "https://thecosmocompany.com/svn/repos/SVN/BioPreDyn", user, password)
 
 ## GenericTestCase derived class for SBML related tests.
 class SBMLTestCase(GenericTestCase):
@@ -198,6 +194,19 @@ class RepeatedTaskTestCase(GenericTestCase):
       self.manager)
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
+
+## GenericTestCase derived class for SteadyState simulation related tests
+class SteadyStateTestCase(GenericTestCase):
+
+  def test_fba_cobrapy(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_fba_cobrapy.xml',
+      self.manager)
+    task = flow.get_task_by_id("task_1")
+    task.run(True)
+    self.assertEqual(
+      task.get_result(0).get_result()['growth_rate'],
+      0.32006432479451496)
 
 if __name__ == '__main__':
     unittest.main()
