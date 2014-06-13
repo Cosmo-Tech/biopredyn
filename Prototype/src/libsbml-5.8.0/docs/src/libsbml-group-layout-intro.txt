@@ -1,5 +1,0 @@
-/** @defgroup Layout Layout
-
-@htmlinclude libsbml-group-layout-intro.html
-
-*/
