@@ -4,3 +4,6 @@
 [submodule "Prototype/python/cobrapy"]
 	path = Prototype/python/cobrapy
 	url = https://github.com/bmoreau/cobrapy.git
+[submodule "Prototype/src/copasi"]
+	path = Prototype/src/copasi
+	url = https://github.com/bmoreau/COPASI.git
