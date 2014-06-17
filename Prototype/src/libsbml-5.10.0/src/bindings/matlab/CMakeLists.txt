@@ -99,8 +99,8 @@ COMMENT "compile and link bindings using buildSBML"
 add_custom_target(binding_matlab_mexfiles ALL 
        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/TranslateSBML.${MATLAB_MEX_EXT} 
                ${CMAKE_CURRENT_BINARY_DIR}/OutputSBML.${MATLAB_MEX_EXT} 
-               ${LIBSBML_LIBRARY})
-add_dependencies(binding_matlab_mexfiles ${LIBSBML_LIBRARY})
+               ${LIBSBML_PREFIX})
+add_dependencies(binding_matlab_mexfiles ${LIBSBML_PREFIX})
 
 install(
     FILES 
@@ -119,7 +119,7 @@ endif()
 
 
 # get location of library
-get_property(sbml_location TARGET ${LIBSBML_LIBRARY} PROPERTY LOCATION)
+get_property(sbml_location TARGET ${LIBSBML_PREFIX} PROPERTY LOCATION)
 get_filename_component(sbml_path "${sbml_location}" PATH)
 file(TO_NATIVE_PATH ${sbml_path} sbml_path)
 
@@ -150,14 +150,14 @@ set(MATLAB_LIBSBML_LIB)
 set(MATLAB_OBJ_FILE)
 set(MATLAB_MEX_EXTRA_ARGS)
 if(UNIX)
-	set(MATLAB_LIBSBML_LIB -l${LIBSBML_LIBRARY} -L${sbml_path})
+	set(MATLAB_LIBSBML_LIB -l${LIBSBML_PREFIX} -L${sbml_path})
 	set(MATLAB_MEX_EXTRA_ARGS -cxx)
 else()
 	if(MSVC)
-		set(MATLAB_LIBSBML_LIB -l${LIBSBML_LIBRARY}-static -L${sbml_path})
+		set(MATLAB_LIBSBML_LIB -l${LIBSBML_PREFIX}-static -L${sbml_path})
 		set(MATLAB_MEX_EXTRA_ARGS -DWIN32 -DLIBSBML_EXPORTS -DLIBLAX_EXPORTS )
 	else()
-		set(MATLAB_LIBSBML_LIB -l${LIBSBML_LIBRARY} -L${sbml_path})	
+		set(MATLAB_LIBSBML_LIB -l${LIBSBML_PREFIX} -L${sbml_path})	
 	endif()
 endif()
 
@@ -172,7 +172,7 @@ macro(build_matlab_file fileName)
 		file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../" include_path1)
 		file(TO_NATIVE_PATH "${LIBSBML_ROOT_SOURCE_DIR}/include" include_path2)
 
-		get_property(sbml_import TARGET ${LIBSBML_LIBRARY} PROPERTY LOCATION)
+		get_property(sbml_import TARGET ${LIBSBML_PREFIX} PROPERTY LOCATION)
 		string(REPLACE ".dll" ".lib" sbml_import ${sbml_import})
 		file(TO_NATIVE_PATH "${sbml_import}" sbml_import)
 		
@@ -231,8 +231,8 @@ macro(build_matlab_file fileName)
 	
 	endif()
 		
-	add_custom_target(binding_matlab_${fileName} ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${fileName}.${MATLAB_MEX_EXT} ${LIBSBML_LIBRARY})
-	add_dependencies(binding_matlab_${fileName} ${LIBSBML_LIBRARY})
+	add_custom_target(binding_matlab_${fileName} ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${fileName}.${MATLAB_MEX_EXT} ${LIBSBML_PREFIX})
+	add_dependencies(binding_matlab_${fileName} ${LIBSBML_PREFIX})
 
 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${fileName}.${MATLAB_MEX_EXT} DESTINATION ${MATLAB_PACKAGE_INSTALL_DIR} )
 	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../matlab/${fileName}.m DESTINATION ${MATLAB_PACKAGE_INSTALL_DIR} )
@@ -282,7 +282,7 @@ else()
 		if (MSVC)
 		set_target_properties(matlab_binding_${matlab_source_file} PROPERTIES LINK_FLAGS "/export:mexFunction") 
 		endif()
-		target_link_libraries(matlab_binding_${matlab_source_file} ${MATLAB_LIBRARIES} ${LIBSBML_LIBRARY}-static)				
+		target_link_libraries(matlab_binding_${matlab_source_file} ${MATLAB_LIBRARIES} ${LIBSBML_PREFIX}-static)				
 		install(TARGETS matlab_binding_${matlab_source_file} DESTINATION ${MATLAB_PACKAGE_INSTALL_DIR} )
 
 	endforeach()

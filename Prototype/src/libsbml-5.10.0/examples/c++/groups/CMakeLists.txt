@@ -22,7 +22,7 @@ foreach(example
 )
 	add_executable(example_groups_cpp_${example} ${example}.cpp ../util.c)
 	set_target_properties(example_groups_cpp_${example} PROPERTIES  OUTPUT_NAME ${example})
-	target_link_libraries(example_groups_cpp_${example} ${LIBSBML_LIBRARY}-static)
+	target_link_libraries(example_groups_cpp_${example} ${LIBSBML_PREFIX}-static)
 	
 	if (WITH_LIBXML)
 		target_link_libraries(example_groups_cpp_${example} ${LIBXML_LIBRARY} ${EXTRA_LIBS})

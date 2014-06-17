@@ -658,15 +658,15 @@ if(UNIX OR CYGWIN)
     set(PATH_SEP "/")
     set(FILE_SEP ":")
     set( MISC_PREFIX "share/libsbml/" )
-    set(LIBSBML_LIBRARY sbml CACHE STRING "")
+    set(LIBSBML_PREFIX sbml CACHE STRING "")
 else()
     set( MISC_PREFIX "" )
     set(PATH_SEP "\\")
     set(FILE_SEP ";")
     if(MINGW)
-        set(LIBSBML_LIBRARY sbml CACHE STRING "")
+        set(LIBSBML_PREFIX sbml CACHE STRING "")
     else()
-        set(LIBSBML_LIBRARY libsbml CACHE STRING "")
+        set(LIBSBML_PREFIX libsbml CACHE STRING "")
     endif()
 endif()
 
@@ -1082,7 +1082,7 @@ message(STATUS "
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #
 #add_executable(libsbml_test test.cpp)
-#target_link_libraries(libsbml_test ${LIBSBML_LIBRARY}-static)
+#target_link_libraries(libsbml_test ${LIBSBML_PREFIX}-static)
 #
 #endif()
 #

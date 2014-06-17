@@ -50,7 +50,7 @@ endif(EXTRA_INCLUDE_DIRS)
 
 include_directories(${LIBCHECK_INCLUDE_DIR})
 add_executable(test_arrays_math ${TEST_FILES})
-target_link_libraries(test_arrays_math ${LIBSBML_LIBRARY}-static ${LIBCHECK_LIBRARY})
+target_link_libraries(test_arrays_math ${LIBSBML_PREFIX}-static ${LIBCHECK_LIBRARY})
 add_test(test_arrays_math_run ${CMAKE_CURRENT_BINARY_DIR}/test_arrays_math )
 set_tests_properties(test_arrays_math_run PROPERTIES ENVIRONMENT 
 	"srcdir=${CMAKE_CURRENT_SOURCE_DIR}")

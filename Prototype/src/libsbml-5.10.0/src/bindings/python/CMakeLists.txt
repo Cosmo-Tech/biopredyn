@@ -211,7 +211,7 @@ else()
 	endif()
 endif()
 
-target_link_libraries(sbml_binding_python_lib ${LIBSBML_LIBRARY}-static ${PYTHON_LIBRARIES})
+target_link_libraries(sbml_binding_python_lib ${LIBSBML_PREFIX}-static ${PYTHON_LIBRARIES})
 
 INSTALL(TARGETS sbml_binding_python_lib DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libsbml )
 

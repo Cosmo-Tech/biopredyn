@@ -173,7 +173,7 @@ if (UNIX)
 		set_target_properties (binding_ruby_lib PROPERTIES SUFFIX ".bundle")
 	endif()
 endif()
-target_link_libraries(binding_ruby_lib ${LIBSBML_LIBRARY}-static ${RUBY_LIBRARY})
+target_link_libraries(binding_ruby_lib ${LIBSBML_PREFIX}-static ${RUBY_LIBRARY})
 INSTALL(TARGETS binding_ruby_lib DESTINATION ${RUBY_PACKAGE_INSTALL_DIR} )
 
 ####################################################################

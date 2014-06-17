@@ -260,9 +260,9 @@ if (UNIX)
 	endif()
 endif()
 if (R_ADDITIONAL_PATH_ENTRIES)
-target_link_libraries(binding_r_lib ${LIBSBML_LIBRARY}-static ${R_LIB} ${R_ADDITIONAL_PATH_ENTRIES})
+target_link_libraries(binding_r_lib ${LIBSBML_PREFIX}-static ${R_LIB} ${R_ADDITIONAL_PATH_ENTRIES})
 else()
-target_link_libraries(binding_r_lib ${LIBSBML_LIBRARY}-static ${R_LIB})
+target_link_libraries(binding_r_lib ${LIBSBML_PREFIX}-static ${R_LIB})
 endif()
 
 ####################################################################

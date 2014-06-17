@@ -39,7 +39,7 @@ include_directories(BEFORE ${LIBSBML_ROOT_BINARY_DIR}/src)
 
 
 add_executable(test_sbml_package_fbc ${TEST_FILES})
-target_link_libraries(test_sbml_package_fbc ${LIBSBML_LIBRARY}-static ${LIBCHECK_LIBRARY})
+target_link_libraries(test_sbml_package_fbc ${LIBSBML_PREFIX}-static ${LIBCHECK_LIBRARY})
 add_test(test_sbml_package_fbc_run ${CMAKE_CURRENT_BINARY_DIR}/test_sbml_package_fbc )
 set_tests_properties(test_sbml_package_fbc_run PROPERTIES ENVIRONMENT 
 	"srcdir=${CMAKE_CURRENT_SOURCE_DIR}")

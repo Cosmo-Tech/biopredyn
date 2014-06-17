@@ -45,6 +45,6 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/TestUtil.c "// test")
 
 endif()
 
-target_link_libraries(test_sbml_util ${LIBSBML_LIBRARY}-static ${LIBCHECK_LIBRARY})
+target_link_libraries(test_sbml_util ${LIBSBML_PREFIX}-static ${LIBCHECK_LIBRARY})
 add_test(test_sbml_util_run ${CMAKE_CURRENT_BINARY_DIR}/test_sbml_util )
 

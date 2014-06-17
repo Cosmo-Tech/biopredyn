@@ -42,7 +42,7 @@ endif()
 
 
 # get location of library
-get_property(sbml_location TARGET ${LIBSBML_LIBRARY} PROPERTY LOCATION)
+get_property(sbml_location TARGET ${LIBSBML_PREFIX} PROPERTY LOCATION)
 get_filename_component(sbml_path ${sbml_location} PATH)
 file(TO_CMAKE_PATH ${sbml_path} sbml_path)
 
@@ -88,7 +88,7 @@ macro(build_octave_file fileName)
 			-I${CMAKE_CURRENT_SOURCE_DIR}/../../
 			-I${LIBSBML_ROOT_SOURCE_DIR}/include
 			${CMAKE_CURRENT_SOURCE_DIR}/../matlab/${fileName}.c
-			-l${LIBSBML_LIBRARY}
+			-l${LIBSBML_PREFIX}
 			${OCTAVE_EXTRA_LIBS}
 			${OCTAVE_EXTRA_PATHS}
 			-L${sbml_path}
@@ -96,8 +96,8 @@ macro(build_octave_file fileName)
 		MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/../matlab/${fileName}.c
 		COMMENT "compile and link octave mex file: ${fileName}") 
 	
-	add_custom_target(binding_octave_${fileName} ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${fileName}.mex ${LIBSBML_LIBRARY})
-	add_dependencies(binding_octave_${fileName} ${LIBSBML_LIBRARY})
+	add_custom_target(binding_octave_${fileName} ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${fileName}.mex ${LIBSBML_PREFIX})
+	add_dependencies(binding_octave_${fileName} ${LIBSBML_PREFIX})
 	
 	# mark files
 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${fileName}.mex DESTINATION ${OCTAVE_PACKAGE_INSTALL_DIR} )

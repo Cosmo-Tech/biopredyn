@@ -211,7 +211,7 @@ else()
 	endif()
 endif()
 
-target_link_libraries(binding_python_lib ${LIBSBML_LIBRARY}-static ${PYTHON_LIBRARIES})
+target_link_libraries(binding_python_lib ${LIBSBML_PREFIX}-static ${PYTHON_LIBRARIES})
 
 # 
 # Determine the python installation directory

@@ -204,7 +204,7 @@ set_target_properties (binding_csharp_native_lib PROPERTIES OUTPUT_NAME "${UNIX_
 else()
 set_target_properties (binding_csharp_native_lib PROPERTIES OUTPUT_NAME ${LIBSBML_CSHARP_BINDING_NATIVE_LIBRARY_NAME})
 endif()
-target_link_libraries(binding_csharp_native_lib ${LIBSBML_LIBRARY}-static)
+target_link_libraries(binding_csharp_native_lib ${LIBSBML_PREFIX}-static)
 INSTALL(TARGETS binding_csharp_native_lib
         DESTINATION ${CSHAPR_PACKAGE_INSTALL_DIR}
   )
@@ -333,7 +333,7 @@ else()
 	add_library(binding_csharp_native_dll_link_check SHARED ${CMAKE_CURRENT_BINARY_DIR}/libsbml_wrap.cpp)
 	add_dependencies(binding_csharp_native_dll_link_check binding_csharp_swig)
 	set_target_properties (binding_csharp_native_dll_link_check PROPERTIES OUTPUT_NAME "DllLinkCheck")
-	target_link_libraries(binding_csharp_native_dll_link_check ${LIBSBML_LIBRARY})
+	target_link_libraries(binding_csharp_native_dll_link_check ${LIBSBML_PREFIX})
 
 	
 	

@@ -43,7 +43,7 @@ file(GLOB H_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.h )
 set (TEST_LIB)
 if (EXISTS "${LIBSBML_ROOT_SOURCE_DIR}/VERSION.txt")
   # integrated
-  set (TEST_LIB ${LIBSBML_LIBRARY}-static)
+  set (TEST_LIB ${LIBSBML_PREFIX}-static)
 else()
   # individual test build
   set (TEST_LIB layout)
