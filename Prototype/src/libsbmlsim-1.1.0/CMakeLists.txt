@@ -33,22 +33,8 @@ endif(NOT WIN32)
 #  LIBSBML_INCLUDE_DIRS - The libSBML include directories
 #  LIBSBML_LIBRARIES - The libraries needed to use libSBML
 #  LIBSBML_DEFINITIONS - Compiler switches required for using libSBML
-
-find_package(PkgConfig)
-pkg_check_modules(PC_LIBSBML QUIET libsbml)
-set(LIBSBML_DEFINITIONS ${PC_LIBSBML_CFLAGS_OTHER})
-
-find_path(LIBSBML_INCLUDE_DIR
-  NAMES sbml/SBMLTypes.h
-  PATHS /usr/include /usr/local/include /opt/local/include
-        ${CMAKE_SOURCE_DIR}/depend/include
-  HINTS ${PC_LIBSBML_INCLUDEDIR} ${PC_LIBSBML_INCLUDE_DIRS} )
-
-find_library(LIBSBML_LIBRARY
-  NAMES libsbml.lib sbml
-  PATHS /usr/lib /usr/local/lib /opt/local/lib
-        ${CMAKE_SOURCE_DIR}/depend/lib
-  HINTS ${PC_LIBSBML_LIBDIR} ${PC_LIBSBML_LIBRARY_DIRS} )
+# BioPreDyn patch - Removed search for LIBSBML_LIBRARY and LIBSBML_INCLUDE_DIR
+# and LIBSBML_DEFINITIONS determination
 
 find_library(LIBBZIP2_LIBRARY
   NAMES bzip2.lib bz2 libbz2.lib
