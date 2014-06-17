@@ -119,7 +119,7 @@ else()
 endif()
 
 # BioPreDyn patch - linking libNuMLwrappers with libSBML wrappers
-target_link_libraries(numl_binding_python_lib sbml_binding_python_lib ${LIBNUML_LIBRARY}-static ${PYTHON_LIBRARIES})
+target_link_libraries(numl_binding_python_lib sbml_binding_python_lib ${LIBNUML_PREFIX}-static ${PYTHON_LIBRARIES})
 
 # BioPreDyn patch - removed PYTHON_PACKAGE_INSTALL_DIR determination
 INSTALL(TARGETS numl_binding_python_lib DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libnuml )

@@ -23,7 +23,7 @@ foreach(example
 	if (WIN32 AND NOT CYGWIN)
 	set_target_properties(example_cpp_${example} PROPERTIES COMPILE_DEFINITIONS "LIBNUML_STATIC=1")
 	endif()
-	target_link_libraries(example_cpp_${example} ${LIBNUML_LIBRARY}-static)
+	target_link_libraries(example_cpp_${example} ${LIBNUML_PREFIX}-static)
 	
 	if (WITH_LIBXML)
 		target_link_libraries(example_cpp_${example} ${LIBXML_LIBRARY} ${EXTRA_LIBS})

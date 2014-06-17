@@ -223,26 +223,7 @@ if(WITH_SWIG)
     set(SWIG_EXTRA_ARGS)
 endif(WITH_SWIG)
 
-###############################################################################
-#
-# Locate libsbml
-#
-find_library(LIBSBML_LIBRARY
-    NAMES libsbml-static.lib sbml-static libsbml.lib sbml
-    PATHS /usr/lib /usr/local/lib
-          ${LIBNUML_DEPENDENCY_DIR}/lib
-    DOC "The file name of the sbml library."
-)
-
-find_path(LIBSBML_INCLUDE_DIR
-    NAMES sbml/SBase.h
-    PATHS /usr/include /usr/local/include
-          /usr/include/libxml2
-          /usr/local/include/libxml2
-          ${LIBNUML_DEPENDENCY_DIR}/include
-    DOC "The directory containing the sbml include files."
-)
-
+# BioPreDyn patch - Removed search for LIBSBML_LIBRARY and LIBSBML_INCLUDE_DIR
 set(LIBSBML_STATIC OFF CACHE BOOL "is libsbml statically compiled")
 if (WIN32 AND NOT CYGWIN)
 if (LIBSBML_LIBRARY AND LIBSBML_LIBRARY MATCHES ".*-static*$")
@@ -391,15 +372,15 @@ if(UNIX OR CYGWIN)
     set(PATH_SEP "/")
     set(FILE_SEP ":")
     set( MISC_PREFIX "share/libnuml/" )
-    set(LIBNUML_LIBRARY numl)
+    set(LIBNUML_PREFIX numl)
 else()
     set( MISC_PREFIX "" )
     set(PATH_SEP "\\")
     set(FILE_SEP ";")
     if(MINGW)
-        set(LIBNUML_LIBRARY numl)
+        set(LIBNUML_PREFIX numl)
     else()
-        set(LIBNUML_LIBRARY libnuml)
+        set(LIBNUML_PREFIX libnuml)
     endif()
 endif()
 
