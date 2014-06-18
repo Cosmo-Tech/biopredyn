@@ -15,6 +15,7 @@ bpdAddTest(SBMLBioModelsImportTest SBMLTestCase.test_biomodels_import)
 bpdAddTest(SBMLWriteModelTest SBMLTestCase.test_write_model)
 
 # SEDML related tests
+bpdAddTest(SEDMLCopasiTimeCourseTest SEDMLTestCase.test_copasi_time_course)
 bpdAddTest(SEDMLLibSBMLSimTimeCourseTest SEDMLTestCase.test_libsbmlsim_time_course)
 
 # Output related tests

@@ -16,6 +16,8 @@ class AbstractTask:
   # A unique identifier associated with the object.
   ## @var name
   # Name of this object.
+  ## @var tool
+  # Name of the tool to be used when calling the run function.
 
   ## Constructor.
   # @param self The object pointer.
@@ -58,7 +60,7 @@ class AbstractTask:
   # @param self The object pointer.
   # @param tool New value for self.tool.
   def set_tool(self, tool):
-    print "Task::set_tool - TODO"
+    self.tool = tool
 
 ## AbstractTask-derived class for atomic executable tasks in SED-ML work flows.
 class Task(AbstractTask):

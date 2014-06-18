@@ -49,6 +49,14 @@ class SBMLTestCase(GenericTestCase):
 
 ## GenericTestCase derived class for SED-ML related tests.
 class SEDMLTestCase(GenericTestCase):
+
+  def test_copasi_time_course(self):
+    flow = workflow.WorkFlow(
+      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
+    flow.get_task_by_id('task_1').set_tool('copasi')
+    flow.run_tasks()
+    self.assertEqual(
+      len(flow.get_task_by_id('task_1').get_result(0).get_time_steps()), 201)
   
   def test_libsbmlsim_time_course(self):
     flow = workflow.WorkFlow(

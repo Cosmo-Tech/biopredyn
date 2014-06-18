@@ -85,10 +85,17 @@ class Result:
     self.result["growth_rate"] = [solution.f]
     for p in solution.x_dict.iteritems():
       self.result[p[0]] = [p[1]]
+
+  ## Import numerical values from a COPASI.CTimeSeries object.
+  # @param self The object pointer.
+  # @param time_series A COPASI.CTimeSeries object.
+  def import_from_copasi_time_series(self, time_series):
+    for i in range(time_series.getNumVariables()):
+      self.result[time_series.getTitles()[i]] = time_series.getDataForIndex(i)
   
   ## Import numerical values from a CSV file and store them in self.result. The
   ## way data is stored in the file (row or column wise) is specified by the
-  ## 'alignement' argument.
+  ## 'alignment' argument.
   # @param self The object pointer.
   # @param address Address of a CSV file (either .csv or .txt).
   # @param manager A ResourceManager instance.

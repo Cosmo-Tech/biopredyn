@@ -13,6 +13,7 @@ import libsedml
 import libsbmlsim
 import algorithm, result
 from cobra.io.sbml import create_cobra_model_from_sbml_doc
+from COPASI import CCopasiDataModel, CCopasiTask, CTrajectoryTask, CCopasiMethod
 
 ## Base representation of the execution of an algorithm, independent from the
 ## model or data set it has to be run with.
@@ -201,14 +202,51 @@ class UniformTimeCourse(Simulation):
   # @param tool Name of the tool to use as simulation engine (string).
   # @return A biopredyn.result.Result object.
   def run(self, model, tool):
+    res = result.Result()
+    # Tool selection - by default libsbmlsim is chosen
+    if tool is None or tool == 'libsbmlsim':
+      self.run_as_libsbmlsim_time_course(model, res)
+    elif tool == 'copasi':
+      self.run_as_copasi_time_course(model, res)
+    else:
+      raise NameError("Invalid tool name; available names are 'copasi' and 'libsbmlsim'.")
+    return res
+
+  ## Run this as a COPASI time course and import its result.
+  # @param self The object pointer.
+  def run_as_copasi_time_course(self, model, result):
+    steps = self.get_number_of_points()
+    start = self.get_initial_time()
+    o_start = self.get_output_start_time()
+    end = self.get_output_end_time()
+    step = (end - o_start) / steps
+    duration = end - start
+    # Importing model to COPASI
+    data_model = CCopasiDataModel()
+    data_model.importSBMLFromString(model.get_sbml_doc().toSBML())
+    task = data_model.addTask(CTrajectoryTask.timeCourse)
+    pbm = task.getProblem()
+    # Set the parameters
+    pbm.setOutputStartTime(o_start)
+    pbm.setStepSize(step)
+    pbm.setDuration(duration)
+    pbm.setTimeSeriesRequested(True)
+    # TODO: acquire KiSAO description of the algorithm
+    task.setMethodType(CCopasiMethod.deterministic)
+    # Execution - initial values are used
+    task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
+    # Time series extraction
+    result.import_from_copasi_time_series(task.getTimeSeries())
+    return result
+
+  ## Run this as a libSBMLSim time course and import its result.
+  # @param self The object pointer.
+  def run_as_libsbmlsim_time_course(self, model, result):
     steps = self.get_number_of_points()
     start = self.get_output_start_time()
     end = self.get_output_end_time()
-    # "step" is computed with respect to the output start / end times, as
-    # number_of_points is defined between these two points:
     step = (end - start) / steps
-    # TODO: handle tool selection
-    # TODO: acquire KiSAO description of the algorithm - libKiSAO dependent
+    # TODO: acquire KiSAO description of the algorithm
     r = libsbmlsim.simulateSBMLFromString(
         model.get_sbml_doc().toSBML(),
         end,
@@ -217,9 +255,8 @@ class UniformTimeCourse(Simulation):
         0,
         libsbmlsim.MTHD_RUNGE_KUTTA,
         0)
-    res = result.Result()
-    res.import_from_libsbmlsim(r)
-    return res
+    result.import_from_libsbmlsim(r)
+    return result
   
   ## Setter. Assign a new value to self.initial_time.
   # @param self The object pointer.
