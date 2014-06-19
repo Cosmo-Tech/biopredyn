@@ -38,7 +38,7 @@
       <listitem>
         <para>Run the experiment:</para>
         <programlisting>
-python main.py --sedml workflow.xml
+python biopredyn.py --sedml workflow.xml
         </programlisting>
       </listitem>
     </itemizedlist>
@@ -99,7 +99,7 @@ python main.py --sedml workflow.xml
       <listitem>
         <para>Run the experiment:</para>
         <programlisting>
-python main.py --sedml workflow.xml
+python biopredyn.py --sedml workflow.xml
         </programlisting>
       </listitem>
     </itemizedlist>
@@ -132,7 +132,7 @@ python main.py --sedml workflow.xml
       <listitem>
         <para>Run the experiment:</para>
         <programlisting>
-python main.py --sedml workflow.xml
+python biopredyn.py --sedml workflow.xml
         </programlisting>
       </listitem>
     </itemizedlist>

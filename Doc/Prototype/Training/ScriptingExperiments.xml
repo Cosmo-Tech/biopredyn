@@ -11,7 +11,7 @@
 <section id="TrainingScriptingExperiments">
   <title>Scripting experiments</title>
   <para>All the tutorials described in the above chapters use the default
-  <literal>main.py</literal> module when running an experiment. However, once
+  <literal>biopredyn.py</literal> module when running an experiment. However, once
   installed, the <literal>BioPreDyn</literal> software suite can be used as any
   Python library in order to develop <literal>SED-ML</literal> file manipulation
   scripts.</para>

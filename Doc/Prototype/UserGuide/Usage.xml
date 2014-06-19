@@ -17,11 +17,11 @@ type the following commands:</para>
   <programlisting>
   cd build/install/bin
   </programlisting>
-  <para>This folder contains a main.py file which can be used to run the
+  <para>This folder contains a biopredyn.py file which can be used to run the
 prototype. To do so, one can use the following syntax:
   </para>
   <programlisting>
-python main.py [options]
+python biopredyn.py [options]
   </programlisting>
   <para>Depending on the option(s) chosen by the user, various operations can be
 done. Valid options are listed below:</para>

@@ -124,10 +124,10 @@
       </listitem>
       <listitem>
         <para>Run the experiment:</para>
-        <programlisting>python main.py --sedml workflow.xml</programlisting>
+        <programlisting>python biopredyn.py --sedml workflow.xml</programlisting>
       </listitem>
     </itemizedlist>
-    <para>When calling the <literal>main.py</literal> script with the
+    <para>When calling the <literal>biopredyn.py</literal> script with the
     <literal>--sedml</literal> flag, the experiment is executed as follows:
     </para>
     <itemizedlist>
@@ -175,14 +175,14 @@
     will be written. The command for writing an output file is slighty
     different, since an address for the output file is required:</para>
     <programlisting>
-python main.py --sedml workflow.xml -o output.csv
+python biopredyn.py --sedml workflow.xml -o output.csv
     </programlisting>
     <para>
     The format of the exported data depends on the extension of the output file;
     in this case, data will be exported in a CSV file. For exporting it as a
     <literal>NuML</literal> file, the command would be:</para>
     <programlisting>
-python main.py --sedml workflow.xml -o output.xml
+python biopredyn.py --sedml workflow.xml -o output.xml
     </programlisting>
   </section>
   <section id="TrainingProcessingData">
@@ -231,7 +231,7 @@ python main.py --sedml workflow.xml -o output.xml
       <listitem>
         <para>Run the experiment:</para>
         <programlisting>
-python main.py --sedml workflow.xml
+python biopredyn.py --sedml workflow.xml
         </programlisting>
       </listitem>
     </itemizedlist>
