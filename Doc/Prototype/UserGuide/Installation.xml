@@ -76,6 +76,36 @@
         </programlisting>
       </section>
       <section>
+        <title>CLAPACK</title>
+        <para>
+Download the latest <literal>CMake</literal> packaged version
+(<literal>clapack-X.Y.Z-CMAKE.tgz</literal>) from the
+<ulink url="http://www.netlib.org/clapack">project home page</ulink>, then
+extract it. Navigate to the freshly created <literal>clapack</literal> folder,
+and install the package:
+        </para>
+        <programlisting>
+  cd clapack
+  mkdir build
+  cd build
+  cmake ..
+  make
+  make install
+        </programlisting>
+      </section>
+      <section>
+        <title>Expat</title>
+        <programlisting>
+  sudo apt-get install libexpat1 libexpat1-dev
+        </programlisting>
+      </section>
+      <section>
+        <title>Raptor</title>
+        <programlisting>
+  sudo apt-get install libraptor1
+        </programlisting>
+      </section>
+      <section>
         <title>Graphviz</title>
         <programlisting>
   sudo apt-get install graphviz graphviz-dev
