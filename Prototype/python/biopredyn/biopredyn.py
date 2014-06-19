@@ -16,7 +16,7 @@ import libsedml
 import libnuml
 from biopredyn import model, workflow, result, resources
 
-COMMAND_SYNTAX_MESSAGE = 'python main.py [options]'
+COMMAND_SYNTAX_MESSAGE = 'python biopredyn.py [options]'
 
 HELP_MESSAGE = "This program is a prototype for the BioPreDyn software suite developed within the scope of the BioPreDyn FP7 project; it applies an analysis pattern encoded as a SEDML file to a SBML model defining a biological system."
 
@@ -81,7 +81,7 @@ try:
       'help', 'sbml=', 'sedml=', 'numl=', 'output=', 'csv='])
 except getopt.error, msg:
   print( COMMAND_SYNTAX_MESSAGE )
-  print( "Type main.py --help for more information" )
+  print( "Type biopredyn.py --help for more information" )
   print( msg )
   sys.exit(2)
 
@@ -95,11 +95,7 @@ for o, a in opts:
     output = a
 
 # Installing resource manager
-user = "dashuser-biopredyn"
-password = "Nie8eir2"
 manager = resources.ResourceManager()
-manager.add_password("https://thecosmocompany.com/svn/repos/SVN/BioPreDyn",
-                     user, password)
 
 for o, a in opts:
   if o == "--sbml":

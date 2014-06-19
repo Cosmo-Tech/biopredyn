@@ -26,6 +26,6 @@ install(
   )
 
 install(
-  FILES ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn/main.py
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn/biopredyn.py
   DESTINATION ${CMAKE_BINARY_DIR}/install/bin
   )
