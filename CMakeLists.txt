@@ -3,13 +3,20 @@ project(BioPreDyn NONE)
 
 enable_testing()
 
+
 include(CTest)
+
 include(FindPythonInterp)
+
 include(FindPythonLibs)
 
+
 set(
+
   CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+
   "${CMAKE_CURRENT_SOURCE_DIR}/Prototype/CMake/"
+
   )
 
 set(
@@ -17,14 +24,20 @@ set(
   CACHE PATH "BioPreDyn install prefix" FORCE
   )
 
+
 # Determining Python user installation directory
 execute_process(
   COMMAND "${PYTHON_EXECUTABLE}" -c "import sys;import site;sys.stdout.write(site.USER_SITE)"
   OUTPUT_VARIABLE PYTHON_USER_SITE)
+
 set(PYTHON_PACKAGE_INSTALL_DIR)
+
 set(
+
   PYTHON_PACKAGE_INSTALL_DIR "${PYTHON_USER_SITE}"
+
   CACHE PATH "Python libraries local install path" FORCE
+
   )
 
 set(
@@ -34,16 +47,29 @@ set(
 
 if(NOT WIN32)
   option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" ON)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
 else()
   option(BPD_GENERATE_DOXYGEN "Build the Doxygen documentation" OFF)
 endif()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
 
 option(WITH_PYTHON "Build Python wrappers for compiled libraries" ON)
 
-if (PYTHONINTERP_FOUND AND PYTHON_LIBRARIES)
+
+
+IF(NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
+
+  SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
+
+ENDIF()
+
+
+
+IF(PYTHONINTERP_FOUND AND PYTHON_LIBRARIES)
   # Prototype software for testing (D7.2)
   add_subdirectory(Prototype)
-endif()
+ENDIF()
