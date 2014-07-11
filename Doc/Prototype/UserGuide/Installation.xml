@@ -11,7 +11,7 @@
 <section>
   <title>Installation</title>
   <section>
-    <title>Debian / Ubuntu</title>
+    <title>Ubuntu</title>
     <section>
       <title>Dependencies</title>
       <section>
@@ -139,7 +139,48 @@ the freshly checked-out biopredyn folder and type:
     </section>
   </section>
   <section>
-    <title>Windows 32 (XP, 7)</title>
+    <title>Windows 7</title>
+    <section>
+      <title>Changing the path environment variable</title>
+      <para>
+Several <literal>Windows</literal> dependencies require the path environment
+variable to be changed. To do so, open the
+<emphasis role="bold">Control panel</emphasis>, then click on
+<emphasis role='bold'>System</emphasis>; in the system panel window, click on
+<emphasis role='bold'>Advanced system settings</emphasis> (see below).
+      </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata width="70%" contentdepth="100%" align="center"
+          scalefit="1" fileref="Sketches/system_panel.png" format="PNG"/>
+        </imageobject>
+      </mediaobject>
+      <para>
+In the system properties window, click on
+<emphasis role='bold'>Environment Variables...</emphasis>; another window pops
+up. Select <emphasis role='bold'>Path</emphasis> in the list of system
+variables, and click <emphasis role='bold'>Edit...</emphasis> 
+      </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata width="70%" contentdepth="100%" align="center"
+          scalefit="1" fileref="Sketches/environment_variables.png"
+          format="PNG"/>
+        </imageobject>
+      </mediaobject>
+      <para>
+Append the absolute path to the folder of interest at the end of the
+<emphasis role='bold'>Variable value</emphasis> string, semicolon separated.
+Be careful not to accidentally modify the rest of the variable value.
+      </para>
+      <mediaobject>
+        <imageobject>
+          <imagedata width="70%" contentdepth="100%" align="center"
+          scalefit="1" fileref="Sketches/edit_system_variable.png"
+          format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </section>
     <section>
       <title>CMake</title>
       <para>Download the latest stable version from the
@@ -148,15 +189,15 @@ page</ulink> then run the installer and follow the instructions.
       </para>
     </section>
     <section>
-      <title>Microsoft Visual Studio 2010</title>
-      <para>Download Visual C++ 2010 Express from the
-<ulink url="http://www.visualstudio.com/en-us/downloads/download-visual-studio-vs#DownloadFamilies_4">
+      <title>Microsoft Visual Studio 2008</title>
+      <para>Download Visual C++ 2008 Express from the
+<ulink url="http://www.microsoft.com/en-us/download/details.aspx?id=10986">
 Visual Studio download page</ulink> then run the executable and follow the
-instructions. 
+instructions.
       </para>
     </section>
     <section>
-      <title>Subversion</title>
+      <title>Git</title>
       <para>Download the latest Windows installer from the
 <ulink url="http://git-scm.com/downloads">Git project download page</ulink>,
 run the installer and follow the instructions.
@@ -166,117 +207,81 @@ run the installer and follow the instructions.
       <title>SWIG</title>
       <para>The latest version of swigwin can be downloaded from the
       <ulink url="http://www.swig.org/download.html">SWIG download page</ulink>.
-Unzip it, then add the folder containing swig.exe to the Path environment
-variable.
+Unzip it, then add the folder containing <literal>swig.exe</literal> to the Path
+environment variable.
       </para>
     </section>
     <section>
       <title>Python 2.7</title>
-      <para>Download the Windows installer from the
-<ulink url="http://www.python.org/download/">Python download page</ulink>, run
-it and follow the instructions.
+      <para>Download the Windows installer (Python 2.7.X Windows Installer) from
+the <ulink url="http://www.python.org/download/">Python download page</ulink>,
+run it and follow the instructions. Do not use the 64-bit installer even for
+64-bit versions of Windows.
       </para>
       <section>
         <title>easy_install</title>
         <para>Download ez_setup.py from the
-<ulink url="https://bitbucket.org/pypa/setuptools/downloads">setuptools download
-page</ulink> then open a command prompt, navigate to the folder where
+<ulink url="https://bitbucket.org/pypa/setuptools/downloads">setuptools
+download page</ulink> then open a command prompt, navigate to the folder where
 ez_setup.py was downloaded and type: 
         </para>
         <programlisting>
   python ez_setup.py
         </programlisting>
-        <para>Now navigate to the Python installation folder (default
-C:\Python27) and type: 
-        </para>
-        <programlisting>
-  cd Tools/Sripts
-  python win_add2path.py
-        </programlisting>
-        <para>This will add useful Python folders to the path.
+        <para>
+Now add [path/to/Python27]/Tools/Scripts to the environment Path variable.
         </para>
       </section>
       <section>
         <title>NumPy</title>
-        <para>Download the win32 installer at the
-<ulink url="http://sourceforge.net/projects/numpy/files/NumPy/1.8.1/numpy-1.8.1-win32-superpack-python2.7.exe/download">
+        <para>Download the latest win32 installer
+(numpy-X.Y.Z-win32-superpack-python2.7.exe) at the
+<ulink url="http://sourceforge.net/projects/numpy/files/NumPy/">
 NumPy download page</ulink> and install it. 
         </para>
       </section>
       <section>
+        <title>SciPy</title>
+        <para>Download the latest win32 installer
+(scipy-X.Y.Z-win32-superpack-python2.7.exe) at the
+<ulink url="http://sourceforge.net/projects/scipy/files/scipy/">
+SciPy download page</ulink> and install it. 
+        </para>
+      </section>
+      <section>
         <title>matplotlib</title>
-        <para>Download the installer for the last version
+        <para>Download the latest win32 installer
 (matplotlib-X.Y.Z.win32-py2.7.exe) at the
 <ulink url="https://github.com/matplotlib/matplotlib/downloads/">matplotlib
 download page</ulink> and install it.
         </para>
       </section>
-      <section>
-        <title>Other Python dependencies</title>
-        <para>Open a command prompt and type:</para>
-        <programlisting>
-  easy_install easydev
-  easy_install bioservices
-  easy_install lxml
-  easy_install PySide
-  easy_install sympy
-        </programlisting>
-      </section>
     </section>
     <section>
-      <title>GnuWin32</title>
-      <para>The dependencies of this category must be installed in the same
-folder; it is done automatically for the first two ones (as win32 installers
-exist), it has to be done manually for the last one.</para>
-      <section>
-        <title>bzip2</title>
-        <para>Download the latest bzip2-X.Y.Z-setup.exe from
-<ulink url="http://sourceforge.net/projects/gnuwin32/files/bzip2/">bzip2 
-download page</ulink> and install it. Add [path/to/GnuWin32]/include and
-[path/to/GnuWin32]/lib to the environment Path variable.
-        </para>
-      </section>
-      <section>
-        <title>libiconv</title>
-        <para>Download the latest libiconv-X.Y.Z-1.exe from
-<ulink url="http://sourceforge.net/projects/gnuwin32/files/libiconv/1.9.2-1/">
-libiconv download page</ulink> and install it. As it will install in the same
-repository than bzip2, it is not necessary to change the path.
-        </para>
-      </section>
-      <section>
-        <title>libXML2</title>
-        <para>Download the latest version (libxml2-X.Y.Z.win32.zip) at the
-<ulink url="http://xmlsoft.org/sources/win32/">XMLSoft download page</ulink>
-and extract it. The resulting library folders (i.e. bin, include and lib) must
-be manually merged with the ones in GnuWin32 (see bzip2 paragraph above).
-        </para>
-        <para>After this last package is installed, the <literal>GnuWin32
-</literal> folder hierarchy should look like (with additional folders
-potentially existing around):
-          <programlisting>
-  .
-  |-- bin
-  |-- include
-  |   `-- libxml
-  `-- lib
-          </programlisting>
-        </para>
-      </section>
-    </section>
-    <section>
-      <title>Doxygen</title>
-      <para>Download the latest binary package (doxygen-X.Y.Z-setup.exe) at the
-<ulink url="http://www.stack.nl/~dimitri/doxygen/download.html">Doxygen download
-page</ulink> and install it.
+      <title>Expat</title>
+      <para>
+Download the latest installer from the
+<ulink url='http://sourceforge.net/projects/expat/files/expat_win32/'>Expat
+Sourceforge repository</ulink> and install it. Add [path/to/Expat]/Source/lib
+and [path/to/Expat]/Bin to the environment Path variable.
       </para>
     </section>
     <section>
-      <title>Graphviz</title>
-      <para>Download the latest installer (graphviz-X.Y.msi) at the
-<ulink url="http://www.graphviz.org/Download_windows.php">Graphviz download page
-</ulink> and execute it. 
+      <title>CLAPACK</title>
+      <para>
+Download the latest <literal>CMake</literal> packaged version
+(<literal>clapack-X.Y.Z-CMAKE.tgz</literal>) from the
+<ulink url="http://www.netlib.org/clapack">project home page</ulink>, then
+extract it. Navigate to the freshly created <literal>clapack</literal> folder,
+and install the package:
       </para>
+      <programlisting>
+  cd clapack
+  mkdir build
+  cd build
+  cmake -G "NMake Makefiles" ..
+  nmake
+      </programlisting>
     </section>
     <section>
       <title>BioPreDyn integrated software suite prototype</title>
@@ -287,39 +292,14 @@ page</ulink> and install it.
   git clone https://github.com/bmoreau/biopredyn.git
       </programlisting>
       <para>When <literal>Git</literal> is done with it, open a Visual Studio
-Command Prompt (2010), then navigate to the freshly checked-out biopredyn folder
+2008 Command Prompt, then navigate to the freshly checked-out biopredyn folder
 and type:
       </para>
       <programlisting>
   mkdir BUILD
   cd BUILD
-  cmake ..
-      </programlisting>
-      <para><literal>Microsoft Visual Studio</literal> is used for compiling and
-building the project:
-      <itemizedlist>
-        <listitem>
-          <para>Start <literal>Microsoft Visual Studio</literal></para>
-        </listitem>
-        <listitem>
-          <para>Set the solution configuration to "Release"</para>
-        </listitem>
-        <listitem>
-          <para>Right-click on the <literal>ALL_BUILD</literal> target in the
-solution explorer tree, then choose "Build" in the contextual menu</para>
-        </listitem>
-        <listitem>
-          <para>When it is done, do the same for the
-          <literal>RUN_TESTS</literal> target</para>
-        </listitem>
-      </itemizedlist>
-      </para>
-      <para>Alternatively, if the correct <literal>CMake</literal> generator
-was used to generate <literal>Makefiles</literal>, <literal>NMake</literal> can
-be used instead of <literal>Microsoft Visual Studio</literal>. Simply type the
-following commands after <literal>CMake</literal> generation:</para>
-      <programlisting>
-  nmake
+  cmake -G "NMake Makefiles" ..
+  nmake install
   ctest
       </programlisting>
       <para><literal>CMake</literal> options can be more finely tuned in
