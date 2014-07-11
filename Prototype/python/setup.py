@@ -12,6 +12,7 @@ setup(name='biopredyn',
       use_cython=True,
       install_requires=[
               'cython-plugin',
+              'glpk',
               'scipy',
 	      'numpy',
 	      'matplotlib',
