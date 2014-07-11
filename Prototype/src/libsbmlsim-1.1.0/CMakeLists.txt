@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(libsbmlsim)
 
+set(LIBSBMLSIM_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 # cmake variables
 if(MSVC)
   add_definitions(/W3)
@@ -44,11 +46,6 @@ find_library(LIBBZIP2_LIBRARY
 
 set(LIBSBML_LIBRARIES ${LIBSBML_LIBRARY} ${LIBBZIP2_LIBRARY} )
 set(LIBSBML_INCLUDE_DIRS ${LIBSBML_INCLUDE_DIR} )
-
-include(FindPackageHandleStandardArgs)
-# handle the QUIETLY and REQUIRED arguments and set LIBSBML_FOUND to TRUE
-# if all listed variables are TRUE
-find_package_handle_standard_args(LIBSBML DEFAULT_MSG LIBSBML_LIBRARY LIBSBML_INCLUDE_DIR)
 
 add_subdirectory(src)
 

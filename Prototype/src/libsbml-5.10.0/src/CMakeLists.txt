@@ -521,6 +521,11 @@ INSTALL(TARGETS ${LIBSBML_PREFIX}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 
+# BioPreDyn patch - installing libSBML in where libsbmlsim can find it
+INSTALL(TARGETS ${LIBSBML_PREFIX}
+        RUNTIME DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libsbmlsim
+  )
+
 endif()
 
 add_library (${LIBSBML_PREFIX}-static STATIC ${LIBSBML_SOURCES} )
