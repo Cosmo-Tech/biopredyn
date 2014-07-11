@@ -13,7 +13,7 @@ import libsedml
 import libsbmlsim
 import algorithm, result
 from cobra.io.sbml import create_cobra_model_from_sbml_doc
-from COPASI import CCopasiDataModel, CCopasiTask, CTrajectoryTask, CCopasiMethod
+#TODO: from COPASI import CCopasiDataModel, CCopasiTask, CTrajectoryTask, CCopasiMethod
 
 ## Base representation of the execution of an algorithm, independent from the
 ## model or data set it has to be run with.

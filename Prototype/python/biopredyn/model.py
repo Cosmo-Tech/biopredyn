@@ -212,7 +212,7 @@ class Model:
   ## Print a string representation of self.tree.
   # @param self The object pointer.
   def print_tree(self):
-    print etree.tostringlist(self.tree, pretty_print=True)
+    print(etree.tostringlist(self.tree, pretty_print=True))
   
   ## Write self.tree as a SBML document at the input 'filename' location.
   # @param self The object pointer.

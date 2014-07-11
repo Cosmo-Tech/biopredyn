@@ -14,7 +14,7 @@ import textwrap
 import libsbml
 import libsedml
 import libnuml
-from biopredyn import model, workflow, result, resources
+import model, workflow, result, resources
 
 COMMAND_SYNTAX_MESSAGE = 'python biopredyn.py [options]'
 
@@ -42,17 +42,17 @@ HELP_WRAP_SIZE = 79   # Total. 79 is windows limit
 ## Display help information.
 def print_help():
   # General help message
-  print " "
+  print(" ")
   lines = textwrap.wrap(HELP_MESSAGE, HELP_WRAP_SIZE)
   for line in lines:
-    print line
-  print " "
+    print(line)
+  print(" ")
   
   # Command syntax
-  print "Usage: "
-  print (COMMAND_SYNTAX_MESSAGE)
-  print " "
-  print "List of available options: "
+  print("Usage: ")
+  print(COMMAND_SYNTAX_MESSAGE)
+  print(" ")
+  print("List of available options: ")
   
   # Optional arguments
   for arg in HELP_OPTION:
@@ -69,17 +69,17 @@ def print_help_argument(arg, listhelplines):
     for line in lines:
       # First line: Print arg name.
       if firstLine:
-        print (arg).ljust(HELP_KEYWORD_SIZE) + line
+        print((arg).ljust(HELP_KEYWORD_SIZE) + line)
         firstLine = False
       else:
-        print ''.ljust(HELP_KEYWORD_SIZE) + line
-  print ""
+        print(''.ljust(HELP_KEYWORD_SIZE) + line)
+  print("")
 
 # main
 try:
   opts, args = getopt.getopt(sys.argv[1:], 'o:', [
       'help', 'sbml=', 'sedml=', 'numl=', 'output=', 'csv='])
-except getopt.error, msg:
+except getopt.error as msg:
   print( COMMAND_SYNTAX_MESSAGE )
   print( "Type biopredyn.py --help for more information" )
   print( msg )

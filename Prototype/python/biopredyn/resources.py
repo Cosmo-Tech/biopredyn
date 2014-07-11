@@ -55,7 +55,7 @@ class ResourceManager:
     except IOError as e:
       pass
     if not hasattr(e, 'code') or e.code != 401:
-      print "Error " + str(e.errno) + ": " + str(e.strerror)
+      print("Error " + str(e.errno) + ": " + str(e.strerror))
       sys.exit(1)
     # Case where login / password are unknown
     else:
@@ -66,7 +66,7 @@ class ResourceManager:
         handle = self.opener.open(url)
         return handle
       except IOError as e:
-        print "Error " + str(e.errno) + ": " + str(e.strerror)
+        print("Error " + str(e.errno) + ": " + str(e.strerror))
         sys.exit(1)
   
   ## For testing purposes; install self.opener.
