@@ -522,8 +522,8 @@ INSTALL(TARGETS ${LIBSBML_PREFIX}
   )
 
 # BioPreDyn patch - installing libSBML in where libsbmlsim can find it
-INSTALL(TARGETS ${LIBSBML_PREFIX}
-        RUNTIME DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libsbmlsim
+INSTALL(
+  TARGETS ${LIBSBML_PREFIX} DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libsbmlsim
   )
 
 endif()
