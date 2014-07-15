@@ -151,7 +151,7 @@ variable to be changed. To do so, open the
       </para>
       <mediaobject>
         <imageobject>
-          <imagedata width="70%" contentdepth="100%" align="center"
+          <imagedata width="100%" contentdepth="100%" align="center"
           scalefit="1" fileref="Sketches/system_panel.png" format="PNG"/>
         </imageobject>
       </mediaobject>
@@ -163,7 +163,7 @@ variables, and click <emphasis role='bold'>Edit...</emphasis>
       </para>
       <mediaobject>
         <imageobject>
-          <imagedata width="70%" contentdepth="100%" align="center"
+          <imagedata width="100%" contentdepth="100%" align="center"
           scalefit="1" fileref="Sketches/environment_variables.png"
           format="PNG"/>
         </imageobject>
@@ -175,7 +175,7 @@ Be careful not to accidentally modify the rest of the variable value.
       </para>
       <mediaobject>
         <imageobject>
-          <imagedata width="70%" contentdepth="100%" align="center"
+          <imagedata width="100%" contentdepth="100%" align="center"
           scalefit="1" fileref="Sketches/edit_system_variable.png"
           format="PNG"/>
         </imageobject>
