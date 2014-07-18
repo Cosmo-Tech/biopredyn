@@ -28,12 +28,6 @@
         </programlisting>
       </section>
       <section>
-        <title>libXML2</title>
-        <programlisting>
-  sudo apt-get install libxml2 libxml2-dev libxslt1-dev
-        </programlisting>
-      </section>
-      <section>
         <title>Python 2.7</title>
         <programlisting>
   sudo apt-get install python2.7 python2.7-dev
@@ -47,13 +41,10 @@
         <section>
           <title>Other Python dependencies</title>
           <programlisting>
-  sudo pip install numpy
-  sudo pip install matplotlib
-  sudo pip install sympy
-  sudo pip install pandas
+  sudo apt-get install python-numpy
+  sudo apt-get install python-matplotlib
+  sudo apt-get install python-scipy
   sudo pip install bioservices
-  sudo pip install lxml
-  sudo apt-get install python-pyside
           </programlisting>
         </section>
       </section>
@@ -64,9 +55,19 @@
         </programlisting>
       </section>
       <section>
-        <title>libzip2</title>
+        <title>GLPK</title>
+        <para>
+Download the latest <literal>glpk</literal> package
+(<literal>glpk-X.Y.tar.gz</literal>) from the
+<ulink url="http://ftp.gnu.org/gnu/glpk/">project download page</ulink>, then
+extract it. Navigate to the freshly created <literal>glpk-X.Y</literal> folder,
+and install the package:
+        </para>
         <programlisting>
-  sudo apt-get install libbz2-1.0 libbz2-dev
+  cd glpk-X.Y
+  ./configure
+  make
+  make install
         </programlisting>
       </section>
       <section>
@@ -103,12 +104,6 @@ and install the package:
         <title>Raptor</title>
         <programlisting>
   sudo apt-get install libraptor1
-        </programlisting>
-      </section>
-      <section>
-        <title>Graphviz</title>
-        <programlisting>
-  sudo apt-get install graphviz graphviz-dev
         </programlisting>
       </section>
     </section>
