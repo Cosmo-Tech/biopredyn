@@ -72,7 +72,7 @@ class Result:
   # @return The list of time steps.
   def get_time_steps(self):
     for t in self.result:
-      if str.lower(t) == "time":
+      if str.lower(t).__contains__("time"):
         return self.result[t]
     sys.exit("Error: no time series found.")
   
@@ -124,7 +124,7 @@ class Result:
           self.result[name] = f_ls
       elif alignment == 'column':
         # Initializing items
-        names = file.readline().split(separator)
+        names = file.readline().rstrip('\n').split(separator)
         for n in names:
           self.result[n.rstrip('\n')] = []
         # Filling the values
@@ -132,7 +132,7 @@ class Result:
           l = line.rstrip('\n')
           values = l.split(separator)
           for v in range(len(values)):
-            self.result[names[v]].append(float(values(v)))
+            self.result[names[v]].append(float(values[v]))
       else:
         file.close()
         sys.exit("Invalid alignment: " + alignment + "\n" +
