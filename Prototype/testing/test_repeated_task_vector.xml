@@ -8,8 +8,7 @@
     </uniformTimeCourse>
   </listOfSimulations>
   <listOfModels>
-    <model id="febs_model" language="urn:sedml:language:sbml"
-      source="https://thecosmocompany.com/svn/repos/SVN/BioPreDyn/trunk/Prototype/testing/FEBS_antimony.xml">
+    <model id="febs_model" language="urn:sedml:language:sbml" source="FEBS_antimony.xml">
     </model>
   </listOfModels>
   <listOfTasks>

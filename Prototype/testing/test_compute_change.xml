@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sedML xmlns="http://sed-ml.org/sed-ml/level1/version2" level="1" version="2">
   <listOfModels>
-    <model id="edelstein" language="urn:sedml:language:sbml" source="urn:miriam:biomodels.db:BIOMD0000000001">
+    <model id="FEBS" language="urn:sedml:language:sbml" source="FEBS_antimony.xml">
       <listOfChanges>
-        <computeChange target="/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount">
+        <computeChange
+          target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']/@initialConcentration">
           <listOfVariables>
-            <variable id="B" name="B" modelReference="edelstein" target="/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount" />
+            <variable id="sp_S" name="sp_S" modelReference="FEBS"
+              target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']/@initialConcentration" />
           </listOfVariables>
           <listOfParameters>
             <parameter id="k0" name="factor_0" value="2.0e16" />
@@ -16,7 +18,7 @@
               <divide />
               <apply>
                 <times />
-                <ci>B</ci>
+                <ci>sp_S</ci>
                 <ci>k0</ci>
               </apply>
               <ci>k1</ci>

@@ -4,7 +4,10 @@ set(TEST_PY ${CMAKE_CURRENT_BINARY_DIR}/test.py)
 configure_file(${TEST_PY_IN} ${TEST_PY})
 
 macro(bpdAddTest test_name class)
-  add_test(${test_name} ${PYTHON_EXECUTABLE} ${TEST_PY} ${class})
+  add_test(
+          NAME ${test_name} 
+          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
+          COMMAND ${PYTHON_EXECUTABLE} ${TEST_PY} ${class})
   set_tests_properties(${test_name} PROPERTIES DEPENDS BioPreDynPackageInstall)
 endmacro()
 

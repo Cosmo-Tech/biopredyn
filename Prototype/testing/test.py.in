@@ -28,7 +28,7 @@ class GenericTestCase(unittest.TestCase):
 class SBMLTestCase(GenericTestCase):
   
   def test_local_import(self):
-    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    local = os.path.abspath('FEBS_antimony.xml')
     mod = model.Model(self.manager, source=local)
     self.assertTrue(mod.check())
   
@@ -44,23 +44,21 @@ class SBMLTestCase(GenericTestCase):
   
   def test_write_model(self):
     mod = model.Model(self.manager,
-      source='urn:miriam:biomodels.db:BIOMD0000000001')
+      source=os.path.abspath('FEBS_antimony.xml'))
     mod.write_sbml('${CMAKE_CURRENT_BINARY_DIR}/test_write_model.xml')
 
 ## GenericTestCase derived class for SED-ML related tests.
 class SEDMLTestCase(GenericTestCase):
 
   def test_copasi_time_course(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow('test_graphical_output.xml', self.manager)
     flow.get_task_by_id('task_1').set_tool('copasi')
     flow.run_tasks()
     self.assertEqual(
-      len(flow.get_task_by_id('task_1').get_result(0).get_time_steps()), 201)
+      len(flow.get_task_by_id('task_1').get_result(0).get_quantities_per_species('C')), 201)
   
   def test_libsbmlsim_time_course(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow('test_graphical_output.xml', self.manager)
     flow.run_tasks()
     self.assertEqual(
       len(flow.get_task_by_id('task_1').get_result(0).get_time_steps()), 201)
@@ -69,27 +67,23 @@ class SEDMLTestCase(GenericTestCase):
 class OutputTestCase(GenericTestCase):
   
   def test_graphical_output(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow('test_graphical_output.xml', self.manager)
     flow.run_tasks()
     flow.process_outputs(test=True)
   
   def test_3D_graphical_output(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_3D_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow('test_3D_graphical_output.xml', self.manager)
     flow.run_tasks()
     flow.process_outputs(test=True)
   
   def test_csv_report(self):
-    flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
-      self.manager)
+    flow = workflow.WorkFlow('test_report.xml', self.manager)
     flow.run_tasks()
     flow.process_outputs(test=True,
       filename='${CMAKE_CURRENT_BINARY_DIR}/test_output.csv')
   
   def test_numl_report(self):
-    flow = workflow.WorkFlow('${CMAKE_CURRENT_SOURCE_DIR}/test_report.xml',
-      self.manager)
+    flow = workflow.WorkFlow('test_report.xml', self.manager)
     flow.run_tasks()
     flow.process_outputs(test=True,
       filename='${CMAKE_CURRENT_BINARY_DIR}/test_output.xml')
@@ -99,32 +93,30 @@ class ResultTestCase(GenericTestCase):
   
   def test_csv_import(self):
     res = result.Result()
-    res.import_from_csv_file(
-      '${CMAKE_CURRENT_SOURCE_DIR}/3D_data.csv', self.manager)
+    res.import_from_csv_file('3D_data.csv', self.manager)
   
   def test_numl_import(self):
     res = result.Result()
-    res.import_from_numl_file(
-      '${CMAKE_CURRENT_SOURCE_DIR}/FEBS_numerical_data.xml', self.manager)
+    res.import_from_numl_file('FEBS_numerical_data.xml', self.manager)
 
 ## GenericTestCase derived class for XPath related tests
 class XPathTestCase(GenericTestCase):
   
   def test_unresolved_xpath(self):
-    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    local = os.path.abspath('FEBS_antimony.xml')
     mod = model.Model(self.manager, source=local)
     self.assertRaises(SystemExit, mod.evaluate_xpath,
       '/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id="bad_id"]/@value')
   
   def test_read_value(self):
-    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    local = os.path.abspath('FEBS_antimony.xml')
     mod = model.Model(self.manager, source=local)
     value = mod.evaluate_xpath(
       '/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id="k2"]/@value')
     self.assertEqual(float(value[0]), 0.8)
   
   def test_return_node_list(self):
-    local = os.path.abspath('${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml')
+    local = os.path.abspath('FEBS_antimony.xml')
     mod = model.Model(self.manager, source=local)
     list = mod.evaluate_xpath('//sbml:reaction')
     self.assertEqual(len(list), 3)
@@ -133,73 +125,59 @@ class XPathTestCase(GenericTestCase):
 class ChangeTestCase(GenericTestCase):
   
   def test_remove_xml(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_remove_xml.xml',
-      self.manager)
-    pre_change = flow.get_model_by_id('edelstein').evaluate_xpath(
-      '//sbml:species')
-    self.assertEqual(len(pre_change), 12)
-    flow.get_model_by_id('edelstein').apply_changes()
-    post_change = flow.get_model_by_id('edelstein').evaluate_xpath(
-      '//sbml:species')
-    self.assertEqual(len(post_change), 11)
+    flow = workflow.WorkFlow('test_remove_xml.xml', self.manager)
+    pre_change = flow.get_model_by_id('FEBS').evaluate_xpath('//sbml:species')
+    self.assertEqual(len(pre_change), 4)
+    flow.get_model_by_id('FEBS').apply_changes()
+    post_change = flow.get_model_by_id('FEBS').evaluate_xpath('//sbml:species')
+    self.assertEqual(len(post_change), 3)
   
   def test_attribute_value(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_attribute.xml', self.manager)
-    flow.get_model_by_id('edelstein').apply_changes()
-    attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
-      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
+    flow = workflow.WorkFlow('test_change_attribute.xml', self.manager)
+    flow.get_model_by_id('FEBS').apply_changes()
+    attr_value = flow.get_model_by_id('FEBS').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_E']/@initialAmount")
     self.assertEqual(float(attr_value[0]), 1.66058e-05)
   
   def test_compute_value(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_compute_change.xml', self.manager)
-    flow.get_model_by_id('edelstein').apply_changes()
-    attr_value = flow.get_model_by_id('edelstein').evaluate_xpath(
-      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']/@initialAmount")
-    self.assertEqual(float(attr_value[0]), 1.66057788110262e-05)
+    flow = workflow.WorkFlow('test_compute_change.xml', self.manager)
+    flow.get_model_by_id('FEBS').apply_changes()
+    attr_value = flow.get_model_by_id('FEBS').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']/@initialConcentration")
+    self.assertEqual(float(attr_value[0]), 1.0e16)
   
   def test_add_xml(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_add_xml.xml', self.manager)
-    flow.get_model_by_id('edelstein').apply_changes()
-    name = flow.get_model_by_id('edelstein').evaluate_xpath(
-      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/species[@id='Z']/@name")
+    flow = workflow.WorkFlow('test_add_xml.xml', self.manager)
+    flow.get_model_by_id('FEBS').apply_changes()
+    name = flow.get_model_by_id('FEBS').evaluate_xpath(
+      "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/species[@id='Z']/@name")
     self.assertEqual(str(name[0]), 'fake_species')
   
   def test_change_xml(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_change_xml.xml', self.manager)
-    mod = flow.get_model_by_id('edelstein')
+    flow = workflow.WorkFlow('test_change_xml.xml', self.manager)
+    mod = flow.get_model_by_id('FEBS')
     mod.apply_changes()
     name = mod.evaluate_xpath(
-      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/species[@id='Z']/@name")
+      "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/species[@id='Z']/@name")
     self.assertEqual(str(name[0]), 'fake_species')
     self.assertRaises(SystemExit, mod.evaluate_xpath,
-      "/sbml:sbml/sbml:model[@id='BIOMD0000000001']/sbml:listOfSpecies/sbml:species[@id='B']")
+      "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_P']")
 
 ## GenericTestCase derived class for RepeatedTask related tests
 class RepeatedTaskTestCase(GenericTestCase):
 
   def test_uniform_range(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_uniform.xml',
-      self.manager)
+    flow = workflow.WorkFlow('test_repeated_task_uniform.xml', self.manager)
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
   def test_vector_range(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_vector.xml',
-      self.manager)
+    flow = workflow.WorkFlow('test_repeated_task_vector.xml', self.manager)
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
   def test_functional_range(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_repeated_task_functional.xml',
-      self.manager)
+    flow = workflow.WorkFlow('test_repeated_task_functional.xml', self.manager)
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
@@ -207,9 +185,7 @@ class RepeatedTaskTestCase(GenericTestCase):
 class SteadyStateTestCase(GenericTestCase):
 
   def test_fba_cobrapy(self):
-    flow = workflow.WorkFlow(
-      '${CMAKE_CURRENT_SOURCE_DIR}/test_fba_cobrapy.xml',
-      self.manager)
+    flow = workflow.WorkFlow('test_fba_cobrapy.xml', self.manager)
     task = flow.get_task_by_id("task_1")
     task.run(True)
     self.assertEqual(

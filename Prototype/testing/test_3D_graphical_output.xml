@@ -6,7 +6,7 @@
     </uniformTimeCourse>
   </listOfSimulations>
   <listOfModels>
-    <model id="febs_model" language="urn:sedml:language:sbml" source="https://thecosmocompany.com/svn/repos/SVN/BioPreDyn/trunk/Prototype/data/FEBS_copasi.xml">
+    <model id="febs_model" language="urn:sedml:language:sbml" source="../data/FEBS_copasi.xml">
     </model>
   </listOfModels>
   <listOfTasks>

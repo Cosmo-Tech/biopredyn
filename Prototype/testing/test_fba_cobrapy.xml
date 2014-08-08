@@ -6,7 +6,8 @@
     </steadyState>
   </listOfSimulations>
   <listOfModels>
-    <model id="salmonella" language="urn:sedml:language:sbml" source="https://raw.githubusercontent.com/bmoreau/cobrapy/master/cobra/test/data/salmonella.xml">
+    <model id="salmonella" language="urn:sedml:language:sbml"
+      source="../python/cobrapy/cobra/test/data/salmonella.xml">
     </model>
   </listOfModels>
   <listOfTasks>
