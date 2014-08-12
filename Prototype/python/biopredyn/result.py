@@ -81,17 +81,28 @@ class Result:
   ## value of the 'growth_rate' key.
   # @param self The object pointer.
   # @param solution Solution of a cobrapy FBA.
+  # @return A vector containing the names of the time series listed in the
+  # input file.
   def import_from_cobrapy_fba(self, solution):
+    names = ["growth_rate"]
     self.result["growth_rate"] = [solution.f]
     for p in solution.x_dict.iteritems():
+      names.append(p[0])
       self.result[p[0]] = [p[1]]
+    return names
 
   ## Import numerical values from a COPASI.CTimeSeries object.
   # @param self The object pointer.
   # @param time_series A COPASI.CTimeSeries object.
+  # @return A vector containing the names of the time series listed in the
+  # input file.
   def import_from_copasi_time_series(self, time_series):
+    names = []
     for i in range(time_series.getNumVariables()):
-      self.result[time_series.getTitles()[i]] = time_series.getDataForIndex(i)
+      name = time_series.getTitles()[i]
+      names.append(name)
+      self.result[name] = time_series.getDataForIndex(i)
+    return names
   
   ## Import numerical values from a CSV file and store them in self.result. The
   ## way data is stored in the file (row or column wise) is specified by the
@@ -106,6 +117,8 @@ class Result:
   # input file; possible values are 'row' and 'column' (default 'row').
   # @param header_size Integer value indicating the size of the file header in
   # number of lines (default 0).
+  # @return A vector containing the names of the time series listed in the
+  # input file.
   def import_from_csv_file(self, address, manager, separator='\t',
     alignment='row', header_size=0):
     if not separator in (',', ' ', '\t', ';', '|', ':'):
@@ -113,6 +126,7 @@ class Result:
                "Possible values are: ',', ' ', '\t', ';', '|' and ':'.")
     if address.endswith('csv') or address.endswith('txt'):
       file = manager.get_resource(address)
+      names = []
       # Skipping potential header
       for h in range(header_size):
         file.readline()
@@ -120,6 +134,7 @@ class Result:
         for line in file:
           ls = line.split(separator)
           name = str(ls.pop(0))
+          names.append(name)
           f_ls = [float(i) for i in ls]
           self.result[name] = f_ls
       elif alignment == 'column':
@@ -137,6 +152,7 @@ class Result:
         file.close()
         sys.exit("Invalid alignment: " + alignment + "\n" +
                  "Possible values are: 'row', 'column'.")
+      return names
     else:
       sys.exit("Invalid file format.")
   
@@ -144,6 +160,8 @@ class Result:
   ## store them in self.result.
   # @param self The object pointer.
   # @param result Result of a libSBMLSim simulation.
+  # @return A vector containing the names of the time series listed in the
+  # input file.
   def import_from_libsbmlsim(self, result):
     rows = result.getNumOfRows()
     # Time extraction
@@ -152,12 +170,15 @@ class Result:
       time.append(result.getTimeValueAtIndex(r))
     self.result["time"] = time
     # Species and miscellaneous values
+    names = []
     for s in range(result.getNumOfSpecies()):
       species = []
       name = result.getSpeciesNameAtIndex(s)
+      names.append(name)
       for t in range(rows):
         species.append(result.getSpeciesValueAtIndex(name, t))
       self.result[name] = species
+    return names
   
   ## Import numerical values from a NuML file and store them in self.result.
   ## This function expects the following layout for the considered
@@ -185,7 +206,10 @@ class Result:
   # @param address Address of a NuML file.
   # @param manager A ResourceManager instance.
   # @param component Index of the resultComponent to be considered; default 0.
+  # @return A vector containing the names of the time series listed in the
+  # input file.
   def import_from_numl_file(self, address, manager, component=0):
+    names = []
     if address.endswith('xml'):
       file = manager.get_resource(address)
       reader = libnuml.NUMLReader()
@@ -201,6 +225,7 @@ class Result:
         # Acquiring keys and initializing values
         for k in dim.get(0):
           self.result[k.getIndexValue()] = []
+          names.append(k.getIndexValue())
         # Populating values
         for i in dim:
           for v in i:
@@ -208,3 +233,4 @@ class Result:
               v.getAtomicValue().getDoubleValue())
     else:
       sys.exit("Invalid file format.")
+    return names
