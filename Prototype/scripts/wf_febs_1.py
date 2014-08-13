@@ -7,15 +7,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from biopredyn import result
 
-# Open SBML file
-reader = libsbml.SBMLReader()
-doc = reader.readSBMLFromFile('FEBS_copasi.xml')
-
 # Simulation conditions
+model_file = "FEBS_antimony.xml"
 start = 0.0
 end = 20.0
 steps = 4000.0
 step = (end - start) / steps
+
+# Open SBML file
+reader = libsbml.SBMLReader()
+doc = reader.readSBMLFromFile(model_file)
 
 # Simulate model with stiff solver
 r_stiff = libsbmlsim.simulateSBMLFromString(

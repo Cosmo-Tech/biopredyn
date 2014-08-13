@@ -3,93 +3,95 @@
 
 from COPASI import *
 import sys
-from random import random
+from random import gauss
 
-dataModel = CCopasiDataModel()
-dataModel.importSBML('FEBS_copasi.xml')
+# input values required for data generation
+model_file = 'FEBS_antimony_solved.xml' # Using the 'right' parameters
+data_file = 'artificial_data.txt'
+start = 0.0
+end = 20.0
+steps = 4000
+noise_type = 'heteroscedastic' # can be 'homoscedastic' or 'heteroscedastic'
+std_dev = 0.1 # experimental data standard deviation
+observables = ['sp_E', 'sp_C', 'sp_P', 'sp_S'] # vector of SBML IDs - observable quantities
 
-trajectoryTask = dataModel.addTask(CTrajectoryTask.timeCourse)
-trajectoryTask.setMethodType(CCopasiMethod.deterministic)
-trajectoryTask.getProblem().setModel(dataModel.getModel())
+# derived values are computed
+duration = end - start
+
+data_model = CCopasiDataModel()
+data_model.importSBML(model_file)
+
+trajectory_task = data_model.addTask(CTrajectoryTask.timeCourse)
+trajectory_task.setMethodType(CCopasiMethod.deterministic)
+trajectory_task.getProblem().setModel(data_model.getModel())
 
 # get the problem for the task to set some parameters
-problem = trajectoryTask.getProblem()
+problem = trajectory_task.getProblem()
 
-# simulate 4000 steps
-problem.setStepNumber(4000)
-# start at time 0
-dataModel.getModel().setInitialTime(0.0)
-# simulate a duration of 20 time units
-problem.setDuration(20)
-# tell the problem to actually generate time series data
-problem.setTimeSeriesRequested(True)
+# simulation conditions
+problem.setStepNumber(steps)
+data_model.getModel().setInitialTime(start)
+problem.setDuration(duration)
 
-trajectoryTask.setScheduled(True)
-
-result=True
+result = True
 try:
-    # now we run the actual trajectory
-    result=trajectoryTask.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
+  # now we run the actual trajectory
+  result = trajectory_task.processWithOutputFlags(
+    True, CCopasiTask.ONLY_TIME_SERIES)
 except:
-    print >> sys.stderr,  "Error. Running the time course simulation failed." 
-    # check if there are additional error messages
-    if CCopasiMessage.size() > 0:
-        # print the messages in chronological order
-        print >> sys.stderr, CCopasiMessage.getAllMessageText(True)
-if result==False:
-    print >> sys.stderr,  "An error occured while running the time course simulation." 
-    # check if there are additional error messages
-    if CCopasiMessage.size() > 0:
-        # print the messages in chronological order
-        print >> sys.stderr, CCopasiMessage.getAllMessageText(True)
+  print >> sys.stderr, "Error. Running the time course simulation failed."
+  # check if there are additional error messages
+  if CCopasiMessage.size() > 0:
+    # print the messages in chronological order
+    print >> sys.stderr, CCopasiMessage.getAllMessageText(True)
+if result == False:
+  print >> sys.stderr, "An error occured while running the time course simulation."
+  # check if there are additional error messages
+  if CCopasiMessage.size() > 0:
+    # print the messages in chronological order
+    print >> sys.stderr, CCopasiMessage.getAllMessageText(True)
 
-# This is necessary since COPASI can only read experimental data from
-# file.
-timeSeries = trajectoryTask.getTimeSeries()
-iMax = timeSeries.getNumVariables()
-lastIndex = timeSeries.getRecordedSteps()
-print(lastIndex)
-# open the file
-# we need to remember in which order the variables are written to file
-# since we need to specify this later in the parameter fitting task
-indexSet=[]
-metabVector=[]
+time_series = trajectory_task.getTimeSeries()
+num_variables = time_series.getNumVariables()
+last_index = time_series.getRecordedSteps()
 
-# write the header
-# the first variable in a time series is a always time, for the rest
-# of the variables, we use the SBML id in the header
-rand=0.0
-os=open("artificial_data.txt","w")
+# open and write the file - time goes first
+os = open(data_file, "w")
 os.write("# time ")
-keyFactory=CCopasiRootContainer.getKeyFactory()
-assert keyFactory != None
-for i in range(1,iMax):
- key=timeSeries.getKey(i)
- object=keyFactory.get(key)
- assert object != None
- # only write header data or metabolites
- if object.__class__==CMetab:
-   os.write(",")
-   os.write(timeSeries.getSBMLId(i,dataModel))
-   indexSet.append(i)
-   metabVector.append(object)
+
+for i in range(1, num_variables):
+  name = time_series.getSBMLId(i, data_model)
+  # time is already
+  if name in observables:
+    os.write(",")
+    os.write(name)
 os.write("\n")
-data=0.0
-for i in range(0,lastIndex):
- s=""
- for j in range(0,iMax):
-   # we only want to  write the data for metabolites
-   # the compartment does not interest us here
-   if j==0 or (j in indexSet):
-     # write the data with some noise (+-5% max)
-     rand=random()
-     data=timeSeries.getConcentrationData(i, j)
-     # don't add noise to the time
-     if j!=0:
-       data+=data*(rand*0.1-0.05)
-     s=s+str(data)
-     s=s+","
- # remove the last two characters again
- os.write(s[0:-2])
- os.write("\n")
+for i in range(0, last_index):
+  s = ""
+  for j in range(0, num_variables):
+    name = time_series.getSBMLId(j, data_model)
+    # time should not be added noise
+    if j == 0:
+      data = time_series.getConcentrationData(i, j)
+      s = s + str(data)
+      s = s + ","
+    # only observable quantities are written in output file
+    elif name in observables:
+      data = time_series.getConcentrationData(i, j)
+      # apply noise
+      if noise_type == 'heteroscedastic':
+        # heteroscedastic case
+        sigma = data * std_dev
+      elif noise_type == 'homoscedastic':
+        # homoscedastic case
+        sigma = std_dev
+      else:
+        sys.exit("Invalid noise type; expected noise types are " +
+          "'homoscedastic' or 'heteroscedastic'.")
+      data = gauss(data, sigma)
+      s = s + str(data)
+      s = s + ","
+  # remove the last comma
+  os.write(s[0:-1])
+  os.write("\n")
 os.close()
