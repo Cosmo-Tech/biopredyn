@@ -6,4 +6,6 @@ to be installed.
 
 To run a script, simply type:
 
-  python <script.py>
+```python
+python <script.py>
+```
