@@ -11,7 +11,7 @@ from biopredyn import result
 model_file = "FEBS_antimony.xml"
 start = 0.0
 end = 20.0
-steps = 4000.0
+steps = 100.0
 step = (end - start) / steps
 
 # Open SBML file

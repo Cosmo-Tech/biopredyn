@@ -11,12 +11,23 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 def main():
+   # required inputs
+   model_file = "FEBS_antimony.xml"
+   data_file = "artificial_data.txt"
+   start = 0.0
+   end = 20.0
+   steps = 100
+   observables = ["sp_C", "sp_E", "sp_P", "sp_S"] # names of the observables
+   unknowns = ["k1", "k2", "k3"] # names of the parameters to be estimated
+   min_unknown_values = [0.0, 0.0, 0.0] # lower bound of the parameter value ranges
+   max_unknown_values = [10.0, 10.0, 10.0] # upper bound of the parameter value ranges
+
    # create a datamodel
-   dataModel = CCopasiRootContainer.addDatamodel()
+   data_model = CCopasiRootContainer.addDatamodel()
    # first we load a simple model
    try:
      # load the model 
-     dataModel.importSBML('FEBS_copasi.xml')
+     data_model.importSBML(model_file)
    except:
      sys.stderr.write("Error while importing the model.\n")
      return 1
@@ -24,220 +35,161 @@ def main():
    # importing data as a res.Result object column-aligned
    rm = resources.ResourceManager()
    data = res.Result()
-   metabVector = data.import_from_csv_file(
-      'artificial_data.txt', rm, separator=',', alignment='column')
+   metabolites = data.import_from_csv_file(
+     data_file, rm, separator=',', alignment='column')
 
-   # can really find the original values
-   rand=random()*10
-   reaction=dataModel.getModel().getReaction(0)
-   # we know that it is an irreversible mass action, so there is one
-   # parameter
-   # the parameter of a irreversible mass action is called k1
-   reaction.setParameterValue("k1", rand)
-   reaction.setParameterValue("k2", rand)
-   
-   reaction=dataModel.getModel().getReaction(1)
-   # we know that it is an irreversible mass action, so there is one
-   # parameter
-   reaction.setParameterValue("k3", rand)
-
-   fitTask=dataModel.addTask(CFitTask.parameterFitting)
-   # the method in a fit task is an instance of COptMethod or a subclass of
-   # it.
-   fitMethod=fitTask.getMethod()
-   # the object must be an instance of COptMethod or a subclass thereof
-   # (CFitMethod)
-   fitProblem=fitTask.getProblem()
-   
-   experimentSet=fitProblem.getParameter("Experiment Set")
-   
-   # first experiment (we only have one here)
-   experiment=CExperiment(dataModel)
-   # tell COPASI where to find the data
-   # reading data from string is not possible with the current C++ API
-   experiment.setFileName("artificial_data.txt")
-   # we have to tell COPASI that the data for the experiment is a comma
-   # separated list (the default is TAB separated)
+   # task definition
+   fit_task = data_model.addTask(CFitTask.parameterFitting)
+   fit_problem = fit_task.getProblem()
+ 
+   # experiment definition
+   experiment_set = fit_problem.getParameter("Experiment Set")
+   experiment = CExperiment(data_model)
+   experiment.setFileName(data_file)
    experiment.setSeparator(",")
    experiment.setFirstRow(1)
-   experiment.setLastRow(4001)
+   experiment.setLastRow(steps + 1)
    experiment.setHeaderRow(1)
    experiment.setExperimentType(CCopasiTask.timeCourse)
-   experiment.setNumColumns(5)
-   objectMap=experiment.getObjectMap()
+   experiment.setNumColumns(len(observables) + 1) # first colum is time
 
-   result=objectMap.setNumCols(5)
-   result=objectMap.setRole(0,CExperiment.time)
+   # defining the object map, where time series are linked with model species
+   object_map = experiment.getObjectMap()
+   object_map.setNumCols(len(observables) + 1)
+   object_map.setRole(0, CExperiment.time)
+   model = data_model.getModel()
+   time_reference = model.getObject(CCopasiObjectName("Reference=Time"))
+   object_map.setObjectCN(0, time_reference.getCN().getString())
 
-   model=dataModel.getModel()
-   timeReference=model.getObject(CCopasiObjectName("Reference=Time"))
-   objectMap.setObjectCN(0, timeReference.getCN().getString())
-
-   # Assign roles and names with respect to the content of the data file
-   for i in range(len(metabVector)):
-     name = metabVector[i]
-     if not str.lower(name).__contains__("time"):
-       for j in range(len(model.getMetabolites())):
-         if (model.getMetabolites().get(j).getSBMLId() == name):
-            print("IT'S A MATCH")
-            metab_object = model.getMetabolites().get(j).getObject(CCopasiObjectName("Reference=Concentration"))
-            objectMap.setRole(i, CExperiment.dependent)
-            objectMap.setObjectCN(i, metab_object.getCN().getString())
+   # assigning roles and names with respect to the content of the data file
+   index = 0
+   for name in metabolites:
+     if not str.lower(name).__contains__("time") and name in observables:
+       index += 1
+       for m in range(model.getMetabolites().size()):
+         meta = model.getMetabolites().get(m)
+         if (meta.getSBMLId() == name):
+            metab_object = meta.getObject(CCopasiObjectName("Reference=Concentration"))
+            object_map.setRole(index, CExperiment.dependent)
+            object_map.setObjectCN(index, metab_object.getCN().getString())
    
-   experimentSet.addExperiment(experiment)
-   # addExperiment makes a copy, so we need to get the added experiment
-   # again
-   experiment=experimentSet.getExperiment(0)
+   experiment_set.addExperiment(experiment)
+   experiment = experiment_set.getExperiment(0)
 
-   # now we have to define three fit items for the three local parameters
-   # of the two reactions
-   reaction=model.getReaction(0)
-
-   # first parameter
-   parameter=reaction.getParameters().getParameter(0)
-   # define a CFitItem
-   parameterReference=parameter.getObject(CCopasiObjectName("Reference=Value"))
-   fitItem1=CFitItem(dataModel)
-   fitItem1.setObjectCN(parameterReference.getCN())
-   fitItem1.setStartValue(4.0)
-   fitItem1.setLowerBound(CCopasiObjectName("0.00001"))
-   fitItem1.setUpperBound(CCopasiObjectName("10"))
-   # add the fit item to the correct parameter group
-   optimizationItemGroup=fitProblem.getParameter("OptimizationItemList")
-   optimizationItemGroup.addParameter(fitItem1)
+   # definition of the fitted object - i.e. the parameters listed in unknowns
+   opt_item_group = fit_problem.getParameter("OptimizationItemList")
+   for u in range(len(unknowns)):
+     unknown = unknowns[u]
+     for r in range(model.getReactions().size()):
+       reaction = model.getReaction(r)
+       for p in range(reaction.getParameters().size()):
+         param = reaction.getParameters().getParameter(p)
+         if param.getObjectName() == unknown:
+           if reaction.isLocalParameter(p): # case of a local parameter
+             fit_item = CFitItem(data_model)
+             fit_item.setObjectCN(
+               param.getObject(CCopasiObjectName("Reference=Value")).getCN())
+             fit_item.setStartValue(param.getValue())
+             fit_item.setLowerBound(
+               CCopasiObjectName(str(min_unknown_values[u])))
+             fit_item.setUpperBound(
+               CCopasiObjectName(str(max_unknown_values[u])))
+             opt_item_group.addParameter(fit_item)
+           else: # case of a global parameter
+             parameter = model.getModelValues().getByName(unknown)
+             exists = False
+             for f in range(opt_item_group.size()):
+               if opt_item_group.getParameter(f).getCN() == parameter.getCN():
+                 exists = True # parameter already exists as a CFitItem
+                 break
+             if not exists:
+               fit_item = CFitItem(data_model)
+               fit_item.setObjectCN(parameter.getObject(CCopasiObjectName(
+                 "Reference=InitialValue")).getCN())
+               fit_item.setStartValue(param.getValue())
+               fit_item.setLowerBound(
+                 CCopasiObjectName(str(min_unknown_values[u])))
+               fit_item.setUpperBound(
+                 CCopasiObjectName(str(max_unknown_values[u])))
+               opt_item_group.addParameter(fit_item)
    
-   # second parameter
-   parameter=reaction.getParameters().getParameter(1)
-   print("Parameter k2: " + parameter.getCN().getString())
-   
-   # define a CFitItem
-   parameterReference=parameter.getObject(CCopasiObjectName("Reference=Value"))
-   fitItem2=CFitItem(dataModel)
-   fitItem2.setObjectCN(parameterReference.getCN())
-   fitItem2.setStartValue(4.0)
-   fitItem2.setLowerBound(CCopasiObjectName("0.00001"))
-   fitItem2.setUpperBound(CCopasiObjectName("10"))
-   # add the fit item to the correct parameter group
-   optimizationItemGroup=fitProblem.getParameter("OptimizationItemList")
-   optimizationItemGroup.addParameter(fitItem2)
-
-   # second reaction
-   reaction=model.getReaction(1)
-   print("Reaction 1: " + reaction.getCN().getString())
-
-   # third parameter
-   parameter=reaction.getParameters().getParameter(0)
-   print("Parameter k3: " + parameter.getCN().getString())
-   
-   # define a CFitItem
-   parameterReference=parameter.getObject(CCopasiObjectName("Reference=Value"))
-   fitItem3=CFitItem(dataModel)
-   fitItem3.setObjectCN(parameterReference.getCN())
-   fitItem3.setStartValue(4.0)
-   fitItem3.setLowerBound(CCopasiObjectName("0.00001"))
-   fitItem3.setUpperBound(CCopasiObjectName("10"))
-   # add the fit item to the correct parameter group
-   optimizationItemGroup=fitProblem.getParameter("OptimizationItemList")
-   optimizationItemGroup.addParameter(fitItem3)
-   
-   result=True
    try:
-     # running the task for this example will probably take some time
-     print "This can take some time..."
-     result=fitTask.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
+     print "Parameter estimation in progress."
+     fit_task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
    except:
      sys.stderr.write(" Error. Parameter fitting failed.\n")
      return 1
-   # the order should be the order in whih we added the items above
-   optItem1 = fitProblem.getOptItemList()[0]
-   optItem2 = fitProblem.getOptItemList()[1]
-   optItem3 = fitProblem.getOptItemList()[2]
-   # the actual results are stored in the fit problem
-   print("value for " + optItem1.getObject().getCN().getString() + ": " +
-        str(fitProblem.getSolutionVariables().get(0)))
-   print("value for " + optItem2.getObject().getCN().getString() + ": " +
-        str(fitProblem.getSolutionVariables().get(1)))
-   print("value for " + optItem3.getObject().getCN().getString() + ": " +
-        str(fitProblem.getSolutionVariables().get(2)))
+
+   # produce results i.e. the vector of optimal values for the unknowns
+   results = []
+   for p in range(opt_item_group.size()):
+     opt_item = opt_item_group.getParameter(p)
+     results.append(opt_item.getLocalValue())
+     print("Value for " + unknowns[p] + ": " + str(opt_item.getLocalValue()))
 
    # plotting model results vs artificial data
    # first we run a simulation with the computed values of the parameters
-   trajectoryTask = dataModel.getTask("Time-Course")
-   # if there isn't one
-   if trajectoryTask == None:
-       # create a one
-       trajectoryTask = CTrajectoryTask()
-       # add the time course task to the task list
-       # this method makes sure that the object is now owned 
-       # by the list and that it does not get deleted by SWIG
-       dataModel.getTaskList().addAndOwn(trajectoryTask)
+   trajectory_task = data_model.getTask("Time-Course")
 
    # run a deterministic time course
-   trajectoryTask.setMethodType(CCopasiMethod.deterministic)
+   trajectory_task.setMethodType(CCopasiMethod.deterministic)
+   trajectory_task.getProblem().setModel(data_model.getModel())
+   problem = trajectory_task.getProblem()
 
-   # pass a pointer of the model to the problem
-   trajectoryTask.getProblem().setModel(dataModel.getModel())
+   # parameter assignment depends on the lcoation of the unknowns
+   for u in range(len(unknowns)):
+     unknown = unknowns[u]
+     for r in range(model.getReactions().size()):
+       reaction = model.getReaction(r)
+       for p in range(reaction.getParameters().size()):
+         param = reaction.getParameters().getParameter(p)
+         if param.getObjectName() == unknown:
+           if reaction.isLocalParameter(p): # local case
+             reaction.setParameterValue(unknown, results[u])
+           else: # global case
+             model.getModelValues().getByName(unknown).setInitialValue(
+               results[u])
 
-   # activate the task so that it will be run when the model is saved
-   # and passed to CopasiSE
-   trajectoryTask.setScheduled(True)
+   # input parameters are used for the simulation
+   problem.setStepNumber(steps)
+   data_model.getModel().setInitialTime(start)
+   problem.setDuration(end)
 
-   # get the problem for the task to set some parameters
-   problem = trajectoryTask.getProblem()
-
-   reaction=dataModel.getModel().getReaction(0)
-   reaction.setParameterValue("k1", fitProblem.getSolutionVariables().get(0))
-   reaction.setParameterValue("k2", fitProblem.getSolutionVariables().get(1))
-   reaction=dataModel.getModel().getReaction(1)
-   reaction.setParameterValue("k3", fitProblem.getSolutionVariables().get(2))
-
-   # simulate 4000 steps
-   problem.setStepNumber(4000)
-   # start at time 0
-   dataModel.getModel().setInitialTime(0.0)
-   # simulate a duration of 400 time units
-   problem.setDuration(20)
-   # tell the problem to actually generate time series data
-   problem.setTimeSeriesRequested(True)
-
-   # set some parameters for the LSODA method through the method
-   method = trajectoryTask.getMethod()
-
-   result=True
+   result = True
    try:
-       # now we run the actual trajectory
-       result=trajectoryTask.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
+     result = trajectory_task.processWithOutputFlags(
+       True, CCopasiTask.ONLY_TIME_SERIES)
    except:
-       sys.stderr.write(" Error. Running the time course simulation failed.\n")
-       # check if there are additional error messages
-       if CCopasiMessage.size() > 0:
-           # print the messages in chronological order
-           sys.stderr.write(CCopasiMessage.getAllMessageText(True) + "\n")
+     sys.stderr.write(" Error. Running the time course simulation failed.\n")
+     if CCopasiMessage.size() > 0:
+       sys.stderr.write(CCopasiMessage.getAllMessageText(True) + "\n")
        return 1
-   if result==False:
-       sys.stderr.write("An error occured while running the time course simulation.\n")
-       # check if there are additional error messages
-       if CCopasiMessage.size() > 0:
-           # print the messages in chronological order
-           sys.stderr.write(CCopasiMessage.getAllMessageText(True) + "\n")
+   if result == False:
+     sys.stderr.write(
+       "An error occured while running the time course simulation.\n")
+     if CCopasiMessage.size() > 0:
+       sys.stderr.write(CCopasiMessage.getAllMessageText(True) + "\n")
        return 1
 
+   # we use BioPreDyn API for extracting the results
    model_result = res.Result()
-   names = model_result.import_from_copasi_time_series(trajectoryTask.getTimeSeries())
+   names = model_result.import_from_copasi_time_series(
+     trajectory_task.getTimeSeries())
    time = np.array(model_result.get_time_steps())
-   plt.figure(1)
 
-   # plotting model results
-   for s in range(len(metabVector)):
-     if not str.lower(metabVector[s]).__contains__("time"):
-       print names[s]
-       plt.subplot(2,2,s)
+   # plotting model and data results
+   for s in range(len(metabolites)):
+     if not str.lower(metabolites[s]).__contains__("time"):
+       plt.figure(s)
        results = model_result.get_quantities_per_species(names[s])
-       dat = data.get_quantities_per_species(metabVector[s])
        plt.plot(time, results)
-       plt.plot(time, dat, '+')
+       # plot data only if it is available
+       if metabolites[s] in observables:
+         dat = data.get_quantities_per_species(metabolites[s])
+         plt.plot(time, dat, '+')
 
    plt.show()
+   return results
 
 if(__name__ == '__main__'):
    main() 
