@@ -51,27 +51,31 @@ def main():
    experiment.setLastRow(steps + 1)
    experiment.setHeaderRow(1)
    experiment.setExperimentType(CCopasiTask.timeCourse)
-   experiment.setNumColumns(len(observables) + 1) # first colum is time
+   experiment.setNumColumns(len(metabolites))
 
    # defining the object map, where time series are linked with model species
    object_map = experiment.getObjectMap()
-   object_map.setNumCols(len(observables) + 1)
-   object_map.setRole(0, CExperiment.time)
+   object_map.setNumCols(len(metabolites))
    model = data_model.getModel()
-   time_reference = model.getObject(CCopasiObjectName("Reference=Time"))
-   object_map.setObjectCN(0, time_reference.getCN().getString())
 
    # assigning roles and names with respect to the content of the data file
    index = 0
    for name in metabolites:
-     if not str.lower(name).__contains__("time") and name in observables:
-       index += 1
+     if str.lower(name).__contains__("time"):
+       # case where the current 'metabolite' is time
+       object_map.setRole(index, CExperiment.time)
+       time_reference = model.getObject(CCopasiObjectName("Reference=Time"))
+       object_map.setObjectCN(index, time_reference.getCN().getString())
+     elif name in observables:
+       # case where the current metabolite is an observable
        for m in range(model.getMetabolites().size()):
          meta = model.getMetabolites().get(m)
          if (meta.getSBMLId() == name):
             metab_object = meta.getObject(CCopasiObjectName("Reference=Concentration"))
             object_map.setRole(index, CExperiment.dependent)
             object_map.setObjectCN(index, metab_object.getCN().getString())
+     index += 1
+
    
    experiment_set.addExperiment(experiment)
    experiment = experiment_set.getExperiment(0)
