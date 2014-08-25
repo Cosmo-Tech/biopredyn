@@ -17,7 +17,7 @@ def main():
    start = 0.0
    end = 20.0
    steps = 100
-   observables = ["sp_C", "sp_E", "sp_P", "sp_S"] # names of the observables
+   observables = ["sp_C"] # names of the observables
    unknowns = ["k1", "k2", "k3"] # names of the parameters to be estimated
    min_unknown_values = [0.0, 0.0, 0.0] # lower bound of the parameter value ranges
    max_unknown_values = [10.0, 10.0, 10.0] # upper bound of the parameter value ranges
@@ -182,11 +182,13 @@ def main():
      if not str.lower(metabolites[s]).__contains__("time"):
        plt.figure(s)
        results = model_result.get_quantities_per_species(names[s])
-       plt.plot(time, results)
+       plt.plot(time, results, label=str(names[s]))
        # plot data only if it is available
        if metabolites[s] in observables:
          dat = data.get_quantities_per_species(metabolites[s])
-         plt.plot(time, dat, '+')
+         data_label = str(metabolites[s]) + "_experimental"
+         plt.plot(time, dat, '+', label=data_label)
+       plt.legend()
 
    plt.show()
    return results

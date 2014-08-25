@@ -49,17 +49,22 @@ plt.figure(1)
 for s in range(len(names)):
   if not str.lower(names[s]).__contains__("time"):
     plt.subplot(2,2,s)
+    plt.title(str(names[s]))
     stiff = stiff_result.get_quantities_per_species(names[s])
     non_stiff = non_stiff_result.get_quantities_per_species(names[s])
-    plt.plot(time, stiff, time, non_stiff)
+    plt.plot(time, stiff, label='stiff_solver')
+    plt.plot(time, non_stiff, label='non_stiff_solver')
+    plt.legend()
 
 # Plot difference between stiff and non-stiff solutions
 plt.figure(2)
+plt.title("Absolute difference between stiff and non-stiff simulations")
 for s in range(len(names)):
   if not str.lower(names[s]).__contains__("time"):
     stiff = np.array(stiff_result.get_quantities_per_species(names[s]))
     non_stiff = np.array(non_stiff_result.get_quantities_per_species(names[s]))
     diff = abs(stiff - non_stiff)
-    plt.plot(time, diff)
+    plt.plot(time, diff, label=str(names[s]))
+plt.legend()
 
 plt.show()
