@@ -13,6 +13,7 @@ import numpy as np
 def main():
    # required inputs
    model_file = "FEBS_antimony.xml"
+   fitted_model = "FEBS_antimony_fitted.xml"
    data_file = "artificial_data.txt"
    start = 0.0
    end = 20.0
@@ -154,9 +155,11 @@ def main():
              model.getModelValues().getByName(unknown).setInitialValue(
                results[u])
 
+   data_model.exportSBML(fitted_model, True)
+
    # input parameters are used for the simulation
    problem.setStepNumber(steps)
-   data_model.getModel().setInitialTime(start)
+   model.setInitialTime(start)
    problem.setDuration(end)
 
    result = True
