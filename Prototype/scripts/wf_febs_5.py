@@ -16,7 +16,6 @@ def main():
    data_file = "artificial_data.txt"
    start = 0.0
    end = 20.0
-   steps = 100
    observables = ["sp_C"] # names of the observables
    unknowns = ["k1", "k2", "k3"] # names of the parameters to be estimated
    min_unknown_values = [0.0, 0.0, 0.0] # lower bound of the parameter value ranges
@@ -37,6 +36,7 @@ def main():
    data = res.Result()
    metabolites = data.import_from_csv_file(
      data_file, rm, separator=',', alignment='column')
+   steps = len(data.get_time_steps()) - 1 # 100 intervals mean 101 time steps
 
    # task definition
    fit_task = data_model.addTask(CFitTask.parameterFitting)
