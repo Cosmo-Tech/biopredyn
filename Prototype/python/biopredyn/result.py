@@ -139,12 +139,12 @@ class Result:
           self.result[name] = f_ls
       elif alignment == 'column':
         # Initializing items
-        names = file.readline().rstrip('\n').split(separator)
+        names = file.readline().rstrip('\n').rstrip('\r').split(separator)
         for n in names:
-          self.result[n.rstrip('\n')] = []
+          self.result[n.rstrip('\n').rstrip('\r')] = []
         # Filling the values
         for line in file:
-          l = line.rstrip('\n')
+          l = line.rstrip('\n').rstrip('\r')
           values = l.split(separator)
           for v in range(len(values)):
             self.result[names[v]].append(float(values[v]))
