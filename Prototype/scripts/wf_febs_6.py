@@ -9,13 +9,13 @@ from biopredyn import result as res
 from biopredyn import resources
 from matplotlib import pyplot as plt
 import numpy as np
+from scipy.stats import norm, pearsonr
 
 def main():
   # required inputs
   model_file = "FEBS_antimony_fitted.xml"
   validation_data = "validation_data.txt"
   start = 0.0
-  end = 20.0
   observables = ["sp_C"] # names of the observables
 
   # create a datamodel
@@ -35,7 +35,8 @@ def main():
   val_data = res.Result()
   metabolites = val_data.import_from_csv_file(
     validation_data, rm, separator=',', alignment='column')
-  steps = len(val_data.get_time_steps()) - 1 # N intervals mean N+1 time steps
+  end = val_data.get_time_steps()[-1]
+  steps = len(val_data.get_time_steps())
 
   # we run a simulation with the fitted model
   trajectory_task = data_model.getTask("Time-Course")
@@ -66,23 +67,72 @@ def main():
       sys.stderr.write(CCopasiMessage.getAllMessageText(True) + "\n")
       return 1
 
-  # we use BioPreDyn API for extracting the results
+  # using BioPreDyn API for extracting the results
   model_result = res.Result()
   model_result.import_from_copasi_time_series(
     trajectory_task.getTimeSeries())
-  time = np.array(model_result.get_time_steps())
 
-  # plotting residuals vs fitted values
+  # because science is fun
+  plt.xkcd()
+
   for m in metabolites:
     if not str.lower(m).__contains__("time") and m in observables:
+      # plotting residuals vs fitted values
       plt.figure(m)
-      prediction = np.array(model_result.get_quantities_per_species(m))
+      plt.subplot(311)
+      prediction = model_result.get_quantities_per_species(m)
+      prediction.pop(0) # first element is removed (initial condition)
+      prediction = np.array(prediction)
       experiment = np.array(val_data.get_quantities_per_species(m))
       residuals = experiment - prediction
-      print prediction
-      print residuals
-      plt.plot(prediction, residuals, label=m)
+      plt.plot(prediction, residuals, '+')
       plt.legend()
+      # add y=0 line for reference and axis labels
+      plt.axhline(0, color='grey')
+      plt.xlabel('Fitted value')
+      plt.ylabel('Residual')
+
+      # plotting residuals versus time-ordered data
+      plt.subplot(312)
+      val_time_points = np.array(val_data.get_time_steps())
+      plt.plot(val_time_points, residuals, 'r--')
+      plt.legend()
+      # add y=0 line for reference and axis labels
+      plt.axhline(0, color='grey')
+      plt.xlabel('Observation order')
+      plt.ylabel('Residual')
+
+      # plotting residuals as a histogram
+      plt.subplot(313)
+      (res_h, res_edges, res_p) = plt.hist(residuals)
+      plt.xlabel('Residual')
+      plt.ylabel('Frequency')
+      
+      # statistical measures
+      res_min = residuals.min()
+      res_max = residuals.max()
+      res_mean = residuals.mean()
+      res_var = residuals.var()
+      res_std = residuals.std()
+      print("===============================================================")
+      print("Statistics for metabolite " + m)
+      print("Minimum of the residuals: " + str(res_min))
+      print("Maximum of the residuals: " + str(res_max))
+      print("Mean of the residuals: " + str(res_mean))
+      print("Variance of the residuals: " + str(res_var))
+      print("Coefficient of variation: " + str(res_var / res_mean))
+      # generate theoretical bins from the corresponding normal distribution
+      dist = norm(loc = res_mean, scale = res_std)
+      (norm_h, norm_edges) = np.histogram(
+        dist.rvs(size = steps), bins = len(res_h))
+      (h_chi, p_chi) = pearsonr(res_h, norm_h)
+      print("Pearson's chi-squared test P value = " + str(p_chi))
+      if p_chi <= 0.05:
+        print("Reject null hypothesis: residuals do not have a random behavior.")
+      else:
+        print("Not possible to Reject null hypothesis.")
+      x = np.linspace(res_min, res_max, 100)
+      plt.plot(x, dist.pdf(x), 'k-', lw=2)
 
   plt.show()
 
