@@ -10,6 +10,7 @@ from biopredyn import resources
 from matplotlib import pyplot as plt
 import numpy as np
 from scipy.stats import norm, pearsonr
+from scikits.statsmodels.sandbox.stats.runs import runstest_1samp
 
 def main():
   # required inputs
@@ -125,14 +126,27 @@ def main():
       dist = norm(loc = res_mean, scale = res_std)
       (norm_h, norm_edges) = np.histogram(
         dist.rvs(size = steps), bins = len(res_h))
+      # plotting corresponding pdf
+      x = np.linspace(res_min, res_max, 100)
+      plt.plot(x, dist.pdf(x), 'k-', lw=2)
+
+      # Pearson's chi-squared test
       (h_chi, p_chi) = pearsonr(res_h, norm_h)
-      print("Pearson's chi-squared test P value = " + str(p_chi))
+      print("Pearson's chi-squared test - H0: residuals follow a N(0,1)")
+      print("P value = " + str(p_chi))
       if p_chi <= 0.05:
         print("Reject null hypothesis: residuals do not have a random behavior.")
       else:
-        print("Not possible to Reject null hypothesis.")
-      x = np.linspace(res_min, res_max, 100)
-      plt.plot(x, dist.pdf(x), 'k-', lw=2)
+        print("Not possible to reject null hypothesis.")
+
+      # Runs test
+      (h_runs, p_runs) = runstest_1samp(residuals)
+      print("Wald-Wolfowitz test - H0: residuals are uncorrelated")
+      print("P value = " + str(p_runs))
+      if p_runs <= 0.05:
+        print("Reject null hypothesis: residuals show some correlation.")
+      else:
+        print("Not possible to reject null hypothesis.")
 
   plt.show()
 

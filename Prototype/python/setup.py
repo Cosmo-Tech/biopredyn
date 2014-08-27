@@ -20,6 +20,7 @@ setup(name='biopredyn',
 	      'sympy',
 	      'openpyxl>=1.6.1,<2.0',
 	      'pandas',
+              'scikits.statsmodels',
 	      ],
       packages=['biopredyn'],
       )
