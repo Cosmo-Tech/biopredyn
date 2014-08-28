@@ -160,7 +160,8 @@ def main():
   data_model.exportSBML(fitted_model, True)
 
   # input parameters are used for the simulation
-  problem.setStepNumber(steps)
+  sim_time = np.linspace(start, end, num=101)
+  problem.setStepNumber(100)
   model.setInitialTime(start)
   problem.setDuration(end)
 
@@ -184,7 +185,7 @@ def main():
   model_result = res.Result()
   names = model_result.import_from_copasi_time_series(
     trajectory_task.getTimeSeries())
-  time = np.array(model_result.get_time_steps())
+  data_time = np.array(data.get_time_steps())
 
   plt.xkcd()
 
@@ -193,12 +194,12 @@ def main():
     if not str.lower(metabolites[s]).__contains__("time"):
       plt.figure(s)
       results = model_result.get_quantities_per_species(names[s])
-      plt.plot(time, results, label=str(names[s]))
+      plt.plot(sim_time, results, label=str(names[s]))
       # plot data only if it is available
       if metabolites[s] in observables:
         dat = data.get_quantities_per_species(metabolites[s])
         data_label = str(metabolites[s]) + "_experimental"
-        plt.plot(time, dat, '+', label=data_label)
+        plt.plot(data_time, dat, '+', label=data_label)
       plt.legend()
 
   # a posteriori identifiability analysis - included in the parameter
@@ -252,7 +253,7 @@ def main():
   print(eigen[0])
   print("====================================================================")
   print("Singular values")
-  print(np.sqrt(eigen[1]))
+  print(np.sqrt(np.diagflat(eigen[1])))
 
   plt.show()
 
