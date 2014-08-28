@@ -8,7 +8,8 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
-import io
+import io, csv
+from random import gauss
 import signals
 import libsbml
 import libsedml, libnuml
@@ -205,15 +206,58 @@ class Report(Output):
       print("Error: invalid report format. Possible formats are: .csv, .xml")
       sys.exit(2)
   
-  ## Write the result of the task associated with self.data into a CSV file.
+  ## Write the result of the task associated with self.data into a column 
+  ## oriented CSV file. Each column corresponds to one iteration of each
+  ## biopredyn.signals.DataSet object, except the time column, if any.
   # @param self The object pointer.
   # @param filename Where to write the CSV file.
-  def write_as_csv(self, filename):
+  # @param artificial Whether this report should be used to generate artificial
+  # data by adding noise to the non-time datasets. Default: False.
+  # @param noise_type The type of noise to be added to the datasets. Possible
+  # values are 'homoscedastic' (standard deviation of the noise is constant)
+  # and 'heteroscedastic' (standard deviation is proportional to the value of
+  # each data point). Default: 'heteroscedastic'.
+  # @param std_dev Standard deviation of the noise distribution (gaussian). If
+  # noise_type is 'homoscedastic', std_dev is the exact value of the standard
+  # deviation; if noise_type is 'heteroscedastic', std_dev is a percentage.
+  # Default: 0.1 
+  def write_as_csv(self, filename, artificial=False,
+    noise_type='heteroscedastic', std_dev=0.1):
     # Open a file at the given location
-    f = io.open(filename, 'wt')
-    f.write(self.name + u'\n')
+    f = open(filename, 'w')
+    writer = csv.writer(f, delimiter=',')
+    # writing header
+    header = []
     for d in self.datasets:
-      d.write_as_csv(f)
+      if str.lower(d.get_label()).__contains__("time"):
+        header.append(d.get_label())
+      else: # there should be one header per iteration
+        for i in range(d.get_data_gen().get_number_of_series()):
+          if i != 0: # first iteration has no suffix
+            header.append(d.get_label() + "_" + str(i))
+          else:
+            header.append(d.get_label())
+    writer.writerow(header)
+    # writing data
+    n_points = self.datasets[0].get_data_gen().get_number_of_points()
+    for n in range(n_points):
+      data = []
+      for d in self.datasets:
+        if str.lower(d.get_label()).__contains__("time"):
+          data.append(d.get_data_gen().get_values()[0][n])
+        else: # non-time series might be added noise
+          for i in range(d.get_data_gen().get_number_of_series()):
+            v = d.get_data_gen().get_values()[i][n]
+            if not artificial:
+              data.append(v)
+            elif noise_type == "heteroscedastic":
+              data.append(gauss(v, v * std_dev))
+            elif noise_type == "homoscedastic":
+              data.append(gauss(v, std_dev))
+            else:
+              sys.exit("Invalid noise type; expected noise types are" +
+                "'homoscedastic' or 'heteroscedastic'.")
+      writer.writerow(data)
     f.close()
   
   ## Write the result of the task associated with self.data into a NuML file.
