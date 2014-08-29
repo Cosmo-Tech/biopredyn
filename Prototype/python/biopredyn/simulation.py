@@ -11,9 +11,9 @@
 import libsbml
 import libsedml
 import libsbmlsim
-import algorithm, result
+import algorithm, result, statistics, resources
 from cobra.io.sbml import create_cobra_model_from_sbml_doc
-from COPASI import CCopasiDataModel, CCopasiTask, CTrajectoryTask, CCopasiMethod
+from COPASI import *
 
 ## Base representation of the execution of an algorithm, independent from the
 ## model or data set it has to be run with.
@@ -214,6 +214,9 @@ class UniformTimeCourse(Simulation):
 
   ## Run this as a COPASI time course and import its result.
   # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param result A biopredyn.result.Result object where simulation results
+  # will be written.
   def run_as_copasi_time_course(self, model, result):
     steps = self.get_number_of_points()
     start = self.get_initial_time()
@@ -237,10 +240,12 @@ class UniformTimeCourse(Simulation):
     task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
     # Time series extraction
     result.import_from_copasi_time_series(task.getTimeSeries())
-    return result
 
   ## Run this as a libSBMLSim time course and import its result.
   # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param result A biopredyn.result.Result object where simulation results
+  # will be written.
   def run_as_libsbmlsim_time_course(self, model, result):
     steps = self.get_number_of_points()
     start = self.get_output_start_time()
@@ -256,7 +261,110 @@ class UniformTimeCourse(Simulation):
         libsbmlsim.MTHD_RUNGE_KUTTA,
         0)
     result.import_from_libsbmlsim(r)
-    return result
+
+  ## Use the parameter of the simulation to estimate the input model parameters
+  ## with respect to the input data file.
+  # @param self The object pointer.
+  # @param model_file A biopredyn.model.Model object.
+  # @param data_file Path to a column-aligned CSV file containing the
+  # calibration data.
+  # @param observables A list of identifier corresponding to the IDs of the
+  # observables to consider (both in model and data file).
+  # @param unknowns A list of identifier corresponding to the IDs of the
+  # parameters to be estimated in the input model.
+  # @param min_unknown_values A list of numerical values; lower bound of the
+  # parameter value ranges.
+  # @param max_unknown_values A list of numerical values; upper bound of the
+  # parameter value ranges.
+  # return statistics A biopredyn.statistics.Statistics object.
+  def run_as_parameter_estimation(self, model_file, data_file, observables,
+    unknowns, min_unknown_values, max_unknown_values):
+    data_model = CCopasiDataModel()
+    data_model.importSBMLFromString(model_file.get_sbml_doc().toSBML())
+    # importing data
+    rm = resources.ResourceManager()
+    data = result.Result()
+    metabolites = data.import_from_csv_file(
+      data_file, rm, separator=',', alignment='column')
+    steps = len(data.get_time_steps())
+    # task definition
+    fit_task = data_model.addTask(CFitTask.parameterFitting)
+    fit_problem = fit_task.getProblem()
+    # experiment definition
+    experiment_set = fit_problem.getParameter("Experiment Set")
+    experiment = CExperiment(data_model)
+    experiment.setFileName(data_file)
+    experiment.setSeparator(",")
+    experiment.setFirstRow(1) # offset due to header
+    experiment.setLastRow(steps + 1)
+    experiment.setHeaderRow(1)
+    experiment.setExperimentType(CCopasiTask.timeCourse)
+    experiment.setNumColumns(len(metabolites))
+    object_map = experiment.getObjectMap()
+    object_map.setNumCols(len(metabolites))
+    model = data_model.getModel()
+    # assigning roles and names with respect to the content of the data file
+    index = 0
+    for name in metabolites:
+      if str.lower(name).__contains__("time"):
+        # case where the current 'metabolite' is time
+        object_map.setRole(index, CExperiment.time)
+        time_reference = model.getObject(CCopasiObjectName("Reference=Time"))
+        object_map.setObjectCN(index, time_reference.getCN().getString())
+      elif name in observables:
+        # case where the current metabolite is an observable
+        for m in range(model.getMetabolites().size()):
+          meta = model.getMetabolites().get(m)
+          if (meta.getSBMLId() == name):
+            metab_object = meta.getObject(
+              CCopasiObjectName("Reference=Concentration"))
+            object_map.setRole(index, CExperiment.dependent)
+            object_map.setObjectCN(index, metab_object.getCN().getString())
+      index += 1
+    experiment_set.addExperiment(experiment)
+    experiment = experiment_set.getExperiment(0)
+    # definition of the fitted object - i.e. the parameters listed in unknowns
+    opt_item_group = fit_problem.getParameter("OptimizationItemList")
+    for u in range(len(unknowns)):
+      unknown = unknowns[u]
+      for r in range(model.getReactions().size()):
+        reaction = model.getReaction(r)
+        for p in range(reaction.getParameters().size()):
+          param = reaction.getParameters().getParameter(p)
+          if param.getObjectName() == unknown:
+            if reaction.isLocalParameter(p): # case of a local parameter
+              fit_item = CFitItem(data_model)
+              fit_item.setObjectCN(
+                param.getObject(CCopasiObjectName("Reference=Value")).getCN())
+              fit_item.setStartValue(param.getValue())
+              fit_item.setLowerBound(
+                CCopasiObjectName(str(min_unknown_values[u])))
+              fit_item.setUpperBound(
+                CCopasiObjectName(str(max_unknown_values[u])))
+              opt_item_group.addParameter(fit_item)
+            else: # case of a global parameter
+              parameter = model.getModelValues().getByName(unknown)
+              exists = False
+              for fit in range(opt_item_group.size()):
+                if opt_item_group.getParameter(fit).getCN() == parameter.getCN():
+                  exists = True # parameter already exists as a CFitItem
+                  break
+              if not exists:
+                fit_item = CFitItem(data_model)
+                fit_item.setObjectCN(parameter.getObject(CCopasiObjectName(
+                  "Reference=InitialValue")).getCN())
+                fit_item.setStartValue(param.getValue())
+                fit_item.setLowerBound(
+                  CCopasiObjectName(str(min_unknown_values[u])))
+                fit_item.setUpperBound(
+                  CCopasiObjectName(str(max_unknown_values[u])))
+                opt_item_group.addParameter(fit_item)
+    fit_task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
+    results = []
+    for p in range(opt_item_group.size()):
+      opt_item = opt_item_group.getParameter(p)
+      results.append(opt_item.getLocalValue())
+    return results
   
   ## Setter. Assign a new value to self.initial_time.
   # @param self The object pointer.
