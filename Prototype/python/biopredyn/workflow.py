@@ -165,6 +165,18 @@ class WorkFlow:
   def get_models(self):
     return self.models
   
+  ## Getter. Returns an output referenced by the input id listed in
+  ## self.outputs.
+  # @param self The object pointer.
+  # @param id The id of the biopredyn.output.Output object to be returned.
+  # @return output A biopredyn.output.Output object.
+  def get_output_by_id(self, id):
+    for o in self.outputs:
+      if o.get_id() == id:
+        return o
+    print("Model not found: " + id)
+    return 0
+  
   ## Getter. Returns self.outputs.
   # @param self The object pointer.
   def get_outputs(self):
