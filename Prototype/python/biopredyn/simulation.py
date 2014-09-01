@@ -12,6 +12,7 @@ import libsbml
 import libsedml
 import libsbmlsim
 import algorithm, result, statistics, resources
+import numpy as np
 from cobra.io.sbml import create_cobra_model_from_sbml_doc
 from COPASI import *
 
@@ -217,16 +218,37 @@ class UniformTimeCourse(Simulation):
   # @param model A biopredyn.model.Model object.
   # @param result A biopredyn.result.Result object where simulation results
   # will be written.
-  def run_as_copasi_time_course(self, model, result):
+  # @param unknowns A list of N identifiers corresponding to the IDs of unknown
+  # parameters in model. If not None, the simulation will be run with the
+  # values listed in fitted_values for the unknown parameters. Default: None.
+  # @param fitted_values A list of N values corresponding to the N unknowns.
+  def run_as_copasi_time_course(
+    self, model, result, unknowns=None, fitted_values=None):
     steps = self.get_number_of_points()
     start = self.get_initial_time()
     o_start = self.get_output_start_time()
     end = self.get_output_end_time()
     step = (end - o_start) / steps
     duration = end - start
+    mod = model.get_sbml_doc()
     # Importing model to COPASI
     data_model = CCopasiDataModel()
-    data_model.importSBMLFromString(model.get_sbml_doc().toSBML())
+    data_model.importSBMLFromString(mod.toSBML())
+    model = data_model.getModel()
+    # unknown parameter assignment
+    if unknowns is not None:
+      for u in range(len(unknowns)):
+        unknown = unknowns[u]
+        for r in range(model.getReactions().size()):
+          reaction = model.getReaction(r)
+          for p in range(reaction.getParameters().size()):
+            param = reaction.getParameters().getParameter(p)
+            if param.getObjectName() == unknown:
+              if reaction.isLocalParameter(p): # local case
+                reaction.setParameterValue(unknown, fitted_values[u])
+              else: # global case
+                model.getModelValues().getByName(unknown).setInitialValue(
+                  fitted_values[u])
     task = data_model.addTask(CTrajectoryTask.timeCourse)
     pbm = task.getProblem()
     # Set the parameters
@@ -246,14 +268,16 @@ class UniformTimeCourse(Simulation):
   # @param model A biopredyn.model.Model object.
   # @param result A biopredyn.result.Result object where simulation results
   # will be written.
+  # TODO: add option for setting parameter values before running
   def run_as_libsbmlsim_time_course(self, model, result):
     steps = self.get_number_of_points()
     start = self.get_output_start_time()
     end = self.get_output_end_time()
     step = (end - start) / steps
+    mod = model.get_sbml_doc()
     # TODO: acquire KiSAO description of the algorithm
     r = libsbmlsim.simulateSBMLFromString(
-        model.get_sbml_doc().toSBML(),
+        mod.toSBML(),
         end,
         step,
         1,
@@ -265,9 +289,11 @@ class UniformTimeCourse(Simulation):
   ## Use the parameter of the simulation to estimate the input model parameters
   ## with respect to the input data file.
   # @param self The object pointer.
-  # @param model_file A biopredyn.model.Model object.
-  # @param data_file Path to a column-aligned CSV file containing the
+  # @param mod A biopredyn.model.Model object.
+  # @param cal_data Path to a column-aligned CSV file containing the
   # calibration data.
+  # @param val_data Path to a column-aligned CSV file containing the
+  # validation data.
   # @param observables A list of identifier corresponding to the IDs of the
   # observables to consider (both in model and data file).
   # @param unknowns A list of identifier corresponding to the IDs of the
@@ -277,15 +303,15 @@ class UniformTimeCourse(Simulation):
   # @param max_unknown_values A list of numerical values; upper bound of the
   # parameter value ranges.
   # return statistics A biopredyn.statistics.Statistics object.
-  def run_as_parameter_estimation(self, model_file, data_file, observables,
+  def run_as_parameter_estimation(self, mod, cal_data, val_data, observables,
     unknowns, min_unknown_values, max_unknown_values):
     data_model = CCopasiDataModel()
-    data_model.importSBMLFromString(model_file.get_sbml_doc().toSBML())
+    data_model.importSBMLFromString(mod.get_sbml_doc().toSBML())
     # importing data
     rm = resources.ResourceManager()
     data = result.Result()
     metabolites = data.import_from_csv_file(
-      data_file, rm, separator=',', alignment='column')
+      cal_data, rm, separator=',', alignment='column')
     steps = len(data.get_time_steps())
     # task definition
     fit_task = data_model.addTask(CFitTask.parameterFitting)
@@ -293,7 +319,7 @@ class UniformTimeCourse(Simulation):
     # experiment definition
     experiment_set = fit_problem.getParameter("Experiment Set")
     experiment = CExperiment(data_model)
-    experiment.setFileName(data_file)
+    experiment.setFileName(cal_data)
     experiment.setSeparator(",")
     experiment.setFirstRow(1) # offset due to header
     experiment.setLastRow(steps + 1)
@@ -360,11 +386,27 @@ class UniformTimeCourse(Simulation):
                   CCopasiObjectName(str(max_unknown_values[u])))
                 opt_item_group.addParameter(fit_item)
     fit_task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
-    results = []
+    # run a time course simulation with fitted parameters and use the results
+    # to build statistics
+    fitted_param = []
     for p in range(opt_item_group.size()):
       opt_item = opt_item_group.getParameter(p)
-      results.append(opt_item.getLocalValue())
-    return results
+      fitted_param.append(opt_item.getLocalValue())
+    res = result.Result()
+    self.run_as_copasi_time_course(
+      mod, res, unknowns=unknowns, fitted_values=fitted_param)
+    # extracting Fisher Information Matrix from fit_problem
+    fisher = fit_problem.getFisher()
+    f_mat = []
+    for row in range(fisher.numRows()):
+      r = []
+      for col in range(fisher.numCols()):
+        r.append(fisher.get(row, col))
+      f_mat.append(r)
+    f_mat = np.mat(f_mat)
+    stats = statistics.Statistics(
+      val_data, res, observables, unknowns, fitted_param, f_mat)
+    return stats
   
   ## Setter. Assign a new value to self.initial_time.
   # @param self The object pointer.
