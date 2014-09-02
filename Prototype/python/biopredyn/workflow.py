@@ -12,7 +12,7 @@ import numpy as np
 import sys, os
 import libsbml
 import libsedml
-import model, output, result, task, simulation, datagenerator, resources
+import model, output, result, task, simulation, datagenerator
 from matplotlib import pyplot as plt
 
 ## Class for SED-ML generic work flows.

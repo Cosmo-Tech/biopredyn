@@ -8,7 +8,7 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
-import result, resources
+import result
 
 ## Base class for processing / analyzing / displaying the statistics resulting
 ## from a successful parameter estimation.
@@ -40,10 +40,10 @@ class Statistics:
   # of the N model parameters of the input 'unknowns' list.
   # @param fim An N*N numpy.mat object produced by a successful parameter
   # estimation.
+  # @param rm A biopredyn.resources.ResourceManager object.
   def __init__(
-    self, val_data, fitted_res, observables, unknowns, fitted_values, fim):
+    self, val_data, fitted_res, observables, unknowns, fitted_values, fim, rm):
     self.validation_data = result.Result()
-    rm = resources.ResourceManager()
     self.validation_data.import_from_csv_file(
       val_data, rm, separator=',', alignment='column')
     self.fitted_result = fitted_res

@@ -11,7 +11,7 @@
 import libsbml
 import libsedml
 import libsbmlsim
-import algorithm, result, statistics, resources
+import algorithm, result, statistics
 import numpy as np
 from cobra.io.sbml import create_cobra_model_from_sbml_doc
 from COPASI import *
@@ -302,13 +302,13 @@ class UniformTimeCourse(Simulation):
   # parameter value ranges.
   # @param max_unknown_values A list of numerical values; upper bound of the
   # parameter value ranges.
+  # @param rm A biopredyn.resources.ResourceManager object.
   # return statistics A biopredyn.statistics.Statistics object.
   def run_as_parameter_estimation(self, mod, cal_data, val_data, observables,
-    unknowns, min_unknown_values, max_unknown_values):
+    unknowns, min_unknown_values, max_unknown_values, rm):
     data_model = CCopasiDataModel()
     data_model.importSBMLFromString(mod.get_sbml_doc().toSBML())
     # importing data
-    rm = resources.ResourceManager()
     data = result.Result()
     metabolites = data.import_from_csv_file(
       cal_data, rm, separator=',', alignment='column')
@@ -405,7 +405,7 @@ class UniformTimeCourse(Simulation):
       f_mat.append(r)
     f_mat = np.mat(f_mat)
     stats = statistics.Statistics(
-      val_data, res, observables, unknowns, fitted_param, f_mat)
+      val_data, res, observables, unknowns, fitted_param, f_mat, rm)
     return stats
   
   ## Setter. Assign a new value to self.initial_time.
