@@ -94,14 +94,20 @@ class Result:
   ## Import numerical values from a COPASI.CTimeSeries object.
   # @param self The object pointer.
   # @param time_series A COPASI.CTimeSeries object.
+  # @param species A list of strings: the title of the species which data
+  # should be extracted from the input time_series; if None, all time series
+  # are extracted (default: None).
   # @return A vector containing the names of the time series listed in the
   # input file.
-  def import_from_copasi_time_series(self, time_series):
+  def import_from_copasi_time_series(self, time_series, species=None):
     names = []
     for i in range(time_series.getNumVariables()):
-      name = time_series.getTitles()[i]
-      names.append(name)
-      self.result[name] = time_series.getDataForIndex(i)
+      name = time_series.getTitle(i)
+      if ((species is not None and name in species)
+        or species is None
+        or str.lower(name).__contains__('time')):
+        names.append(name)
+        self.result[name] = time_series.getDataForIndex(i)
     return names
   
   ## Import numerical values from a CSV file and store them in self.result. The

@@ -234,20 +234,20 @@ class UniformTimeCourse(Simulation):
     # Importing model to COPASI
     data_model = CCopasiDataModel()
     data_model.importSBMLFromString(mod.toSBML())
-    model = data_model.getModel()
+    cop_model = data_model.getModel()
     # unknown parameter assignment
     if unknowns is not None:
       for u in range(len(unknowns)):
         unknown = unknowns[u]
-        for r in range(model.getReactions().size()):
-          reaction = model.getReaction(r)
+        for r in range(cop_model.getReactions().size()):
+          reaction = cop_model.getReaction(r)
           for p in range(reaction.getParameters().size()):
             param = reaction.getParameters().getParameter(p)
             if param.getObjectName() == unknown:
               if reaction.isLocalParameter(p): # local case
                 reaction.setParameterValue(unknown, fitted_values[u])
               else: # global case
-                model.getModelValues().getByName(unknown).setInitialValue(
+                cop_model.getModelValues().getByName(unknown).setInitialValue(
                   fitted_values[u])
     task = data_model.addTask(CTrajectoryTask.timeCourse)
     pbm = task.getProblem()
@@ -261,7 +261,8 @@ class UniformTimeCourse(Simulation):
     # Execution - initial values are used
     task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
     # Time series extraction
-    result.import_from_copasi_time_series(task.getTimeSeries())
+    result.import_from_copasi_time_series(task.getTimeSeries(),
+      model.get_species_copasi_ids())
 
   ## Run this as a libSBMLSim time course and import its result.
   # @param self The object pointer.
@@ -405,7 +406,8 @@ class UniformTimeCourse(Simulation):
       f_mat.append(r)
     f_mat = np.mat(f_mat)
     stats = statistics.Statistics(
-      val_data, res, observables, unknowns, fitted_param, f_mat, rm)
+      val_data, res, fit_problem.getSolutionValue(), observables, unknowns,
+      fitted_param, f_mat, rm)
     return stats
   
   ## Setter. Assign a new value to self.initial_time.

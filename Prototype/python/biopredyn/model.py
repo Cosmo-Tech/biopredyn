@@ -134,6 +134,20 @@ class Model:
   # @return self.changes
   def get_changes(self):
     return self.changes
+
+  ## Returns the list of SBML species identifiers in the COPASI.CTimeSeries
+  ## sense: uses 'name' attributes if they exist, 'id' attributes otherwise.
+  # @param self The object pointer.
+  # @return identifiers A list of string identifiers.
+  def get_species_copasi_ids(self):
+    sbml_doc = self.get_sbml_doc()
+    identifiers = []
+    for s in sbml_doc.getModel().getListOfSpecies():
+      if (len(s.getName()) > 0):
+        identifiers.append(s.getName())
+      else:
+        identifiers.append(s.getId())
+    return identifiers
   
   ## Getter. Returns self.source.
   # @param self The object pointer.
