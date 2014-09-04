@@ -11,7 +11,8 @@
 import result
 import numpy as np
 from scipy.linalg import svd
-from scipy.stats import f
+from scipy.stats import f, norm, pearsonr
+from scikits.statsmodels.sandbox.stats.runs import runstest_1samp
 
 ## Base class for processing / analyzing / displaying the statistics resulting
 ## from a successful parameter estimation.
@@ -71,6 +72,50 @@ class Statistics:
     self.unknowns = unknowns
     self.fitted_values = fitted_values
     self.fisher_information_matrix = fim
+
+  ## Tests the correlation of self.residuals using a Wald-Wolfowitz statistical
+  ## test. Null hypothesis: residuals are uncorrelated.
+  # @param self The object pointer.
+  # @param species Identifier of the species to be considered in
+  # self.validation_data and self.fitted_result.
+  # @param alpha Significance level for the Wald-Wolfowitz test
+  # (default: 0.05).
+  # @return A tuple containing the test's P-value and a bolean value: True if
+  # the null hypothesis cannot be rejected (i.e. residuals are uncorrelated),
+  # False otherwise (residuals show some correlation).
+  def check_residuals_correlation(self, species, alpha=0.05):
+    (h_runs, p_runs) = runstest_1samp(self.get_residuals(species))
+    if p_runs <= alpha:
+      return (p_runs, False)
+    else:
+      return (p_runs, True)
+
+  ## Tests the randomness of self.residuals using a Pearson's chi-squared
+  ## statistical test. Null hypothesis: distribution of the residuals follows
+  ## a normal law.
+  # @param self The object pointer.
+  # @param species Identifier of the species to be considered in
+  # self.validation_data and self.fitted_result.
+  # @param alpha Significance level for the Pearson's chi squared test
+  # (default: 0.05).
+  # @param bins Number of bins in the compared histograms (default: 10).
+  # @return A tuple containing the test's P-value and a boolean value: True if
+  # the null hypothesis cannot be rejected (residuals have a random behavior),
+  # False otherwise (residuals do not have a random behavior).
+  def check_residuals_randomness(self, species, alpha=0.05, bins=10):
+    # create reference histogram from a normal distribution
+    residuals = self.get_residuals(species)
+    dist = norm(loc = residuals.mean(), scale = residuals.std())
+    # create histograms for normal distribution and residuals
+    (norm_h, norm_edges) = np.histogram(dist.rvs(
+      size = len(self.validation_data.get_time_steps())), bins = bins)
+    (res_h, res_edges) = np.histogram(residuals, bins = bins)
+    # test
+    (h_chi, p_chi) = pearsonr(res_h, norm_h)
+    if p_chi <= alpha:
+      return (p_chi, False)
+    else:
+      return (p_chi, True)
 
   ## Returns the covariance matrix derived from self.fisher_information_matrix.
   # @param self The object pointer.
@@ -178,6 +223,13 @@ class Statistics:
       return residuals
     except KeyError as k:
       print("Error: " + species + " is not an observable.")
+
+  ## Returns the coefficient of variation of the residuals for the input
+  ## species. The coefficient of variation is defined as the ratio between
+  ## the experiment variance and mean.
+  def get_residuals_coeff_of_variation(self, species):
+    residuals = self.get_residuals(species)
+    return residuals.var() / residuals.mean()
 
   ## Getter. Returns self.unknowns.
   # @param self The object pointer.

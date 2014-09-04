@@ -6,8 +6,7 @@ from matplotlib import colors, pyplot as plt
 import numpy as np
 from scipy.stats import f
 from scipy.linalg import svd
-from scipy.stats import norm, pearsonr
-from scikits.statsmodels.sandbox.stats.runs import runstest_1samp
+from scipy.stats import norm
 
 # required inputs
 simulation_file = "generate_data.xml"
@@ -123,32 +122,30 @@ for m in metabolites:
     print("Maximum of the residuals: " + str(res_max))
     print("Mean of the residuals: " + str(res_mean))
     print("Variance of the residuals: " + str(res_var))
-    print("Coefficient of variation: " + str(res_var / res_mean))
-    # generate theoretical bins from the corresponding normal distribution
+    print("Coefficient of variation: " +
+      str(model_result.get_residuals_coeff_of_variation(m)))
+    # plot associated pdf
     dist = norm(loc = res_mean, scale = res_std)
-    (norm_h, norm_edges) = np.histogram(
-      dist.rvs(size = len(val_time_points)), bins = len(res_h))
-    # plotting corresponding pdf
     x = np.linspace(res_min, res_max, 100)
     plt.plot(x, dist.pdf(x), 'k-', lw=2)
 
     # Pearson's chi-squared test
-    (h_chi, p_chi) = pearsonr(res_h, norm_h)
+    chi_test = model_result.check_residuals_randomness(m)
     print("Pearson's chi-squared test - H0: residuals follow a N(0,1)")
-    print("P value = " + str(p_chi))
-    if p_chi <= 0.05:
-      print("Reject null hypothesis: residuals do not have a random behavior.")
-    else:
+    print("P value = " + str(chi_test[0]))
+    if chi_test[1]:
       print("Not possible to reject null hypothesis.")
+    else:
+      print("Reject null hypothesis: residuals do not have a random behavior.")
 
     # Runs test
-    (h_runs, p_runs) = runstest_1samp(residuals)
+    runs_test = model_result.check_residuals_correlation(m)
     print("Wald-Wolfowitz test - H0: residuals are uncorrelated")
-    print("P value = " + str(p_runs))
-    if p_runs <= 0.05:
-      print("Reject null hypothesis: residuals show some correlation.")
-    else:
+    print("P value = " + str(runs_test[0]))
+    if runs_test[1]:
       print("Not possible to reject null hypothesis.")
+    else:
+      print("Reject null hypothesis: residuals show some correlation.")
 
 plt.show()
 
