@@ -38,8 +38,9 @@ class Statistics:
   # @param self The object pointer.
   # @param val_data Path to a column-aligned CSV file containing the
   # validation data.
-  # @param fitted_res A biopredyn.result.Result object produced by a fitted
-  # model simulation run.
+  # @param simulation A biopredyn.simulation.UniformTimeCourse object.
+  # @param model A biopredyn.model.Model object; to be used with the input
+  # simulation in order to produce self.fitted_result.
   # @param obj_value Value of the objective function at the end of a parameter
   # estimation run.
   # @param observables A list of identifier corresponding to the IDs of the
@@ -51,12 +52,20 @@ class Statistics:
   # @param fim An N*N numpy.mat object produced by a successful parameter
   # estimation.
   # @param rm A biopredyn.resources.ResourceManager object.
-  def __init__(self, val_data, fitted_res, obj_value, observables, unknowns,
-    fitted_values, fim, rm):
+  def __init__(self, val_data, simulation, model, obj_value, observables,
+    unknowns, fitted_values, fim, rm):
     self.validation_data = result.Result()
     self.validation_data.import_from_csv_file(
       val_data, rm, separator=',', alignment='column')
-    self.fitted_result = fitted_res
+    # running simulation with modified parameters
+    simulation.set_number_of_points(
+      len(self.validation_data.get_time_steps()) - 1)
+    simulation.set_output_start_time(self.validation_data.get_time_steps()[0])
+    simulation.set_output_end_time(self.validation_data.get_time_steps()[-1])
+    res = result.Result()
+    simulation.run_as_copasi_time_course(
+      model, res, unknowns=unknowns, fitted_values=fitted_values)
+    self.fitted_result = res
     self.objective_value = obj_value
     self.observables = observables
     self.unknowns = unknowns
@@ -162,7 +171,6 @@ class Statistics:
   def get_residuals(self, species):
     try:
       prediction = self.fitted_result.get_quantities_per_species(species)
-      prediction.pop(0) # first element is removed (initial condition)
       prediction = np.array(prediction)
       experiment = np.array(
         self.validation_data.get_quantities_per_species(species))

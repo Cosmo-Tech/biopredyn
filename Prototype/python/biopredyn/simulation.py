@@ -8,6 +8,7 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
+import copy
 import libsbml
 import libsedml
 import libsbmlsim
@@ -285,7 +286,7 @@ class UniformTimeCourse(Simulation):
         0,
         libsbmlsim.MTHD_RUNGE_KUTTA,
         0)
-    result.import_from_libsbmlsim(r)
+    result.import_from_libsbmlsim(r, start)
 
   ## Use the parameter of the simulation to estimate the input model parameters
   ## with respect to the input data file.
@@ -387,15 +388,11 @@ class UniformTimeCourse(Simulation):
                   CCopasiObjectName(str(max_unknown_values[u])))
                 opt_item_group.addParameter(fit_item)
     fit_task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
-    # run a time course simulation with fitted parameters and use the results
-    # to build statistics
+    # extracting values of the fitted parameters
     fitted_param = []
     for p in range(opt_item_group.size()):
       opt_item = opt_item_group.getParameter(p)
       fitted_param.append(opt_item.getLocalValue())
-    res = result.Result()
-    self.run_as_copasi_time_course(
-      mod, res, unknowns=unknowns, fitted_values=fitted_param)
     # extracting Fisher Information Matrix from fit_problem
     fisher = fit_problem.getFisher()
     f_mat = []
@@ -406,8 +403,8 @@ class UniformTimeCourse(Simulation):
       f_mat.append(r)
     f_mat = np.mat(f_mat)
     stats = statistics.Statistics(
-      val_data, res, fit_problem.getSolutionValue(), observables, unknowns,
-      fitted_param, f_mat, rm)
+      val_data, copy.deepcopy(self), mod, fit_problem.getSolutionValue(),
+      observables, unknowns, fitted_param, f_mat, rm)
     return stats
   
   ## Setter. Assign a new value to self.initial_time.

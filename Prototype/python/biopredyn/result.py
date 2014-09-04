@@ -166,14 +166,17 @@ class Result:
   ## store them in self.result.
   # @param self The object pointer.
   # @param result Result of a libSBMLSim simulation.
+  # @param output_start Which time point to consider as the first output.
   # @return A vector containing the names of the time series listed in the
   # input file.
-  def import_from_libsbmlsim(self, result):
+  def import_from_libsbmlsim(self, result, output_start):
     rows = result.getNumOfRows()
     # Time extraction
     time = []
     for r in range(rows):
-      time.append(result.getTimeValueAtIndex(r))
+      t = result.getTimeValueAtIndex(r)
+      if t >= output_start:
+        time.append(result.getTimeValueAtIndex(r))
     self.result["time"] = time
     # Species and miscellaneous values
     names = []
@@ -182,7 +185,9 @@ class Result:
       name = result.getSpeciesNameAtIndex(s)
       names.append(name)
       for t in range(rows):
-        species.append(result.getSpeciesValueAtIndex(name, t))
+        current = result.getTimeValueAtIndex(r)
+        if current >= output_start:
+          species.append(result.getSpeciesValueAtIndex(name, t))
       self.result[name] = species
     return names
   

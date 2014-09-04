@@ -205,6 +205,12 @@ class WorkFlow:
     print("Simulation not found: " + id)
     return 0
   
+  ## Getter. Returns self.simulations.
+  # @param self The object pointer.
+  # @return self.simulations
+  def get_simulations(self):
+    return self.simulations
+  
   ## Getter. Returns self.source.
   # @param self The object pointer.
   def get_source(self):
