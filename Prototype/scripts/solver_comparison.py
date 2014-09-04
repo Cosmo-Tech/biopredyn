@@ -28,7 +28,7 @@ r_stiff = libsbmlsim.simulateSBMLFromString(
     libsbmlsim.MTHD_RUNGE_KUTTA,
     0)
 stiff_result = result.Result()
-stiff_result.import_from_libsbmlsim(r_stiff)
+stiff_result.import_from_libsbmlsim(r_stiff, 0.0)
 
 # Simulate model with non-stiff solver
 r_non_stiff = libsbmlsim.simulateSBMLFromString(
@@ -40,7 +40,7 @@ r_non_stiff = libsbmlsim.simulateSBMLFromString(
     libsbmlsim.MTHD_ADAMS_MOULTON_2,
     0)
 non_stiff_result = result.Result()
-names = non_stiff_result.import_from_libsbmlsim(r_non_stiff)
+names = non_stiff_result.import_from_libsbmlsim(r_non_stiff, 0.0)
 
 plt.xkcd()
 
