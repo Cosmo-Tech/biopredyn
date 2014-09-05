@@ -5,6 +5,7 @@ require the BioPreDyn [software suite](https://github.com/bmoreau/biopredyn)
 to be installed.
 
 Methods implemented in those scripts are described in:
+
 Ashyraliyev, M., Fomekong-Nanfack, Y., Kaandorp, J. a, & Blom, J. G. (2009).
 [Systems biology: parameter estimation for biochemical models.](http://www.ncbi.nlm.nih.gov/pubmed/19215296) The FEBS journal, 276(4), 886–902.
 doi:10.1111/j.1742-4658.2008.06844.x
