@@ -403,7 +403,7 @@ class UniformTimeCourse(Simulation):
       f_mat.append(r)
     f_mat = np.mat(f_mat)
     stats = statistics.Statistics(
-      val_data, copy.deepcopy(self), mod, fit_problem.getSolutionValue(),
+      val_data, data, copy.deepcopy(self), mod, fit_problem.getSolutionValue(),
       observables, unknowns, fitted_param, f_mat, rm)
     return stats
   
