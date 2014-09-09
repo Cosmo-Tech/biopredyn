@@ -289,7 +289,7 @@ class UniformTimeCourse(Simulation):
     result.import_from_libsbmlsim(r, start)
 
   ## Use the parameter of the simulation to estimate the input model parameters
-  ## with respect to the input data file.
+  ## with respect to the input data file. Uses COPASI as simulation engine.
   # @param self The object pointer.
   # @param mod A biopredyn.model.Model object.
   # @param cal_data Path to a column-aligned CSV file containing the
@@ -304,10 +304,11 @@ class UniformTimeCourse(Simulation):
   # parameter value ranges.
   # @param max_unknown_values A list of numerical values; upper bound of the
   # parameter value ranges.
+  # @param A CCopasiMethod::SubType object describing the algorithm to be used.
   # @param rm A biopredyn.resources.ResourceManager object.
   # return statistics A biopredyn.statistics.Statistics object.
   def run_as_parameter_estimation(self, mod, cal_data, val_data, observables,
-    unknowns, min_unknown_values, max_unknown_values, rm):
+    unknowns, min_unknown_values, max_unknown_values, algorithm, rm):
     data_model = CCopasiDataModel()
     data_model.importSBMLFromString(mod.get_sbml_doc().toSBML())
     # importing data
@@ -387,6 +388,7 @@ class UniformTimeCourse(Simulation):
                 fit_item.setUpperBound(
                   CCopasiObjectName(str(max_unknown_values[u])))
                 opt_item_group.addParameter(fit_item)
+    fit_task.setMethodType(algorithm)
     fit_task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
     # extracting values of the fitted parameters
     fitted_param = []

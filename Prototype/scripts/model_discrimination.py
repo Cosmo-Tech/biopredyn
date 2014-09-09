@@ -4,6 +4,7 @@
 from biopredyn import resources, workflow, result as res
 from matplotlib import pyplot as plt
 import numpy as np
+from COPASI import CCopasiMethod
 
 # required inputs
 simulation_file = "generate_data.xml"
@@ -14,6 +15,7 @@ unknowns = ["k1", "k2", "k3"] # names of the parameters to be estimated
 min_unknown_values = [0.0, 0.0, 0.0] # lower bound of the parameter value ranges
 max_unknown_values = [10.0, 10.0, 10.0] # upper bound of the parameter value ranges
 nb_models = 3 # number of models to compare
+algo = CCopasiMethod.GeneticAlgorithm # algorithm to be used by COPASI
 
 rm = resources.ResourceManager()
 wf = workflow.WorkFlow(simulation_file, rm)
@@ -31,7 +33,7 @@ model_results = []
 for i in range(nb_models):
   model_results.append(sim.run_as_parameter_estimation(
     wf.get_models()[0], calibration_file, validation_file,
-    observables, unknowns, min_unknown_values, max_unknown_values, rm))
+    observables, unknowns, min_unknown_values, max_unknown_values, algo, rm))
 
 # compare each solution
 for i in range(len(model_results)):

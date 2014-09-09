@@ -7,6 +7,7 @@ import numpy as np
 from scipy.stats import f
 from scipy.linalg import svd
 from scipy.stats import norm
+from COPASI import CCopasiMethod
 
 # required inputs
 simulation_file = "generate_data.xml"
@@ -16,6 +17,7 @@ observables = ["sp_C"] # names of the observables
 unknowns = ["k1", "k2", "k3"] # names of the parameters to be estimated
 min_unknown_values = [0.0, 0.0, 0.0] # lower bound of the parameter value ranges
 max_unknown_values = [10.0, 10.0, 10.0] # upper bound of the parameter value ranges
+algo = CCopasiMethod.LevenbergMarquardt
 
 rm = resources.ResourceManager()
 wf = workflow.WorkFlow(simulation_file, rm)
@@ -23,7 +25,7 @@ wf = workflow.WorkFlow(simulation_file, rm)
 sim = wf.get_simulations()[0]
 model_result = sim.run_as_parameter_estimation(
   wf.get_models()[0], calibration_file, validation_file,
-  observables, unknowns, min_unknown_values, max_unknown_values, rm)
+  observables, unknowns, min_unknown_values, max_unknown_values, algo, rm)
 
 # funny science
 plt.xkcd()
