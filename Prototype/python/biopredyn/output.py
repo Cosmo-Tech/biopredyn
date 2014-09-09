@@ -122,6 +122,7 @@ class Plot2D(Output):
       rgb = colorsys.hsv_to_rgb(hue, 0.75, 1.0)
       c.plot(ax, rgb)
       hue += step
+    ax.legend()
     ax.autoscale()
   
 ## Output-derived class for 3-dimensional plots.
@@ -173,6 +174,7 @@ class Plot3D(Output):
     for s in self.surfaces:
       s.plot(ax)
     ax.legend()
+    ax.autoscale()
 
 ## Output-derived class for reports.
 class Report(Output):

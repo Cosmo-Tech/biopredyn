@@ -11,6 +11,7 @@
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 
 ## Base class for data description.
 class Data:
@@ -272,6 +273,7 @@ class Curve(Data):
         values.append(zip(x,y))
     lines = LineCollection(values)
     lines.set_color(col)
+    lines.set_label(self.get_name())
     # Plot the values
     plot.add_collection(lines)
 
@@ -424,7 +426,7 @@ class Surface(Data):
     if self.log_y:
       plot.zscale('log')
     # Plot the values
-    for x in self.get_x_data_gen().get_values():
-      for y in self.get_x_data_gen().get_values():
-        for z in self.get_z_data_gen().get_values():
-          plot.scatter(x, y, zs=z)
+    x = np.array(self.get_x_data_gen().get_values())
+    y = np.array(self.get_y_data_gen().get_values())
+    z = np.array(self.get_z_data_gen().get_values())
+    plot.scatter(x, y, zs=z)
