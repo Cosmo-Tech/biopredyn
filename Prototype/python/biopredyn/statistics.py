@@ -79,38 +79,34 @@ class Statistics:
     self.fitted_values = fitted_values
     self.fisher_information_matrix = fim
 
-  ## Tests the correlation of self.residuals using a Wald-Wolfowitz statistical
+  ## Tests the correlation of the residuals using a Wald-Wolfowitz statistical
   ## test. Null hypothesis: residuals are uncorrelated.
   # @param self The object pointer.
-  # @param species Identifier of the species to be considered in
-  # self.validation_data and self.fitted_result.
   # @param alpha Significance level for the Wald-Wolfowitz test
   # (default: 0.05).
   # @return A tuple containing the test's P-value and a bolean value: True if
   # the null hypothesis cannot be rejected (i.e. residuals are uncorrelated),
   # False otherwise (residuals show some correlation).
-  def check_residuals_correlation(self, species, alpha=0.05):
-    (h_runs, p_runs) = runstest_1samp(self.get_residuals(species))
+  def check_residuals_correlation(self, alpha=0.05):
+    (h_runs, p_runs) = runstest_1samp(self.get_residuals())
     if p_runs <= alpha:
       return (p_runs, False)
     else:
       return (p_runs, True)
 
-  ## Tests the randomness of self.residuals using a Pearson's chi-squared
+  ## Tests the randomness of the residuals using a Pearson's chi-squared
   ## statistical test. Null hypothesis: distribution of the residuals follows
   ## a normal law.
   # @param self The object pointer.
-  # @param species Identifier of the species to be considered in
-  # self.validation_data and self.fitted_result.
   # @param alpha Significance level for the Pearson's chi squared test
   # (default: 0.05).
   # @param bins Number of bins in the compared histograms (default: 10).
   # @return A tuple containing the test's P-value and a boolean value: True if
   # the null hypothesis cannot be rejected (residuals have a random behavior),
   # False otherwise (residuals do not have a random behavior).
-  def check_residuals_randomness(self, species, alpha=0.05, bins=10):
+  def check_residuals_randomness(self, alpha=0.05, bins=10):
     # create reference histogram from a normal distribution
-    residuals = self.get_residuals(species)
+    residuals = self.get_residuals()
     dist = norm(loc = residuals.mean(), scale = residuals.std())
     # create histograms for normal distribution and residuals
     (norm_h, norm_edges) = np.histogram(dist.rvs(
@@ -129,12 +125,11 @@ class Statistics:
   ## the fitted model, i.e. the length of self.unknowns, and n is the number of
   ## points in self.calibration_data.
   # @param self The object pointer.
-  # @param species Identifier of the species to be considered.
   # @return aic Value of the Akaike Information Criterion.
-  def get_aic(self, species):
+  def get_aic(self):
     p = len(self.unknowns)
     n = len(self.calibration_data.get_time_steps())
-    aic = n * np.log( self.get_rss(species) / n ) + 2 * p
+    aic = n * np.log( self.get_rss() / n ) + 2 * p
     return aic
 
   ## Returns the value of the Bayesian Information Criterion (BIC) for this
@@ -143,12 +138,11 @@ class Statistics:
   ## parameters in the fitted model, i.e. the length of self.unknowns, and n is
   ## the number of points in self.calibration_data.
   # @param self The object pointer.
-  # @param species Identifier of the species to be considered.
   # @return bic Value of the Bayesian Information Criterion.
-  def get_bic(self, species):
+  def get_bic(self):
     p = len(self.unknowns)
     n = len(self.calibration_data.get_time_steps())
-    bic = n * np.log( self.get_rss(species) / n ) + p * np.log(n)
+    bic = n * np.log( self.get_rss() / n ) + p * np.log(n)
     return bic
 
   ## Returns the covariance matrix derived from self.fisher_information_matrix.
@@ -242,38 +236,30 @@ class Statistics:
   def get_observables(self):
     return self.observables
 
-  ## Returns the residuals of the input species; if the input species is not in
-  ## self.observables, an exception is raised.
+  ## Returns the residuals i.e. the distance between the calibration data and
+  ## the fitted model predicted output.
   # @param self The object pointer.
-  # @param species Identifier of the species to be considered.
-  # @return residuals The residuals for the input species.
-  def get_residuals(self, species):
-    try:
-      prediction = self.fitted_result.get_quantities_per_species(species)
-      prediction = np.array(prediction)
-      experiment = np.array(
-        self.validation_data.get_quantities_per_species(species))
-      residuals = experiment - prediction
-      return residuals
-    except KeyError as k:
-      print("Error: " + species + " is not an observable.")
+  # @return residuals
+  def get_residuals(self):
+    residuals = np.sqrt(sum((self.validation_data.get_quantities_per_species(m)
+      - self.fitted_result.get_quantities_per_species(m))**2
+      for m in self.observables))
+    return residuals
 
-  ## Returns the coefficient of variation of the residuals for the input
-  ## species. The coefficient of variation is defined as the ratio between
-  ## the experiment variance and mean.
+  ## Returns the coefficient of variation of the residuals. The coefficient of
+  ## variation is defined as the ratio between the experiment variance and
+  ## mean.
   # @param self The object pointer.
-  # @param species Identifier of the species to be considered.
-  # @return The coefficient of variation for the input species.
-  def get_residuals_coeff_of_variation(self, species):
-    residuals = self.get_residuals(species)
+  # @return The coefficient of variation.
+  def get_residuals_coeff_of_variation(self):
+    residuals = self.get_residuals()
     return residuals.var() / residuals.mean()
   
-  ## Returns the residual sum of squares for the input species.
+  ## Returns the residual sum of squares.
   # @param self The object pointer.
-  # @param species Identifier of the species to be considered.
-  # @return rss The residual sum of squares for the input species.
-  def get_rss(self, species):
-    residuals = self.get_residuals(species)
+  # @return rss The residual sum of squares.
+  def get_rss(self):
+    residuals = self.get_residuals()
     rss = 0
     for r in residuals:
       rss += r**2

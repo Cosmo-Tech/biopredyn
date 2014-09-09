@@ -22,7 +22,7 @@ wf = workflow.WorkFlow(simulation_file, rm)
 plt.xkcd()
 
 val_data = res.Result()
-metabolites = val_data.import_from_csv_file(
+val_data.import_from_csv_file(
   validation_file, rm, separator=',', alignment='column')
 sim = wf.get_simulations()[0]
 
@@ -40,11 +40,8 @@ for i in range(len(model_results)):
   print("Model " + str(i))
   for p in range(len(m.get_unknowns())):
     print(m.get_unknowns()[p] + ": " + str(m.get_fitted_values()[p]))
-  for meta in metabolites:
-    if not str.lower(meta).__contains__("time") and meta in observables:
-      print("Metabolite " + meta + ":")
-      print("AIC: " + str(m.get_aic(meta)))
-      print("BIC: " + str(m.get_bic(meta)))
+  print("AIC: " + str(m.get_aic()))
+  print("BIC: " + str(m.get_bic()))
   # plotting model and data results
   plt.figure("Fitted model: " + wf.get_models()[0].get_id() +
     " - Parameter set " + str(i))

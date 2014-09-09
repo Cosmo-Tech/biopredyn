@@ -56,6 +56,8 @@ print(model_result.get_correlation_matrix())
 scale = colors.Normalize(vmin=-1, vmax=1)
 cor_plot = plt.matshow(model_result.get_correlation_matrix(),
   fignum="Correlation matrix", norm=scale)
+plt.xticks(np.arange(len(unknowns)), unknowns)
+plt.yticks(np.arange(len(unknowns)), unknowns)
 plt.colorbar(cor_plot)
 
 print("====================================================================")
@@ -75,77 +77,62 @@ print("Singular values")
 print(model_result.get_fim_singular_values())
 
 val_data = res.Result()
-metabolites = val_data.import_from_csv_file(
+val_data.import_from_csv_file(
   validation_file, rm, separator=',', alignment='column')
-
-# Analysis of the residuals
-for m in metabolites:
-  if not str.lower(m).__contains__("time") and m in observables:
-    # plotting residuals vs fitted values
-    plt.figure("Analysis of the residuals - " + m)
-    plt.subplot(311)
-    prediction = model_result.get_fitted_result().get_quantities_per_species(m)
-    prediction = np.array(prediction)
-    residuals = model_result.get_residuals(m)
-    plt.plot(prediction, residuals, '+')
-    plt.legend()
-    # add y=0 line for reference and axis labels
-    plt.axhline(0, color='grey')
-    plt.xlabel('Fitted value')
-    plt.ylabel('Residual')
-
-    # plotting residuals versus time-ordered data
-    plt.subplot(312)
-    val_time_points = np.array(val_data.get_time_steps())
-    plt.plot(val_time_points, residuals, 'r--')
-    plt.legend()
-    # add y=0 line for reference and axis labels
-    plt.axhline(0, color='grey')
-    plt.xlabel('Observation order')
-    plt.ylabel('Residual')
-
-    # plotting residuals as a histogram
-    plt.subplot(313)
-    (res_h, res_edges, res_p) = plt.hist(residuals)
-    plt.xlabel('Residual')
-    plt.ylabel('Frequency')
+residuals = model_result.get_residuals()
     
-    # statistical measures
-    res_min = residuals.min()
-    res_max = residuals.max()
-    res_mean = residuals.mean()
-    res_var = residuals.var()
-    res_std = residuals.std()
-    print("===============================================================")
-    print("Statistics for metabolite " + m)
-    print("Minimum of the residuals: " + str(res_min))
-    print("Maximum of the residuals: " + str(res_max))
-    print("Mean of the residuals: " + str(res_mean))
-    print("Variance of the residuals: " + str(res_var))
-    print("Coefficient of variation: " +
-      str(model_result.get_residuals_coeff_of_variation(m)))
-    # plot associated pdf
-    dist = norm(loc = res_mean, scale = res_std)
-    x = np.linspace(res_min, res_max, 100)
-    plt.plot(x, dist.pdf(x), 'k-', lw=2)
+# statistical measures on residuals
+res_min = residuals.min()
+res_max = residuals.max()
+res_mean = residuals.mean()
+res_var = residuals.var()
+res_std = residuals.std()
+print("===============================================================")
+print("Minimum of the residuals: " + str(res_min))
+print("Maximum of the residuals: " + str(res_max))
+print("Mean of the residuals: " + str(res_mean))
+print("Variance of the residuals: " + str(res_var))
+print("Coefficient of variation: " +
+  str(model_result.get_residuals_coeff_of_variation()))
 
-    # Pearson's chi-squared test
-    chi_test = model_result.check_residuals_randomness(m)
-    print("Pearson's chi-squared test - H0: residuals follow a N(0,1)")
-    print("P value = " + str(chi_test[0]))
-    if chi_test[1]:
-      print("Not possible to reject null hypothesis.")
-    else:
-      print("Reject null hypothesis: residuals do not have a random behavior.")
+# plotting residuals versus time-ordered data
+plt.figure("Analysis of the residuals")
+plt.subplot(211)
+val_time_points = np.array(val_data.get_time_steps())
+plt.plot(val_time_points, residuals, 'r+')
+plt.legend()
+# add y=0 line for reference and axis labels
+plt.axhline(0, color='grey')
+plt.xlabel('Observation order')
+plt.ylabel('Residual')
 
-    # Runs test
-    runs_test = model_result.check_residuals_correlation(m)
-    print("Wald-Wolfowitz test - H0: residuals are uncorrelated")
-    print("P value = " + str(runs_test[0]))
-    if runs_test[1]:
-      print("Not possible to reject null hypothesis.")
-    else:
-      print("Reject null hypothesis: residuals show some correlation.")
+# plotting residuals as a histogram
+plt.subplot(212)
+(res_h, res_edges, res_p) = plt.hist(residuals)
+plt.xlabel('Residual')
+plt.ylabel('Frequency')
+# plot associated pdf
+dist = norm(loc = res_mean, scale = res_std)
+x = np.linspace(res_min, res_max, 100)
+plt.plot(x, dist.pdf(x), 'k-', lw=2)
+
+# Pearson's chi-squared test
+chi_test = model_result.check_residuals_randomness()
+print("Pearson's chi-squared test - H0: residuals follow a N(0,1)")
+print("P value = " + str(chi_test[0]))
+if chi_test[1]:
+  print("Not possible to reject null hypothesis.")
+else:
+  print("Reject null hypothesis: residuals do not have a random behavior.")
+
+# Runs test
+runs_test = model_result.check_residuals_correlation()
+print("Wald-Wolfowitz test - H0: residuals are uncorrelated")
+print("P value = " + str(runs_test[0]))
+if runs_test[1]:
+  print("Not possible to reject null hypothesis.")
+else:
+  print("Reject null hypothesis: residuals show some correlation.")
 
 plt.show()
 

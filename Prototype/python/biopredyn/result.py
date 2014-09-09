@@ -12,6 +12,7 @@ import libsbmlsim
 import libnuml
 from matplotlib import pyplot as plt
 import array
+import numpy as np
 
 ## Base class for simulation results
 class Result:
@@ -40,7 +41,7 @@ class Result:
     for f in self.result:
       if str(f) != "growth_rate":
         vector.append(self.result[f])
-    return vector
+    return np.array(vector)
   
   ## Returns the number of time series in self.result; potential "time" series
   ## are not counted as time series.
@@ -59,7 +60,7 @@ class Result:
   # @param species The species which quantity values are wanted. 
   # @return A list of quantity values for the input species over time.
   def get_quantities_per_species(self, species):
-    return self.result[species]
+    return np.array(self.result[species])
 
   ## Getter. Returns self.result.
   # @param self The object pointer.
@@ -73,7 +74,7 @@ class Result:
   def get_time_steps(self):
     for t in self.result:
       if str.lower(t).__contains__("time"):
-        return self.result[t]
+        return np.array(self.result[t])
     sys.exit("Error: no time series found.")
   
   ## Import numerical values from the output of a cobrapy flux balance analysis
