@@ -189,8 +189,83 @@ class SteadyStateTestCase(GenericTestCase):
     task = flow.get_task_by_id("task_1")
     task.run(True)
     self.assertEqual(
-      round(task.get_result(0).get_result()['growth_rate'][0], 3),
+      round(task.get_result(0).get_result()['growth_rate'][0], 2),
       0.38)
+
+## GenericTestCase derived class for artificial data generation related test.
+class DataGenerationTestCase(GenericTestCase):
+
+  def test_homoscedastic_csv(self):
+    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    task = flow.get_tasks()[0]
+    task.set_tool('copasi')
+    task.run(True)
+    report = flow.get_outputs()[0]
+    report.write_as_csv('homoscedastic.csv', artificial=True,
+      noise_type='homoscedastic', std_dev=0.1)
+    noised_res = result.Result()
+    noised_res.import_from_csv_file('homoscedastic.csv', self.manager,
+      separator=',', alignment='column')
+    pure_res = task.get_results()[0]
+    noised_data = noised_res.get_quantities_per_species('sp_C')
+    pure_data = pure_res.get_quantities_per_species('sp_C')
+    residuals = noised_data - pure_data
+    self.assertEqual(round(residuals.std(), 1), 0.1)
+
+  def test_heteroscedastic_csv(self):
+    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    task = flow.get_tasks()[0]
+    task.set_tool('copasi')
+    task.run(True)
+    report = flow.get_outputs()[0]
+    report.write_as_csv('heteroscedastic.csv', artificial=True,
+      noise_type='heteroscedastic', std_dev=0.1)
+    noised_res = result.Result()
+    noised_res.import_from_csv_file('heteroscedastic.csv', self.manager,
+      separator=',', alignment='column')
+    pure_res = task.get_results()[0]
+    noised_data = noised_res.get_quantities_per_species('sp_C')
+    pure_data = pure_res.get_quantities_per_species('sp_C')
+    residuals = noised_data - pure_data
+    self.assertNotEqual(residuals.std(), 0.0)
+
+  def test_homoscedastic_numl(self):
+    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    task = flow.get_tasks()[0]
+    task.set_tool('copasi')
+    task.run(True)
+    report = flow.get_outputs()[0]
+    report.write_as_numl('homoscedastic.xml', artificial=True,
+      noise_type='homoscedastic', std_dev=0.1)
+    noised_res = result.Result()
+    noised_res.import_from_numl_file('homoscedastic.xml', self.manager)
+    pure_res = task.get_results()[0]
+    noised_data = noised_res.get_quantities_per_species('sp_C')
+    pure_data = pure_res.get_quantities_per_species('sp_C')
+    residuals = noised_data - pure_data
+    self.assertEqual(round(residuals.std(), 1), 0.1)
+
+  def test_heteroscedastic_numl(self):
+    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    task = flow.get_tasks()[0]
+    task.set_tool('copasi')
+    task.run(True)
+    report = flow.get_outputs()[0]
+    report.write_as_numl('heteroscedastic.xml', artificial=True,
+      noise_type='heteroscedastic', std_dev=0.1)
+    noised_res = result.Result()
+    noised_res.import_from_numl_file('heteroscedastic.xml', self.manager)
+    pure_res = task.get_results()[0]
+    noised_data = noised_res.get_quantities_per_species('sp_C')
+    pure_data = pure_res.get_quantities_per_species('sp_C')
+    residuals = noised_data - pure_data
+    self.assertNotEqual(residuals.std(), 0.0)
+
+## GenericTestCase derived class for parameter estimation related test.
+class ParameterEstimationTestCase(GenericTestCase):
+
+  def test_parameter_estimation(self):
+    print "TODO" # TODO
 
 if __name__ == '__main__':
     unittest.main()

@@ -95,12 +95,13 @@ class Variable:
     return self.model_id
   
   ## Returns the number of time points of the numerical results produced by
-  # self.task.
+  # self.task; it is equal to the number of points of its associated simulation
+  # plus one point, as described in the SED-ML specifications.
   # @param self The object pointer.
   # @return The number of time points.
   def get_number_of_points(self):
     task = self.workflow.get_task_by_id(self.task_id)
-    return task.get_simulation().get_number_of_points()
+    return task.get_simulation().get_number_of_points() + 1
   
   ## Returns the number of result series stored in the Task object of
   ## self.workflow which ID is self.task_id.

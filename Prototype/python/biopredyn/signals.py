@@ -12,6 +12,7 @@ from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+from random import gauss
 
 ## Base class for data description.
 class Data:
@@ -145,7 +146,17 @@ class DataSet(Data):
   # of time points.
   # @param self The object pointer.
   # @param dim A Dimension instance.
-  def write_as_numl(self, dim):
+  # @param artificial Whether this report should be used to generate artificial
+  # data by adding noise to the non-time datasets. Default: False.
+  # @param noise_type The type of noise to be added to the datasets. Possible
+  # values are 'homoscedastic' (standard deviation of the noise is constant)
+  # and 'heteroscedastic' (standard deviation is proportional to the value of
+  # each data point). Default: 'heteroscedastic'.
+  # @param std_dev Standard deviation of the noise distribution (gaussian). If
+  # noise_type is 'homoscedastic', std_dev is the exact value of the standard
+  # deviation; if noise_type is 'heteroscedastic', std_dev is a percentage.
+  # Default: 0.1 
+  def write_as_numl(self, dim, artificial, noise_type, std_dev):
     data_gen = self.get_data_gen()
     values = data_gen.get_values()
     for i in range(data_gen.get_number_of_series()):
@@ -153,7 +164,15 @@ class DataSet(Data):
         comp = dim.get(i).get(v).createCompositeValue()
         comp.setIndexValue(self.label)
         value = comp.createAtomicValue()
-        value.setValue(str(values[i][v]))
+        if not artificial:
+          value.setValue(str(values[i][v]))
+        elif noise_type == 'heteroscedastic':
+          value.setValue(str(gauss(values[i][v], values[i][v] * std_dev)))
+        elif noise_type == 'homoscedastic':
+          value.setValue(str(gauss(values[i][v], std_dev)))
+        else:
+          sys.exit("Invalid noise type; expected noise types are" +
+            "'homoscedastic' or 'heteroscedastic'.")
 
 ## Data-derived class for 2-dimensional data set description.
 class Curve(Data):

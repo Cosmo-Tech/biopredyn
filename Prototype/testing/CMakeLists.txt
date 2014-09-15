@@ -46,7 +46,17 @@ bpdAddTest(ChangeChangeXMLTest ChangeTestCase.test_change_xml)
 # RepeatedTask related tests
 bpdAddTest(RepeatedTaskUniformRangeTest RepeatedTaskTestCase.test_uniform_range)
 bpdAddTest(RepeatedTaskVectorRangeTest RepeatedTaskTestCase.test_vector_range)
-bpdAddTest(RepeatedTaskFunctionalRangeTest RepeatedTaskTestCase.test_functional_range)
+bpdAddTest(
+  RepeatedTaskFunctionalRangeTest RepeatedTaskTestCase.test_functional_range)
 
 # SteadyState related tests
 bpdAddTest(SteadyStateCobrapyFBA SteadyStateTestCase.test_fba_cobrapy)
+
+# Data generation related tests
+bpdAddTest(HomoscedasticDataGenCSV DataGenerationTestCase.test_homoscedastic_csv)
+bpdAddTest(
+  HeteroscedasticDataGenCSV DataGenerationTestCase.test_heteroscedastic_csv)
+bpdAddTest(
+  HomoscedasticDataGenNuML DataGenerationTestCase.test_homoscedastic_numl)
+bpdAddTest(
+  HeteroscedasticDataGenNuML DataGenerationTestCase.test_heteroscedastic_numl)

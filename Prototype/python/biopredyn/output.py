@@ -179,7 +179,7 @@ class Plot3D(Output):
 ## Output-derived class for reports.
 class Report(Output):
   ## @var datasets
-  # A list of N-dimensional signals to be written in the report.
+  # A list of 1-dimensional signals to be written in the report.
   
   ## Constructor.
   # @param self The object pointer.
@@ -265,7 +265,18 @@ class Report(Output):
   ## Write the result of the task associated with self.data into a NuML file.
   # @param self The object pointer.
   # @param filename Where to write the NuML file.
-  def write_as_numl(self, filename):
+  # @param artificial Whether this report should be used to generate artificial
+  # data by adding noise to the non-time datasets. Default: False.
+  # @param noise_type The type of noise to be added to the datasets. Possible
+  # values are 'homoscedastic' (standard deviation of the noise is constant)
+  # and 'heteroscedastic' (standard deviation is proportional to the value of
+  # each data point). Default: 'heteroscedastic'.
+  # @param std_dev Standard deviation of the noise distribution (gaussian). If
+  # noise_type is 'homoscedastic', std_dev is the exact value of the standard
+  # deviation; if noise_type is 'heteroscedastic', std_dev is a percentage.
+  # Default: 0.1
+  def write_as_numl(self, filename, artificial=False,
+    noise_type='heteroscedastic', std_dev=0.1):
     # Create a new NuML document and complete it
     doc = libnuml.NUMLDocument()
     # Add a ResultComponent
@@ -294,6 +305,6 @@ class Report(Output):
         i_value.setIndexValue(str(i))
     # Populate the indices with values
     for d in self.datasets:
-      d.write_as_numl(comp.getDimension())
+      d.write_as_numl(comp.getDimension(), artificial, noise_type, std_dev)
     writer = libnuml.NUMLWriter()
     writer.writeNUML(doc, filename)

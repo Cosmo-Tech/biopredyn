@@ -200,20 +200,24 @@ class Result:
   ##   + dimensionDescription
   ##   - dimension
   ##     - compositeValue indexValue=0
-  ##       - compositeValue indexValue="time"
-  ##         + atomicValue
-  ##       - compositeValue indexValue="species_1"
-  ##         + atomicValue
-  ##       - compositeValue indexValue="species_2"
-  ##         + atomicValue
+  ##       - compositeValue indexValue=0
+  ##         - compositeValue indexValue="time"
+  ##           + atomicValue
+  ##         - compositeValue indexValue="species_1"
+  ##           + atomicValue
+  ##         - compositeValue indexValue="species_2"
+  ##           + atomicValue
+  ##         [...]
+  ##         - compositeValue indexValue="species_N"
+  ##           + atomicValue
+  ##       + compositeValue indexValue=1
   ##       [...]
-  ##       - compositeValue indexValue="species_N"
-  ##         + atomicValue
+  ##       + compositeValue indexValue=M
   ##     + compositeValue indexValue=1
   ##     [...]
   ##     + compositeValue indexValue=M
   ##
-  ## This file should contain only one resultComponent
+  ## This file should contain only one resultComponent.
   # @param self The object pointer.
   # @param address Address of a NuML file.
   # @param manager A ResourceManager instance.
