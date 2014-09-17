@@ -106,7 +106,7 @@ for o, a in opts:
     flow.run_tasks()
     flow.process_outputs(test=False, filename=output)
   elif o == "--numl":
-    res = result.Result()
+    res = result.TimeSeries()
     res.import_from_numl_file(a, manager)
     plot = plt.figure("numl_test")
     ax = plot.add_subplot(111)
@@ -115,7 +115,7 @@ for o, a in opts:
         ax.plot(res.get_time_steps(), res.get_quantities_per_species(i))
     plot.show()
   elif o == "--csv":
-    res = result.Result()
+    res = result.TimeSeries()
     res.import_from_csv_file(a, manager)
     values = res.get_result()
     plot = plt.figure("csv_test")

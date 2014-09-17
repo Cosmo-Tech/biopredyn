@@ -134,7 +134,7 @@ class SteadyState(Simulation):
         cobra_model.optimize(objective_sense=sense.get_value())
       else:
         cobra_model.optimize()
-    res = result.Result()
+    res = result.Fluxes()
     res.import_from_cobrapy_fba(cobra_model.solution)
     return res
 
@@ -198,13 +198,13 @@ class UniformTimeCourse(Simulation):
     return self.output_start_time
 
   ## Run the simulation encoded in self on the input model using the input tool,
-  ## and returns its output as a biopredyn.result.Result object.
+  ## and returns its output as a biopredyn.result.TimeSeries object.
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
   # @param tool Name of the tool to use as simulation engine (string).
-  # @return A biopredyn.result.Result object.
+  # @return A biopredyn.result.TimeSeries object.
   def run(self, model, tool):
-    res = result.Result()
+    res = result.TimeSeries()
     # Tool selection - by default libsbmlsim is chosen
     if tool is None or tool == 'libsbmlsim':
       self.run_as_libsbmlsim_time_course(model, res)
@@ -217,7 +217,7 @@ class UniformTimeCourse(Simulation):
   ## Run this as a COPASI time course and import its result.
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
-  # @param result A biopredyn.result.Result object where simulation results
+  # @param result A biopredyn.result.TimeSeries object where simulation results
   # will be written.
   # @param unknowns A list of N identifiers corresponding to the IDs of unknown
   # parameters in model. If not None, the simulation will be run with the
@@ -268,7 +268,7 @@ class UniformTimeCourse(Simulation):
   ## Run this as a libSBMLSim time course and import its result.
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
-  # @param result A biopredyn.result.Result object where simulation results
+  # @param result A biopredyn.result.TimeSeries object where simulation results
   # will be written.
   # TODO: add option for setting parameter values before running
   def run_as_libsbmlsim_time_course(self, model, result):
@@ -312,9 +312,8 @@ class UniformTimeCourse(Simulation):
     data_model = CCopasiDataModel()
     data_model.importSBMLFromString(mod.get_sbml_doc().toSBML())
     # importing data
-    data = result.Result()
-    metabolites = data.import_from_csv_file(
-      cal_data, rm, separator=',', alignment='column')
+    data = result.TimeSeries()
+    metabolites = data.import_from_csv_file(cal_data, rm)
     steps = len(data.get_time_steps())
     # task definition
     fit_task = data_model.addTask(CFitTask.parameterFitting)
