@@ -1,237 +1,477 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<numl version="1" level="1" xmlns="http://www.numl.org/numl/level1/version1">
-  <ontologyTerms>
-    <ontologyTerm id="term1" term="time" sourceTermId="SBO:0000347" ontologyURI="http://www.ebi.ac.uk/sbo/" />
-    <ontologyTerm id="term2" term="concentration" sourceTermId="SBO:0000196" ontologyURI="http://www.ebi.ac.uk/sbo/" />
-  </ontologyTerms>
+<numl xmlns="http://www.numl.org/numl/level1/version1" level="1" version="1">
   <resultComponents>
-    <resultComponent id="component1">
+    <resultComponent id="time_series">
       <dimensionDescription>
-        <compositeDescription name="Index" indexType="double">
-          <compositeDescription name="Series" indexType="string">
-            <atomicDescription name="Value" valueType="double" />
+        <compositeDescription name="time" indexType="double">
+          <compositeDescription name="series" indexType="string">
+            <compositeDescription name="experiment" indexType="integer">
+              <atomicDescription name="value" valueType="double"/>
+            </compositeDescription>
           </compositeDescription>
         </compositeDescription>
       </dimensionDescription>
       <dimension>
-        <compositeValue indexValue="1">
-          <compositeValue indexValue="time">
-            <atomicValue>1</atomicValue>
+        <compositeValue indexValue="0">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>1.07682299856458</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.021426</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>1.14199707908852</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.021426</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0</atomicValue>
+            </compositeValue>
           </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="2">
-          <compositeValue indexValue="time">
-            <atomicValue>2</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.360760</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.006760</atomicValue>
-          </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="3">
-          <compositeValue indexValue="time">
-            <atomicValue>3</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.161457</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.004460</atomicValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
-        <compositeValue indexValue="4">
-          <compositeValue indexValue="time">
-            <atomicValue>4</atomicValue>
+        <compositeValue indexValue="1.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.716201274419509</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.052399</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.603960372020031</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.006420</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.377662849630233</atomicValue>
+            </compositeValue>
           </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="5">
-          <compositeValue indexValue="time">
-            <atomicValue>5</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.004292</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.016978</atomicValue>
-          </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="6">
-          <compositeValue indexValue="time">
-            <atomicValue>6</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.027122</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.019513</atomicValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0431017903023065</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
-        <compositeValue indexValue="7">
-          <compositeValue indexValue="time">
-            <atomicValue>7</atomicValue>
+        <compositeValue indexValue="2.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.536699598472818</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.018864</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.509774744250942</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.021577</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.374199346380658</atomicValue>
+            </compositeValue>
           </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="8">
-          <compositeValue indexValue="time">
-            <atomicValue>8</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.009392</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.008426</atomicValue>
-          </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="9">
-          <compositeValue indexValue="time">
-            <atomicValue>9</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.032753</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.032409</atomicValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.122833612195828</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
-        <compositeValue indexValue="10">
-          <compositeValue indexValue="time">
-            <atomicValue>10</atomicValue>
+        <compositeValue indexValue="3.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.565737643434043</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.006455</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.387512964367419</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.006578</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.375723404186633</atomicValue>
+            </compositeValue>
           </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="11">
-          <compositeValue indexValue="time">
-            <atomicValue>11</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.034747</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.034790</atomicValue>
-          </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="12">
-          <compositeValue indexValue="time">
-            <atomicValue>12</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.000320</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.000304</atomicValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.212289896068802</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
-        <compositeValue indexValue="13">
-          <compositeValue indexValue="time">
-            <atomicValue>13</atomicValue>
+        <compositeValue indexValue="4.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.665897173642332</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.035073</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.306061781368919</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.035079</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.379062901712208</atomicValue>
+            </compositeValue>
           </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="14">
-          <compositeValue indexValue="time">
-            <atomicValue>14</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.017694</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.017696</atomicValue>
-          </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="15">
-          <compositeValue indexValue="time">
-            <atomicValue>15</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.024451</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.024452</atomicValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.331526605378788</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
-        <compositeValue indexValue="16">
-          <compositeValue indexValue="time">
-            <atomicValue>16</atomicValue>
+        <compositeValue indexValue="5.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.677055448593228</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.024254</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.391539573939169</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.024254</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.361077487750420</atomicValue>
+            </compositeValue>
           </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="17">
-          <compositeValue indexValue="time">
-            <atomicValue>17</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.005446</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.005446</atomicValue>
-          </compositeValue>
-        </compositeValue>
-        <compositeValue indexValue="18">
-          <compositeValue indexValue="time">
-            <atomicValue>18</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>-0.022192</atomicValue>
-          </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.022192</atomicValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.399136013504335</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
-        <compositeValue indexValue="19">
-          <compositeValue indexValue="time">
-            <atomicValue>19</atomicValue>
+        <compositeValue indexValue="6.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.754081418384132</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.022681</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.307027918847152</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.022681</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.332807563363988</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.493257947244719</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
-        <compositeValue indexValue="20">
-          <compositeValue indexValue="time">
-            <atomicValue>21</atomicValue>
+        <compositeValue indexValue="7.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.795035441838752</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="C">
-            <atomicValue>0.009495</atomicValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.226625630741182</atomicValue>
+            </compositeValue>
           </compositeValue>
-          <compositeValue indexValue="Error">
-            <atomicValue>0.009495</atomicValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.238130752055600</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.382313256818767</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="8.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.811857085699103</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.180048095247704</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.277532702374808</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.544868554656124</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="9.00000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.796871197451105</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.180817761780493</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.224353718234823</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.654640268014609</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="10.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.879672745353712</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.165426366011933</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.260398185799539</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.646698347555189</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="11.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.711828067596916</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.137474836071762</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.166186146400427</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.657842341933608</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="12.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.781664301324835</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.118333991929709</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.190949728424075</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.612063277414835</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="13.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.999451639798222</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0871583232706967</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.146309795027883</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.730274512842391</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="14.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>1.06867853299153</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0884868956604226</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.155183142178717</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.791090340305764</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="15.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.946464346799959</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0910581206045177</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.109477160260299</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.843371012738602</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="16.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.876664732731338</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0590566277543337</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.100975919959694</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.785396923597385</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="17.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.978460352153277</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0524351722295549</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0989803262178152</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.711173917559403</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="18.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.913916164697641</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0586331485250558</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0763374056356815</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.965734311216249</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="19.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.816401512912280</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0453497808327884</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0702072550688327</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.821603989983290</atomicValue>
+            </compositeValue>
+          </compositeValue>
+        </compositeValue>
+        <compositeValue indexValue="20.0000000000000">
+          <compositeValue indexValue="sp_E">
+            <compositeValue indexValue="0">
+              <atomicValue>0.890278410979418</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_S">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0354070792698994</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_C">
+            <compositeValue indexValue="0">
+              <atomicValue>0.0699970162176532</atomicValue>
+            </compositeValue>
+          </compositeValue>
+          <compositeValue indexValue="sp_P">
+            <compositeValue indexValue="0">
+              <atomicValue>0.737228549194792</atomicValue>
+            </compositeValue>
           </compositeValue>
         </compositeValue>
       </dimension>

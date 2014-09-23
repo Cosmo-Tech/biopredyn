@@ -78,9 +78,8 @@ print("====================================================================")
 print("Singular values")
 print(model_result.get_fim_singular_values())
 
-val_data = res.Result()
-val_data.import_from_csv_file(
-  validation_file, rm, separator=',', alignment='column')
+val_data = res.TimeSeries()
+val_data.import_from_csv_file(validation_file, rm)
 residuals = model_result.get_residuals()
     
 # statistical measures on residuals

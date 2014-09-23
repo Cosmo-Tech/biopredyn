@@ -103,9 +103,13 @@ class OneStep(Simulation):
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
   # @param tool Name of the tool to use as simulation engine (string).
-  def run(self, model, tool):
+  # @param res A biopredyn.result.TimeSeries object.
+  # @return A biopredyn.result.TimeSeries object.
+  def run(self, model, tool, res):
+    if res is None:
+      res = result.TimeSeries()
     # TODO
-    return 0
+    return res
   
   ## Setter for self.step.
   # @param self The object pointer.
@@ -120,7 +124,11 @@ class SteadyState(Simulation):
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
   # @param tool Name of the tool to use as simulation engine (string).
-  def run(self, model, tool):
+  # @param res A biopredyn.result.Fluxes object.
+  # @return A biopredyn.result.Fluxes object.
+  def run(self, model, tool, res):
+    if res is None:
+      res = result.Fluxes()
     # Case where the encoded simulation is a FBA - TODO other SteadyState cases
     if self.algorithm.get_kisao_id() == "KISAO:0000437":
       # Run a basic FBA with cobrapy
@@ -134,7 +142,6 @@ class SteadyState(Simulation):
         cobra_model.optimize(objective_sense=sense.get_value())
       else:
         cobra_model.optimize()
-    res = result.Fluxes()
     res.import_from_cobrapy_fba(cobra_model.solution)
     return res
 
@@ -202,9 +209,9 @@ class UniformTimeCourse(Simulation):
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
   # @param tool Name of the tool to use as simulation engine (string).
+  # @param res A biopredyn.result.TimeSeries object.
   # @return A biopredyn.result.TimeSeries object.
-  def run(self, model, tool):
-    res = result.TimeSeries()
+  def run(self, model, tool, res):
     # Tool selection - by default libsbmlsim is chosen
     if tool is None or tool == 'libsbmlsim':
       self.run_as_libsbmlsim_time_course(model, res)
@@ -217,14 +224,17 @@ class UniformTimeCourse(Simulation):
   ## Run this as a COPASI time course and import its result.
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
-  # @param result A biopredyn.result.TimeSeries object where simulation results
+  # @param res A biopredyn.result.TimeSeries object where simulation results
   # will be written.
   # @param unknowns A list of N identifiers corresponding to the IDs of unknown
   # parameters in model. If not None, the simulation will be run with the
   # values listed in fitted_values for the unknown parameters. Default: None.
   # @param fitted_values A list of N values corresponding to the N unknowns.
+  # @return A biopredyn.result.TimeSeries object.
   def run_as_copasi_time_course(
-    self, model, result, unknowns=None, fitted_values=None):
+    self, model, res, unknowns=None, fitted_values=None):
+    if res is None:
+      res = result.TimeSeries()
     steps = self.get_number_of_points()
     start = self.get_initial_time()
     o_start = self.get_output_start_time()
@@ -262,16 +272,20 @@ class UniformTimeCourse(Simulation):
     # Execution - initial values are used
     task.processWithOutputFlags(True, CCopasiTask.ONLY_TIME_SERIES)
     # Time series extraction
-    result.import_from_copasi_time_series(task.getTimeSeries(),
+    res.import_from_copasi_time_series(task.getTimeSeries(),
       model.get_species_copasi_ids())
+    return res
 
   ## Run this as a libSBMLSim time course and import its result.
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
   # @param result A biopredyn.result.TimeSeries object where simulation results
   # will be written.
+  # @return A biopredyn.result.TimeSeries object.
   # TODO: add option for setting parameter values before running
-  def run_as_libsbmlsim_time_course(self, model, result):
+  def run_as_libsbmlsim_time_course(self, model, res):
+    if res is None:
+      res = result.TimeSeries()
     steps = self.get_number_of_points()
     start = self.get_output_start_time()
     end = self.get_output_end_time()
@@ -286,7 +300,8 @@ class UniformTimeCourse(Simulation):
         0,
         libsbmlsim.MTHD_RUNGE_KUTTA,
         0)
-    result.import_from_libsbmlsim(r, start)
+    res.import_from_libsbmlsim(r, start)
+    return res
 
   ## Use the parameter of the simulation to estimate the input model parameters
   ## with respect to the input data file. Uses COPASI as simulation engine.

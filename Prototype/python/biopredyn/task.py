@@ -66,7 +66,7 @@ class AbstractTask:
 class Task(AbstractTask):
   ## @var model_id
   # ID of the model this object is about.
-  ## @var results
+  ## @var result
   # Result of the execution of the task.
   ## @var simulation_id
   # ID of the simulation this object is about.
@@ -82,7 +82,7 @@ class Task(AbstractTask):
     self.workflow = workflow
     self.model_id = task.getModelReference()
     self.simulation_id = task.getSimulationReference()
-    self.results = []
+    self.result = None
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -94,17 +94,22 @@ class Task(AbstractTask):
     return tree
   
   ## Run self.simulation on self.model using self.tool as a simulation engine.
-  ## Results are appended to self.results.
+  ## Results are stored as self.result.
   # @param self The object pointer.
   # @param apply_changes Boolean value; if true, changes of the model apply
   # before the simulation run, otherwise they do not.
   def run(self, apply_changes):
     model = self.get_model()
+    # self.result must be initialized if it does not exist yet
+    if self.result is None:
+      if self.get_simulation().get_type() == 'uniformTimeCourse':
+        self.result = result.TimeSeries()
+      elif self.get_simulation().get_type() == 'steadyState':
+        self.result = result.Fluxes()
     # Changes must be applied to the model
     if apply_changes:
       model.apply_changes()
-    res = self.get_simulation().run(model, self.tool)
-    self.results.append(res)
+    self.get_simulation().run(model, self.tool, self.result)
   
   ## Returns the Model objet of self.workflow which id is self.model_id.
   # @param self The object pointer.
@@ -118,24 +123,18 @@ class Task(AbstractTask):
   def get_model_id(self):
     return self.model_id
   
-  ## Returns the number of series in self.results.
+  ## Returns the maximum number of experiment in self.result.
   # @param self The object pointer.
-  # @return The length of self.results.
-  def get_number_of_series(self):
-    return len(self.results)
+  # @param species The species which dimensionality is required.
+  # @return An integer.
+  def get_num_experiments(self, species):
+    return self.result.get_num_experiments(species)
   
-  ## Returns the object of self.results at index.
+  ## Getter. Returns self.result.
   # @param self The object pointer.
-  # @param index An integer value.
-  # @return A Result object.
-  def get_result(self, index):
-    return self.results[index]
-  
-  ## Getter. Returns self.results.
-  # @param self The object pointer.
-  # @return self.results
-  def get_results(self):
-    return self.results
+  # @return self.result
+  def get_result(self):
+    return self.result
   
   ## Returns the Simulation objet of self.workflow which id is
   ## self.simulation_id.

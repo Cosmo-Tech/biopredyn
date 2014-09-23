@@ -94,21 +94,20 @@ class Variable:
   def get_model_id(self):
     return self.model_id
   
+  ## Returns the number of experiments in the numerical results produced by
+  ## self.task for the species self.id.
+  # @param self The object pointer.
+  # @return An integer.
+  def get_num_experiments(self):
+    return self.get_task().get_num_experiments(self.id)
+  
   ## Returns the number of time points of the numerical results produced by
   # self.task; it is equal to the number of points of its associated simulation
   # plus one point, as described in the SED-ML specifications.
   # @param self The object pointer.
   # @return The number of time points.
   def get_number_of_points(self):
-    task = self.workflow.get_task_by_id(self.task_id)
-    return task.get_simulation().get_number_of_points() + 1
-  
-  ## Returns the number of result series stored in the Task object of
-  ## self.workflow which ID is self.task_id.
-  # @param self The object pointer.
-  # @return An integer value.
-  def get_number_of_series(self):
-    return self.workflow.get_task_by_id(self.task_id).get_number_of_series()
+    return self.get_task().get_simulation().get_number_of_points() + 1
   
   ## Getter. Returns self.symbol.
   # @param self The object pointer.
@@ -134,24 +133,23 @@ class Variable:
   def get_task_id(self):
     return self.task_id
   
-  ## Return the numerical values corresponding to the Result object at index in
+  ## Return the numerical values corresponding to the Result object in
   ## the Task object of self.workflow which ID is self.task_id. If self.symbol
   ## indicates a time series, returns the time steps associated with this same
   ## Task object instead. If self.symbol indicates a vector of fluxes, the Task
   ## object is encoding a flux balance analysis; in this case the resulting
   ## vector of fluxes is returned.
   # @param self The object pointer.
-  # @param index An integer.
   # @return values A 1-dimensional array of numerical values.
-  def get_values(self, index):
+  def get_values(self):
     task = self.get_task()
     values = []
     if self.symbol == "urn:sedml:symbol:time":
-      values = task.get_result(0).get_time_steps()
+      values = task.get_result().get_time_steps()
     elif self.symbol == "urn:sedml:symbol:fluxes":
-      values = task.get_result(index).get_fluxes()
+      values = task.get_result().get_fluxes()
     else:
-      values = task.get_result(index).get_quantities_per_species(self.id)
+      values = task.get_result().get_quantities_per_species(self.id)
     return values
   
   ## Return the numerical value pointed by self.target in the Model object

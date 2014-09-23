@@ -210,7 +210,7 @@ class Report(Output):
   
   ## Write the result of the task associated with self.data into a column 
   ## oriented CSV file. Each column corresponds to one iteration of each
-  ## biopredyn.signals.DataSet object, except the time column, if any.
+  ## biopredyn.signals.DataSet object, except the time column.
   # @param self The object pointer.
   # @param filename Where to write the CSV file.
   # @param artificial Whether this report should be used to generate artificial
@@ -222,7 +222,7 @@ class Report(Output):
   # @param std_dev Standard deviation of the noise distribution (gaussian). If
   # noise_type is 'homoscedastic', std_dev is the exact value of the standard
   # deviation; if noise_type is 'heteroscedastic', std_dev is a percentage.
-  # Default: 0.1 
+  # Default: 0.1
   def write_as_csv(self, filename, artificial=False,
     noise_type='heteroscedastic', std_dev=0.1):
     # Open a file at the given location
@@ -231,25 +231,25 @@ class Report(Output):
     # writing header
     header = []
     for d in self.datasets:
-      if str.lower(d.get_label()).__contains__("time"):
-        header.append(d.get_label())
-      else: # there should be one header per iteration
-        for i in range(d.get_data_gen().get_number_of_series()):
-          if i != 0: # first iteration has no suffix
-            header.append(d.get_label() + "_" + str(i))
-          else:
-            header.append(d.get_label())
+      header.append(d.get_label())
     writer.writerow(header)
-    # writing data
+    # writing data - it is assumed all datasets have the same number of points
     n_points = self.datasets[0].get_data_gen().get_number_of_points()
+    # for each time_point
     for n in range(n_points):
       data = []
+      num_exp = 0
+      # number of experiments is detected
       for d in self.datasets:
-        if str.lower(d.get_label()).__contains__("time"):
-          data.append(d.get_data_gen().get_values()[0][n])
-        else: # non-time series might be added noise
-          for i in range(d.get_data_gen().get_number_of_series()):
-            v = d.get_data_gen().get_values()[i][n]
+        if d.get_num_experiments() > num_exp:
+          num_exp = d.get_num_experiments()
+      # data is written
+      for e in range(num_exp):
+        for d in self.datasets:
+          if str.lower(d.get_label()).__contains__("time"):
+            data.append(d.get_data_gen().get_values()[n][0])
+          else: # non-time series might be added noise
+            v = d.get_data_gen().get_values()[n][e]
             if not artificial:
               data.append(v)
             elif noise_type == "heteroscedastic":
@@ -283,26 +283,23 @@ class Report(Output):
     comp = doc.createResultComponent()
     comp.setId(self.name)
     # Add the default DimensionDescription
-    iter_desc = comp.createCompositeDescription()
-    iter_desc.setName("Iteration")
-    iter_desc.setIndexType("double")
-    ind_desc = iter_desc.createCompositeDescription()
-    ind_desc.setName("Index")
-    ind_desc.setIndexType("double")
-    series_desc = ind_desc.createCompositeDescription()
-    series_desc.setName("Series")
+    time_desc = comp.createCompositeDescription()
+    time_desc.setName("time")
+    time_desc.setIndexType("double")
+    series_desc = time_desc.createCompositeDescription()
+    series_desc.setName("series")
     series_desc.setIndexType("string")
-    at_desc = series_desc.createAtomicDescription()
-    at_desc.setName("Value")
-    at_desc.setValueType("double")
+    exp_desc = series_desc.createCompositeDescription()
+    exp_desc.setName("experiment")
+    exp_desc.setIndexType("integer")
+    val_desc = exp_desc.createAtomicDescription()
+    val_desc.setName("value")
+    val_desc.setValueType("double")
     # Create iterations and indices
     num_indices = self.datasets[0].get_number_of_points()
-    for s in range(self.datasets[0].get_number_of_series()):
-      s_value = comp.createCompositeValue()
-      s_value.setIndexValue(str(s))
-      for i in range(num_indices):
-        i_value = s_value.createCompositeValue()
-        i_value.setIndexValue(str(i))
+    for i in range(num_indices):
+      i_value = comp.createCompositeValue()
+      i_value.setIndexValue(str(i)) # temporary value
     # Populate the indices with values
     for d in self.datasets:
       d.write_as_numl(comp.getDimension(), artificial, noise_type, std_dev)

@@ -23,9 +23,8 @@ report = wf.get_outputs()[0] # processing output with noise
 report.write_as_csv(data_file, artificial=True, noise_type=noise, std_dev=std)
 
 # splitting generated data set into two smaller sets
-data = res.Result()
-metabolites = data.import_from_csv_file(
-  data_file, rm, separator=',', alignment='column')
+data = res.TimeSeries()
+metabolites = data.import_from_csv_file(data_file, rm)
 
 cal = open(calibration_file, "w")
 cal_writer = csv.writer(cal, delimiter=',')

@@ -8,7 +8,6 @@
 ## $License: BSD 3-Clause $
 ## $Revision$
 
-import libsbmlsim
 import libnuml
 from matplotlib import pyplot as plt
 import array
@@ -43,6 +42,18 @@ class TimeSeries(Result):
   def __init__(self):
     Result.__init__(self)
   
+  ## Returns the number of experiments (i.e the length of each time point
+  ## vector) in the time series generated for the input species.
+  # @param self The object pointer.
+  # @param species The species which dimensionality is required.
+  # @return The length of a time point vector in the 
+  def get_num_experiments(self, species):
+    try:
+      num_exp = len(self.result[species][0])
+      return num_exp
+    except TypeError:
+      return 1
+  
   ## Returns the list of experiment for the input species over time.
   # @param self The object pointer.
   # @param species The species which quantity values are wanted. 
@@ -65,22 +76,33 @@ class TimeSeries(Result):
   # @param species A list of strings: the title of the species which data
   # should be extracted from the input time_series; if None, all time series
   # are extracted (default: None).
+  # @param overwrite If True, the content of the input time_series will
+  # overwrite any conflicting data in self.result; if False, new data will be
+  # appended as new experiments to already existing time series. Default:
+  # False.
   # @return A vector containing the names of the time series listed in the
   # input file.
-  def import_from_copasi_time_series(self, time_series, species=None):
+  def import_from_copasi_time_series(self, time_series, species=None,
+    overwrite=False):
     names = []
     for i in range(time_series.getNumVariables()):
       name = time_series.getTitle(i)
       if str.lower(name).__contains__('time'):
-        self.result[name] = np.array(time_series.getDataForIndex(i))
+        self.result[name] = time_series.getDataForIndex(i)
       elif ((species is not None and name in species)
         or species is None):
         names.append(name)
         res = time_series.getDataForIndex(i)
-        value = []
-        for r in res:
-          value.append(np.array([r]))
-        self.result[name] = np.array(value)
+        # case where the content of self.result is rewritten or created
+        if overwrite == True or name not in self.result:
+          value = []
+          for r in res:
+            value.append([r])
+          self.result[name] = value
+        # case where time_series data is appended to already existing data
+        else:
+          for r in range(len(res)):
+            self.result[name][r].append(res[r])
     return names
   
   ## Import numerical values from a CSV file and store them in self.result.
@@ -106,9 +128,14 @@ class TimeSeries(Result):
   # @param header Integer value indicating the size of the file header in
   # number of lines i.e. the number of line to be skipped when parsing the file
   # (default 0).
+  # @param overwrite If True, the content of the input CSV file will
+  # overwrite any conflicting data in self.result; if False, new data will be
+  # appended as new experiments to already existing time series. Default:
+  # False.
   # @return A vector containing the names of the time series listed in the
   # input file.
-  def import_from_csv_file(self, address, manager, separator=',', header=0):
+  def import_from_csv_file(self, address, manager, separator=',', header=0, 
+    overwrite=False):
     if not separator in (',', ' ', '\t', ';', '|', ':'):
       sys.exit("Invalid separator: " + separator + "\n" +
                "Possible values are: ',', ' ', '\t', ';', '|' and ':'.")
@@ -120,55 +147,73 @@ class TimeSeries(Result):
         file.readline()
       # Initializing items
       names = file.readline().rstrip('\n').rstrip('\r').split(separator)
-      for n in names:
-        self.result[n.rstrip('\n').rstrip('\r')] = []
+      is_empty = []
+      for n in range(len(names)):
+        is_empty.append(False) # self.result is considered filled by default
+        if (names[n] not in self.result or overwrite == True
+          or str.lower(names[n]).__contains__('time')):
+          self.result[names[n].rstrip('\n').rstrip('\r')] = []
+          is_empty[n] = True
       # Filling the values
       for line in file:
         l = line.rstrip('\n').rstrip('\r')
         values = l.split(separator)
-        # test whether new vectors of experiment should be created
-        if (len(self.result['time'] == 0)
+        # update time column if need be
+        if (len(self.result['time']) == 0
           or values[0] != self.result['time'][-1]):
           self.result['time'].append(values[0])
-          for v in range(1, len(values)):
-            self.result[names[v]].append([])
         # populate vectors of experiment
         for p in range(1, len(values)):
-          self.result[names[p]][-1].append(float(values[p]))
-      # Convert all values to np.array
-      for key in self.result.keys():
-        self.result[key] = np.array(self.result[key])
+          if (is_empty[p] == True and values[0] != self.result['time'][index]):
+            self.result[names[p]].append([])
+          self.result[names[p]][len(self.result['time']-1)].append(
+            float(values[p]))
       return names
     else:
       sys.exit("Invalid file format.")
   
   ## Import numerical values from the output of a libSBMLSim simulation and
-  ## store them in self.result.
+  ## store them in self.result; if self.result is not empty and input
+  ## 'overwrite' argument is set to False, new experiments will be appended to
+  ## previously existing time series experiment vectors instead of erasing it.
   # @param self The object pointer.
   # @param result Result of a libSBMLSim simulation.
   # @param output_start Which time point to consider as the first output.
+  # @param overwrite If True, the content of the input 'result' argument will
+  # overwrite any conflicting data in self.result; if False, new data will be
+  # appended as new experiments to already existing time series. Default:
+  # False.
   # @return A vector containing the names of the time series listed in the
   # input file.
-  def import_from_libsbmlsim(self, result, output_start):
+  def import_from_libsbmlsim(self, result, output_start, overwrite=False):
     rows = result.getNumOfRows()
     # Time extraction
-    time = []
-    for r in range(rows):
-      t = result.getTimeValueAtIndex(r)
-      if t >= output_start:
-        time.append(result.getTimeValueAtIndex(r))
-    self.result["time"] = np.array(time)
+    if 'time' not in self.result or overwrite == True:
+      time = []
+      for r in range(rows):
+        t = result.getTimeValueAtIndex(r)
+        if t >= output_start:
+          time.append(result.getTimeValueAtIndex(r))
+      self.result["time"] = time
     # Species and miscellaneous values
     names = []
     for s in range(result.getNumOfSpecies()):
-      species = []
       name = result.getSpeciesNameAtIndex(s)
       names.append(name)
-      for t in range(rows):
-        current = result.getTimeValueAtIndex(r)
-        if current >= output_start:
-          species.append(np.array([result.getSpeciesValueAtIndex(name, t)]))
-      self.result[name] = np.array(species)
+      if name not in self.result or overwrite==True:
+        # case where dictionary item has to be created
+        species = []
+        for t in range(rows):
+          current = result.getTimeValueAtIndex(r)
+          if current >= output_start:
+            species.append([result.getSpeciesValueAtIndex(name, t)])
+        self.result[name] = species
+      else:
+        # case where dictionary item will not be overwritten
+        for t in range(rows):
+          current = result.getTimeValueAtIndex(r)
+          if current >= output_start:
+            self.result[name][t].append(result.getSpeciesValueAtIndex(name, t))
     return names
   
   ## Import time series from a NuML file and store them in self.result. This
@@ -180,11 +225,11 @@ class TimeSeries(Result):
   ##   - dimension
   ##     - compositeValue indexValue=0.0
   ##       - compositeValue indexValue="species_1"
-  ##         - tuple
+  ##         - compositeValue indexValue="0"
   ##           - atomicValue value=0.256
-  ##           + atomicValue
-  ##           [...]
-  ##           + atomicValue
+  ##         + compositeValue
+  ##         [...]
+  ##         + compositeValue
   ##       + compositeValue
   ##       [...]
   ##       + compositeValue
@@ -197,9 +242,13 @@ class TimeSeries(Result):
   # @param self The object pointer.
   # @param address Address of a NuML file.
   # @param manager A ResourceManager instance.
+  # @param overwrite If True, the content of the input NuML file will
+  # overwrite any conflicting data in self.result; if False, new data will be
+  # appended as new experiments to already existing time series. Default:
+  # False.
   # @return A vector containing the names of the time series listed in the
   # input file.
-  def import_from_numl_file(self, address, manager):
+  def import_from_numl_file(self, address, manager, overwrite=False):
     names = []
     if address.endswith('xml'):
       file = manager.get_resource(address)
@@ -214,21 +263,31 @@ class TimeSeries(Result):
         # extract metadata
         dim = doc.getResultComponents().get('time_series').getDimension()
         self.result['time'] = []
+        is_empty = []
         # Acquiring keys and initializing values
         for k in dim.get(0):
-          self.result[k.getIndexValue()] = []
-          names.append(k.getIndexValue())
+          key = k.getIndexValue()
+          names.append(key)
+          if key not in self.result or overwrite == True:
+            self.result[k.getIndexValue()] = []
+            is_empty.append(True)
+          else:
+            is_empty.append(False)
         # Populating values
         for i in dim: # time level
           self.result['time'].append(float(i.getIndexValue()))
-          for v in i: # species level
-            exp = []
-            for e in v: # experiment level
-              exp.append(e.getAtomicValue().getDoubleValue())
-            self.result[v.getIndexValue()].append(np.array(exp))
-        # Convert all values to np.array
-        for key in self.result.keys():
-          self.result[key] = np.array(self.result[key])
+          for v in range(len(i)): # species level
+            species = i.get(v)
+            name = species.getIndexValue()
+            if is_empty[v] == True:
+              exp = []
+              for e in species: # experiment level
+                exp.append(e.getAtomicValue().getDoubleValue())
+              self.result[name].append(exp)
+            else:
+              for e in species: # experiment level
+                self.result[name][i].append(
+                  e.getAtomicValue().getDoubleValue())
     else:
       sys.exit("Invalid file format.")
     return names

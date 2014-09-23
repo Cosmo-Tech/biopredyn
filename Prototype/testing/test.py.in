@@ -55,13 +55,13 @@ class SEDMLTestCase(GenericTestCase):
     flow.get_task_by_id('task_1').set_tool('copasi')
     flow.run_tasks()
     self.assertEqual(
-      len(flow.get_task_by_id('task_1').get_result(0).get_quantities_per_species('C')), 201)
+      len(flow.get_task_by_id('task_1').get_result().get_quantities_per_species('C')), 201)
   
   def test_libsbmlsim_time_course(self):
     flow = workflow.WorkFlow('test_graphical_output.xml', self.manager)
     flow.run_tasks()
     self.assertEqual(
-      len(flow.get_task_by_id('task_1').get_result(0).get_time_steps()), 201)
+      len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201)
 
 ## GenericTestCase derived class for Output related tests
 class OutputTestCase(GenericTestCase):
@@ -92,11 +92,11 @@ class OutputTestCase(GenericTestCase):
 class ResultTestCase(GenericTestCase):
   
   def test_csv_import(self):
-    res = result.Result()
+    res = result.TimeSeries()
     res.import_from_csv_file('3D_data.csv', self.manager)
   
   def test_numl_import(self):
-    res = result.Result()
+    res = result.TimeSeries()
     res.import_from_numl_file('FEBS_numerical_data.xml', self.manager)
 
 ## GenericTestCase derived class for XPath related tests
@@ -189,7 +189,7 @@ class SteadyStateTestCase(GenericTestCase):
     task = flow.get_task_by_id("task_1")
     task.run(True)
     self.assertEqual(
-      round(task.get_result(0).get_result()['growth_rate'][0], 2),
+      round(task.get_result().get_result()['growth_rate'][0], 2),
       0.38)
 
 ## GenericTestCase derived class for artificial data generation related test.
@@ -203,10 +203,9 @@ class DataGenerationTestCase(GenericTestCase):
     report = flow.get_outputs()[0]
     report.write_as_csv('homoscedastic.csv', artificial=True,
       noise_type='homoscedastic', std_dev=0.1)
-    noised_res = result.Result()
-    noised_res.import_from_csv_file('homoscedastic.csv', self.manager,
-      separator=',', alignment='column')
-    pure_res = task.get_results()[0]
+    noised_res = result.TimeSeries()
+    noised_res.import_from_csv_file('homoscedastic.csv', self.manager)
+    pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')
     residuals = noised_data - pure_data
@@ -220,10 +219,9 @@ class DataGenerationTestCase(GenericTestCase):
     report = flow.get_outputs()[0]
     report.write_as_csv('heteroscedastic.csv', artificial=True,
       noise_type='heteroscedastic', std_dev=0.1)
-    noised_res = result.Result()
-    noised_res.import_from_csv_file('heteroscedastic.csv', self.manager,
-      separator=',', alignment='column')
-    pure_res = task.get_results()[0]
+    noised_res = result.TimeSeries()
+    noised_res.import_from_csv_file('heteroscedastic.csv', self.manager)
+    pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')
     residuals = noised_data - pure_data
@@ -237,9 +235,9 @@ class DataGenerationTestCase(GenericTestCase):
     report = flow.get_outputs()[0]
     report.write_as_numl('homoscedastic.xml', artificial=True,
       noise_type='homoscedastic', std_dev=0.1)
-    noised_res = result.Result()
+    noised_res = result.TimeSeries()
     noised_res.import_from_numl_file('homoscedastic.xml', self.manager)
-    pure_res = task.get_results()[0]
+    pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')
     residuals = noised_data - pure_data
@@ -253,9 +251,9 @@ class DataGenerationTestCase(GenericTestCase):
     report = flow.get_outputs()[0]
     report.write_as_numl('heteroscedastic.xml', artificial=True,
       noise_type='heteroscedastic', std_dev=0.1)
-    noised_res = result.Result()
+    noised_res = result.TimeSeries()
     noised_res.import_from_numl_file('heteroscedastic.xml', self.manager)
-    pure_res = task.get_results()[0]
+    pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')
     residuals = noised_data - pure_data

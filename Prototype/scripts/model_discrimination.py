@@ -23,9 +23,8 @@ wf = workflow.WorkFlow(simulation_file, rm)
 # funny science
 plt.xkcd()
 
-val_data = res.Result()
-val_data.import_from_csv_file(
-  validation_file, rm, separator=',', alignment='column')
+val_data = res.TimeSeries()
+val_data.import_from_csv_file(validation_file, rm)
 sim = wf.get_simulations()[0]
 
 # run a parameter estimation for each model
