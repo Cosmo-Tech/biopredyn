@@ -59,7 +59,7 @@ class TimeSeries(Result):
   # @param species The species which quantity values are wanted. 
   # @return A list of quantity values for the input species over time.
   def get_quantities_per_species(self, species):
-    return self.result[species]
+    return np.array(self.result[species])
   
   ## Returns the list of all time steps in self.result.
   # @param self The object pointer.
@@ -67,7 +67,7 @@ class TimeSeries(Result):
   def get_time_steps(self):
     for t in self.result:
       if str.lower(t).__contains__("time"):
-        return self.result[t]
+        return np.array(self.result[t])
     sys.exit("Error: no time series found.")
 
   ## Import numerical values from a COPASI.CTimeSeries object.
@@ -88,7 +88,7 @@ class TimeSeries(Result):
     for i in range(time_series.getNumVariables()):
       name = time_series.getTitle(i)
       if str.lower(name).__contains__('time'):
-        self.result[name] = time_series.getDataForIndex(i)
+        self.result['time'] = time_series.getDataForIndex(i)
       elif ((species is not None and name in species)
         or species is None):
         names.append(name)
@@ -158,16 +158,17 @@ class TimeSeries(Result):
       for line in file:
         l = line.rstrip('\n').rstrip('\r')
         values = l.split(separator)
+        # populate vectors of experiment
+        for p in range(1, len(values)):
+          if (len(self.result[names[p]]) == 0 
+            or (is_empty[p] == True and values[0] != self.result['time'][-1])):
+            self.result[names[p]].append([])
+          self.result[names[p]][len(self.result['time'])].append(
+            float(values[p]))
         # update time column if need be
         if (len(self.result['time']) == 0
           or values[0] != self.result['time'][-1]):
           self.result['time'].append(values[0])
-        # populate vectors of experiment
-        for p in range(1, len(values)):
-          if (is_empty[p] == True and values[0] != self.result['time'][index]):
-            self.result[names[p]].append([])
-          self.result[names[p]][len(self.result['time']-1)].append(
-            float(values[p]))
       return names
     else:
       sys.exit("Invalid file format.")
@@ -204,14 +205,14 @@ class TimeSeries(Result):
         # case where dictionary item has to be created
         species = []
         for t in range(rows):
-          current = result.getTimeValueAtIndex(r)
+          current = result.getTimeValueAtIndex(t)
           if current >= output_start:
             species.append([result.getSpeciesValueAtIndex(name, t)])
         self.result[name] = species
       else:
         # case where dictionary item will not be overwritten
         for t in range(rows):
-          current = result.getTimeValueAtIndex(r)
+          current = result.getTimeValueAtIndex(t)
           if current >= output_start:
             self.result[name][t].append(result.getSpeciesValueAtIndex(name, t))
     return names
