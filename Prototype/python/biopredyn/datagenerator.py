@@ -111,7 +111,7 @@ class DataGenerator:
     return self.variables[0].get_number_of_points()
   
   ## Evaluate the values encoded by this and returned them as a 1-dimensional
-  # array of numerical values.
+  ## array of time series.
   # @param self The object pointer.
   # @return results An array of array of numerical values.
   def get_values(self):
@@ -123,25 +123,25 @@ class DataGenerator:
     # 'time'
     num_exp = self.get_num_experiments()
     results = []
-    for t in range(num_time_points):
+    for i in range(num_exp):
       # Initialization 
       res = []
-      for i in range(num_exp):
+      for t in range(num_time_points):
         res.append(self.math)
       # SymPy substitution - variables
       for v in self.variables:
         v_id = v.get_id()
         values = v.get_values()
-        for e in range(num_exp):
+        for t in range(num_time_points):
           if str.lower(v_id).__contains__('time'):
-            res[e] = res[e].subs(v_id, values[t])
+            res[t] = res[t].subs(v_id, values[t])
           else:
-            res[e] = res[e].subs(v_id, values[t][e])
+            res[t] = res[t].subs(v_id, values[t][i])
       # SymPy substitution - parameters
       for p in self.parameters:
         p_id = p.get_id()
-        for e in range(num_exp):
-          res[e] = res[e].subs(p_id, p.get_value())
+        for t in range(num_time_points):
+          res[t] = res[t].subs(p_id, p.get_value())
       results.append(res)
     return results
   

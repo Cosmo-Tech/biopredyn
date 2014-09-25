@@ -163,22 +163,22 @@ class DataSet(Data):
     for v in range(data_gen.get_number_of_points()):
       comp = dim.get(v)
       if str.lower(self.label).__contains__('time'):
-        comp.setIndexValue(str(values[v][0]))
+        comp.setIndexValue(str(values[0][v]))
       else:
         # series level
         series = comp.createCompositeValue()
         series.setIndexValue(self.label)
         # experiment level
-        for e in range(len(values[v])):
+        for e in range(len(values)):
           exp = series.createCompositeValue()
           exp.setIndexValue(str(e))
           value = exp.createAtomicValue()
           if not artificial:
-            value.setValue(str(values[v][e]))
+            value.setValue(str(values[e][v]))
           elif noise_type == 'heteroscedastic':
-            value.setValue(str(gauss(values[v][e], values[v][e] * std_dev)))
+            value.setValue(str(gauss(values[e][v], values[e][v] * std_dev)))
           elif noise_type == 'homoscedastic':
-            value.setValue(str(gauss(values[v][e], std_dev)))
+            value.setValue(str(gauss(values[e][v], std_dev)))
           else:
             sys.exit("Invalid noise type; expected noise types are" +
               "'homoscedastic' or 'heteroscedastic'.")

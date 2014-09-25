@@ -247,9 +247,9 @@ class Report(Output):
       for e in range(num_exp):
         for d in self.datasets:
           if str.lower(d.get_label()).__contains__("time"):
-            data.append(d.get_data_gen().get_values()[n][0])
+            data.append(d.get_data_gen().get_values()[0][n])
           else: # non-time series might be added noise
-            v = d.get_data_gen().get_values()[n][e]
+            v = d.get_data_gen().get_values()[e][n]
             if not artificial:
               data.append(v)
             elif noise_type == "heteroscedastic":
