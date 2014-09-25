@@ -92,10 +92,18 @@ class OutputTestCase(GenericTestCase):
 class ResultTestCase(GenericTestCase):
   
   def test_csv_import(self):
-    res = result.TimeSeries()
+    res = result.Result()
     res.import_from_csv_file('3D_data.csv', self.manager)
   
   def test_numl_import(self):
+    res = result.Result()
+    res.import_from_numl_file('FEBS_numerical_data.xml', self.manager)
+  
+  def test_csv_import_time_series(self):
+    res = result.TimeSeries()
+    res.import_from_csv_file('heteroscedastic.csv', self.manager)
+  
+  def test_numl_import_time_series(self):
     res = result.TimeSeries()
     res.import_from_numl_file('FEBS_numerical_data.xml', self.manager)
 

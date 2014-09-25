@@ -30,6 +30,8 @@ bpdAddTest(OutputNUMLReportTest OutputTestCase.test_numl_report)
 # Result related tests
 bpdAddTest(ResultCSVImportTest ResultTestCase.test_csv_import)
 bpdAddTest(ResultNUMLImportTest ResultTestCase.test_numl_import)
+bpdAddTest(TimeSeriesCSVImportTest ResultTestCase.test_csv_import_time_series)
+bpdAddTest(TimeSeriesNUMLImportTest ResultTestCase.test_numl_import_time_series)
 
 # XPath related tests
 bpdAddTest(XPathUnresolvedXPathTest XPathTestCase.test_unresolved_xpath)

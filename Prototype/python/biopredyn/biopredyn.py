@@ -115,7 +115,7 @@ for o, a in opts:
         ax.plot(res.get_time_steps(), res.get_quantities_per_species(i))
     plot.show()
   elif o == "--csv":
-    res = result.TimeSeries()
+    res = result.Result()
     res.import_from_csv_file(a, manager)
     values = res.get_result()
     plot = plt.figure("csv_test")

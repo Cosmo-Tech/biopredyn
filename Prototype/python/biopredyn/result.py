@@ -30,6 +30,141 @@ class Result:
   # @return self.result
   def get_result(self):
     return self.result
+  
+  ## Import numerical values from a CSV file and store them in self.result.
+  # Data is expected to be stored column-wise:
+  #
+  # species_1, ..., species_N
+  #
+  # 0.256, ..., 0.321
+  #
+  # 0.276, ..., 0.332
+  #
+  # ..., ..., ...
+  #
+  # @param self The object pointer.
+  # @param address Address of a CSV file (either .csv or .txt).
+  # @param manager A ResourceManager instance.
+  # @param separator A string indicating the type of separator to be expected
+  # between the data values; possible values are ',', ' ', '\\t', ';', '|' and
+  # ':' (default ',').
+  # @param header Integer value indicating the size of the file header in
+  # number of lines i.e. the number of line to be skipped when parsing the file
+  # (default 0).
+  # @param overwrite If True, the content of the input CSV file will
+  # overwrite any conflicting data in self.result; if False, new data will be
+  # appended as new experiments to already existing data series. Default:
+  # False.
+  # @return A vector containing the names of the numerical values listed in the
+  # input file.
+  def import_from_csv_file(self, address, manager, separator=',', header=0, 
+    overwrite=False):
+    if not separator in (',', ' ', '\t', ';', '|', ':'):
+      sys.exit("Invalid separator: " + separator + "\n" +
+               "Possible values are: ',', ' ', '\t', ';', '|' and ':'.")
+    if address.endswith('csv') or address.endswith('txt'):
+      file = manager.get_resource(address)
+      names = []
+      # Skipping potential header
+      for h in range(header):
+        file.readline()
+      # Initializing items
+      names = file.readline().rstrip('\n').rstrip('\r').split(separator)
+      is_empty = []
+      for n in range(len(names)):
+        is_empty.append(False) # self.result is considered filled by default
+        if (names[n] not in self.result or overwrite == True):
+          self.result[names[n].rstrip('\n').rstrip('\r')] = []
+          is_empty[n] = True
+      # Filling the values
+      index = 0
+      for line in file:
+        l = line.rstrip('\n').rstrip('\r')
+        values = l.split(separator)
+        # populate vectors of experiment
+        for p in range(len(values)):
+          if (is_empty[p] == True):
+            self.result[names[p]].append([])
+          self.result[names[p]][0].append(float(values[p]))
+        index += 1
+      return names
+    else:
+      sys.exit("Invalid file format.")
+  
+  ## Import numerical data from a NuML file and store them in self.result.
+  # This function expects the following layout for the resultComponent element
+  # indexed by input 'component':
+  #
+  # - resultComponent id="time_series"
+  #   + dimensionDescription
+  #   - dimension
+  #     - compositeValue indexValue=0.0
+  #       - compositeValue indexValue="species_1"
+  #         - compositeValue indexValue="0"
+  #           - atomicValue value=0.256
+  #         + compositeValue
+  #         [...]
+  #         + compositeValue
+  #       + compositeValue
+  #       [...]
+  #       + compositeValue
+  #     + compositeValue indexValue=0.2
+  #     [...]
+  #     + compositeValue indexValue=M
+  #
+  # @param self The object pointer.
+  # @param address Address of a NuML file.
+  # @param manager A ResourceManager instance.
+  # @param overwrite If True, the content of the input NuML file will
+  # overwrite any conflicting data in self.result; if False, new data will be
+  # appended as new experiments to already existing time series. Default:
+  # False.
+  # @param component Identifier (string or integer) for the resultComponent to
+  # be imported. Default: 0
+  # @return A vector containing the names of the time series listed in the
+  # input file.
+  def import_from_numl_file(self, address, manager, overwrite=False,
+    component=0):
+    names = []
+    if address.endswith('xml'):
+      file = manager.get_resource(address)
+      reader = libnuml.NUMLReader()
+      doc = reader.readNUMLFromString(file.read())
+      if doc.getNumErrors() > 0:
+        print("Error code " + str(doc.getError(0).getErrorId()) + " at line " +
+              str(doc.getError(0).getLine()) + " when opening file: " +
+              str(doc.getError(0).getShortMessage()))
+        sys.exit(2)
+      else:
+        # extract metadata
+        dim = doc.getResultComponents().get(component).getDimension()
+        is_empty = []
+        # Acquiring keys and initializing values
+        for k in dim.get(0):
+          key = k.getIndexValue()
+          names.append(key)
+          if key not in self.result or overwrite == True:
+            self.result[k.getIndexValue()] = []
+            is_empty.append(True)
+          else:
+            is_empty.append(False)
+        # Populating values
+        for i in dim: # composite level
+          for v in range(len(i)): # species level
+            species = i.get(v)
+            name = species.getIndexValue()
+            if is_empty[v] == True:
+              exp = []
+              for e in species: # experiment level
+                exp.append(e.getAtomicValue().getDoubleValue())
+              self.result[name].append(exp)
+            else:
+              for e in species: # experiment level
+                self.result[name][i].append(
+                  e.getAtomicValue().getDoubleValue())
+    else:
+      sys.exit("Invalid file format.")
+    return names
 
 ## Result derived class for time series formatted simulation results.
 # In a TimeSeries class, values of self.result are arrays of experiments,
@@ -123,8 +258,6 @@ class TimeSeries(Result):
   # @param separator A string indicating the type of separator to be expected
   # between the data values; possible values are ',', ' ', '\\t', ';', '|' and
   # ':' (default ',').
-  # @param alignment String value indicating the way data is aligned in the
-  # input file; possible values are 'row' and 'column' (default 'row').
   # @param header Integer value indicating the size of the file header in
   # number of lines i.e. the number of line to be skipped when parsing the file
   # (default 0).
