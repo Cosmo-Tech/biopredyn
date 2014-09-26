@@ -88,7 +88,9 @@ class Statistics:
   # the null hypothesis cannot be rejected (i.e. residuals are uncorrelated),
   # False otherwise (residuals show some correlation).
   def check_residuals_correlation(self, alpha=0.05):
-    (h_runs, p_runs) = runstest_1samp(self.get_residuals())
+    residuals = self.get_residuals()
+    res = [item for sublist in residuals for item in sublist]
+    (h_runs, p_runs) = runstest_1samp(res)
     if p_runs <= alpha:
       return (p_runs, False)
     else:

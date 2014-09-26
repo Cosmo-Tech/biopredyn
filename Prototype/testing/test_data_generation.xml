@@ -17,6 +17,14 @@
   <listOfTasks>
     <task id="task_1" name="task_1" modelReference="febs_model" simulationReference="simulation_1">
     </task>
+    <repeatedTask id="task_2" resetModel="true" range="repeat">
+      <listOfRanges>
+        <uniformRange id="repeat" start="0" end="2" numberOfPoints="4" type="linear" />
+      </listOfRanges>
+      <listOfSubTasks>
+        <subTask order="1" task="task_1" />
+      </listOfSubTasks>
+    </repeatedTask>
   </listOfTasks>
   <listOfDataGenerators>
     <dataGenerator id="datagenerator_1" name="time_datagenerator">

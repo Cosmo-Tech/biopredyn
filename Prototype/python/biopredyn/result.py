@@ -301,7 +301,7 @@ class TimeSeries(Result):
         # update time column if need be
         if (len(self.result['time']) == 0
           or values[0] != self.result['time'][-1]):
-          self.result['time'].append(values[0])
+          self.result['time'].append(float(values[0]))
       return names
     else:
       sys.exit("Invalid file format.")

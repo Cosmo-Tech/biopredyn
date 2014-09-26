@@ -101,7 +101,7 @@ class ResultTestCase(GenericTestCase):
   
   def test_csv_import_time_series(self):
     res = result.TimeSeries()
-    res.import_from_csv_file('heteroscedastic.csv', self.manager)
+    res.import_from_csv_file('time_series_data.csv', self.manager)
   
   def test_numl_import_time_series(self):
     res = result.TimeSeries()
@@ -207,12 +207,12 @@ class DataGenerationTestCase(GenericTestCase):
     flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
-    task.run(True)
+    flow.get_tasks()[1].run(True)
     report = flow.get_outputs()[0]
-    report.write_as_csv('homoscedastic.csv', artificial=True,
+    report.write_as_csv('homoscedastic_gen.csv', artificial=True,
       noise_type='homoscedastic', std_dev=0.1)
     noised_res = result.TimeSeries()
-    noised_res.import_from_csv_file('homoscedastic.csv', self.manager)
+    noised_res.import_from_csv_file('homoscedastic_gen.csv', self.manager)
     pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')
@@ -223,12 +223,12 @@ class DataGenerationTestCase(GenericTestCase):
     flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
-    task.run(True)
+    flow.get_tasks()[1].run(True)
     report = flow.get_outputs()[0]
-    report.write_as_csv('heteroscedastic.csv', artificial=True,
+    report.write_as_csv('heteroscedastic_gen.csv', artificial=True,
       noise_type='heteroscedastic', std_dev=0.1)
     noised_res = result.TimeSeries()
-    noised_res.import_from_csv_file('heteroscedastic.csv', self.manager)
+    noised_res.import_from_csv_file('heteroscedastic_gen.csv', self.manager)
     pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')
@@ -239,12 +239,12 @@ class DataGenerationTestCase(GenericTestCase):
     flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
-    task.run(True)
+    flow.get_tasks()[1].run(True)
     report = flow.get_outputs()[0]
-    report.write_as_numl('homoscedastic.xml', artificial=True,
+    report.write_as_numl('homoscedastic_gen.xml', artificial=True,
       noise_type='homoscedastic', std_dev=0.1)
     noised_res = result.TimeSeries()
-    noised_res.import_from_numl_file('homoscedastic.xml', self.manager)
+    noised_res.import_from_numl_file('homoscedastic_gen.xml', self.manager)
     pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')
@@ -255,12 +255,12 @@ class DataGenerationTestCase(GenericTestCase):
     flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
-    task.run(True)
+    flow.get_tasks()[1].run(True)
     report = flow.get_outputs()[0]
-    report.write_as_numl('heteroscedastic.xml', artificial=True,
+    report.write_as_numl('heteroscedastic_gen.xml', artificial=True,
       noise_type='heteroscedastic', std_dev=0.1)
     noised_res = result.TimeSeries()
-    noised_res.import_from_numl_file('heteroscedastic.xml', self.manager)
+    noised_res.import_from_numl_file('heteroscedastic_gen.xml', self.manager)
     pure_res = task.get_result()
     noised_data = noised_res.get_quantities_per_species('sp_C')
     pure_data = pure_res.get_quantities_per_species('sp_C')

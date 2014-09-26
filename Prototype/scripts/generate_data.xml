@@ -17,15 +17,23 @@
   <listOfTasks>
     <task id="task_1" name="task_1" modelReference="febs_model" simulationReference="simulation_1">
     </task>
+    <repeatedTask id="task_2" resetModel="true" range="repeat">
+      <listOfRanges>
+        <uniformRange id="repeat" start="0" end="9" numberOfPoints="9" type="linear" />
+      </listOfRanges>
+      <listOfSubTasks>
+        <subTask order="1" task="task_1" />
+      </listOfSubTasks>
+    </repeatedTask>
   </listOfTasks>
   <listOfDataGenerators>
     <dataGenerator id="datagenerator_1" name="time_datagenerator">
       <listOfVariables>
-        <variable id="Time" name="time" taskReference="task_1" symbol="urn:sedml:symbol:time">
+        <variable id="time" name="time" taskReference="task_1" symbol="urn:sedml:symbol:time">
         </variable>
       </listOfVariables>
       <math xmlns="http://www.w3.org/1998/Math/MathML">
-        <ci>Time</ci>
+        <ci>time</ci>
       </math>
     </dataGenerator>
     <dataGenerator id="datagenerator_2" name="E_datagenerator">
@@ -68,7 +76,7 @@
   <listOfOutputs>
     <report id="report_1" name="time_series">
       <listOfDataSets>
-        <dataSet id="data1" label="Time" dataReference="datagenerator_1">
+        <dataSet id="data1" label="time" dataReference="datagenerator_1">
         </dataSet>
         <dataSet id="data2" label="sp_E" dataReference="datagenerator_2">
         </dataSet>

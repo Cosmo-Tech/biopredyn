@@ -237,7 +237,6 @@ class Report(Output):
     n_points = self.datasets[0].get_data_gen().get_number_of_points()
     # for each time_point
     for n in range(n_points):
-      data = []
       num_exp = 0
       # number of experiments is detected
       for d in self.datasets:
@@ -245,6 +244,7 @@ class Report(Output):
           num_exp = d.get_num_experiments()
       # data is written
       for e in range(num_exp):
+        data = []
         for d in self.datasets:
           if str.lower(d.get_label()).__contains__("time"):
             data.append(d.get_data_gen().get_values()[0][n])
@@ -259,7 +259,7 @@ class Report(Output):
             else:
               sys.exit("Invalid noise type; expected noise types are" +
                 "'homoscedastic' or 'heteroscedastic'.")
-      writer.writerow(data)
+        writer.writerow(data)
     f.close()
   
   ## Write the result of the task associated with self.data into a NuML file.
