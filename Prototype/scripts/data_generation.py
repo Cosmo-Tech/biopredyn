@@ -38,8 +38,8 @@ val_writer = csv.writer(val, delimiter=',')
 val_writer.writerow(metabolites)
 
 for l in range(len(data.get_time_steps())):
-  row = []
   for e in range(num_exp):
+    row = []
     for m in metabolites:
       if (str.lower(m).__contains__('time')):
         row.append(data.get_quantities_per_species(m)[l])

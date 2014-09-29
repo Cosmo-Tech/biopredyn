@@ -291,17 +291,18 @@ class TimeSeries(Result):
       for line in file:
         l = line.rstrip('\n').rstrip('\r')
         values = l.split(separator)
+        # update time column if need be
+        if (len(self.result['time']) == 0
+          or float(values[0]) != self.result['time'][-1]):
+          self.result['time'].append(float(values[0]))
         # populate vectors of experiment
         for p in range(1, len(values)):
           if (len(self.result[names[p]]) == 0 
-            or (is_empty[p] == True and values[0] != self.result['time'][-1])):
+            or (is_empty[p] == True
+            and len(self.result[names[p]]) != len(self.result['time']))):
             self.result[names[p]].append([])
-          self.result[names[p]][len(self.result['time'])].append(
+          self.result[names[p]][len(self.result['time']) - 1].append(
             float(values[p]))
-        # update time column if need be
-        if (len(self.result['time']) == 0
-          or values[0] != self.result['time'][-1]):
-          self.result['time'].append(float(values[0]))
       return names
     else:
       sys.exit("Invalid file format.")
