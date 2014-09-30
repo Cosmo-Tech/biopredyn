@@ -279,7 +279,7 @@ class UniformTimeCourse(Simulation):
   ## Run this as a libSBMLSim time course and import its result.
   # @param self The object pointer.
   # @param model A biopredyn.model.Model object.
-  # @param result A biopredyn.result.TimeSeries object where simulation results
+  # @param res A biopredyn.result.TimeSeries object where simulation results
   # will be written.
   # @return A biopredyn.result.TimeSeries object.
   # TODO: add option for setting parameter values before running
@@ -319,7 +319,8 @@ class UniformTimeCourse(Simulation):
   # parameter value ranges.
   # @param max_unknown_values A list of numerical values; upper bound of the
   # parameter value ranges.
-  # @param A CCopasiMethod::SubType object describing the algorithm to be used.
+  # @param algorithm A CCopasiMethod::SubType object describing the algorithm
+  # to be used.
   # @param rm A biopredyn.resources.ResourceManager object.
   # return statistics A biopredyn.statistics.Statistics object.
   def run_as_parameter_estimation(self, mod, cal_data, val_data, observables,

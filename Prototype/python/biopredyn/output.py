@@ -60,7 +60,7 @@ class Output:
   
   ## Setter for self.name.
   # @param self The object pointer.
-  # @param id New value for self.id.
+  # @param name New value for self.name.
   def set_name(self, name):
     self.name = name
   

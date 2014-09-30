@@ -87,7 +87,7 @@ class Algorithm:
 
   ## Setter for self.kisao_id.
   # @param self The object pointer.
-  # @param id New value for self.kisao_id
+  # @param kisao_id New value for self.kisao_id
   def set_kisao_id(self, kisao_id):
     self.kisao_id = kisao_id
 
@@ -150,7 +150,7 @@ class AlgorithmParameter:
 
   ## Setter for self.kisao_id.
   # @param self The object pointer.
-  # @param id New value for self.kisao_id
+  # @param kisao_id New value for self.kisao_id
   def set_kisao_id(self, kisao_id):
     self.kisao_id = kisao_id
 

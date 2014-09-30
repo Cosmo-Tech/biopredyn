@@ -90,20 +90,12 @@ class Change:
 
 ## Change-derived class for changes computed with MathML expressions.
 class ComputeChange(Change):
-  ## @var id
-  # ID of the Change element.
-  ## @var name
-  # Name of the Change element.
   ## @var variables
   # A list of Variable objects.
   ## @var parameters
   # A list of Parameter objects.
   ## @var math
   # A Sympy expression.
-  ## @var target
-  # XPath expression pointing the element to be impacted by the change.
-  ## @var model
-  # Reference to the model to be modified by the change.
 
   ## Constructor.
   # @param self The object pointer.
@@ -168,16 +160,8 @@ class ComputeChange(Change):
 
 ## Change-derived class for changing attribute values.
 class ChangeAttribute(Change):
-  ## @var id
-  # ID of the Change element.
-  ## @var name
-  # Name of the Change element.
   ## @var value
   # Value to be given to the changed attribute.
-  ## @var target
-  # XPath expression pointing the element to be impacted by the change.
-  ## @var model
-  # Reference to the model to be modified by the change.
   
   ## Constructor.
   # @param self The object pointer.
@@ -215,16 +199,8 @@ class ChangeAttribute(Change):
 
 ## Change-derived class for adding a piece of XML code.
 class AddXML(Change):
-  ## @var id
-  # ID of the Change element.
-  ## @var name
-  # Name of the Change element.
   ## @var xml
   # A piece of XML code.
-  ## @var target
-  # XPath expression pointing the element to be impacted by the change.
-  ## @var model
-  # Reference to the model to be modified by the change.
   
   ## Constructor.
   # @param self The object pointer.
@@ -263,16 +239,8 @@ class AddXML(Change):
 
 ## Change-derived class for replacing a piece of XML code.
 class ChangeXML(Change):
-  ## @var id
-  # ID of the Change element.
-  ## @var name
-  # Name of the Change element.
   ## @var xml
   # A piece of XML code.
-  ## @var target
-  # XPath expression pointing the element to be impacted by the change.
-  ## @var model
-  # Reference to the model to be modified by the change.
   
   ## Constructor.
   # @param self The object pointer.
@@ -313,14 +281,6 @@ class ChangeXML(Change):
 
 ## Change-derived class for removing a piece of XML code.
 class RemoveXML(Change):
-  ## @var id
-  # ID of the Change element.
-  ## @var name
-  # Name of the Change element.
-  ## @var target
-  # XPath expression pointing the element to be impacted by the change.
-  ## @var model
-  # Reference to the model to be modified by the change.
   
   ## Constructor.
   # @param self The object pointer.
@@ -346,7 +306,7 @@ class RemoveXML(Change):
       parent.remove(target[0])
 
 ## Class for RepeatedTask change elements; does not inherit from Change, as it
-## works differently from the other changes..
+## works differently from the other changes.
 class SetValue:
   ## @var id
   # ID of the Change element.

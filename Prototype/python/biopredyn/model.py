@@ -157,7 +157,7 @@ class Model:
   
   ## Setter for self.source.
   # @param self The object pointer.
-  # @param id New value for self.source.
+  # @param source New value for self.source.
   def set_source(self, source):
     self.source = source
   
