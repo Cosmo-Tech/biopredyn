@@ -28,7 +28,7 @@ model_result = sim.run_as_parameter_estimation(
   observables, unknowns, min_unknown_values, max_unknown_values, algo, rm)
 
 # funny science
-plt.xkcd()
+#plt.xkcd()
 
 # plotting model and data results
 plt.figure("Fitted model: " + wf.get_models()[0].get_id())
@@ -39,10 +39,10 @@ for s in model_result.get_fitted_result().get_result().keys():
       results, label=s)
     # plot data only if it is available
     if s in observables:
-      dat = model_result.get_validation_data().get_quantities_per_species(s)
+      dat = model_result.get_validation_data().get_species_as_mean_std(s)
       data_label = str(s) + "_experimental"
-      plt.plot(model_result.get_validation_data().get_time_steps(),
-        dat, '+', label=data_label)
+      plt.errorbar(model_result.get_validation_data().get_time_steps(),
+        dat[:,0], yerr=dat[:,1], ls='None', marker='+', label=data_label)
     plt.legend()
 
 print("====================================================================")

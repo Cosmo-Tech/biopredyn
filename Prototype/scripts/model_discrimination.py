@@ -21,7 +21,7 @@ rm = resources.ResourceManager()
 wf = workflow.WorkFlow(simulation_file, rm)
 
 # funny science
-plt.xkcd()
+#plt.xkcd()
 
 val_data = res.TimeSeries()
 val_data.import_from_csv_file(validation_file, rm)
@@ -52,10 +52,10 @@ for i in range(len(model_results)):
       plt.plot(m.get_fitted_result().get_time_steps(), results, label=s)
       # plot data only if it is available
       if s in observables:
-        dat = m.get_validation_data().get_quantities_per_species(s)
+        dat = m.get_validation_data().get_species_as_mean_std(s)
         data_label = str(s) + "_experimental"
-        plt.plot(m.get_validation_data().get_time_steps(),
-          dat, '+', label=data_label)
+        plt.errorbar(m.get_validation_data().get_time_steps(),
+          dat[:,0], yerr=dat[:,1], ls='None', marker='_', label=data_label)
       plt.legend()
 
 plt.show()

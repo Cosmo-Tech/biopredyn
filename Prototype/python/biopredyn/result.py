@@ -195,6 +195,38 @@ class TimeSeries(Result):
   # @return A list of quantity values for the input species over time.
   def get_quantities_per_species(self, species):
     return np.array(self.result[species])
+
+  ## Returns the list of experiment for the input species over time as a list
+  ## of (mean, standard deviation) couples.
+  # @param self The object pointer.
+  # @param species The species which quantity values are wanted. 
+  # @return A list of (mean, standard deviation) couples for the input species
+  # over time.
+  def get_species_as_mean_std(self, species):
+    couples = []
+    experiments = self.get_quantities_per_species(species)
+    for e in experiments:
+      couple = []
+      couple.append(e.mean())
+      couple.append(e.std())
+      couples.append(couple)
+    return np.array(couples)
+
+  ## Returns the list of experiment for the input species over time as a list
+  ## of (mean, variance) couples.
+  # @param self The object pointer.
+  # @param species The species which quantity values are wanted. 
+  # @return A list of (mean, variance) couples for the input species
+  # over time.
+  def get_species_as_mean_var(self, species):
+    couples = []
+    experiments = self.get_quantities_per_species(species)
+    for e in experiments:
+      couple = []
+      couple.append(e.mean())
+      couple.append(e.var())
+      couples.append(couple)
+    return np.array(couples)
   
   ## Returns the list of all time steps in self.result.
   # @param self The object pointer.
