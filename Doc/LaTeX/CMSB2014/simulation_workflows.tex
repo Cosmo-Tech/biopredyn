@@ -17,7 +17,10 @@ software platform integrating several tools specialized in systems biology for
 running dry experiments on numerical models. More specifically, this platform
 is an implementation of the systems biology model building cycle for data-driven
 computational models\cite{Kitano2002}, and allows the execution of simulation
-workflows.
+workflows. Current version handles workflows combining simulation run, flux
+balance analysis and parameter estimation; its application programming
+interface (API) also provides tools for assessing the quality of a numerical
+model.
 
 \begin{figure}[!hbtp]
   \centering
@@ -31,11 +34,11 @@ initialization, simulation runs and result processing. In this context,
 "executing a workflow" simply means executing each instruction sequentially.
 Acquiring and parsing the physical representation of the workflow can be part
 of the process, as pictured in figure 1. The following standard languages were
-chosen to describe the various elements composing a generic model building work
-flow:
+chosen to describe the various elements composing a generic model building
+workflow:
 \begin{enumerate}
 \item As a workflow description language: Simulation Experiment Description
-Markup Language (\href{http://sed-ml.org/}{SEDML});
+Markup Language (\href{http://sed-ml.org/}{SED-ML});
 \item As a modeling language: Systems Biology Markup Language
 (\href{http://sbml.org}{SBML});
 \item As a numerical result description language: Numerical Markup Language
@@ -44,10 +47,9 @@ Results Markup Language.
 \end{enumerate}
 With those requirements in mind, an open-source software tool hosted on the
 \href{http://www.github.com/bmoreau/biopredyn}{GitHub} platform was developed.
-This implementation consists in:
+This implementation consists of:
 \begin{enumerate}
-\item A Python application programming interface (API) allowing users to
-create and edit simulation workflows;
+\item A Python API allowing users to create and edit simulation workflows;
 \item Parsers for reading workflows from SED-ML files, describing the tasks,
 and passing them to the simulation engine;
 \item A Python-based engine capable of dispatching the tasks read by the parsers
@@ -59,7 +61,9 @@ The BioPreDyn software relies on several tools for writing or reading specific
 file formats, running simulations, accessing data bases, etc: dedicated parsers
 (libSEDML, libSBML, and libNuML respectively for SED-ML, SBML and NuML files),
 simulation engines (libSBMLSim\cite{Takizawa2013}, CobraPY\cite{Ebrahim2013}
-and COPASI\cite{Hoops2006}), web services (BioServices\cite{Cokelaer2013}).\\
+and COPASI\cite{Hoops2006}), web services (BioServices\cite{Cokelaer2013}).
+Depending on the task to be done, the user can therefore choose between
+different simulation engines.\\
 
 The BioPreDyn software can be used as any Python library for scripting more
 elaborated workflows:
