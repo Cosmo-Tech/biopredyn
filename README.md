@@ -21,6 +21,9 @@ The engine can also be used as a Python library; the available API is documented
 [this page](https://thecosmocompany.com/BioPreDyn-doxygen/).
 
 ## License
+This project is distributed under the terms of the
+[BSD-3 clause license](http://opensource.org/licenses/BSD-3-Clause):
+
 Copyright (c) 2014, The CoSMo Company
 All rights reserved.
 
