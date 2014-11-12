@@ -43,7 +43,7 @@ for s in model_result.get_fitted_result().get_result().keys():
       data_label = str(s) + "_experimental"
       plt.errorbar(model_result.get_validation_data().get_time_steps(),
         dat[:,0], yerr=dat[:,1], ls='None', marker='+', label=data_label)
-    plt.legend()
+    plt.legend(loc='center right')
 
 print("====================================================================")
 print("Fisher Information Matrix")
