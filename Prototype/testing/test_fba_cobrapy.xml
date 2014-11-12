@@ -7,7 +7,7 @@
   </listOfSimulations>
   <listOfModels>
     <model id="salmonella" language="urn:sedml:language:sbml"
-      source="../python/cobrapy/cobra/test/data/salmonella.xml">
+      source="../python/cobrapy/cobra/test/data/salmonella_fbc.xml">
     </model>
   </listOfModels>
   <listOfTasks>
