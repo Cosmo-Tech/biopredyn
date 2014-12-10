@@ -1,7 +1,7 @@
 # Dependencies
 find_package(Doxygen REQUIRED)
 
-macro(csmAddDoxygen a_Name a_DstDir a_SrcFilesOrDirs a_WithSources)
+macro(addDoxygen a_Name a_DstDir a_SrcFilesOrDirs a_WithSources)
   set(DOXYGEN_PROJECT ${a_Name})
   set(DOXYGEN_PROJECT_SRC)
   foreach(fileOrDir ${a_SrcFilesOrDirs})
@@ -48,7 +48,7 @@ mark_as_advanced(BPD_DOXYGEN_WITH_SOURCES)
 set(PROTOTYPE_SRC
   "${CMAKE_SOURCE_DIR}/Prototype/python/biopredyn")
 if(BPD_DOXYGEN_WITH_SOURCES)
-  csmAddDoxygen("doxygen" "PrototypeWithSources" "${PROTOTYPE_SRC}" YES)
+  addDoxygen("biopredyn_doxygen" "PrototypeWithSources" "${PROTOTYPE_SRC}" YES)
 else()
-  csmAddDoxygen("doxygen" "PrototypeWithoutSources" "${PROTOTYPE_SRC}" NO)
+  addDoxygen("biopredyn_doxygen" "PrototypeWithoutSources" "${PROTOTYPE_SRC}" NO)
 endif()

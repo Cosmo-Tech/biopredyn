@@ -3,3 +3,4 @@ Current versions of the project dependencies:
 * libSBMLSim version 1.1.0
 * libNUML version 1.0.1
 * libSBML version 5.10.0
+* libFBC version 0.1.0

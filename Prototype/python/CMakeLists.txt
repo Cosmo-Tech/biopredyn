@@ -6,5 +6,5 @@ add_subdirectory(cobrapy)
 
 # biopredyn installation
 install(
-	CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --user WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})"
+  CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --user WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})"
   )

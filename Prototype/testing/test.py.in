@@ -34,7 +34,7 @@ class SBMLTestCase(GenericTestCase):
   
   def test_server_import(self):
     mod = model.Model(self.manager,
-      source='https://thecosmocompany.com/svn/repos/SVN/BioPreDyn/trunk/Prototype/data/FEBS_copasi.xml')
+      source='https://raw.githubusercontent.com/TheCoSMoCompany/biopredyn/master/Prototype/scripts/FEBS_antimony.xml')
     self.assertTrue(mod.check())
   
   def test_biomodels_import(self):

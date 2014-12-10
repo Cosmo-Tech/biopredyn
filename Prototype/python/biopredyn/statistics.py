@@ -12,7 +12,7 @@ import result
 import numpy as np
 from scipy.linalg import svd
 from scipy.stats import f, norm, pearsonr
-from scikits.statsmodels.sandbox.stats.runs import runstest_1samp
+from statsmodels.sandbox.stats.runs import runstest_1samp
 
 ## Base class for processing / analyzing / displaying the statistics resulting
 ## from a successful parameter estimation.

@@ -28,7 +28,7 @@ model_result = sim.run_as_parameter_estimation(
   observables, unknowns, min_unknown_values, max_unknown_values, algo, rm)
 
 # funny science
-#plt.xkcd()
+plt.xkcd()
 
 # plotting model and data results
 plt.figure("Fitted model: " + wf.get_models()[0].get_id())

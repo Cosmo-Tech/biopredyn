@@ -21,7 +21,7 @@ rm = resources.ResourceManager()
 wf = workflow.WorkFlow(simulation_file, rm)
 
 # funny science
-#plt.xkcd()
+plt.xkcd()
 
 val_data = res.TimeSeries()
 val_data.import_from_csv_file(validation_file, rm)
