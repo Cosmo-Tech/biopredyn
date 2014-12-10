@@ -7,3 +7,6 @@
 [submodule "Prototype/src/copasi"]
 	path = Prototype/src/copasi
 	url = https://github.com/bmoreau/COPASI.git
+[submodule "Prototype/src/libfbc"]
+	path = Prototype/src/libfbc
+	url = https://github.com/TheCoSMoCompany/libfbc.git
