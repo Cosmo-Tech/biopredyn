@@ -4,9 +4,9 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{listings}
 \usepackage{multicol}
-\usepackage[labelfont=bf,font=it]{caption}
+\usepackage[hypcap,labelfont=bf,font=it]{caption}
 
-\definecolor{BoxCol}{rgb}{0.8,0.835,0.894}
+\definecolor{BoxCol}{rgb}{0.4706,0.6196,0.8902}
 
 \lstset{
   basicstyle=\small\ttfamily,
@@ -49,13 +49,13 @@ of a numerical model.
 \section{Architecture and implementation}
 In the scope of the BioPreDyn project, a {\bf simulation workflow} - or
 numerical experiment - is defined as a {\bf sequence of instructions} to be
-executed on a numerical model; instructions encoded in the workflow include
-{\bf model initialization}, {\bf simulation runs} and {\bf result processing}.
-Standard languages encodes different parts of the workflow: the Simulation
-Experiment Description Markup Language\cite{Kohn2008} ({\bf SED-ML}) for the
-workflow itself, the Systems Biology Markup Language\cite{Hucka2003}
-({\bf SBML}) for the model, and the Numerical Markup Language ({\bf NuML}) for
-the numerical results.
+executed on a numerical model, as described in figure~\ref{fig:workflow};
+instructions encoded in the workflow include {\bf model initialization},
+{\bf simulation runs} and {\bf result processing}. Standard languages encodes
+different parts of the workflow: the Simulation Experiment Description Markup
+Language\cite{Kohn2008} ({\bf SED-ML}) for the workflow itself, the Systems
+Biology Markup Language\cite{Hucka2003} ({\bf SBML}) for the model, and the
+Numerical Markup Language ({\bf NuML}) for the numerical results.
 
 \begin{figure}
 \begin{minipage}[c]{0.5\textwidth}
@@ -67,17 +67,16 @@ the workflow from its physical representation and passes it to the engine as a
 series of instructions; each instruction describes an operation and refers to
 a model. The engine dispatches the instructions to the appropriate tools and
 schedules their execution following the order specified in the input workflow
-file. In this context, "executing a workflow" simply means executing each
-instruction sequentially.}
+file.}
+\label{fig:workflow}
 \end{minipage}
 \end{figure}
 
 An {\bf open-source Python software framework} hosted on the GitHub platform
 was developed. The BioPreDyn software relies on several tools for writing or
 reading specific file formats, running simulations, accessing data bases, etc:
-dedicated parsers, simulation engines, and web services. Depending on the task
-to be done, one can therefore choose between {\bf different simulation
-engines}.
+dedicated parsers, simulation engines, and web services. Figure~\ref{fig:tools}
+displays an overview of these dependencies:
 
 \begin{figure}
 \centering
@@ -85,33 +84,47 @@ engines}.
 \caption{BioPreDyn collection of tools; built-in dependencies are compiled
 and wrapped with the package, while external dependencies need to be
 installed independently.}
+\label{fig:tools}
 \end{figure}
 
 \section{Usage and results}
 The BioPreDyn software's main purpose is to {\bf read and execute SED-ML
-encoded workflows}; its default behavior when given a SED-ML file consists in
-first running all the tasks, then processing all the outputs, if any. An
-elementary executable SED-ML workflow contains at least a {\bf simulation}, a
-{\bf model}, and a {\bf task} linking the simulation to the model.
-\lstinputlisting[
-  language=XML,
-  caption={SED-ML workflow describing a time course simulation of an SBML
-model hosted on the BioModels database; for the sake of readability, this
-workflow does not describe any output nor data generation step.}
-]{goldbeter_simulation.xml}
+encoded workflows}; figure~\ref{fig:sedml} shows the structure of an SED-ML
+file and describes the execution process:
+
+\begin{figure}
+\begin{minipage}[c]{0.7\textwidth}
+\centering
+\includegraphics[width=0.9\textwidth]{workflow_instance.pdf}\\(a)
+\end{minipage}\hfill
+\begin{minipage}[c]{0.3\textwidth}
+\centering
+\includegraphics[width=0.9\textwidth]{activity.pdf}\\(b)
+\end{minipage}
+\caption{(a) Representation of an elementary SED-ML workflow describing a time
+course simulation of an SBML model hosted on the BioModels database; (b)
+activity diagram of the BioPreDyn software default behavior when executing a
+SED-ML workflow.}
+\label{fig:sedml}
+\end{figure}
+
 In addition, the BioPreDyn API {\bf can be used as any Python library} to
 manipulate and enrich any workflow with operations that are not described by
-the SED-ML language yet; one could for instance use the following script to
-estimate the parameters of a model:
+the SED-ML language yet; one could for instance use the script presented in
+listing~\ref{lst:script} to estimate the parameters of a model:
+
 \lstinputlisting[
   language=Python,
   caption={Example of an executable script using the BioPreDyn API to describe
 a parameter estimation based on an SED-ML time course description.}
 ]{script_example_2.py}
+\label{lst:script}
+
 Once a simulation has been run, the biopredyn.result module provides multiple
 tools and accessors for {\bf analyzing and exporting results}. Numerical results
-can be displayed using Matplotlib\cite{Hunter2007} or exported as CSV of NuML
-files.
+can be displayed using Matplotlib\cite{Hunter2007} (as shown in
+figure~\ref{fig:results}) or exported as CSV of NuML files.
+
 \begin{figure}
 \begin{center}
 \begin{minipage}[c]{0.56\textwidth}
@@ -125,23 +138,30 @@ files.
 \includegraphics[width=\textwidth]{correlation_matrix.pdf}\\
 (c)\\
 \end{minipage}
-\caption{Results of the parameter estimation described in Listing 2 using
-the matplotlib library: (a) residual plot and frequency analysis of the
-residuals; (b) simulated concentrations of species E, S, C and P versus time
-using fitted parameters; (c) correlation matrix for the estimated parameters
-$k_{1}$, $k_{2}$ and $k_{3}$.}
+\caption{Results of the parameter estimation described in
+listing~\ref{lst:script} using the matplotlib library: (a) residual plot and
+frequency analysis of the residuals; (b) simulated concentrations of species E,
+S, C and P versus time using fitted parameters; (c) correlation matrix for the
+estimated parameters $k_{1}$, $k_{2}$ and $k_{3}$.}
+\label{fig:results}
 \end{center}
 \end{figure}
 
 \section{Conclusion}
-The presented framework provides a {\bf high-level Python API} for executing
-and manipulating analysis workflows written in SED-ML; simple workflows can be
-directly executed while more elaborated ones can be scripted in Python. It
-includes {\bf several simulation engines} dedicated to specific steps of the
-{\bf systems biology model building cycle} and offers tools for {\bf exporting
-and displaying numerical results}. The source code of the BioPreDyn software has
-been {\bf released under the terms of the BSD 3-clause} open-source license and
-is available on GitHub at {\bf https://github.com/TheCoSMoCompany/biopredyn}.
+The presented software framework consists of:
+\begin{itemize}
+\item
+a {\bf high-level Python API} for manipulating analysis workflows written in
+SED-ML;
+\item
+{\bf simulation engines} implementing steps of the {\bf systems biology model
+building cycle};
+\item
+tools for {\bf exporting and displaying numerical results}.
+\end{itemize}
+BioPreDyn's source code has been {\bf released under the terms of the BSD
+3-clause} open-source license and is available at
+{\bf https://github.com/TheCoSMoCompany/biopredyn}.
 \bibliography{references}{}
 \bibliographystyle{plain}
 \end{multicols}
