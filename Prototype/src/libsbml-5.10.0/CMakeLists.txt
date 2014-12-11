@@ -151,14 +151,7 @@ mark_as_advanced(LIBSBML_USE_LEGACY_MATH)
 option(WITH_EXAMPLES "Compile the libSBML example programs."  OFF)
 
 # Which language bindings should be built
-option(WITH_CSHARP   "Generate the C# language interface for libSBML."     OFF)
-option(WITH_JAVA     "Generate the Java language interface for libSBML."   OFF)
 option(WITH_PYTHON   "Generate the Python language interface for libSBML." ON)
-option(WITH_PERL     "Generate the Perl language interface for libSBML."   OFF)
-option(WITH_RUBY     "Generate the Ruby language interface for libSBML"    OFF)
-option(WITH_R        "Generate the R language interface for libSBML"       OFF)
-option(WITH_OCTAVE   "Generate the Octave language interface for libSBML." OFF)
-option(WITH_MATLAB   "Generate the MATLAB language interface for libSBML." OFF)
 
 # Add an option to compile with all warnings shown
 option(WITH_WALL     "Compile with -Wall, so that the compiler will display all warnings." OFF)
@@ -567,47 +560,6 @@ endif(WITH_ZLIB)
 
 ###############################################################################
 #
-# Find the C# compiler to use and set name for resulting library
-#
-
-if(WITH_CSHARP)
-    FILE(TO_CMAKE_PATH "$ENV{WINDIR}" windir)	
-    find_program(CSHARP_COMPILER
-        NAMES gmcs csc
-        PATHS 
-            ${windir}/Microsoft.NET/Framework/v2.0.50727/ 
-            ${windir}/Microsoft.NET/Framework/v3.0/ 
-            /usr/bin 
-            /usr/local/bin
-        DOC "The file name of the C# compiler for the libsbmlcs assembly."
-        )
-    find_program(CSHARP_EXAMPLE_COMPILER
-        NAMES gmcs csc
-        PATHS 
-            ${windir}/Microsoft.NET/Framework/v4.0.30319/ 
-            ${windir}/Microsoft.NET/Framework/v3.5/ 
-            ${windir}/Microsoft.NET/Framework/v3.0/ 
-            ${windir}/Microsoft.NET/Framework/v2.0.50727/ 
-            /usr/bin 
-            /usr/local/bin
-        DOC "The file name of the C# compiler to be used for the examples."
-        )
-    if(UNIX)
-    else()
-        if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-            # mark libsbml library as x86
-            set(CSHARP_EXTRA_ARGS -platform:x86 )
-        elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-            # mark libsbml library as x64
-            set(CSHARP_EXTRA_ARGS -platform:x64 )
-        endif()
-    endif()
-
-endif(WITH_CSHARP)
-
-
-###############################################################################
-#
 # Enable support for testing ... can be invoked by running ctest
 # or make test
 #
@@ -979,33 +931,8 @@ if(WITH_SWIG)
 
 endif()
 
-
-if(WITH_CSHARP)
-    message(STATUS "  Using C#                      = ${CSHARP_COMPILER}")
-endif()
-
-if(WITH_JAVA)
-    message(STATUS "  Using Java                    = ${Java_JAVA_EXECUTABLE}")
-endif()
-
 if(WITH_PYTHON)
     message(STATUS "  Using Python                  = ${PYTHON_EXECUTABLE}")
-endif()
-
-if(WITH_PERL)
-    message(STATUS "  Using Perl                    = ${PERL_EXECUTABLE}")
-endif()
-
-if(WITH_RUBY)
-    message(STATUS "  Using Ruby                    = ${RUBY_EXECUTABLE}")
-endif()
-
-if(WITH_OCTAVE)
-    message(STATUS "  Using Octave                  = ${MKOCTFILE_EXECUTABLE}")
-endif()
-
-if(WITH_MATLAB)
-    message(STATUS "  Using Matlab                  = ${MATLAB_ROOT_PATH}")
 endif()
 
 if(WITH_CHECK)

@@ -106,13 +106,10 @@
 
      If you want to build language bindings, please turn on the
      corresponding compile option.
-       WITH_JAVA     ... build with Java bindings
        WITH_PYTHON   ... build with Python bindings
-       WITH_RUBY     ... build with Ruby bindings
-       WITH_CSHARP   ... build with C# bindings
 
      Once you press [c] key, cmake will run the configure procedure
-     and tries to detect SWIG, Java, Python, C# and Ruby (depending on
+     and tries to detect SWIG and Python (depending on
      which language bindings you enabled). Hit [c] several times to
      complete configuration. Once the configuration is done, 
      press [g] key and cmake will generate Makefile.

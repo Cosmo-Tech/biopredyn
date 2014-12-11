@@ -84,35 +84,6 @@ mark_as_advanced(LIBSBML_REMOVE_WRAPPERS)
 # and build selected language bindings
 #
 
-if(WITH_CSHARP)
-add_subdirectory(csharp)
-endif()
-
-if(WITH_JAVA)
-add_subdirectory(java)
-endif()
-
-if(WITH_PERL)
-add_subdirectory(perl)
-endif()
-
-if(WITH_MATLAB)
-add_subdirectory(matlab)
-endif()
-
-if(WITH_OCTAVE)
-add_subdirectory(octave)
-endif()
-
 if(WITH_PYTHON)
 add_subdirectory(python)
 endif()
-
-if(WITH_RUBY)
-add_subdirectory(ruby)
-endif()
-
-if(WITH_R)
-add_subdirectory(r)
-endif()
-

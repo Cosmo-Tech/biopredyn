@@ -116,24 +116,8 @@ if(MSVC)
 endif()
 
 # Bindings
-if(WITH_JAVA)
-add_subdirectory(bindings/java)
-endif()
-
 if(WITH_PYTHON)
 add_subdirectory(bindings/python)
-endif()
-
-if(WITH_PERL)
-add_subdirectory(bindings/perl)
-endif()
-
-if(WITH_RUBY)
-add_subdirectory(bindings/ruby)
-endif()
-
-if(WITH_CSHARP)
-add_subdirectory(bindings/csharp)
 endif()
 
 # for installer
