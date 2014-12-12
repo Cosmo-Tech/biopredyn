@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Language: XML
-  $Author$
-  $Date$
-  $Revision$
-  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
--->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
   <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
   <!--
@@ -129,14 +122,7 @@ afterwards.
             </xsl:when>
             <xsl:when test="contains($token, 'pdf')">
               <xsl:variable name="basename" select="substring-before($token,'.pdf')"/>
-              <!-- TODO
-              http://cygwin.ru/ml/docbook-apps/2005-q2/msg00220.html
-              http://www.mail-archive.com/fop-dev@xmlgraphics.apache.org/msg06568.html
-              http://xmlgraphics.apache.org/fop/0.95/extensions.html#bookmarks
-              -->
-              <!-- https://www.thecosmocompany.com/doc/Corporate/Training/CoSMoValidation.pdf -->
               <xsl:variable name="myurl" select="substring-after($path,'share')"/>
-              <!--document targetdoc="{$basename}" baseuri="{concat('https://www.thecosmocompany.com',$myurl,'/',$token)}"-->
               <document targetdoc="{$basename}" baseuri="{$token}">
                 <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="{$basename}.olinkdb.pdf.xml"/>
               </document>

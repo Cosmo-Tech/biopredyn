@@ -88,7 +88,7 @@ macro(add_docbook input_xml)
   #  COMMENT "Generating deps from: ${input_file}"
   #  )
   # In order to track dependencie one need to check the output of:
-  #$ xmllint --xinclude --noout --load-trace CoSMo/ReferenceGuide/article.xml
+  #$ xmllint --xinclude --noout --load-trace input.xml
   execute_process(
     COMMAND ${LIBXML2_XMLLINT_EXECUTABLE} --catalogs --xinclude --noout --load-trace ${input_file}
     ERROR_VARIABLE variable

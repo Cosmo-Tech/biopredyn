@@ -1,5 +1,4 @@
-# Attempt to find jlatexmath-fop.jar there is no need to find it on windows since FOP_HYPHENATION_PATH is already set by
-# the externals.
+# Attempt to find jlatexmath-fop.jar
 
 if(NOT WIN32)
   find_file(

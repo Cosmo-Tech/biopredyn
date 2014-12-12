@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Language: XML
-  $Author$
-  $Date$
-  $Revision$
-  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
--->
-<!--
   This XSLT convert a main() doxygen function into a docbook style <programlisting/>
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
@@ -17,19 +10,6 @@
          xmlns:xlink="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:db="http://docbook.org/ns/docbook">
-      <info>
-        <title>titre</title>
-        <author>
-          <personname>
-            <firstname>mathieu</firstname>
-            <surname>malaterre</surname>
-          </personname>
-          <affiliation>
-            <orgname>ENS-Lyon</orgname>
-          </affiliation>
-        </author>
-        <pubdate>2010</pubdate>
-      </info>
       -->
       <xsl:apply-templates/>
     <!--

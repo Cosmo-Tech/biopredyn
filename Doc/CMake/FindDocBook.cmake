@@ -17,7 +17,7 @@ option(DOCBOOK_BUILD_HTML "Build HTML?" ON)
 option(DOCBOOK_BUILD_SINGLE_HTML "Build Single HTML?" OFF)
 
 # This option allows generation of PDF document
-option(DOCBOOK_BUILD_PDF "Build PDF?" OFF)
+option(DOCBOOK_BUILD_PDF "Build PDF?" ON)
 
 # This option allows validation of DTD of docbook document (advanced user)
 option(DOCBOOK_BUILD_VALIDATION "Build Validation Target?" OFF)
@@ -26,7 +26,7 @@ option(DOCBOOK_BUILD_SPELLCHECK "Build Spell Check Target? (Experimental)" OFF)
 
 # ------------- Docbook slides -------------------------
 # This option allows generation of HTML pages
-option(DOCBOOK_SLIDES_BUILD_HTML "Build Slides HTML?" ON)
+option(DOCBOOK_SLIDES_BUILD_HTML "Build Slides HTML?" OFF)
 
 # This option allows generation of PDF document
 option(DOCBOOK_SLIDES_BUILD_PDF "Build Slides PDF?" OFF)

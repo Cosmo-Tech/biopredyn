@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Language: XML
-  $Author$
-  $Date$
-  $Revision$
-  $Copyright: [2010-2014] The CoSMo Company, All Rights Reserved $
--->
 <xsl:stylesheet
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
