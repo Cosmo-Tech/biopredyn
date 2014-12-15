@@ -53,6 +53,7 @@ bpdAddTest(
 
 # SteadyState related tests
 bpdAddTest(bpdSteadyStateCobrapyFBA SteadyStateTestCase.test_fba_cobrapy)
+bpdAddTest(bpdSteadyStateLibFbcFBA SteadyStateTestCase.test_fba_libfbc)
 
 # Data generation related tests
 bpdAddTest(bpdHomoscedasticDataGenCSV DataGenerationTestCase.test_homoscedastic_csv)

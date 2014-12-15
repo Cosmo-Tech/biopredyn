@@ -16,6 +16,7 @@ import algorithm, result, statistics
 import numpy as np
 from cobra.io.sbml import create_cobra_model_from_sbml_doc
 from COPASI import *
+import libfbc
 
 ## Base representation of the execution of an algorithm, independent from the
 ## model or data set it has to be run with.
@@ -127,13 +128,29 @@ class SteadyState(Simulation):
   # @param res A biopredyn.result.Fluxes object.
   # @return A biopredyn.result.Fluxes object.
   def run(self, model, tool, res):
+    # tool selection - by default cobrapy is chosen
+    if tool is None or tool == 'cobrapy':
+      self.run_as_cobrapy_problem(model, res)
+    elif tool == 'libfbc':
+      self.run_as_libfbc_problem(model, res)
+    else:
+      raise NameError("Invalid tool name; available names are 'cobrapy' and " +
+        " 'libfbc'.")
+    return res
+
+  ## Run the simulation encoded in self as a CobraPy model.
+  # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param res A biopredyn.result.Fluxes object.
+  # @return A biopredyn.result.Fluxes object.
+  def run_as_cobrapy_problem(self, model, res):
     if res is None:
       res = result.Fluxes()
-    # Case where the encoded simulation is a FBA - TODO other SteadyState cases
+    # Case where the encoded simulation is a FBA
     if self.algorithm.get_kisao_id() == "KISAO:0000437":
       # Run a basic FBA with cobrapy
       cobra_model = create_cobra_model_from_sbml_doc(model.get_sbml_doc())
-      # Optional model parameters are set - TODO KiSAO: suggest new parameters
+      # Optional model parameters are set
       obj = self.algorithm.get_parameter_by_name('objective_function')
       sense = self.algorithm.get_parameter_by_name('objective_sense')
       if obj is not None:
@@ -142,7 +159,31 @@ class SteadyState(Simulation):
         cobra_model.optimize(objective_sense=sense.get_value())
       else:
         cobra_model.optimize()
+    else:
+      raise NameError("Invalid KiSAO identifier for a steady state " + 
+        "simulation; see http://bioportal.bioontology.org/ontologies/KISAO " +
+        "for more information about the KiSAO ontology.")
     res.import_from_cobrapy_fba(cobra_model.solution)
+    return res
+
+  ## Run the simulation encoded in self as a libFBC problem.
+  # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param res A biopredyn.result.Fluxes object.
+  # @return A biopredyn.result.Fluxes object
+  def run_as_libfbc_problem(self, model, res):
+    if res is None:
+      res = result.Fluxes()
+    # Case where the encoded simulation is a FBA
+    if self.algorithm.get_kisao_id() == "KISAO:0000437":
+      fbc_model = libfbc.FBAProblem()
+      fbc_model.initFromSBMLString(model.get_sbml_doc().toSBML())
+      fbc_model.solveProblem()
+    else:
+      raise NameError("Invalid KiSAO identifier for a steady state " + 
+        "simulation; see http://bioportal.bioontology.org/ontologies/KISAO " +
+        "for more information about the KiSAO ontology.")
+    res.import_from_libfbc_fba(fbc_model.getSolution())
     return res
 
 ## Simulation-derived class for uniform time course simulations.
@@ -212,7 +253,7 @@ class UniformTimeCourse(Simulation):
   # @param res A biopredyn.result.TimeSeries object.
   # @return A biopredyn.result.TimeSeries object.
   def run(self, model, tool, res):
-    # Tool selection - by default libsbmlsim is chosen
+    # tool selection - by default libsbmlsim is chosen
     if tool is None or tool == 'libsbmlsim':
       self.run_as_libsbmlsim_time_course(model, res)
     elif tool == 'copasi':

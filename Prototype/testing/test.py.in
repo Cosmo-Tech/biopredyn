@@ -200,6 +200,15 @@ class SteadyStateTestCase(GenericTestCase):
       round(task.get_result().get_result()['growth_rate'][0], 2),
       0.38)
 
+  def test_fba_libfbc(self):
+    flow = workflow.WorkFlow('test_fba_libfbc.xml', self.manager)
+    task = flow.get_task_by_id("task_1")
+    task.set_tool('libfbc')
+    task.run(True)
+    self.assertEqual(
+      round(task.get_result().get_result()['growth_rate'][0], 2),
+      0.38)
+
 ## GenericTestCase derived class for artificial data generation related test.
 class DataGenerationTestCase(GenericTestCase):
 

@@ -490,3 +490,20 @@ class Fluxes(Result):
       names.append(p[0])
       self.result[p[0]] = [p[1]]
     return names
+  
+  ## Import numerical values from the output of a libfbc flux balance analysis
+  ## and store them in self.result. The resulting growth rate is stored as the
+  ## value of the 'growth_rate' key.
+  # @param self The object pointer.
+  # @param solution Solution of a libfbc FBA.
+  # @return A vector containing the names of the time series listed in the
+  # input file.
+  def import_from_libfbc_fba(self, solution):
+    names = ["growth_rate"]
+    self.result["growth_rate"] = [solution.getObjectiveValue()]
+    fluxes = solution.getFluxes()
+    for p in range(fluxes.size()):
+      key = fluxes.getKey(p)
+      names.append(key)
+      self.result[key] = [fluxes.get(key)]
+    return names
