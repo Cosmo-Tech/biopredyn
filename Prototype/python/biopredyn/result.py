@@ -259,7 +259,7 @@ class TimeSeries(Result):
       elif ((species is not None and name in species)
         or species is None):
         names.append(name)
-        res = time_series.getDataForIndex(i)
+        res = time_series.getConcentrationDataForIndex(i)
         # case where the content of self.result is rewritten or created
         if overwrite == True or name not in self.result:
           value = []
