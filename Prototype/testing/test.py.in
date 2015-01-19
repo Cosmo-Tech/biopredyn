@@ -189,6 +189,15 @@ class RepeatedTaskTestCase(GenericTestCase):
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
+## GenericTestCase derived class for OneStep simulation related tests
+class OneStepTestCase(GenericTestCase):
+
+  def test_one_step(self):
+    flow = workflow.WorkFlow('test_one_step.xml', self.manager)
+    task = flow.get_task_by_id("task_2")
+    task.run(True)
+    wf.process_outputs()
+
 ## GenericTestCase derived class for SteadyState simulation related tests
 class SteadyStateTestCase(GenericTestCase):
 

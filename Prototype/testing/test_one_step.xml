@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sedML xmlns="http://sed-ml.org/sed-ml/level1/version2" level="1" version="2">
+  <listOfSimulations>
+    <oneStep id="step_1" step="0.1">
+      <algorithm kisaoID="KISAO:0000035" />
+    </oneStep>
+  </listOfSimulations>
+  <listOfModels>
+    <model id="febs_model" language="urn:sedml:language:sbml" source="FEBS_antimony.xml">
+    </model>
+  </listOfModels>
+  <listOfTasks>
+    <task id="task_1" name="task_1" modelReference="febs_model"
+      simulationReference="step_1">
+    </task>
+    <repeatedTask id="task_2" resetModel="false" range="current">
+      <listOfRanges>
+        <uniformRange id="current" start="0" end="20" numberOfPoints="200" type="linear" />
+      </listOfRanges>
+      <listOfSubTasks>
+        <subTask order="1" task="task_1" />
+      </listOfSubTasks>
+    </repeatedTask>
+  </listOfTasks>
+  <listOfDataGenerators>
+    <dataGenerator id="datagenerator_1" name="time_datagenerator">
+      <listOfVariables>
+        <variable id="time" name="time" taskReference="task_1"
+          symbol="urn:sedml:symbol:time">
+        </variable>
+      </listOfVariables>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <ci>time</ci>
+      </math>
+    </dataGenerator>
+    <dataGenerator id="datagenerator_2" name="E_datagenerator">
+      <listOfVariables>
+        <variable id="sp_E" name="sp_E" taskReference="task_1"
+          target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_E']">
+        </variable>
+      </listOfVariables>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <ci>sp_E</ci>
+      </math>
+    </dataGenerator>
+    <dataGenerator id="datagenerator_3" name="S_datagenerator">
+      <listOfVariables>
+        <variable id="sp_S" name="sp_S" taskReference="task_1"
+          target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_S']">
+        </variable>
+      </listOfVariables>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <ci>sp_S</ci>
+      </math>
+    </dataGenerator>
+    <dataGenerator id="datagenerator_4" name="C_datagenerator">
+      <listOfVariables>
+        <variable id="sp_C" name="sp_C" taskReference="task_1"
+          target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_C']">
+        </variable>
+      </listOfVariables>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <ci>sp_C</ci>
+      </math>
+    </dataGenerator>
+    <dataGenerator id="datagenerator_5" name="P_datagenerator">
+      <listOfVariables>
+        <variable id="sp_P" name="sp_P" taskReference="task_1"
+          target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_P']">
+        </variable>
+      </listOfVariables>
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <ci>sp_P</ci>
+      </math>
+    </dataGenerator>
+  </listOfDataGenerators>
+  <listOfOutputs>
+    <report id="report_1" name="time_series">
+      <listOfDataSets>
+        <dataSet id="data1" label="time" dataReference="datagenerator_1"/>
+        <dataSet id="data2" label="E" dataReference="datagenerator_2"/>
+        <dataSet id="data3" label="S" dataReference="datagenerator_3"/>
+        <dataSet id="data4" label="C" dataReference="datagenerator_4"/>
+        <dataSet id="data5" label="P" dataReference="datagenerator_5"/>
+      </listOfDataSets>
+    </report>
+  </listOfOutputs>
+</sedML>

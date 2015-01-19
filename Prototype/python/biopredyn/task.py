@@ -102,9 +102,10 @@ class Task(AbstractTask):
     model = self.get_model()
     # self.result must be initialized if it does not exist yet
     if self.result is None:
-      if self.get_simulation().get_type() == 'uniformTimeCourse':
+      sim_type = self.get_simulation().get_type()
+      if sim_type == 'uniformTimeCourse' or sim_type == 'oneStep':
         self.result = result.TimeSeries()
-      elif self.get_simulation().get_type() == 'steadyState':
+      elif sim_type == 'steadyState':
         self.result = result.Fluxes()
     # Changes must be applied to the model
     if apply_changes:

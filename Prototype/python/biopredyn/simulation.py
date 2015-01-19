@@ -107,9 +107,27 @@ class OneStep(Simulation):
   # @param res A biopredyn.result.TimeSeries object.
   # @return A biopredyn.result.TimeSeries object.
   def run(self, model, tool, res):
-    if res is None:
-      res = result.TimeSeries()
-    # TODO
+    # tool selection - by default copasi is chosen
+    if tool is None or tool == 'copasi':
+      self.run_as_copasi_one_step(model, res)
+    else:
+      raise NameError("Invalid tool name; only 'copasi' is available as a " +
+        "simulation engine.")
+    return res
+  
+  ## Run the simulation encoded in self as a Copasi model.
+  # @param self The object pointer.
+  # @param model A biopredyn.model.Model object.
+  # @param res A biopredyn.result.TimeSeries object.
+  # @return A biopredyn.result.TimeSeries object. 
+  def run_as_copasi_one_step(self, model, res):
+    data_model = CCopasiDataModel()
+    data_model.importSBMLFromString(model.get_sbml_doc().toSBML())
+    task = data_model.addTask(CTrajectoryTask.timeCourse)
+    task.setMethodType(CCopasiMethod.deterministic)
+    task.processStep(self.get_step())
+    res.import_from_copasi_time_series(task.getTimeSeries(),
+      model.get_species_copasi_ids())
     return res
   
   ## Setter for self.step.

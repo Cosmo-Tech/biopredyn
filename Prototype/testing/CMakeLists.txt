@@ -51,6 +51,9 @@ bpdAddTest(bpdRepeatedTaskVectorRangeTest RepeatedTaskTestCase.test_vector_range
 bpdAddTest(
   bpdRepeatedTaskFunctionalRangeTest RepeatedTaskTestCase.test_functional_range)
 
+# OneStep related tests
+bpdAddTest(bpdOneStep OneStepTestCase.test_one_step)
+
 # SteadyState related tests
 bpdAddTest(bpdSteadyStateCobrapyFBA SteadyStateTestCase.test_fba_cobrapy)
 bpdAddTest(bpdSteadyStateLibFbcFBA SteadyStateTestCase.test_fba_libfbc)
