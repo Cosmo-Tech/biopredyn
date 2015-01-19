@@ -11,7 +11,7 @@
 <section>
   <title>Installation</title>
   <section>
-    <title>Ubuntu</title>
+    <title>Ubuntu 11.10 and later (32-bit and 64-bit)</title>
     <section>
       <title>Dependencies</title>
       <section>
@@ -44,6 +44,7 @@
   sudo apt-get install python-numpy
   sudo apt-get install python-matplotlib
   sudo apt-get install python-scipy
+  sudo apt-get install python-glpk
   sudo pip install bioservices
           </programlisting>
         </section>
@@ -55,22 +56,6 @@
         </programlisting>
       </section>
       <section>
-        <title>GLPK</title>
-        <para>
-Download the latest <literal>glpk</literal> package
-(<literal>glpk-X.Y.tar.gz</literal>) from the
-<ulink url="http://ftp.gnu.org/gnu/glpk/">project download page</ulink>, then
-extract it. Navigate to the freshly created <literal>glpk-X.Y</literal> folder,
-and install the package:
-        </para>
-        <programlisting>
-  cd glpk-X.Y
-  ./configure
-  make
-  make install
-        </programlisting>
-      </section>
-      <section>
         <title>Doxygen</title>
         <programlisting>
   sudo apt-get install doxygen
@@ -78,20 +63,8 @@ and install the package:
       </section>
       <section>
         <title>CLAPACK</title>
-        <para>
-Download the latest <literal>CMake</literal> packaged version
-(<literal>clapack-X.Y.Z-CMAKE.tgz</literal>) from the
-<ulink url="http://www.netlib.org/clapack">project home page</ulink>, then
-extract it. Navigate to the freshly created <literal>clapack</literal> folder,
-and install the package:
-        </para>
         <programlisting>
-  cd clapack
-  mkdir build
-  cd build
-  cmake ..
-  make
-  make install
+  sudo apt-get install liblapack-dev libatlas-dev
         </programlisting>
       </section>
       <section>
@@ -103,7 +76,7 @@ and install the package:
       <section>
         <title>Raptor</title>
         <programlisting>
-  sudo apt-get install libraptor1
+  sudo apt-get install libraptor1 libraptor1-dev
         </programlisting>
       </section>
     </section>
@@ -120,7 +93,6 @@ When <literal>Git</literal> is done with it, open a shell, navigate to
 the freshly checked-out biopredyn folder and type:
       </para>
       <programlisting>
-  cd biopredyn
   mkdir BUILD
   cd BUILD
   cmake ..
@@ -134,7 +106,7 @@ the freshly checked-out biopredyn folder and type:
     </section>
   </section>
   <section>
-    <title>Windows 7</title>
+    <title>Windows 7 (64-bit)</title>
     <section>
       <title>Changing the path environment variable</title>
       <para>
