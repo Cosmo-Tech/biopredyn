@@ -15,6 +15,7 @@ import libsbml
 import libsedml
 import libnuml
 import model, workflow, result, resources
+import matplotlib.pyplot as plt
 
 COMMAND_SYNTAX_MESSAGE = 'python biopredyn.py [options]'
 
@@ -108,17 +109,19 @@ for o, a in opts:
   elif o == "--numl":
     res = result.TimeSeries()
     res.import_from_numl_file(a, manager)
-    plot = plt.figure("numl_test")
-    ax = plot.add_subplot(111)
+    plt.figure("numl_test")
     for i in res.get_result():
       if str.lower(i) != "time":
-        ax.plot(res.get_time_steps(), res.get_quantities_per_species(i))
-    plot.show()
+        plt.plot(res.get_time_steps(), res.get_quantities_per_species(i))
+    plt.legend()
+    plt.show()
   elif o == "--csv":
-    res = result.Result()
+    res = result.TimeSeries()
     res.import_from_csv_file(a, manager)
     values = res.get_result()
-    plot = plt.figure("csv_test")
-    ax = plot.add_subplot(111, projection='3d')
-    ax.scatter(values["series_1"], values["series_2"], zs = values["series_3"])
-    plot.show()
+    plt.figure("csv_test")
+    for i in res.get_result():
+      if str.lower(i) != "time":
+        plt.plot(res.get_time_steps(), res.get_quantities_per_species(i))
+    plt.legend()
+    plt.show()
