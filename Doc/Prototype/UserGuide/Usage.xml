@@ -10,46 +10,107 @@
     "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section>
   <title>Usage</title>
-  <para>Once the BioPreDyn prototype is installed, it can be used to run
-numerical experiments encoded as SEDML files. Simply open a shell or a
-command prompt, navigate to the folder where the prototype is installed, and
-type the following commands:</para>
-  <programlisting>
-  cd build/install/bin
-  </programlisting>
-  <para>This folder contains a biopredyn.py file which can be used to run the
-prototype. To do so, one can use the following syntax:
-  </para>
-  <programlisting>
-python biopredyn.py [options]
-  </programlisting>
-  <para>Depending on the option(s) chosen by the user, various operations can be
-done. Valid options are listed below:</para>
-  <itemizedlist>
-    <listitem>
-      <para><literal>--sedml [path/to/file.xml]</literal>: opens the input SEDML
-file, executes the tasks it contains and process its outputs. Graphical outputs
-are displayed, if any; path/to/file.xml must point to a valid SEDML file.</para>
-    </listitem>
-    <listitem>
-      <para><literal>--output [path/to/output.csv]</literal>: write the result
-of a numerical experiment (if any) to the input location as a CSV file. This
-option should be used only when the opened SEDML file contains one or more
-“report” elements.</para>
-    </listitem>
-    <listitem>
-      <para><literal>--output [path/to/output.xml]</literal>: identical to the
-previous one, except that the result is exported as a NuML file instead.</para>
-    </listitem>
-    <listitem>
-      <para><literal>--csv [path/to/file.csv]</literal>: opens the input CSV
-file and plot its content; path/to/file.csv must point to a valid CSV file.
-      </para>
-    </listitem>
-    <listitem>
-      <para><literal>--numl [path/to/file.xml]</literal>: opens the input NuML
-file and plot its content; path/to/file.xml must point to a valid NuML file.
-      </para>
-    </listitem>
-  </itemizedlist>
+  <section>
+    <title>Command line</title>
+    <para>Once the <literal>BioPreDyn</literal> prototype is installed, it can
+be used to run numerical experiments encoded as <literal>SED-ML</literal>
+files. Simply open a shell or a command prompt, navigate to the folder where
+the prototype is installed, and type the following commands:</para>
+    <programlisting>
+  cd Prototype/python/biopredyn
+    </programlisting>
+    <para>This folder contains a <literal>biopredyn.py</literal> file which can
+be used to run the prototype. To do so, one can use the following syntax:
+    </para>
+    <programlisting>
+  python biopredyn.py [options]
+    </programlisting>
+    <para>Depending on the option(s) chosen by the user, various operations can
+be done. Valid options are listed below:</para>
+    <itemizedlist>
+      <listitem>
+        <para><literal>--sbml [path/to/file.xml]</literal>: opens the input
+<literal>SBML</literal> file and check its compliance with the different
+versions of the language. <literal>path/to/file.xml</literal> must point to a
+valid <literal>SBML</literal> file.</para>
+      </listitem>
+      <listitem>
+        <para><literal>--sedml [path/to/file.xml]</literal>: opens the input
+<literal>SED-ML</literal> file, executes the tasks it contains and process its
+outputs. Graphical outputs are displayed, if any;
+<literal>path/to/file.xml</literal> must point to a valid
+<literal>SED-ML</literal> file.</para>
+      </listitem>
+      <listitem>
+        <para><literal>--output [path/to/output.csv]</literal>: write the
+result of a numerical experiment (if any) to the input location as a CSV file.
+This option should be used only when the opened <literal>SED-ML</literal> file
+contains one or more <literal>report</literal> elements.</para>
+      </listitem>
+      <listitem>
+        <para><literal>--output [path/to/output.xml]</literal>: identical to
+the previous one, except that the result is exported as a NuML file instead.
+        </para>
+      </listitem>
+      <listitem>
+        <para><literal>--csv [path/to/file.csv]</literal>: opens the input CSV
+file and plot its content; <literal>path/to/file.csv</literal> must point to a
+valid CSV file.
+        </para>
+      </listitem>
+      <listitem>
+        <para><literal>--numl [path/to/file.xml]</literal>: opens the input
+<literal>NuML</literal> file and plot its content;
+<literal>path/to/file.xml</literal> must point to a valid
+<literal>NuML</literal> file.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>
+  <section>
+    <title>Writing scripts</title>
+    <para><literal>BioPreDyn</literal> is a software framework for manipulating
+simulation workflows in systems biology. Is is primarily intended to provide
+a high-level <literal>Python</literal> <acronym>API</acronym> for scripting
+such numerical experiments. This <acronym>API</acronym> is automatically
+generated every night and made publicly available on
+<ulink url="https://thecosmocompany.com/BioPreDyn-doxygen/">this page</ulink>.
+    </para>
+    <para>
+In order to use the <literal>BioPreDyn</literal> <acronym>API</acronym> in a
+<literal>Python</literal> script, the package <literal>biopredyn</literal>
+needs to be imported, as shown in the example below:
+    </para>
+    <programlisting language="python">
+  from biopredyn import resources, workflow
+  from COPASI import CCopasiMethod
+  # required inputs
+  simulation_file = "febs_workflow.xml"
+  calibration_file = "calibration_data.txt"
+  validation_file = "validation_data.txt"
+  observables = ["sp_C"]
+  unknowns = ["k1", "k2", "k3"] # parameters to be estimated
+  min_unknown_values = [0.0, 0.0, 0.0] # lower bound for unknowns
+  max_unknown_values = [10.0, 10.0, 10.0] # upper bound for unknowns
+  algo = CCopasiMethod.LevenbergMarquardt
+  # uses BioPreDyn API to estimate parameters
+  rm = resources.ResourceManager()
+  wf = workflow.WorkFlow(simulation_file, rm)
+  sim = wf.get_simulations()[0]
+  model_result = sim.run_as_parameter_estimation(
+    wf.get_models()[0], calibration_file, validation_file,
+    observables, unknowns, min_unknown_values, max_unknown_values, algo, rm)
+    </programlisting>
+    <para>This example describes a parameter estimation based on a
+<literal>SED-ML</literal> time course description. It requires the modules
+<literal>biopredyn.resources</literal> and
+<literal>biopredyn.workflows</literal> to be imported before being used.
+    </para>
+    <para>
+More sophisticated examples dedicated to specific steps of the systems biology
+model building cycle can be found in the
+<ulink url="https://github.com/TheCoSMoCompany/biopredyn/tree/master/Prototype/scripts">
+<literal>scripts</literal> folder</ulink> of the project repository.
+    </para>
+  </section>
 </section>

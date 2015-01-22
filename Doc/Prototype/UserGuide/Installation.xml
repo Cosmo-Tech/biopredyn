@@ -11,7 +11,7 @@
 <section>
   <title>Installation</title>
   <section>
-    <title>Ubuntu 11.10 and later (32-bit and 64-bit)</title>
+    <title>Ubuntu 11.10 and later (32-bit)</title>
     <section>
       <title>Dependencies</title>
       <section>
@@ -64,7 +64,7 @@
       <section>
         <title>CLAPACK</title>
         <programlisting>
-  sudo apt-get install liblapack-dev libatlas-dev
+  sudo apt-get install liblapack-dev libatlas-dev libatlas3gf-base
         </programlisting>
       </section>
       <section>
@@ -103,6 +103,49 @@ the freshly checked-out biopredyn folder and type:
       <para><literal>CMake</literal> options can be more finely tuned by using
 <literal>ccmake</literal> instead of <literal>cmake</literal>.
       </para>
+    </section>
+  </section>
+  <section>
+    <title>Ubuntu 11.10 and later / Debian 7.x (64-bit)</title>
+    <section>
+      <title>Dependencies</title>
+      <para>The procedure is the same as for the 32-bit architecture, except
+for the following libraries:
+      </para>
+      <section>
+        <title>Expat</title>
+        <para>On 64-bit architecture, <literal>libexpat</literal> must be
+recompiled with the <literal>-fPIC</literal> flag. Open a command prompt in a
+folder where source code will be downloaded and type:
+        </para>
+        <programlisting>
+  sudo apt-get source libexpat1-dev
+  cd expat-2.1.0
+  ./configure --with-pic
+  make
+  sudo make install
+        </programlisting>
+        <para>The package version number might be different; it does not change
+the procedure, except for the name of the source folder.</para>
+      </section>
+      <section>
+        <title>Raptor</title>
+        <para>The same has to be done with <literal>libraptor</literal>:
+        </para>
+        <programlisting>
+  sudo apt-get source libraptor1-dev
+  cd raptor_1.4.21
+  ./configure --with-pic
+  make
+  sudo make install
+        </programlisting>
+        <para>The package version number might be different; it does not change
+the procedure, except for the name of the source folder.</para>
+      </section>
+    </section>
+    <section>
+      <title>BioPreDyn integrated software suite prototype</title>
+      <para>Follow the same instructions as for the 32-bit architecture.</para>
     </section>
   </section>
   <section>
