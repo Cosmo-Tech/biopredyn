@@ -11,6 +11,12 @@ macro(bpdAddTest test_name class)
   set_tests_properties(${test_name} PROPERTIES DEPENDS BioPreDynPackageInstall)
 endmacro()
 
+# Package needs to be installed first
+add_test(
+  bpdInstallPackage
+  ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_install.cmake
+)
+
 # SBML related tests
 bpdAddTest(bpdSBMLLocalImportTest SBMLTestCase.test_local_import)
 bpdAddTest(bpdSBMLServerImportTest SBMLTestCase.test_server_import)
