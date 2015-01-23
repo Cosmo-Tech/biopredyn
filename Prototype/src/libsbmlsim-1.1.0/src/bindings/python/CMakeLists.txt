@@ -16,7 +16,7 @@ SET_SOURCE_FILES_PROPERTIES(libsbmlsim.i PROPERTIES CPLUSPLUS OFF)
 SET_SOURCE_FILES_PROPERTIES(libsbmlsim.i PROPERTIES SWIG_FLAGS "-includeall")
 SWIG_ADD_MODULE(libsbmlsim python libsbmlsim.i ${SOURCES_LIB})
 # BioPreDyn patch - linking libSBMLSim wrappers to libSBML wrappers
-SWIG_LINK_LIBRARIES(libsbmlsim sbml_binding_python_lib sbmlsim ${PYTHON_LIBRARIES})
+SWIG_LINK_LIBRARIES(libsbmlsim sbmlsim-static ${LIBSBML_LIBRARY} ${PYTHON_LIBRARIES})
 
 # BioPreDyn patch - changed libSBMLSim install directory
 INSTALL(TARGETS ${SWIG_MODULE_libsbmlsim_REAL_NAME} DESTINATION ${PYTHON_PACKAGE_INSTALL_DIR}/libsbmlsim )
