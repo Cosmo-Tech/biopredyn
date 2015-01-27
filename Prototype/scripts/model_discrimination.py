@@ -18,7 +18,7 @@ nb_models = 3 # number of models to compare
 algo = CCopasiMethod.GeneticAlgorithm # algorithm to be used by COPASI
 
 rm = resources.ResourceManager()
-wf = workflow.WorkFlow(simulation_file, rm)
+wf = workflow.WorkFlow(rm, source=simulation_file)
 
 # funny science
 plt.xkcd()

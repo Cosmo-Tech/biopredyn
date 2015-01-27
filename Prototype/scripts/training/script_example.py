@@ -1,7 +1,7 @@
 from biopredyn import resources, workflow
 
 rm = resources.ResourceManager() # Mandatory resource manager
-wf = workflow.WorkFlow('training_3_3.xml', rm)
+wf = workflow.WorkFlow(rm, source='training_3_3.xml')
 
 for m in wf.get_models():
   m.apply_changes()

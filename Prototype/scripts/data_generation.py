@@ -13,7 +13,7 @@ calibration_file = 'calibration_data.txt'
 validation_file = 'validation_data.txt'
 
 rm = resources.ResourceManager()
-wf = workflow.WorkFlow(simulation_file, rm)
+wf = workflow.WorkFlow(rm, source=simulation_file)
 
 wf.get_tasks()[0].set_tool('copasi') # choosing COPASI as simulation engine
 wf.get_tasks()[1].run(True) # applying changes and running the simulation

@@ -20,7 +20,7 @@ max_unknown_values = [10.0, 10.0, 10.0] # upper bound of the parameter value ran
 algo = CCopasiMethod.LevenbergMarquardt
 
 rm = resources.ResourceManager()
-wf = workflow.WorkFlow(simulation_file, rm)
+wf = workflow.WorkFlow(rm, source=simulation_file)
 
 sim = wf.get_simulations()[0]
 model_result = sim.run_as_parameter_estimation(
