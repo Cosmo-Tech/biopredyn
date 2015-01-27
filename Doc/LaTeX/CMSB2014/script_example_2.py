@@ -11,7 +11,7 @@ max_unknown_values = [10.0, 10.0, 10.0] # upper bound for unknowns
 algo = CCopasiMethod.LevenbergMarquardt 
 # uses BioPreDyn API to estimate parameters
 rm = resources.ResourceManager()
-wf = workflow.WorkFlow(simulation_file, rm)
+wf = workflow.WorkFlow(rm, source=simulation_file)
 sim = wf.get_simulations()[0]
 model_result = sim.run_as_parameter_estimation(
   wf.get_models()[0], calibration_file, validation_file,
