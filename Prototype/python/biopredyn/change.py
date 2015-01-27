@@ -21,13 +21,24 @@ class Change:
   ## @var model
   # Reference to the model to be modified by the change.
   
-  ## Constructor.
+  ## Constructor; either 'change' or 'idf' and 'target' must be passed as
+  ## keyword argument(s).
   # @param self The object pointer.
-  # @param change A SED-ML change element.
-  def __init__(self, change):
-    self.id = change.getId()
-    self.name = change.getName()
-    self.target = change.getTarget()
+  # @param change A libsedml.SedChange element; optional (default=None).
+  # @param idf A unique identifier; optional (default=None).
+  # @param target A valid XPath expression; optional (default=None).
+  def __init__(self, change=None, idf=None, target=None):
+    if (change is None) and (idf is None or target is None):
+      sys.exit("Error: either 'change' or 'target' and 'idf' " +
+        "input arguments must be passed to the constructor.")
+    else:
+      if change is not None:
+        self.id = change.getId()
+        self.name = change.getName()
+        self.target = change.getTarget()
+      elif idf is not None and target is not None:
+        self.id = idf
+        self.target = target
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -94,22 +105,49 @@ class ComputeChange(Change):
   ## @var math
   # A Sympy expression.
 
-  ## Constructor.
+  ## Constructor; either 'change' or 'idf' and 'target' and 'math' must be
+  ## passed as keyword arguments.
   # @param self The object pointer.
-  # @param compute_change A SED-ML computeChange element.
-  # @param workflow A WorkFlow object.
-  # @param model Reference to the Model object to be changed.
-  def __init__(self, compute_change, workflow, model):
-    Change.__init__(self, compute_change)
-    self.model = model
-    self.variables = []
-    for v in compute_change.getListOfVariables():
-      self.variables.append(variable.Variable(v, workflow))
-    self.parameters = []
-    for p in compute_change.getListOfParameters():
-      self.parameters.append(parameter.Parameter(p))
-    self.math = self.parse_math_expression(compute_change.getMath())
+  # @param workflow A biopredyn.workflow.WorkFlow object.
+  # @param model Reference to the biopredyn.model.Model object to be changed.
+  # @param change A libsedml.SedComputeChange element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param target A valid XPath expression; optional (default: None).
+  # @param math A valid Python mathematical expression. Symbols it contains must
+  # correspond to identifiers of elements listed in self.variables and / or
+  # self.parameters.
+  def __init__(self, workflow, model, change=None, idf=None, target=None,
+    math=None):
+    if (change is None) and (idf is None or target is None or math is None):
+      sys.exit("Error: either 'change' or 'target' and 'idf' " +
+        "input arguments must be passed to the constructor.")
+    else:
+      self.model = model
+      self.variables = []
+      self.parameters = []
+      if change is not None:
+        Change.__init__(self, change=change)
+        for v in change.getListOfVariables():
+          self.add_variable(variable.Variable(v, workflow))
+        for p in change.getListOfParameters():
+          self.add_parameter(parameter.Parameter(p))
+        self.math = self.parse_math_expression(change.getMath())
+      elif idf is not None and target is not None and math is not None:
+        Change.__init__(self, idf=idf, target=target)
+        self.math = sympify(math)
   
+  ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
+  # @param self The object pointer.
+  # @param par A biopredyn.parameter.Parameter object.
+  def add_parameter(self, par):
+    self.parameters.append(par)
+  
+  ## Appends the input biopredyn.variable.Variable object to self.variables.
+  # @param self The object pointer.
+  # @param var A biopredyn.variable.Variable object.
+  def add_variable(self, var):
+    self.variables.append(var)
+
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
   def apply(self):
@@ -162,12 +200,25 @@ class ChangeAttribute(Change):
   
   ## Constructor.
   # @param self The object pointer.
-  # @param change_attribute A SED-ML changeAttribute element.
-  # @param model Reference to the Model object to be changed.
-  def __init__(self, change_attribute, model):
-    Change.__init__(self, change_attribute)
-    self.model = model
-    self.value = change_attribute.getNewValue()
+  # @param model Reference to the biopredyn.model.Model object to be changed.
+  # @param change A libsedml.SedChangeAttribute element; optional (default:
+  # None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param target A valid XPath expression; optional (default: None).
+  # @param value Value to be given to the target attribute; optional (default:
+  # None).
+  def __init__(self, model, change=None, idf=None, target=None, value=None):
+    if (change is None) and (idf is None or target is None or value is None):
+      sys.exit("Error: either 'change' or 'idf', 'target' and 'value' must " +
+        "be passed as arguments.")
+    else:
+      self.model = model
+      if change is not None:
+        Change.__init__(self, change=change)
+        self.value = change.getNewValue()
+      elif idf is not None and target is not None and value is not None:
+        Change.__init__(self, idf=idf, target=target)
+        self.value = value
   
   ## Set the value of self.target to self.value in self.model.
   # @param self The object pointer.
@@ -199,14 +250,26 @@ class AddXML(Change):
   ## @var xml
   # A piece of XML code.
   
-  ## Constructor.
+  ## Constructor; either 'change' or 'idf', 'target' and 'xml' must be passed as
+  ## arguments.
   # @param self The object pointer.
-  # @param add_xml A SED-ML addXML element.
   # @param model Reference to the Model object to be changed.
-  def __init__(self, add_xml, model):
-    Change.__init__(self, add_xml)
-    self.model = model
-    self.xml = add_xml.getNewXML().toXMLString()
+  # @param change A libsedml.SedAddXML element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param target A valid XPath expression; optional (default: None).
+  # @param xml A valid XML string; optional (default: None).
+  def __init__(self, model, change=None, idf=None, target=None, xml=None):
+    if (change is None) and (idf is None or target is None or xml is None):
+      sys.exit("Error: either 'change' or 'idf', 'target' and 'xml' must be " +
+        "passed as arguments.")
+    else:
+      self.model = model
+      if change is not None:
+        Change.__init__(self, change=change)
+        self.xml = change.getNewXML().toXMLString()
+      elif idf is not None and target is not None and xml is not None:
+        Change.__init__(self, idf=idf, target=target)
+        self.xml = xml
   
   ## Add self.xml as a child of self.target in self.model.
   # @param self The object pointer.
@@ -239,14 +302,26 @@ class ChangeXML(Change):
   ## @var xml
   # A piece of XML code.
   
-  ## Constructor.
+  ## Constructor; either 'change' or 'idf', 'target' and 'xml' must be passed as
+  ## arguments.
   # @param self The object pointer.
-  # @param change_xml A SED-ML changeXML element.
   # @param model Reference to the Model object to be changed.
-  def __init__(self, change_xml, model):
-    Change.__init__(self, change_xml)
-    self.model = model
-    self.xml = change_xml.getNewXML().toXMLString()
+  # @param change A libsedml.SedChangeXML element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param target A valid XPath expression; optional (default: None).
+  # @param xml A valid XML string; optional (default: None).
+  def __init__(self, model, change=None, idf=None, target=None, xml=None):
+    if (change is None) and (idf is None or target is None or xml is None):
+      sys.exit("Error: either 'change' or 'idf', 'target' and 'xml' must be " +
+        "passed as arguments.")
+    else:
+      self.model = model
+      if change is not None:
+        Change.__init__(self, change=change)
+        self.xml = change.getNewXML().toXMLString()
+      elif idf is not None and target is not None and xml is not None:
+        Change.__init__(self, idf=idf, target=target)
+        self.xml = xml
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
@@ -279,13 +354,23 @@ class ChangeXML(Change):
 ## Change-derived class for removing a piece of XML code.
 class RemoveXML(Change):
   
-  ## Constructor.
+  ## Constructor; either 'change' or 'idf' and 'target' must be passed as
+  ## arguments.
   # @param self The object pointer.
-  # @param remove_xml A SED-ML removeXML element.
   # @param model Reference to the Model object to be changed.
-  def __init__(self, remove_xml, model):
-    Change.__init__(self, remove_xml)
-    self.model = model
+  # @param change A libsedml.SedChangeXML element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param target A valid XPath expression; optional (default: None).
+  def __init__(self, model, change=None, idf=None, target=None):
+    if (change is None) and (idf is None or target is None):
+      sys.exit("Error: either 'change' or 'idf' and 'target' must be " +
+        "passed as arguments.")
+    else:
+      self.model = model
+      if change is not None:
+        Change.__init__(self, change=change)
+      elif idf is not None and target is not None and xml is not None:
+        Change.__init__(self, idf=idf, target=target)
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.

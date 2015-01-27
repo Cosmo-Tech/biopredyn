@@ -26,36 +26,37 @@ class SBMLTestCase(GenericTestCase):
   
   def test_local_import(self):
     local = os.path.abspath('FEBS_antimony.xml')
-    mod = model.Model(self.manager, source=local)
+    mod = model.Model(self.manager, source=local, idf='febs')
     self.assertTrue(mod.check())
   
   def test_server_import(self):
     mod = model.Model(self.manager,
-      source='https://raw.githubusercontent.com/TheCoSMoCompany/biopredyn/master/Prototype/scripts/FEBS_antimony.xml')
+      source='https://raw.githubusercontent.com/TheCoSMoCompany/biopredyn/master/Prototype/scripts/FEBS_antimony.xml',
+      idf='febs')
     self.assertTrue(mod.check())
   
   def test_biomodels_import(self):
     mod = model.Model(self.manager,
-      source='urn:miriam:biomodels.db:BIOMD0000000001')
+      source='urn:miriam:biomodels.db:BIOMD0000000001', idf='biomd1')
     self.assertTrue(mod.check())
   
   def test_write_model(self):
     mod = model.Model(self.manager,
-      source=os.path.abspath('FEBS_antimony.xml'))
+      source=os.path.abspath('FEBS_antimony.xml'), idf='febs')
     mod.write_sbml('${CMAKE_CURRENT_BINARY_DIR}/test_write_model.xml')
 
 ## GenericTestCase derived class for SED-ML related tests.
 class SEDMLTestCase(GenericTestCase):
 
   def test_copasi_time_course(self):
-    flow = workflow.WorkFlow('test_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_graphical_output.xml')
     flow.get_task_by_id('task_1').set_tool('copasi')
     flow.run_tasks()
     self.assertEqual(
       len(flow.get_task_by_id('task_1').get_result().get_quantities_per_species('C')), 201)
   
   def test_libsbmlsim_time_course(self):
-    flow = workflow.WorkFlow('test_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_graphical_output.xml')
     flow.run_tasks()
     self.assertEqual(
       len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201)
@@ -64,23 +65,24 @@ class SEDMLTestCase(GenericTestCase):
 class OutputTestCase(GenericTestCase):
   
   def test_graphical_output(self):
-    flow = workflow.WorkFlow('test_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_graphical_output.xml')
     flow.run_tasks()
     flow.process_outputs(test=True)
   
   def test_3D_graphical_output(self):
-    flow = workflow.WorkFlow('test_3D_graphical_output.xml', self.manager)
+    flow = workflow.WorkFlow(
+      self.manager, source='test_3D_graphical_output.xml')
     flow.run_tasks()
     flow.process_outputs(test=True)
   
   def test_csv_report(self):
-    flow = workflow.WorkFlow('test_report.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_report.xml')
     flow.run_tasks()
     flow.process_outputs(test=True,
       filename='${CMAKE_CURRENT_BINARY_DIR}/test_output.csv')
   
   def test_numl_report(self):
-    flow = workflow.WorkFlow('test_report.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_report.xml')
     flow.run_tasks()
     flow.process_outputs(test=True,
       filename='${CMAKE_CURRENT_BINARY_DIR}/test_output.xml')
@@ -109,20 +111,20 @@ class XPathTestCase(GenericTestCase):
   
   def test_unresolved_xpath(self):
     local = os.path.abspath('FEBS_antimony.xml')
-    mod = model.Model(self.manager, source=local)
+    mod = model.Model(self.manager, source=local, idf='febs')
     self.assertRaises(SystemExit, mod.evaluate_xpath,
       '/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id="bad_id"]/@value')
   
   def test_read_value(self):
     local = os.path.abspath('FEBS_antimony.xml')
-    mod = model.Model(self.manager, source=local)
+    mod = model.Model(self.manager, source=local, idf='febs')
     value = mod.evaluate_xpath(
       '/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id="k2"]/@value')
     self.assertEqual(float(value[0]), 0.8)
   
   def test_return_node_list(self):
     local = os.path.abspath('FEBS_antimony.xml')
-    mod = model.Model(self.manager, source=local)
+    mod = model.Model(self.manager, source=local, idf='febs')
     list = mod.evaluate_xpath('//sbml:reaction')
     self.assertEqual(len(list), 3)
 
@@ -130,7 +132,7 @@ class XPathTestCase(GenericTestCase):
 class ChangeTestCase(GenericTestCase):
   
   def test_remove_xml(self):
-    flow = workflow.WorkFlow('test_remove_xml.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_remove_xml.xml')
     pre_change = flow.get_model_by_id('FEBS').evaluate_xpath('//sbml:species')
     self.assertEqual(len(pre_change), 4)
     flow.get_model_by_id('FEBS').apply_changes()
@@ -138,28 +140,28 @@ class ChangeTestCase(GenericTestCase):
     self.assertEqual(len(post_change), 3)
   
   def test_attribute_value(self):
-    flow = workflow.WorkFlow('test_change_attribute.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_change_attribute.xml')
     flow.get_model_by_id('FEBS').apply_changes()
     attr_value = flow.get_model_by_id('FEBS').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_E']/@initialAmount")
     self.assertEqual(float(attr_value[0]), 1.66058e-05)
   
   def test_compute_value(self):
-    flow = workflow.WorkFlow('test_compute_change.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_compute_change.xml')
     flow.get_model_by_id('FEBS').apply_changes()
     attr_value = flow.get_model_by_id('FEBS').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']/@initialConcentration")
     self.assertEqual(float(attr_value[0]), 1.0e16)
   
   def test_add_xml(self):
-    flow = workflow.WorkFlow('test_add_xml.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_add_xml.xml')
     flow.get_model_by_id('FEBS').apply_changes()
     name = flow.get_model_by_id('FEBS').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/species[@id='Z']/@name")
     self.assertEqual(str(name[0]), 'fake_species')
   
   def test_change_xml(self):
-    flow = workflow.WorkFlow('test_change_xml.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_change_xml.xml')
     mod = flow.get_model_by_id('FEBS')
     mod.apply_changes()
     name = mod.evaluate_xpath(
@@ -172,17 +174,20 @@ class ChangeTestCase(GenericTestCase):
 class RepeatedTaskTestCase(GenericTestCase):
 
   def test_uniform_range(self):
-    flow = workflow.WorkFlow('test_repeated_task_uniform.xml', self.manager)
+    flow = workflow.WorkFlow(
+      self.manager, source='test_repeated_task_uniform.xml')
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
   def test_vector_range(self):
-    flow = workflow.WorkFlow('test_repeated_task_vector.xml', self.manager)
+    flow = workflow.WorkFlow(
+      self.manager, source='test_repeated_task_vector.xml')
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
   def test_functional_range(self):
-    flow = workflow.WorkFlow('test_repeated_task_functional.xml', self.manager)
+    flow = workflow.WorkFlow(
+      self.manager, source='test_repeated_task_functional.xml')
     flow.get_task_by_id("task_2").run(True)
     flow.process_outputs(test=True)
 
@@ -190,7 +195,7 @@ class RepeatedTaskTestCase(GenericTestCase):
 class OneStepTestCase(GenericTestCase):
 
   def test_one_step(self):
-    flow = workflow.WorkFlow('test_one_step.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_one_step.xml')
     task = flow.get_task_by_id("task_2")
     task.run(True)
     wf.process_outputs()
@@ -199,7 +204,7 @@ class OneStepTestCase(GenericTestCase):
 class SteadyStateTestCase(GenericTestCase):
 
   def test_fba_cobrapy(self):
-    flow = workflow.WorkFlow('test_fba_cobrapy.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_fba_cobrapy.xml')
     task = flow.get_task_by_id("task_1")
     task.run(True)
     self.assertEqual(
@@ -207,7 +212,7 @@ class SteadyStateTestCase(GenericTestCase):
       0.38)
 
   def test_fba_libfbc(self):
-    flow = workflow.WorkFlow('test_fba_libfbc.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_fba_libfbc.xml')
     task = flow.get_task_by_id("task_1")
     task.set_tool('libfbc')
     task.run(True)
@@ -219,7 +224,7 @@ class SteadyStateTestCase(GenericTestCase):
 class DataGenerationTestCase(GenericTestCase):
 
   def test_homoscedastic_csv(self):
-    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)
@@ -235,7 +240,7 @@ class DataGenerationTestCase(GenericTestCase):
     self.assertEqual(round(residuals.std(), 1), 0.1)
 
   def test_heteroscedastic_csv(self):
-    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)
@@ -251,7 +256,7 @@ class DataGenerationTestCase(GenericTestCase):
     self.assertNotEqual(residuals.std(), 0.0)
 
   def test_homoscedastic_numl(self):
-    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)
@@ -267,7 +272,7 @@ class DataGenerationTestCase(GenericTestCase):
     self.assertEqual(round(residuals.std(), 1), 0.1)
 
   def test_heteroscedastic_numl(self):
-    flow = workflow.WorkFlow('test_data_generation.xml', self.manager)
+    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)

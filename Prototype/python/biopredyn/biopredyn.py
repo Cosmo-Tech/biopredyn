@@ -100,7 +100,7 @@ for o, a in opts:
     model = model.Model(manager, source=a)
     model.check()
   elif o == "--sedml":
-    flow = workflow.WorkFlow(a, res_man=manager)
+    flow = workflow.WorkFlow(manager, source=a)
     flow.run_tasks()
     flow.process_outputs(test=False, filename=output)
   elif o == "--numl":

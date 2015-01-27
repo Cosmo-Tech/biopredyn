@@ -33,58 +33,59 @@ class WorkFlow:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param source Address of the SED-ML file to be read.
+  # @param source Address of the SED-ML file to be read (default: None).
   # @param res_man A ResourceManager instance.
-  def __init__(self, source, res_man):
-    self.source = source
+  def __init__(self, res_man, source=None):
     self.resource_manager = res_man
-    file = self.resource_manager.get_resource(self.source)
-    reader = libsedml.SedReader()
-    self.sedml = reader.readSedMLFromString(file.read())
-    self.check()
-    # Parsing self.sedml for model elements
     self.models = []
-    for m in self.sedml.getListOfModels():
-      self.models.append(
-        model.Model(self.resource_manager, model=m, workflow=self))
-    # Parsing self.sedml for simulation elements
     self.simulations = []
-    for s in self.sedml.getListOfSimulations():
-      s_name = s.getElementName()
-      if s_name == "uniformTimeCourse":
-        self.simulations.append(simulation.UniformTimeCourse(s))
-      elif s_name == "oneStep":
-        self.simulations.append(simulation.OneStep(s))
-      elif s_name == "steadyState":
-        self.simulations.append(simulation.SteadyState(s))
-      else:
-        self.simulations.append(simulation.Simulation(s))
-    # Parsing self.sedml for task elements
     self.tasks = []
-    for t in self.sedml.getListOfTasks():
-      t_name = t.getElementName()
-      if t_name == "task":
-        self.tasks.append(task.Task(t, self))
-      elif t_name == "repeatedTask":
-        self.tasks.append(task.RepeatedTask(t, self))
-      else:
-        self.tasks.append(task.AbstractTask(t))
-    # Parsing self.sedml for data generator elements
     self.data_generators = []
-    for d in self.sedml.getListOfDataGenerators():
-      self.data_generators.append(datagenerator.DataGenerator(d, self))
-    # Parsing self.sedml for output elements
     self.outputs = []
-    for o in self.sedml.getListOfOutputs():
-      o_name = o.getElementName()
-      if o_name == "plot2D":
-        self.outputs.append(output.Plot2D(o, self))
-      elif o_name == "plot3D":
-        self.outputs.append(output.Plot3D(o, self))
-      elif o_name == "report":
-        self.outputs.append(output.Report(o, self))
-      else:
-        self.outputs.append(output.Output(o))
+    if source is not None:
+      self.source = source
+      fl = self.resource_manager.get_resource(self.source)
+      reader = libsedml.SedReader()
+      self.sedml = reader.readSedMLFromString(fl.read())
+      self.check()
+      # Parsing self.sedml for model elements
+      for m in self.sedml.getListOfModels():
+        self.add_model(
+          model.Model(self.resource_manager, model=m, workflow=self))
+      # Parsing self.sedml for simulation elements
+      for s in self.sedml.getListOfSimulations():
+        s_name = s.getElementName()
+        if s_name == "uniformTimeCourse":
+          self.add_simulation(simulation.UniformTimeCourse(s))
+        elif s_name == "oneStep":
+          self.add_simulation(simulation.OneStep(s))
+        elif s_name == "steadyState":
+          self.add_simulation(simulation.SteadyState(s))
+        else:
+          self.add_simulation(simulation.Simulation(s))
+      # Parsing self.sedml for task elements
+      for t in self.sedml.getListOfTasks():
+        t_name = t.getElementName()
+        if t_name == "task":
+          self.add_task(task.Task(t, self))
+        elif t_name == "repeatedTask":
+          self.add_task(task.RepeatedTask(t, self))
+        else:
+          self.add_task(task.AbstractTask(t))
+      # Parsing self.sedml for data generator elements
+      for d in self.sedml.getListOfDataGenerators():
+        self.add_data_generator(datagenerator.DataGenerator(d, self))
+      # Parsing self.sedml for output elements
+      for o in self.sedml.getListOfOutputs():
+        o_name = o.getElementName()
+        if o_name == "plot2D":
+          self.add_output(output.Plot2D(o, self))
+        elif o_name == "plot3D":
+          self.add_output(output.Plot3D(o, self))
+        elif o_name == "report":
+          self.add_output(output.Report(o, self))
+        else:
+          self.add_output(output.Output(o))
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -112,6 +113,41 @@ class WorkFlow:
       for o in self.outputs:
         tree += str(o)
     return tree
+
+  ## Appends the input biopredyn.datagenerator.DataGenerator object to
+  # self.datagenerators.
+  # @param self The object pointer.
+  # @param dg A biopredyn.datagenerator.DataGenerator instance.
+  def add_data_generator(self, dg):
+    self.data_generators.append(dg)
+
+  ## Appends the input biopredyn.model.Model object to
+  # self.models.
+  # @param self The object pointer.
+  # @param md A biopredyn.model.Model instance.
+  def add_model(self, md):
+    self.models.append(md)
+
+  ## Appends the input biopredyn.output.Output object to
+  # self.outputs.
+  # @param self The object pointer.
+  # @param op A biopredyn.output.Output instance.
+  def add_output(self, op):
+    self.outputs.append(op)
+
+  ## Appends the input biopredyn.simulation.Simulation object to
+  # self.simulations.
+  # @param self The object pointer.
+  # @param sm A biopredyn.simulation.Simulation instance.
+  def add_simulation(self, sm):
+    self.simulations.append(sm)
+
+  ## Appends the input biopredyn.task.Task object to
+  # self.tasks.
+  # @param self The object pointer.
+  # @param tk A biopredyn.task.Task instance.
+  def add_task(self, tk):
+    self.tasks.append(tk)
   
   ## SED-ML compliance check function.
   # Check whether self.sedml is compliant with the SED-ML standard; if

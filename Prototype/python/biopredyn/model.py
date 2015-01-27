@@ -28,39 +28,41 @@ class Model:
   ## @var resource_manager
   # Resource manager for the current work flow.
   
-  ## Constructor; one of the two argument 'model' or 'source' must be passed to
-  ## the constructor.
+  ## Constructor; either 'model' and 'workflow' or 'source' and 'idf' must be
+  ## passed to the constructor.
   # @param self The object pointer.
   # @param manager An instance of ResourceManager.
   # @param model A SED-ML model element; optional (default None). If a model is
   # provided, this will be initialized as an element of a SED-ML workflow (the
   # list of changes will be initialized); if not, this will be initialized as
-  # a stand-alone SBML model using the input source (if provided).
+  # a stand-alone SBML model using the input source and idf (if provided).
   # @param workflow A WorkFlow object; required if a SED-ML model is provided
   # (default None).
   # @param source The address of a SBML model file; optional (default None).
-  def __init__(self, manager, model=None, workflow=None, source=None):
-    if (model is None or workflow is None) and (source is None):
-      sys.exit("Error: either 'model' and 'workflow' or 'source' input " +
-               "arguments must be passed to the constructor.")
+  # @param idf A unique identifier; optional (default None).
+  def __init__(self, manager, model=None, workflow=None, source=None, idf=None):
+    if (model is None or workflow is None) and (source is None or idf is None):
+      sys.exit("Error: either 'model' and 'workflow' or 'source' and 'idf' " +
+               "input arguments must be passed to the constructor.")
     else:
       self.resource_manager = manager
+      self.changes = []
       if model is not None and workflow is not None:
         self.id = model.getId()
         self.source = model.getSource()
-        self.changes = []
         for c in model.getListOfChanges():
           if c.getElementName() == "changeAttribute":
-            self.changes.append(change.ChangeAttribute(c, self))
+            self.add_change(change.ChangeAttribute(self, change=c))
           elif c.getElementName() == "computeChange":
-            self.changes.append(change.ComputeChange(c, workflow, self))
+            self.add_change(change.ComputeChange(workflow, self, change=c))
           elif c.getElementName() == "changeXML":
-            self.changes.append(change.ChangeXML(c, self))
+            self.add_change(change.ChangeXML(self, change=c))
           elif c.getElementName() == "addXML":
-            self.changes.append(change.AddXML(c, self))
+            self.add_change(change.AddXML(self, change=c))
           elif c.getElementName() == "removeXML":
-            self.changes.append(change.RemoveXML(c, self))
-      elif source is not None:
+            self.add_change(change.RemoveXML(self, change=c))
+      elif source is not None and idf is not None:
+        self.id = idf
         self.source = source
       self.init_tree()
       self.init_namespaces()
@@ -74,6 +76,12 @@ class Model:
     for c in self.changes:
       tree += str(c)
     return tree
+
+  ## Appends the input biopredyn.change.Change object to self.changes.
+  # @param self The object pointer.
+  # @param ch A biopredyn.change.Change object.
+  def add_change(self, ch):
+    self.changes.append(ch)
   
   ## Sequentially apply all changes in the model.
   # @param self The object pointer.
