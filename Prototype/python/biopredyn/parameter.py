@@ -22,9 +22,10 @@ class Parameter:
   # @param self The object pointer.
   # @param parameter A libsedml.SedParameter element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param value A string representing a numerical value; optional (default:
   # None).
-  def __init__(self, parameter=None, idf=None, value=None):
+  def __init__(self, parameter=None, idf=None, name=None, value=None):
     if (parameter is None) and (idf is None or value is None):
       sys.exit("Error: either 'parameter' or 'idf' and 'value' must be " +
         "passed as keyword arguments.")
@@ -35,6 +36,7 @@ class Parameter:
         self.value = parameter.getValue()
       elif idf is not None and value is not None:
         self.id = idf
+        self.name = name
         self.value = value
   
   ## String representation of this. Displays it as a hierarchy.

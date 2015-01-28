@@ -27,14 +27,29 @@ class Simulation:
   ## @var type
   # Type of simulation.
   
-  ## Constructor.
+  ## Constructor; either 'simulation' or 'idf' and 's_type' must be passed as
+  ## keyword arguments.
   # @param self The object pointer.
-  # @param simulation A SED-ML simulation.
-  def __init__(self, simulation):
-    self.algorithm = algorithm.Algorithm(simulation.getAlgorithm())
-    self.id = simulation.getId()
-    self.name = simulation.getName()
-    self.type = simulation.getElementName()
+  # @param simulation A libsedml.SedSimulation object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param s_type The type of simulation encoded in 'self'. Possible values for
+  # s_type are: 'uniformTimeCourse', 'oneStep', 'steadyState' and 'simulation'.
+  # Optional (default: None).
+  def __init__(self, simulation=None, idf=None, name=None, s_type=None):
+    if (simulation is None) and (idf is None or s_type is None):
+      sys.exit("Error: either 'simulation' or 'idf' and 's_type' must be " +
+        "passed as keyword arguments.")
+    else:
+      if simulation is not None:
+        self.set_algorithm(algorithm.Algorithm(simulation.getAlgorithm()))
+        self.id = simulation.getId()
+        self.name = simulation.getName()
+        self.type = simulation.getElementName()
+      elif idf is not None and s_type is not None:
+        self.id = idf
+        self.name = name
+        self.type = s_type
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -55,6 +70,12 @@ class Simulation:
   # @return self.id
   def get_id(self):
     return self.id
+  
+  ## Setter for self.algorithm.
+  # @param self The object pointer.
+  # @param algo A biopredyn.algorithm.Algorithm object.
+  def set_algorithm(self, algo):
+    self.algorithm = algo
   
   ## Setter for self.id.
   # @param self The object pointer.
@@ -84,12 +105,24 @@ class OneStep(Simulation):
   ## @var step
   # Value of the time step to be considered.
 
-  ## Overridden constructor.
+  ## Overridden constructor; either 'simulation' or 'idf' and 'step'
+  ## must be passed as keyword arguments.
   # @param self The object pointer.
-  # @param simulation A SED-ML 'one step' element.
-  def __init__(self, simulation):
-    Simulation.__init__(self, simulation)
-    self.step = simulation.getStep()
+  # @param simulation A libsedml.SedOneStep element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param step Size of the time step to integrate; optional (default: None).
+  def __init__(self, simulation=None, idf=None, name=None, step=None):
+    if simulation is None and (idf is None or step is None):
+      sys.exit("Error: either 'simulation' or 'idf' and 'step' must be " +
+        "passed as keyword arguments.")
+    else:
+      if simulation is not None:
+        Simulation.__init__(self, simulation=simulation)
+        self.step = simulation.getStep()
+      else:
+        Simulation.__init__(self, idf=idf, name=name, s_type='oneStep')
+        self.step = step
 
   ## Getter. Returns self.step.
   # @param self The object pointer.
@@ -214,15 +247,41 @@ class UniformTimeCourse(Simulation):
   # Time point where the result collection starts; not necessarily the same as
   # initial_time.
   
-  ## Overridden constructor.
+  ## Overridden constructor; either 'simulation' or 'idf', 'start', 'end',
+  ## 'out_st' and 'pts' must be passed as keyword arguments.
   # @param self The object pointer.
-  # @param simulation A SED-ML uniform time course element.
-  def __init__(self, simulation):
-    Simulation.__init__(self, simulation)
-    self.initial_time = simulation.getInitialTime()
-    self.number_of_points = simulation.getNumberOfPoints()
-    self.output_end_time = simulation.getOutputEndTime()
-    self.output_start_time = simulation.getOutputStartTime()
+  # @param simulation A libsedml.SedUniformTimeCourse element; optional
+  # (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param start Time point where the simulation begins; optional (default:
+  # None).
+  # @param end Time point where both the simulation and the result collection
+  # end; optional (default: None).
+  # @param out_st Time point where the result collection starts; optional
+  # (default: None).
+  # @param pts Number of time points between 'out_st' and 'end'; optional
+  # (default: None).
+  def __init__(self, simulation=None, idf=None, name=None, start=None, end=None,
+    out_st=None, pts=None):
+    if simulation is None and (idf is None or start is None or end is None or
+      out_st is None or pts is None):
+      sys.exit("Error: either 'simulation' or 'idf', 'start', 'end', " +
+        "'out_st' and 'pts' must be passed as keyword arguments.")
+    else:
+      if simulation is not None:
+        Simulation.__init__(self, simulation=simulation)
+        self.initial_time = simulation.getInitialTime()
+        self.number_of_points = simulation.getNumberOfPoints()
+        self.output_end_time = simulation.getOutputEndTime()
+        self.output_start_time = simulation.getOutputStartTime()
+      else:
+        Simulation.__init__(self, idf=idf, name=name,
+          s_type='uniformTimeCourse')
+        self.initial_time = start
+        self.number_of_points = pts
+        self.output_end_time = end
+        self.output_start_time = out_st
   
   ## Overridden string representation of this. Displays it as a hierarchy.
   # @param self The object pointer.

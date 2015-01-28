@@ -26,8 +26,9 @@ class Change:
   # @param self The object pointer.
   # @param change A libsedml.SedChange element; optional (default=None).
   # @param idf A unique identifier; optional (default=None).
+  # @param A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default=None).
-  def __init__(self, change=None, idf=None, target=None):
+  def __init__(self, change=None, idf=None, name=None, target=None):
     if (change is None) and (idf is None or target is None):
       sys.exit("Error: either 'change' or 'target' and 'idf' " +
         "must be passed as keyword arguments.")
@@ -38,6 +39,7 @@ class Change:
         self.target = change.getTarget()
       elif idf is not None and target is not None:
         self.id = idf
+        self.name = name
         self.target = target
   
   ## String representation of this. Displays it as a hierarchy.
@@ -112,12 +114,13 @@ class ComputeChange(Change):
   # @param model Reference to the biopredyn.model.Model object to be changed.
   # @param change A libsedml.SedComputeChange element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default: None).
   # @param math A valid Python mathematical expression. Symbols it contains must
   # correspond to identifiers of elements listed in self.variables and / or
   # self.parameters.
-  def __init__(self, workflow, model, change=None, idf=None, target=None,
-    math=None):
+  def __init__(self, workflow, model, change=None, idf=None, name=None,
+    target=None, math=None):
     if (change is None) and (idf is None or target is None or math is None):
       sys.exit("Error: either 'change' or 'target' and 'idf' " +
         "must be passed as keyword arguments.")
@@ -133,7 +136,7 @@ class ComputeChange(Change):
           self.add_parameter(parameter.Parameter(parameter=p))
         self.math = self.parse_math_expression(change.getMath())
       elif idf is not None and target is not None and math is not None:
-        Change.__init__(self, idf=idf, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target)
         self.math = sympify(math)
   
   ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
@@ -205,10 +208,12 @@ class ChangeAttribute(Change):
   # @param change A libsedml.SedChangeAttribute element; optional (default:
   # None).
   # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default: None).
   # @param value Value to be given to the target attribute; optional (default:
   # None).
-  def __init__(self, model, change=None, idf=None, target=None, value=None):
+  def __init__(self, model, change=None, idf=None, name=None, target=None,
+    value=None):
     if (change is None) and (idf is None or target is None or value is None):
       sys.exit("Error: either 'change' or 'idf', 'target' and 'value' must " +
         "be passed as keyword arguments.")
@@ -218,7 +223,7 @@ class ChangeAttribute(Change):
         Change.__init__(self, change=change)
         self.value = change.getNewValue()
       elif idf is not None and target is not None and value is not None:
-        Change.__init__(self, idf=idf, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target)
         self.value = value
   
   ## Set the value of self.target to self.value in self.model.
@@ -257,9 +262,11 @@ class AddXML(Change):
   # @param model Reference to the Model object to be changed.
   # @param change A libsedml.SedAddXML element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default: None).
   # @param xml A valid XML string; optional (default: None).
-  def __init__(self, model, change=None, idf=None, target=None, xml=None):
+  def __init__(self, model, change=None, idf=None, name=None, target=None,
+    xml=None):
     if (change is None) and (idf is None or target is None or xml is None):
       sys.exit("Error: either 'change' or 'idf', 'target' and 'xml' must be " +
         "passed as keyword arguments.")
@@ -269,7 +276,7 @@ class AddXML(Change):
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
       elif idf is not None and target is not None and xml is not None:
-        Change.__init__(self, idf=idf, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target)
         self.xml = xml
   
   ## Add self.xml as a child of self.target in self.model.
@@ -309,9 +316,11 @@ class ChangeXML(Change):
   # @param model Reference to the Model object to be changed.
   # @param change A libsedml.SedChangeXML element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default: None).
   # @param xml A valid XML string; optional (default: None).
-  def __init__(self, model, change=None, idf=None, target=None, xml=None):
+  def __init__(self, model, change=None, idf=None, name=None, target=None,
+    xml=None):
     if (change is None) and (idf is None or target is None or xml is None):
       sys.exit("Error: either 'change' or 'idf', 'target' and 'xml' must be " +
         "passed as arguments.")
@@ -321,7 +330,7 @@ class ChangeXML(Change):
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
       elif idf is not None and target is not None and xml is not None:
-        Change.__init__(self, idf=idf, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target)
         self.xml = xml
   
   ## Compute the new value of self.target and change it in the model.
@@ -361,8 +370,9 @@ class RemoveXML(Change):
   # @param model Reference to the Model object to be changed.
   # @param change A libsedml.SedChangeXML element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default: None).
-  def __init__(self, model, change=None, idf=None, target=None):
+  def __init__(self, model, change=None, idf=None, name=None, target=None):
     if (change is None) and (idf is None or target is None):
       sys.exit("Error: either 'change' or 'idf' and 'target' must be " +
         "passed as arguments.")
@@ -371,7 +381,7 @@ class RemoveXML(Change):
       if change is not None:
         Change.__init__(self, change=change)
       elif idf is not None and target is not None and xml is not None:
-        Change.__init__(self, idf=idf, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target)
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
@@ -412,25 +422,52 @@ class SetValue:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param setvalue A libsedml.SedSetValue element.
   # @param task A libsedml.SedRepeatedTask object.
   # @param workflow A WorkFlow object.
-  def __init__(self, setvalue, task, workflow):
-    self.id = setvalue.getId()
-    self.name = setvalue.getName()
-    self.target = setvalue.getTarget()
-    self.task = task
-    self.workflow = workflow
-    if setvalue.isSetRange():
-      self.range = setvalue.getRange()
-    self.model_id = setvalue.getModelReference()
-    self.variables = []
-    for v in setvalue.getListOfVariables():
-      self.variables.append(variable.Variable(workflow, variable=v))
-    self.parameters = []
-    for p in setvalue.getListOfParameters():
-      self.parameters.append(parameter.Parameter(parameter=p))
-    self.math = self.parse_math_expression(setvalue.getMath())
+  # @param setvalue A libsedml.SedSetValue element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, task, workflow, setvalue=None, idf=None, name=None,
+    target=None, mod_ref=None, math=None):
+    if setvalue is None and (idf is None or target is None or mod_ref is None or
+      math is None):
+      sys.exit("Error: either 'setvalue' or 'idf', 'target', 'mod_ref' and " +
+        "'math' must be passed as keyword argument(s).")
+    else:
+      self.task = task
+      self.workflow = workflow
+      self.parameters = []
+      self.variables = []
+      if setvalue is not None:
+        self.id = setvalue.getId()
+        self.name = setvalue.getName()
+        self.target = setvalue.getTarget()
+        if setvalue.isSetRange():
+          self.set_range(setvalue.getRange())
+        self.model_id = setvalue.getModelReference()
+        for v in setvalue.getListOfVariables():
+          self.add_variable(variable.Variable(workflow, variable=v))
+        for p in setvalue.getListOfParameters():
+          self.add_parameter(parameter.Parameter(parameter=p))
+        self.math = self.parse_math_expression(setvalue.getMath())
+      else:
+        self.id = idf
+        self.name = name
+        self.target = target
+        self.model_id = mod_ref
+        self.math = sympify(math)
+
+  ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
+  # @para self The object pointer.
+  # @param par A biopredyn.parameter.Parameter object.
+  def add_parameter(self, par):
+    self.parameters.append(par)
+
+  ## Appends the input biopredyn.variable.Variable object to self.variables.
+  # @para self The object pointer.
+  # @param var A biopredyn.variable.Variable object.
+  def add_variable(self, var):
+    self.variables.append(var)
   
   ## Compute the new value of self.target and change it in self.model.
   # @param self The object pointer.
@@ -519,3 +556,10 @@ class SetValue:
   # @param target New value for self.target.
   def set_target(self, target):
     self.target = target
+  
+  ## Setter for self.range.
+  # @param self The object pointer.
+  # @param range Reference to the identifier of a biopredyn.ranges.Range object
+  # of self.task.
+  def set_range(self, rng):
+    self.range = rng

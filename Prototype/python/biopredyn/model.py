@@ -40,15 +40,18 @@ class Model:
   # (default None).
   # @param source The address of a SBML model file; optional (default None).
   # @param idf A unique identifier; optional (default None).
-  def __init__(self, manager, model=None, workflow=None, source=None, idf=None):
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, manager, model=None, workflow=None, source=None, idf=None,
+    name=None):
     if (model is None or workflow is None) and (source is None or idf is None):
       sys.exit("Error: either 'model' and 'workflow' or 'source' and 'idf' " +
                "input arguments must be passed to the constructor.")
     else:
       self.resource_manager = manager
       self.changes = []
-      if model is not None and workflow is not None:
+      if model is not None:
         self.id = model.getId()
+        self.name = model.getName()
         self.source = model.getSource()
         for c in model.getListOfChanges():
           if c.getElementName() == "changeAttribute":
@@ -61,8 +64,9 @@ class Model:
             self.add_change(change.AddXML(self, change=c))
           elif c.getElementName() == "removeXML":
             self.add_change(change.RemoveXML(self, change=c))
-      elif source is not None and idf is not None:
+      else:
         self.id = idf
+        self.name = name
         self.source = source
       self.init_tree()
       self.init_namespaces()

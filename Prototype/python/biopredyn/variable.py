@@ -32,22 +32,29 @@ class Variable:
   ## passed as keyword arguments: 'idf'; 'target' OR 'symbol'; 'tsk_ref' OR
   ## 'mod_ref'.
   # @param self The object pointer.
-  # @param variable A libsedml.SedVariable object.
   # @param workflow A WorkFlow object.
-  def __init__(self, workflow, variable=None, idf=None, target=None,
+  # @param variable A libsedml.SedVariable object.
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param target A valid XPath expression; optional (default: None).
+  # @param symbol A valid libsedml URI expression; optional (default: None).
+  # @param tsk_ref Reference to a biopredyn.task.Task object; optional (default:
+  # None).
+  # @param mod_ref Reference to a biopredyn.model.Model object; optional
+  # (default: None).
+  def __init__(self, workflow, variable=None, idf=None, name=None, target=None,
     symbol=None, tsk_ref=None, mod_ref=None):
     self.workflow = workflow
     if (variable is not None):
       self.id = variable.getId()
+      self.name = variable.getName()
       # element cannot have both a 'target' and a 'symbol'
       if not variable.isSetTarget() ^ variable.isSetSymbol():
         sys.exit("Invalid 'variable' argument: one and only one of the " +
           "target or symbol attributes must exist in the input " +
           "libsedml.SedVariable element.")
       else:
-      #elif variable.isSetTarget():
         self.target = variable.getTarget()
-      #elif variable.isSetSymbol():
         self.symbol = variable.getSymbol()
       # element cannot refer to a task and a model a the same time
       if not variable.isSetTaskReference() ^ variable.isSetModelReference():
@@ -60,6 +67,7 @@ class Variable:
         self.model_id = variable.getModelReference()
     elif idf is not None:
       self.id = idf
+      self.name = name
       # input arguments 'target' and 'symbol' cannot exist simultaneously
       if (target is not None ^ symbol is not None):
         self.target = target

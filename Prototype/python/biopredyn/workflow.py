@@ -57,13 +57,13 @@ class WorkFlow:
       for s in self.sedml.getListOfSimulations():
         s_name = s.getElementName()
         if s_name == "uniformTimeCourse":
-          self.add_simulation(simulation.UniformTimeCourse(s))
+          self.add_simulation(simulation.UniformTimeCourse(simulation=s))
         elif s_name == "oneStep":
-          self.add_simulation(simulation.OneStep(s))
+          self.add_simulation(simulation.OneStep(simulation=s))
         elif s_name == "steadyState":
-          self.add_simulation(simulation.SteadyState(s))
+          self.add_simulation(simulation.SteadyState(simulation=s))
         else:
-          self.add_simulation(simulation.Simulation(s))
+          self.add_simulation(simulation.Simulation(simulation=s))
       # Parsing self.sedml for task elements
       for t in self.sedml.getListOfTasks():
         t_name = t.getElementName()

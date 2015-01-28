@@ -17,16 +17,35 @@ class Algorithm:
   ## @var parameters
   # A list of AlgorithmParameter objects.
 
-  ## Constructor.
-  # @param self The objcet pointer.
-  # @param algorithm A libsedml.SedAlgorithm element.
-  def __init__(self, algorithm):
-    self.id = algorithm.getId()
-    self.name = algorithm.getName()
-    self.kisao_id = algorithm.getKisaoID()
-    self.parameters = []
-    for p in algorithm.getListOfAlgorithmParameters():
-      self.parameters.append(AlgorithmParameter(p))
+  ## Constructor; either 'algo' or 'idf' and 'kid' must be passed as keyword
+  ## argument(s).
+  # @param self The object pointer.
+  # @param algo A libsedml.SedAlgorithm element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param kid A valid KiSAO identifier; optional (default: None).
+  def __init__(self, algo=None, idf=None, name=None, kid=None):
+    if algo is None and (idf is None or kid is None):
+      sys.exit("Error: either 'algo' or 'idf' and 'kid' must be passed as " +
+        "keyword argument(s).")
+    else:
+      self.parameters = []
+      if algo is not None:
+        self.id = algo.getId()
+        self.name = algo.getName()
+        self.kisao_id = algo.getKisaoID()
+        for p in algo.getListOfAlgorithmParameters():
+          self.add_parameter(AlgorithmParameter(parameter=p))
+      else:
+        self.id = idf
+        self.name = name
+        self.kisao_id = kid
+
+  ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
+  # @param self The object pointer.
+  # @param par A biopredyn.parameter.Parameter object.
+  def add_parameter(self, par):
+    self.parameters.append(par)
 
   ## Getter. Returns self.id.
   # @param self The object pointer.
@@ -106,14 +125,30 @@ class AlgorithmParameter:
   ## @var value
   # A string value for this parameter.
 
-  ## Constructor.
+  ## Constructor; either 'parameter' or 'idf', 'kid' and 'value' must be passed
+  ## as keyword argument(s).
   # @param self the object pointer.
-  # @param parameter A libsedml.SedAlgorithmParameter object.
-  def __init__(self, parameter):
-    self.id = parameter.getId()
-    self.name = parameter.getName()
-    self.kisao_id = parameter.getKisaoID()
-    self.value = parameter.getValue()
+  # @param parameter A libsedml.SedAlgorithmParameter object; optional (default:
+  # None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param kid A valid KiSAO identifier; optional (default: None).
+  # @param value A string value for this parameter; optional (default: None).
+  def __init__(self, parameter=None, idf=None, name=None, kid=None, value=None):
+    if parameter is None and (idf is None or kid is None or value is None):
+      sys.exit("Error; either 'parameter' or 'idf', 'kid' and 'value' must " +
+        "be passed as keyword argument(s).")
+    else:
+      if parameter is not None:
+        self.id = parameter.getId()
+        self.name = parameter.getName()
+        self.kisao_id = parameter.getKisaoID()
+        self.value = parameter.getValue()
+      else:
+        self.id = idf
+        self.name = name
+        self.kisao_id = kid
+        self.value = value
 
   ## Getter. Returns self.id.
   # @param self The object pointer.

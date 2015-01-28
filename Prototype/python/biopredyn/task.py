@@ -188,7 +188,7 @@ class RepeatedTask(AbstractTask):
     self.changes = []
     for c in task.getListOfTaskChanges():
       # Change objects in RepeatedTask objects can only be SetValue objects
-      self.changes.append(change.SetValue(c, self, workflow))
+      self.changes.append(change.SetValue(self, workflow, setvalue=c))
     self.ranges = []
     for r in task.getListOfRanges():
       r_name = r.getElementName()
