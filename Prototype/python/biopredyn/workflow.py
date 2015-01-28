@@ -33,8 +33,9 @@ class WorkFlow:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param source Address of the SED-ML file to be read (default: None).
-  # @param res_man A ResourceManager instance.
+  # @param res_man A biopredyn.resources.ResourceManager object.
+  # @param source Address of the SED-ML file to be read; optional (default:
+  # None).
   def __init__(self, res_man, source=None):
     self.resource_manager = res_man
     self.models = []

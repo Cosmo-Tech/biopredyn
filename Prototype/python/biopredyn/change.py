@@ -30,7 +30,7 @@ class Change:
   def __init__(self, change=None, idf=None, target=None):
     if (change is None) and (idf is None or target is None):
       sys.exit("Error: either 'change' or 'target' and 'idf' " +
-        "input arguments must be passed to the constructor.")
+        "must be passed as keyword arguments.")
     else:
       if change is not None:
         self.id = change.getId()
@@ -99,9 +99,9 @@ class Change:
 ## Change-derived class for changes computed with MathML expressions.
 class ComputeChange(Change):
   ## @var variables
-  # A list of Variable objects.
+  # A list of biopredyn.variable.Variable objects.
   ## @var parameters
-  # A list of Parameter objects.
+  # A list of biopredyn.parameter.Parameter objects.
   ## @var math
   # A Sympy expression.
 
@@ -120,7 +120,7 @@ class ComputeChange(Change):
     math=None):
     if (change is None) and (idf is None or target is None or math is None):
       sys.exit("Error: either 'change' or 'target' and 'idf' " +
-        "input arguments must be passed to the constructor.")
+        "must be passed as keyword arguments.")
     else:
       self.model = model
       self.variables = []
@@ -128,9 +128,9 @@ class ComputeChange(Change):
       if change is not None:
         Change.__init__(self, change=change)
         for v in change.getListOfVariables():
-          self.add_variable(variable.Variable(v, workflow))
+          self.add_variable(variable.Variable(workflow, variable=v))
         for p in change.getListOfParameters():
-          self.add_parameter(parameter.Parameter(p))
+          self.add_parameter(parameter.Parameter(parameter=p))
         self.math = self.parse_math_expression(change.getMath())
       elif idf is not None and target is not None and math is not None:
         Change.__init__(self, idf=idf, target=target)
@@ -198,7 +198,8 @@ class ChangeAttribute(Change):
   ## @var value
   # Value to be given to the changed attribute.
   
-  ## Constructor.
+  ## Constructor; either 'change' or 'idf', 'target' and 'value' must be passed
+  ## as keyword arguments.
   # @param self The object pointer.
   # @param model Reference to the biopredyn.model.Model object to be changed.
   # @param change A libsedml.SedChangeAttribute element; optional (default:
@@ -210,7 +211,7 @@ class ChangeAttribute(Change):
   def __init__(self, model, change=None, idf=None, target=None, value=None):
     if (change is None) and (idf is None or target is None or value is None):
       sys.exit("Error: either 'change' or 'idf', 'target' and 'value' must " +
-        "be passed as arguments.")
+        "be passed as keyword arguments.")
     else:
       self.model = model
       if change is not None:
@@ -251,7 +252,7 @@ class AddXML(Change):
   # A piece of XML code.
   
   ## Constructor; either 'change' or 'idf', 'target' and 'xml' must be passed as
-  ## arguments.
+  ## keyword arguments.
   # @param self The object pointer.
   # @param model Reference to the Model object to be changed.
   # @param change A libsedml.SedAddXML element; optional (default: None).
@@ -261,7 +262,7 @@ class AddXML(Change):
   def __init__(self, model, change=None, idf=None, target=None, xml=None):
     if (change is None) and (idf is None or target is None or xml is None):
       sys.exit("Error: either 'change' or 'idf', 'target' and 'xml' must be " +
-        "passed as arguments.")
+        "passed as keyword arguments.")
     else:
       self.model = model
       if change is not None:
@@ -303,7 +304,7 @@ class ChangeXML(Change):
   # A piece of XML code.
   
   ## Constructor; either 'change' or 'idf', 'target' and 'xml' must be passed as
-  ## arguments.
+  ## keyword arguments.
   # @param self The object pointer.
   # @param model Reference to the Model object to be changed.
   # @param change A libsedml.SedChangeXML element; optional (default: None).
@@ -355,7 +356,7 @@ class ChangeXML(Change):
 class RemoveXML(Change):
   
   ## Constructor; either 'change' or 'idf' and 'target' must be passed as
-  ## arguments.
+  ## keyword arguments.
   # @param self The object pointer.
   # @param model Reference to the Model object to be changed.
   # @param change A libsedml.SedChangeXML element; optional (default: None).
@@ -411,8 +412,8 @@ class SetValue:
   
   ## Constructor.
   # @param self The object pointer.
-  # @param setvalue A SED-ML setValue element.
-  # @param task A RepeatedTask object.
+  # @param setvalue A libsedml.SedSetValue element.
+  # @param task A libsedml.SedRepeatedTask object.
   # @param workflow A WorkFlow object.
   def __init__(self, setvalue, task, workflow):
     self.id = setvalue.getId()
@@ -425,10 +426,10 @@ class SetValue:
     self.model_id = setvalue.getModelReference()
     self.variables = []
     for v in setvalue.getListOfVariables():
-      self.variables.append(variable.Variable(v, workflow))
+      self.variables.append(variable.Variable(workflow, variable=v))
     self.parameters = []
     for p in setvalue.getListOfParameters():
-      self.parameters.append(parameter.Parameter(p))
+      self.parameters.append(parameter.Parameter(parameter=p))
     self.math = self.parse_math_expression(setvalue.getMath())
   
   ## Compute the new value of self.target and change it in self.model.

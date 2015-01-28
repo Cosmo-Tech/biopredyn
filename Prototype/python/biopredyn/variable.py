@@ -28,29 +28,56 @@ class Variable:
   ## @var workflow
   # Reference to the WorkFlow object this refers to.
   
-  ## Constructor. Depending on the content of the input variable, one of the
-  ## input workflow or model arguments must exist.
+  ## Constructor; if 'variable' is not passed, the following arguments must be
+  ## passed as keyword arguments: 'idf'; 'target' OR 'symbol'; 'tsk_ref' OR
+  ## 'mod_ref'.
   # @param self The object pointer.
   # @param variable A libsedml.SedVariable object.
   # @param workflow A WorkFlow object.
-  def __init__(self, variable, workflow):
-    self.id = variable.getId()
-    self.name = variable.getName()
-    self.target = variable.getTarget()
+  def __init__(self, workflow, variable=None, idf=None, target=None,
+    symbol=None, tsk_ref=None, mod_ref=None):
     self.workflow = workflow
-    self.symbol = variable.getSymbol()
-    if variable.isSetTaskReference():
-      # DataGenerator case
-      self.task_id = variable.getTaskReference()
-    elif variable.isSetModelReference():
-      # ComputeChange case
-      self.model_id = variable.getModelReference()
+    if (variable is not None):
+      self.id = variable.getId()
+      # element cannot have both a 'target' and a 'symbol'
+      if not variable.isSetTarget() ^ variable.isSetSymbol():
+        sys.exit("Invalid 'variable' argument: one and only one of the " +
+          "target or symbol attributes must exist in the input " +
+          "libsedml.SedVariable element.")
+      else:
+      #elif variable.isSetTarget():
+        self.target = variable.getTarget()
+      #elif variable.isSetSymbol():
+        self.symbol = variable.getSymbol()
+      # element cannot refer to a task and a model a the same time
+      if not variable.isSetTaskReference() ^ variable.isSetModelReference():
+        sys.exit("Invalid 'variable' argument; at least one of the " +
+          "taskReference or modelReference attributes must exist in the " +
+          "input Variable element.")
+      elif variable.isSetTaskReference():
+        self.task_id = variable.getTaskReference()
+      elif variable.isSetModelReference():
+        self.model_id = variable.getModelReference()
+    elif idf is not None:
+      self.id = idf
+      # input arguments 'target' and 'symbol' cannot exist simultaneously
+      if (target is not None ^ symbol is not None):
+        self.target = target
+        self.symbol = symbol
+      else:
+        sys.exit("Error: either 'target' or 'symbol' must be passed as " +
+          "keyword argument.")
+      # input arguments 'tsk_ref' and 'mod_ref' cannot exist simultaneously
+      if (tsk_ref is not None ^ mod_ref is not None):
+        self.task_id = tsk_ref
+        self.model_id = mod_ref
+      else:
+        sys.exit("Error: either 'tsk_ref' or 'mod_ref' must be passed as " +
+          "keyword argument.")
     else:
-      print(
-            "Invalid 'variable' argument; at least one of the taskReference" +
-            " or modelReference attributes must exist in the input Variable" +
-            " element."
-            )
+      sys.exit("Error: either 'variable' or the " +
+        "following keyword arguments must be passed: 'idf'; 'target' OR " +
+        "'symbol'; 'tsk_ref' OR 'mod_ref'.")
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.

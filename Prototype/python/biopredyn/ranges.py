@@ -80,10 +80,10 @@ class FunctionalRange(Range):
       self.range = range.getRange()
     self.variables = []
     for v in range.getListOfVariables():
-      self.variables.append(variable.Variable(v, workflow))
+      self.variables.append(variable.Variable(workflow, variable=v))
     self.parameters = []
     for p in range.getListOfParameters():
-      self.parameters.append(parameter.Parameter(p))
+      self.parameters.append(parameter.Parameter(parameter=p))
     self.math = self.parse_math_expression(range.getMath())
   
   ## Computes and returns the value encoded by the element for the current

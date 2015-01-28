@@ -17,13 +17,25 @@ class Parameter:
   ## @var value
   # Value of this object.
   
-  ## Constructor.
+  ## Constructor; either 'parameter' or 'idf' and 'value' must be passed as
+  ## keyword arguments.
   # @param self The object pointer.
-  # @param parameter A SED-ML parameter element.
-  def __init__(self, parameter):
-    self.id = parameter.getId()
-    self.name = parameter.getName()
-    self.value = parameter.getValue()
+  # @param parameter A libsedml.SedParameter element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param value A string representing a numerical value; optional (default:
+  # None).
+  def __init__(self, parameter=None, idf=None, value=None):
+    if (parameter is None) and (idf is None or value is None):
+      sys.exit("Error: either 'parameter' or 'idf' and 'value' must be " +
+        "passed as keyword arguments.")
+    else:
+      if parameter is not None:
+        self.id = parameter.getId()
+        self.name = parameter.getName()
+        self.value = parameter.getValue()
+      elif idf is not None and value is not None:
+        self.id = idf
+        self.value = value
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
