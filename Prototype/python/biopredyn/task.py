@@ -16,13 +16,23 @@ class AbstractTask:
   ## @var tool
   # Name of the tool to be used when calling the run function.
 
-  ## Constructor.
+  ## Constructor; either 'task' or 'idf' must be passed as keyword argument.
   # @param self The object pointer.
-  # @param task A SED-ML task.
-  def __init__(self, task):
-    self.id = task.getId()
-    self.name = task.getName()
-    self.tool = None
+  # @param task A libsedml.SedTask object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, task=None, idf=None, name=None):
+    if task is None and idf is None:
+      sys.exit("Error: either 'task' or 'idf' must be passed as keyword " +
+        "argument.")
+    else:
+      self.tool = None
+      if task is not None:
+        self.id = task.getId()
+        self.name = task.getName()
+      else:
+        self.id = idf
+        self.name = name
 
   ## Getter. Returns self.id.
   # @param self The object pointer.
@@ -70,16 +80,33 @@ class Task(AbstractTask):
   ## @var workflow
   # Reference to the WorkFlow object this belongs to.
   
-  ## Constructor.
+  ## Constructor; either 'task' or 'idf', 'mod_ref' and 'sim_ref' must be passed
+  ## as keyword argument(s).
   # @param self The object pointer.
-  # @param task A SED-ML task.
   # @param workflow The WorkFlow object this.
-  def __init__(self, task, workflow):
-    AbstractTask.__init__(self, task)
-    self.workflow = workflow
-    self.model_id = task.getModelReference()
-    self.simulation_id = task.getSimulationReference()
-    self.result = None
+  # @param task A libsedml.SedTask object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param mod_ref Reference to a biopredyn.model.Model object; optional (
+  # default: None).
+  # @param sim_ref Reference to a biopredyn.simulation.Simulation object;
+  # optional (default: None).
+  def __init__(self, workflow, task=None, idf=None, name=None, mod_ref=None,
+    sim_ref=None):
+    if task is None and (idf is None or mod_ref is None or sim_ref is None):
+      sys.exit("Error: either 'task' or 'idf', 'mod_ref' and 'sim_ref' must " +
+        "be passed as keyword argument(s).")
+    else:
+      self.result = None
+      self.workflow = workflow
+      if task is not None:
+        AbstractTask.__init__(self, task=task)
+        self.model_id = task.getModelReference()
+        self.simulation_id = task.getSimulationReference()
+      else:
+        AbstractTask.__init__(self, idf=idf, name=name)
+        self.model_id = mod_ref
+        self.simulation_id = sim_ref
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -176,35 +203,71 @@ class RepeatedTask(AbstractTask):
   ## @var subtasks
   # A list of AbstractTask objects.
   
-  ## Constructor.
+  ## Constructor; either 'task' or 'idf', 'reset' and 'rng' must be passed as
+  ## keyword argument(s).
   # @param self The object pointer.
-  # @param task A SED-ML repeatedTask element.
-  # @param workflow 
-  def __init__(self, task, workflow):
-    AbstractTask.__init__(self, task)
-    self.workflow = workflow
-    self.reset_model = task.getResetModel()
-    self.master_range = task.getRangeId()
-    self.changes = []
-    for c in task.getListOfTaskChanges():
-      # Change objects in RepeatedTask objects can only be SetValue objects
-      self.changes.append(change.SetValue(self, workflow, setvalue=c))
-    self.ranges = []
-    for r in task.getListOfRanges():
-      r_name = r.getElementName()
-      if r_name == "functionalRange":
-        self.ranges.append(ranges.FunctionalRange(r, workflow, self))
-      elif r_name == "uniformRange":
-        self.ranges.append(ranges.UniformRange(r))
-      elif r_name == "vectorRange":
-        self.ranges.append(ranges.VectorRange(r))
+  # @param workflow The WorkFlow object this.
+  # @param task A libsedml.SedTask object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param reset Boolean value stating whether the model should be reset at each
+  # iteration; optional (default: None).
+  # @param rng Reference to a biopredyn.simulation.Simulation object;
+  # optional (default: None).
+  def __init__(self, workflow, task=None, idf=None, name=None, reset=None,
+    rng=None):
+    if task is None and (idf is None or reset is None or rng is None):
+      sys.exit("Error: either 'task' or 'idf', 'reset' and 'rng' must be " +
+        "passed as keyword argument(s).")
+    else:
+      self.workflow = workflow
+      self.changes = []
+      self.ranges = []
+      self.subtasks = []
+      if task is not None:
+        AbstractTask.__init__(self, task=task)
+        self.reset_model = task.getResetModel()
+        self.master_range = task.getRangeId()
+        for c in task.getListOfTaskChanges():
+          # Change objects in RepeatedTask objects can only be SetValue objects
+          self.add_change(change.SetValue(self, workflow, setvalue=c))
+        for r in task.getListOfRanges():
+          r_name = r.getElementName()
+          if r_name == "functionalRange":
+            self.add_range(ranges.FunctionalRange(r, workflow, self))
+          elif r_name == "uniformRange":
+            self.add_range(ranges.UniformRange(r))
+          elif r_name == "vectorRange":
+            self.add_range(ranges.VectorRange(r))
+          else:
+            self.add_range(ranges.Range(r))
+        for s in task.getListOfSubTasks():
+          self.add_task(SubTask(workflow, subtask=s))
       else:
-        self.ranges.append(ranges.Range(r))
-    self.subtasks = []
-    for s in task.getListOfSubTasks():
-      self.subtasks.append(SubTask(s, workflow))
-    self.subtasks.sort()
+        AbstractTask.__init__(self, idf=idf, name=name)
+        self.reset_model = reset
+        self.master_range = rng
+      self.subtasks.sort()
   
+  ## Appends the input biopredyn.change.Change object to self.changes.
+  # @param self The object pointer.
+  # @param change A biopredyn.change.Change object.
+  def add_change(self, change):
+    self.changes.append(change)
+  
+  ## Appends the input biopredyn.ranges.Range object to self.ranges.
+  # @param self The object pointer.
+  # @param rng A biopredyn.ranges.Range object.
+  def add_range(self, rng):
+    self.ranges.append(rng)
+  
+  ## Appends the input biopredyn.task.Task object to self.subtasks.
+  # @param self The object pointer.
+  # @param tsk A biopredyn.task.Task object.
+  def add_task(self, tsk):
+    self.subtasks.append(tsk)
+    self.subtasks.sort()
+
   ## Getter. Returns a range referenced by the input id listed in self.ranges.
   # @param self The object pointer.
   # @param id The id of the range to be returned.
@@ -259,14 +322,28 @@ class SubTask:
   ## @var workflow
   # Reference to the WorkFlow object this object belongs to.
   
-  ## Constructor.
+  ## Constructor; either 'subtask' or 'idf' and 'order' must be passed as
+  ## keyword argument(s).
   # @param self The object pointer.
-  # @param subtask A SED-ML subTask element.
   # @param workflow A WorkFlow object.
-  def __init__(self, subtask, workflow):
-    self.order = subtask.getOrder()
-    self.task_id = subtask.getTask()
-    self.workflow = workflow
+  # @param subtask A libsedml.SedSubTask element; optional (default: None).
+  # @param idf Identifier of an already existing biopredyn.task.AbstractTask
+  # object in 'workflow'; optional (default: None).
+  # @param order Order of execution of 'self' relatively to the other
+  # biopredyn.task.SubTask objects of its parent biopredyn.task.RepeatedTask;
+  # optional (default: None).
+  def __init__(self, workflow, subtask=None, idf=None, order=None):
+    if subtask is None and (idf is None or order is None):
+      sys.exit("Error: either 'subtask' or 'idf' and 'order' must be passed " +
+        "as keyword argument(s).")
+    else:
+      self.workflow = workflow
+      if subtask is not None:
+        self.order = subtask.getOrder()
+        self.task_id = subtask.getTask()
+      else:
+        self.order = order
+        self.task_id = idf
   
   ## Comparison operator (order wise).
   # @param self The object pointer.

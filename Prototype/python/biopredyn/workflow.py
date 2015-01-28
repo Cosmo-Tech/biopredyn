@@ -68,11 +68,11 @@ class WorkFlow:
       for t in self.sedml.getListOfTasks():
         t_name = t.getElementName()
         if t_name == "task":
-          self.add_task(task.Task(t, self))
+          self.add_task(task.Task(self, task=t))
         elif t_name == "repeatedTask":
-          self.add_task(task.RepeatedTask(t, self))
+          self.add_task(task.RepeatedTask(self, task=t))
         else:
-          self.add_task(task.AbstractTask(t))
+          self.add_task(task.AbstractTask(task=t))
       # Parsing self.sedml for data generator elements
       for d in self.sedml.getListOfDataGenerators():
         self.add_data_generator(datagenerator.DataGenerator(d, self))
