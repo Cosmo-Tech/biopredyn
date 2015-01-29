@@ -5,6 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
+import sys
 from sympy import *
 from lxml import etree
 import libsbml

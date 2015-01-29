@@ -5,6 +5,8 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
+import sys
+
 ## Representation of an algorithm in SED-ML workflows; an algorithm is defined
 ## using a KiSAO id along with several optional algorithm parameters.
 class Algorithm:

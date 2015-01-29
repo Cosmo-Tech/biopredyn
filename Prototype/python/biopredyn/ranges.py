@@ -5,6 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
+import sys
 import libsbml
 import numpy as np
 from sympy import *
@@ -17,13 +18,27 @@ class Range:
   ## @var values
   # A range of values encoded by the element.
   
-  ## Constructor.
+  ## Constructor; either 'rng' or 'idf' must be passed as keyword argument.
   # @param self The object pointer.
-  # @param range A SED-ML range element.
-  def __init__(self, range):
-    self.id = range.getId()
-    self.values = []
+  # @param rng A libsedml.SedRange element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  def __init__(self, rng=None, idf=None):
+    if rng is None and idf is None:
+      sys.exit("Error: either 'rng' or 'idf' must be passed as keyword " +
+        "argument.")
+    else:
+      self.values = []
+      if rng is not None:
+        self.id = rng.getId()
+      else:
+        self.id = idf
   
+  ## Appends the input value to self.values.
+  # @param self The object pointer.
+  # @param value A numerical value.
+  def add_value(self, value):
+    self.values.append(value)
+
   ## Getter for self.id.
   # @param self The object pointer.
   # @return self.id
@@ -68,24 +83,51 @@ class FunctionalRange(Range):
   ## @var task
   # Reference to the parent RepeatedTask of the object.
   
-  ## Constructor.
+  ## Constructor; either 'rng' or 'idf' and 'math' must be passed
+  ## as keyword argument(s).
   # @param self The object pointer.
-  # @param range A SED-ML functionalRange element.
-  # @param workflow A WorkFlow object.
-  # @param task A RepeatedTask object.
-  def __init__(self, range, workflow, task):
-    Range.__init__(self, range)
-    self.task = task
-    if range.isSetRange():
-      self.range = range.getRange()
-    self.variables = []
-    for v in range.getListOfVariables():
-      self.variables.append(variable.Variable(workflow, variable=v))
-    self.parameters = []
-    for p in range.getListOfParameters():
-      self.parameters.append(parameter.Parameter(parameter=p))
-    self.math = self.parse_math_expression(range.getMath())
+  # @param workflow A biopredyn.workflow.WorkFlow object.
+  # @param task A biopredyn.task.RepeatedTask object.
+  # @param rng A libsedml.SedFunctionalRange element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param rng_ref Identifier of another biopredyn.ranges.Range object stored in
+  # self.task; optional (default: None).
+  # @param math A valid MathML string; optional (default: None).
+  def __init__(self, workflow, task, rng=None, idf=None, rng_ref=None,
+    math=None):
+    if rng is None and (idf is None or math is None):
+      sys.exit("Error: either 'rng' or 'idf' and 'math' must be " +
+        "passed as keyword argument(s).")
+    else:
+      self.variables = []
+      self.parameters = []
+      self.task = task
+      if rng is not None:
+        Range.__init__(self, rng=rng)
+        if rng.isSetRange():
+          self.range = rng.getRange()
+        for v in rng.getListOfVariables():
+          self.add_variable(variable.Variable(workflow, variable=v))
+        for p in rng.getListOfParameters():
+          self.add_parameter(parameter.Parameter(parameter=p))
+        self.math = self.parse_math_expression(rng.getMath())
+      else:
+        Range.__init__(self, idf=idf)
+        self.range = rng_ref
+        self.math = sympify(math)
   
+  ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
+  # @param self The object pointer.
+  # @param par A biopredyn.parameter.Parameter object.
+  def add_parameter(self, par):
+    self.parameters.append(par)
+  
+  ## Appends the input biopredyn.variable.Variable object to self.variables.
+  # @param self The object pointer.
+  # @param var A biopredyn.variable.Variable object.
+  def add_variable(self, var):
+    self.variables.append(var)
+
   ## Computes and returns the value encoded by the element for the current
   ## iteration of self.task. Overrides Range.get_value.
   # @param self The object pointer.
@@ -95,8 +137,8 @@ class FunctionalRange(Range):
     result = self.math
     # SymPy substitution - range
     if self.range is not None:
-      range = self.task.get_range_by_id(self.range)
-      r_value = range.get_value(iteration)
+      rng = self.task.get_range_by_id(self.range)
+      r_value = rng.get_value(iteration)
       result = result.subs(self.range, r_value)
     # SymPy substitution - variables
     for v in self.variables:
@@ -128,18 +170,41 @@ class UniformRange(Range):
   ## @var number_of_points
   # Number of intervals the range defined by start / end must be divided into.
   ## @var type
-  # Type of range; can be either 'start' or 'end'.
+  # Type of range; can be either 'linear' or 'log'.
   
-  ## Constructor.
+  ## Constructor; either 'rng' or 'idf', 'stt', 'end', 'pts' and 'typ'
+  ## must be passed as keyword argument(s).
   # @param self The object pointer.
-  # @param range A SED-ML uniformRange element.
-  def __init__(self, range):
-    Range.__init__(self, range)
-    self.end = range.getEnd()
-    self.number_of_points = range.getNumberOfPoints()
-    self.start = range.getStart()
-    self.type = range.getType()
-    self.compute_values()
+  # @param rng A libsedml.SedUniformRange element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param stt Starting point for the encoded range of values; optional
+  # (default: None).
+  # @param end End point for the encoded range of values; optional (default:
+  # None).
+  # @param pts Number of intervals between 'stt' and 'end'; optional (default:
+  # None).
+  # @param typ Type of range; can be either 'linear' or 'log'. Optional
+  # (default: None).
+  def __init__(self, rng=None, idf=None, stt=None, end=None, pts=None,
+    typ=None):
+    if rng is None and (idf is None or stt is None or end is None or pts is None
+      or typ is None):
+      sys.exit("Error: either 'rng' or 'idf', 'stt', 'end', 'pts' and 'typ' " +
+        "must be passed as keyword argument(s).")
+    else:
+      if rng is not None:
+        Range.__init__(self, rng=rng)
+        self.end = rng.getEnd()
+        self.number_of_points = rng.getNumberOfPoints()
+        self.start = rng.getStart()
+        self.type = rng.getType()
+      else:
+        Range.__init__(self, idf=idf)
+        self.end = end
+        self.number_of_points = pts
+        self.start = stt
+        self.type = typ
+      self.compute_values()
   
   ## Computes the range of values encoded by the element.
   # @param self The object pointer.
@@ -150,7 +215,7 @@ class UniformRange(Range):
       value = 0
       while value < self.end:
         value = self.start + factor * step
-        self.values.append(value)
+        self.add_value(value)
         factor += 1
     elif self.type == 'log':
       if self.start <= 0 or self.end <= 0:
@@ -163,7 +228,7 @@ class UniformRange(Range):
         value = 0
         while value < end:
           value = start + factor * step
-          self.values.append(10**value)
+          self.add_value(10**value)
           factor += 1
     else:
       print("Invalid type value in range element " + self.id + ": " +
@@ -219,14 +284,20 @@ class UniformRange(Range):
 
 ## Range-derived class for vectors of values in SED-ML repeatedTask elements.
 class VectorRange(Range):
-  ## @var values
-  # Range of values encoded by the range element.
   
-  ## Constructor.
+  ## Constructor. either 'rng' or 'idf' must be passed as keyword
+  ## argument.
   # @param self The object pointer.
-  # @param range A SED-ML vectorRange element.
-  def __init__(self, range):
-    Range.__init__(self, range)
-    self.values = []
-    for v in range.getValues():
-      self.values.append(v)
+  # @param rng A libsedml.SedVectorRange element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  def __init__(self, rng=None, idf=None):
+    if rng is None and idf is None:
+      sys.exit("Error: either 'rng' or 'idf' must be passed as keyword " +
+        "argument.")
+    else:
+      if rng is not None:
+        Range.__init__(self, rng=rng)
+        for v in rng.getValues():
+          self.add_value(v)
+      else:
+        Range.__init__(self, idf=idf)

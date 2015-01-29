@@ -5,6 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
+import sys
 import model, simulation, result, change, ranges
 
 ## Abstract representation of an atomic task in a SED-ML work flow.
@@ -234,13 +235,13 @@ class RepeatedTask(AbstractTask):
         for r in task.getListOfRanges():
           r_name = r.getElementName()
           if r_name == "functionalRange":
-            self.add_range(ranges.FunctionalRange(r, workflow, self))
+            self.add_range(ranges.FunctionalRange(workflow, self, rng=r))
           elif r_name == "uniformRange":
-            self.add_range(ranges.UniformRange(r))
+            self.add_range(ranges.UniformRange(rng=r))
           elif r_name == "vectorRange":
-            self.add_range(ranges.VectorRange(r))
+            self.add_range(ranges.VectorRange(rng=r))
           else:
-            self.add_range(ranges.Range(r))
+            self.add_range(ranges.Range(rng=r))
         for s in task.getListOfSubTasks():
           self.add_task(SubTask(workflow, subtask=s))
       else:

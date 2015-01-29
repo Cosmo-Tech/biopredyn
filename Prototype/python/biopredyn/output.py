@@ -5,7 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import io, csv
+import sys, io, csv
 from random import gauss
 import signals
 import libsbml
@@ -22,13 +22,27 @@ class Output:
   ## @var type
   # Type of output.
   
-  ## Constructor.
+  ## Constructor; either 'out' or 'idf' and 'typ' must be passed as keyword
+  ## argument(s).
   # @param self The object pointer.
-  # @param out A SedOutput object.
-  def __init__(self, out):
-    self.id = out.getId()
-    self.name = out.getName()
-    self.type = out.getElementName()
+  # @param out A libsedml.SedOutput object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param typ The type of output encoded in 'self'; can be either 'plot2D',
+  # 'plot3D', 'report' or 'output'. Optional (default: None).
+  def __init__(self, out=None, idf=None, name=None, typ=None):
+    if out is None and (idf is None or typ is None):
+      sys.exit("Error: either 'out' or 'idf' and 'typ' must be passed as " +
+        "keyword argument(s).")
+    else:
+      if out is not None:
+        self.id = out.getId()
+        self.name = out.getName()
+        self.type = out.getElementName()
+      else:
+        self.id = idf
+        self.name = name
+        self.type = typ
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -74,17 +88,25 @@ class Plot2D(Output):
   ## @var plot
   # A matplotlib figure.
   
-  ## Overridden constructor.
+  ## Overridden constructor; either 'plot_2d' or 'idf' must be passed as keyword
+  ## argument(s).
   # @param self The object pointer.
-  # @param plot_2d A SedPlot2D object.
   # @param workflow A WorkFlow object.
-  def __init__(self, plot_2d, workflow):
-    self.id = plot_2d.getId()
-    self.name = plot_2d.getName()
-    self.type = plot_2d.getElementName()
-    self.curves = []
-    for p in plot_2d.getListOfCurves():
-      self.curves.append(signals.Curve(p, workflow))
+  # @param plot_2d A libsedml.SedPlot2D object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, workflow, plot_2d=None, idf=None, name=None):
+    if plot_2d is None and idf is None:
+      sys.exit("Error: either 'plot_2d' or 'idf' must be passed as keyword " +
+        "argument(s).")
+    else:
+      self.curves = []
+      if plot_2d is not None:
+        Output.__init__(self, out=plot_2d)
+        for p in plot_2d.getListOfCurves():
+          self.add_curve(signals.Curve(workflow, curve=p))
+      else:
+        Output.__init__(self, idf=idf, name=name, typ="plot2D")
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -95,6 +117,12 @@ class Plot2D(Output):
     for c in self.curves:
       tree += str(c)
     return tree
+
+  ## Appends the input biopredyn.signals.Curve object to self.curves.
+  # @param self The object pointer.
+  # @param curve A biopredyn.signals.Curve object.
+  def add_curve(self, curve):
+    self.curves.append(curve)
   
   ## Getter. Returns self.curves.
   # @param self The object pointer.
@@ -129,17 +157,25 @@ class Plot3D(Output):
   ## @var plot
   # A matplotlib figure.
   
-  ## Overridden constructor.
+  ## Overridden constructor; either 'plot_3d' or 'idf' must be passed as keyword
+  ## argument.
   # @param self The object pointer.
-  # @param plot_3d A SedPlot3D object.
   # @param workflow A WorkFlow object.
-  def __init__(self, plot_3d, workflow):
-    self.id = plot_3d.getId()
-    self.name = plot_3d.getName()
-    self.type = plot_3d.getElementName()
-    self.surfaces = []
-    for s in plot_3d.getListOfSurfaces():
-      self.surfaces.append(signals.Surface(s, workflow))
+  # @param plot_3d A libsedml.SedPlot3D object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, workflow, plot_3d=None, idf=None, name=None):
+    if plot_3d is None and idf is None:
+      sys.exit("Error: either 'plot_3d' or 'idf' must be passed as keyword " +
+        "argument.")
+    else:
+      self.surfaces = []
+      if plot_3d is not None:
+        Output.__init__(self, out=plot_3d)
+        for s in plot_3d.getListOfSurfaces():
+          self.add_surface(signals.Surface(workflow, surf=s))
+      else:
+        Output.__init__(self, idf=idf, name=name, typ="plot3D")
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -150,6 +186,12 @@ class Plot3D(Output):
     for s in self.surfaces:
       tree += str(s)
     return tree
+
+  ## Appends the input biopredyn.signals.Surface object to self.surfaces.
+  # @param self The object pointer.
+  # @param surf A biopredyn.signals.Surface object.
+  def add_surface(self, surf):
+    self.surfaces.append(surf)
   
   ## Getter. Returns self.plot.
   # @param self The object pointer.
@@ -178,17 +220,31 @@ class Report(Output):
   ## @var datasets
   # A list of 1-dimensional signals to be written in the report.
   
-  ## Constructor.
+  ## Overridden constructor; either 'report' or 'idf' must be passed as keyword
+  ## argument.
   # @param self The object pointer.
-  # @param report A SedReport object.
   # @param workflow A WorkFlow object.
-  def __init__(self, report, workflow):
-    self.id = report.getId()
-    self.name = report.getName()
-    self.type = report.getElementName()
-    self.datasets = []
-    for d in report.getListOfDataSets():
-      self.datasets.append(signals.DataSet(d, workflow))
+  # @param report A libsedml.SedReport object; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, workflow, report=None, idf=None, name=None):
+    if report is None and idf is None:
+      sys.exit("Error: either 'report' or 'idf' must be passed as keyword " +
+        "argument.")
+    else:
+      self.datasets = []
+      if report is not None:
+        Output.__init__(self, out=report)
+        for d in report.getListOfDataSets():
+          self.add_dataset(signals.DataSet(workflow, data=d))
+      else:
+        Output.__init__(self, idf=idf, name=name, typ="report")
+
+  ## Appends the input biopredyn.signals.DataSet object to self.datasets.
+  # @param self The object pointer.
+  # @param data A biopredyn.signals.DataSet object.
+  def add_dataset(self, data):
+    self.datasets.append(data)
   
   ## Write the result of the task associated with self.data into a report file.
   ## The report format depends on the extension of the input file: if it ends

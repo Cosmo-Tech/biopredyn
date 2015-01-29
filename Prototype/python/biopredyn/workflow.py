@@ -75,18 +75,19 @@ class WorkFlow:
           self.add_task(task.AbstractTask(task=t))
       # Parsing self.sedml for data generator elements
       for d in self.sedml.getListOfDataGenerators():
-        self.add_data_generator(datagenerator.DataGenerator(d, self))
+        self.add_data_generator(datagenerator.DataGenerator(self,
+          data_generator=d))
       # Parsing self.sedml for output elements
       for o in self.sedml.getListOfOutputs():
         o_name = o.getElementName()
         if o_name == "plot2D":
-          self.add_output(output.Plot2D(o, self))
+          self.add_output(output.Plot2D(self, plot_2d=o))
         elif o_name == "plot3D":
-          self.add_output(output.Plot3D(o, self))
+          self.add_output(output.Plot3D(self, plot_3d=o))
         elif o_name == "report":
-          self.add_output(output.Report(o, self))
+          self.add_output(output.Report(self, report=o))
         else:
-          self.add_output(output.Output(o))
+          self.add_output(output.Output(out=o))
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
