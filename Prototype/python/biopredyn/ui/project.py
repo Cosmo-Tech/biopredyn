@@ -5,7 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import resources, workflow
+from .. import resources, workflow
 
 ## Class for handling projects in BioPreDyn user interface.
 # A Project object holds a list of WorkFlow objects and a ResourceManager.
