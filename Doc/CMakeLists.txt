@@ -1,12 +1,17 @@
-project(bpdDocumentation NONE)
+project(Documentation NONE)
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 set(DOCBOOK_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/DocBook")
 set(DOCBOOK_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/DocBook")
-set(
-  CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
-  CACHE PATH "BioPreDyn documentation install prefix" FORCE
-  )
+
+set(documentation_directory "Documentation")
+if(NOT Documentation_INSTALL_DATA_DIR)
+  set(Documentation_INSTALL_DATA_DIR "share/${documentation_directory}")
+endif()
+
+if(NOT Documentation_INSTALL_CMAKE_DIR)
+  set(Documentation_INSTALL_CMAKE_DIR "lib/${documentation_directory}")
+endif()
 
 # --------------------------------------------------------------------------
 find_package(DocBook REQUIRED)
