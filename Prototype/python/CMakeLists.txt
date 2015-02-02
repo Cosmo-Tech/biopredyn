@@ -8,3 +8,9 @@ add_subdirectory(cobrapy)
 install(
   CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${SETUP_PY} install --user WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})"
   )
+install(
+  PROGRAMS
+  ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn/biopredynUI.py
+  ${CMAKE_CURRENT_SOURCE_DIR}/biopredyn/biopredynCL.py
+  DESTINATION bin
+  )

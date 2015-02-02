@@ -11,10 +11,10 @@ import textwrap
 import libsbml
 import libsedml
 import libnuml
-import model, workflow, result, resources
+from biopredyn import model, workflow, result, resources
 import matplotlib.pyplot as plt
 
-COMMAND_SYNTAX_MESSAGE = 'python biopredyn.py [options]'
+COMMAND_SYNTAX_MESSAGE = 'python biopredynCL.py [options]'
 
 HELP_MESSAGE = "This program is a prototype for the BioPreDyn software suite developed within the scope of the BioPreDyn FP7 project; it applies an analysis pattern encoded as a SEDML file to a SBML model defining a biological system."
 
@@ -79,7 +79,7 @@ try:
       'help', 'sbml=', 'sedml=', 'numl=', 'output=', 'csv='])
 except getopt.error as msg:
   print( COMMAND_SYNTAX_MESSAGE )
-  print( "Type biopredyn.py --help for more information" )
+  print( "Type biopredynCL.py --help for more information" )
   print( msg )
   sys.exit(2)
 
