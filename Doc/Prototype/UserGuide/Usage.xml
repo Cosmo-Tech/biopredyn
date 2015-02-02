@@ -16,11 +16,11 @@ the prototype is installed, and type the following commands:</para>
     <programlisting>
   cd Prototype/python/biopredyn
     </programlisting>
-    <para>This folder contains a <literal>biopredyn.py</literal> file which can
+    <para>This folder contains a <literal>biopredynCL.py</literal> file which can
 be used to run the prototype. To do so, one can use the following syntax:
     </para>
     <programlisting>
-  python biopredyn.py [options]
+  python biopredynCL.py [options]
     </programlisting>
     <para>Depending on the option(s) chosen by the user, various operations can
 be done. Valid options are listed below:</para>

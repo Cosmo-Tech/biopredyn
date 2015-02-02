@@ -55,7 +55,7 @@
       <listitem>
         <para>Run the experiment:</para>
         <programlisting>
-python biopredyn.py --sedml workflow.xml
+python biopredynCL.py --sedml workflow.xml
         </programlisting>
       </listitem>
     </itemizedlist>
@@ -130,7 +130,7 @@ python biopredyn.py --sedml workflow.xml
       <listitem>
         <para>Run the experiment:</para>
         <programlisting>
-python biopredyn.py --sedml workflow.xml
+python biopredynCL.py --sedml workflow.xml
         </programlisting>
       </listitem>
     </itemizedlist>

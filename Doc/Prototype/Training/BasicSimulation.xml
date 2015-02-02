@@ -46,7 +46,7 @@
     </listitem>
     <listitem>
       <para>Execute it by typing the following command:
-      <programlisting>python biopredyn.py --sedml workflow.xml</programlisting>
+      <programlisting>python biopredynCL.py --sedml workflow.xml</programlisting>
       </para>
     </listitem>
   </itemizedlist>
