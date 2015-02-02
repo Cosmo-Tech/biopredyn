@@ -97,7 +97,7 @@ manager = resources.ResourceManager()
 
 for o, a in opts:
   if o == "--sbml":
-    model = model.Model(manager, source=a)
+    model = model.Model(manager, source=a, idf='model_0')
     model.check()
   elif o == "--sedml":
     flow = workflow.WorkFlow(manager, source=a)
