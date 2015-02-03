@@ -57,7 +57,7 @@ class Result:
   def import_from_csv_file(self, address, manager, separator=',', header=0, 
     overwrite=False):
     if not separator in (',', ' ', '\t', ';', '|', ':'):
-      sys.exit("Invalid separator: " + separator + "\n" +
+      raise ValueError("Invalid separator: " + separator + "\n" +
                "Possible values are: ',', ' ', '\t', ';', '|' and ':'.")
     if address.endswith('csv') or address.endswith('txt'):
       file = manager.get_resource(address)
@@ -86,7 +86,7 @@ class Result:
         index += 1
       return names
     else:
-      sys.exit("Invalid file format.")
+      raise TypeError("Invalid file format:" + address)
   
   ## Import numerical data from a NuML file and store them in self.result.
   # This function expects the following layout for the resultComponent element
@@ -128,10 +128,9 @@ class Result:
       reader = libnuml.NUMLReader()
       doc = reader.readNUMLFromString(file.read())
       if doc.getNumErrors() > 0:
-        print("Error code " + str(doc.getError(0).getErrorId()) + " at line " +
-              str(doc.getError(0).getLine()) + " when opening file: " +
-              str(doc.getError(0).getShortMessage()))
-        sys.exit(2)
+        raise RuntimeError("Code " + str(doc.getError(0).getErrorId()) +
+          " at line " + str(doc.getError(0).getLine()) +
+          " when opening file: " + str(doc.getError(0).getShortMessage()))
       else:
         # extract metadata
         dim = doc.getResultComponents().get(component).getDimension()
@@ -160,7 +159,7 @@ class Result:
                 self.result[name][i].append(
                   e.getAtomicValue().getDoubleValue())
     else:
-      sys.exit("Invalid file format.")
+      raise TypeError("Invalid file format: " + address)
     return names
 
 ## Result derived class for time series formatted simulation results.
@@ -232,7 +231,7 @@ class TimeSeries(Result):
     for t in self.result:
       if str.lower(t).__contains__("time"):
         return np.array(self.result[t])
-    sys.exit("Error: no time series found.")
+    raise RuntimeError("No time series were found.")
 
   ## Import numerical values from a COPASI.CTimeSeries object.
   # @param self The object pointer.
@@ -299,7 +298,7 @@ class TimeSeries(Result):
   def import_from_csv_file(self, address, manager, separator=',', header=0, 
     overwrite=False):
     if not separator in (',', ' ', '\t', ';', '|', ':'):
-      sys.exit("Invalid separator: " + separator + "\n" +
+      raise ValueError("Invalid separator: " + separator + "\n" +
                "Possible values are: ',', ' ', '\t', ';', '|' and ':'.")
     if address.endswith('csv') or address.endswith('txt'):
       file = manager.get_resource(address)
@@ -334,7 +333,7 @@ class TimeSeries(Result):
             float(values[p]))
       return names
     else:
-      sys.exit("Invalid file format.")
+      raise TypeError("Invalid file format: " + address)
   
   ## Import numerical values from the output of a libSBMLSim simulation and
   ## store them in self.result; if self.result is not empty and input
@@ -419,10 +418,9 @@ class TimeSeries(Result):
       reader = libnuml.NUMLReader()
       doc = reader.readNUMLFromString(file.read())
       if doc.getNumErrors() > 0:
-        print("Error code " + str(doc.getError(0).getErrorId()) + " at line " +
-              str(doc.getError(0).getLine()) + " when opening file: " +
-              str(doc.getError(0).getShortMessage()))
-        sys.exit(2)
+        raise RuntimeError("Code " + str(doc.getError(0).getErrorId()) +
+          " at line " + str(doc.getError(0).getLine()) +
+          " when opening file: " + str(doc.getError(0).getShortMessage()))
       else:
         # extract metadata
         dim = doc.getResultComponents().get('time_series').getDimension()
@@ -453,7 +451,7 @@ class TimeSeries(Result):
                 self.result[name][i].append(
                   e.getAtomicValue().getDoubleValue())
     else:
-      sys.exit("Invalid file format.")
+      raise TypeError("Invalid file format: " + address)
     return names
 
 class Fluxes(Result):

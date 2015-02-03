@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 import os
 import urllib
 import urllib2
@@ -37,14 +36,23 @@ class ResourceManager:
   ## Returns the resource stored at the input URL.
   # @param self The object pointer.
   # @param url A valid URL.
+  # @param hint Absolute path to a directory; optional (default: None).
   # @return A resource file.
-  def get_resource(self, url):
+  def get_resource(self, url, hint=None):
     # Try to open as a local path
     try:
       handle = urllib.urlopen(urllib.pathname2url(url))
       return handle
     except IOError as e:
       pass
+    # Try to open as an absolute path by combining 'hint' and 'url'
+    if hint is not None:
+      try:
+        path = os.path.join(hint, url)
+        handle = urllib.urlopen(urllib.pathname2url(path))
+        return handle
+      except IOError as e:
+        pass
     # Case where input URL is not a local path
     try:
       handle = self.opener.open(url)
@@ -52,8 +60,7 @@ class ResourceManager:
     except IOError as e:
       pass
     if not hasattr(e, 'code') or e.code != 401:
-      print("Error " + str(e.errno) + ": " + str(e.strerror))
-      sys.exit(1)
+      raise EnvironmentError(str(e.errno) + ": " + str(e.strerror))
     # Case where login / password are unknown
     else:
       username = str(raw_input("Username for " + url + ": "))
@@ -63,8 +70,7 @@ class ResourceManager:
         handle = self.opener.open(url)
         return handle
       except IOError as e:
-        print("Error " + str(e.errno) + ": " + str(e.strerror))
-        sys.exit(1)
+        print(str(e.errno) + ": " + str(e.strerror))
   
   ## For testing purposes; install self.opener.
   # @param self The object pointer.

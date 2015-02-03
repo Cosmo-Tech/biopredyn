@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 import libsbml
 import libsedml
 from sympy import *
@@ -37,8 +36,8 @@ class DataGenerator:
   def __init__(self, workflow, data_generator=None, idf=None, name=None,
     math=None):
     if data_generator is None and (idf is None or math is None):
-      sys.exit("Error: either 'data_generator' or 'idf' and 'math' must be " +
-        "passed as keyword argument(s).")
+      raise RuntimeError("Either 'data_generator' or 'idf' and 'math' " +
+        "must be passed as keyword argument(s).")
     else:
       self.parameters = []
       self.variables = []

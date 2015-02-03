@@ -21,11 +21,13 @@ class Project:
     self.workflows = []
     self.resource_manager = resources.ResourceManager()
   
-  ## Appends the input biopredyn.workflow.WorkFlow object to self.workflows.
+  ## Create a new biopredyn.workflow.WorkFlow object from the input 'source' and
+  ## adds it to self.workflows.
   # @param self The object pointer.
-  # @param workflow A biopredyn.workflow.WorkFlow object.
-  def add_workflow(self, workflow):
-    self.workflows.append(workflow)
+  # @param source Complete filename of a valid SED-ML workflow.
+  def add_workflow(self, source):
+    wf = workflow.WorkFlow(self.resource_manager, source=source)
+    # TODO self.workflows.append(workflow)
   
   ## Getter for self.resource_manager.
   # @param self The object pointer.
@@ -33,12 +35,29 @@ class Project:
   def get_resource_manager(self):
     return self.resource_manager
   
-  ## Remove the input biopredyn.workflow.WorkFlow object from self.workflows.
+  ## Create a new biopredyn.workflow.WorkFlow object and adds it to
+  ## self.workflows.
   # @param self The object pointer.
-  # @param workflow A biopredyn.workflow.WorkFlow object.
-  def remove_workflow(self, workflow):
-    try:
-      self.workflows.remove(workflow)
-    except KeyError:
-      print("Input biopredyn.workflow.WorkFlow object does not exist in " +
-        "current Project.")
+  def new_workflow(self):
+    wf = workflow.WorkFlow(self.resource_manager)
+    # TODO self.workflows.append(workflow)
+  
+  ## Remove the active workflow from self.workflows.
+  # @param self The object pointer.
+  def remove_workflow(self):
+    print("TODO") # TODO 
+  
+  ## Runs the active workflow i.e. runs its tasks, then process its outputs.
+  # @param self The object pointer.
+  def run_workflow(self):
+    # workflow.run_tasks()
+    # workflow.process_outputs()
+    print("TODO") # TODO
+  
+  ## Writes the active workflow to the input location 'source' as a SED-ML
+  ## file.
+  # @param self The object pointer.
+  # @param source Where to write the active workflow; optional. If not
+  # specified, the 'source' attribute of the active workflow is used. 
+  def write_workflow(self, source=None):
+    print("TODO") # TODO

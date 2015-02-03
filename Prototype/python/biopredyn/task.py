@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 import model, simulation, result, change, ranges
 
 ## Abstract representation of an atomic task in a SED-ML work flow.
@@ -24,7 +23,7 @@ class AbstractTask:
   # @param name A name for 'self'; optional (default: None).
   def __init__(self, task=None, idf=None, name=None):
     if task is None and idf is None:
-      sys.exit("Error: either 'task' or 'idf' must be passed as keyword " +
+      raise RuntimeError("Either 'task' or 'idf' must be passed as keyword " +
         "argument.")
     else:
       self.tool = None
@@ -95,8 +94,8 @@ class Task(AbstractTask):
   def __init__(self, workflow, task=None, idf=None, name=None, mod_ref=None,
     sim_ref=None):
     if task is None and (idf is None or mod_ref is None or sim_ref is None):
-      sys.exit("Error: either 'task' or 'idf', 'mod_ref' and 'sim_ref' must " +
-        "be passed as keyword argument(s).")
+      raise RuntimeError("Either 'task' or 'idf', 'mod_ref' and 'sim_ref' " +
+        "must be passed as keyword argument(s).")
     else:
       self.result = None
       self.workflow = workflow
@@ -218,7 +217,7 @@ class RepeatedTask(AbstractTask):
   def __init__(self, workflow, task=None, idf=None, name=None, reset=None,
     rng=None):
     if task is None and (idf is None or reset is None or rng is None):
-      sys.exit("Error: either 'task' or 'idf', 'reset' and 'rng' must be " +
+      raise RuntimeError("Either 'task' or 'idf', 'reset' and 'rng' must be " +
         "passed as keyword argument(s).")
     else:
       self.workflow = workflow
@@ -335,8 +334,8 @@ class SubTask:
   # optional (default: None).
   def __init__(self, workflow, subtask=None, idf=None, order=None):
     if subtask is None and (idf is None or order is None):
-      sys.exit("Error: either 'subtask' or 'idf' and 'order' must be passed " +
-        "as keyword argument(s).")
+      raise RuntimeError("Either 'subtask' or 'idf' and 'order' must be " +
+        "passed as keyword argument(s).")
     else:
       self.workflow = workflow
       if subtask is not None:

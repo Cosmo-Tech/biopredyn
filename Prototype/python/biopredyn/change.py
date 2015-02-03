@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 from sympy import *
 from lxml import etree
 import libsbml
@@ -31,7 +30,7 @@ class Change:
   # @param target A valid XPath expression; optional (default=None).
   def __init__(self, change=None, idf=None, name=None, target=None):
     if (change is None) and (idf is None or target is None):
-      sys.exit("Error: either 'change' or 'target' and 'idf' " +
+      raise RuntimeError("Either 'change' or 'target' and 'idf' " +
         "must be passed as keyword arguments.")
     else:
       if change is not None:
@@ -123,7 +122,7 @@ class ComputeChange(Change):
   def __init__(self, workflow, model, change=None, idf=None, name=None,
     target=None, math=None):
     if (change is None) and (idf is None or target is None or math is None):
-      sys.exit("Error: either 'change' or 'target' and 'idf' " +
+      raise RuntimeError("Either 'change' or 'target' and 'idf' " +
         "must be passed as keyword arguments.")
     else:
       self.model = model
@@ -216,8 +215,8 @@ class ChangeAttribute(Change):
   def __init__(self, model, change=None, idf=None, name=None, target=None,
     value=None):
     if (change is None) and (idf is None or target is None or value is None):
-      sys.exit("Error: either 'change' or 'idf', 'target' and 'value' must " +
-        "be passed as keyword arguments.")
+      raise RuntimeError("Either 'change' or 'idf', 'target' and " +
+        "'value' must be passed as keyword arguments.")
     else:
       self.model = model
       if change is not None:
@@ -269,8 +268,8 @@ class AddXML(Change):
   def __init__(self, model, change=None, idf=None, name=None, target=None,
     xml=None):
     if (change is None) and (idf is None or target is None or xml is None):
-      sys.exit("Error: either 'change' or 'idf', 'target' and 'xml' must be " +
-        "passed as keyword arguments.")
+      raise RuntimeError("Either 'change' or 'idf', 'target' and " +
+        "'xml' must be passed as keyword arguments.")
     else:
       self.model = model
       if change is not None:
@@ -323,8 +322,8 @@ class ChangeXML(Change):
   def __init__(self, model, change=None, idf=None, name=None, target=None,
     xml=None):
     if (change is None) and (idf is None or target is None or xml is None):
-      sys.exit("Error: either 'change' or 'idf', 'target' and 'xml' must be " +
-        "passed as arguments.")
+      raise RuntimeError("Either 'change' or 'idf', 'target' and " +
+        "'xml' must be passed as arguments.")
     else:
       self.model = model
       if change is not None:
@@ -375,8 +374,8 @@ class RemoveXML(Change):
   # @param target A valid XPath expression; optional (default: None).
   def __init__(self, model, change=None, idf=None, name=None, target=None):
     if (change is None) and (idf is None or target is None):
-      sys.exit("Error: either 'change' or 'idf' and 'target' must be " +
-        "passed as arguments.")
+      raise RuntimeError("Either 'change' or 'idf' and 'target' must " +
+        "be passed as arguments.")
     else:
       self.model = model
       if change is not None:
@@ -432,8 +431,8 @@ class SetValue:
     target=None, mod_ref=None, math=None):
     if setvalue is None and (idf is None or target is None or mod_ref is None or
       math is None):
-      sys.exit("Error: either 'setvalue' or 'idf', 'target', 'mod_ref' and " +
-        "'math' must be passed as keyword argument(s).")
+      raise RuntimeError("Either 'setvalue' or 'idf', 'target', " +
+        "'mod_ref' and 'math' must be passed as keyword argument(s).")
     else:
       self.task = task
       self.workflow = workflow

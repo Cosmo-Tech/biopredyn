@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 import libsbml
 import numpy as np
 from sympy import *
@@ -24,7 +23,7 @@ class Range:
   # @param idf A unique identifier; optional (default: None).
   def __init__(self, rng=None, idf=None):
     if rng is None and idf is None:
-      sys.exit("Error: either 'rng' or 'idf' must be passed as keyword " +
+      raise RuntimeError("Either 'rng' or 'idf' must be passed as keyword " +
         "argument.")
     else:
       self.values = []
@@ -96,7 +95,7 @@ class FunctionalRange(Range):
   def __init__(self, workflow, task, rng=None, idf=None, rng_ref=None,
     math=None):
     if rng is None and (idf is None or math is None):
-      sys.exit("Error: either 'rng' or 'idf' and 'math' must be " +
+      raise RuntimeError("Either 'rng' or 'idf' and 'math' must be " +
         "passed as keyword argument(s).")
     else:
       self.variables = []
@@ -189,8 +188,8 @@ class UniformRange(Range):
     typ=None):
     if rng is None and (idf is None or stt is None or end is None or pts is None
       or typ is None):
-      sys.exit("Error: either 'rng' or 'idf', 'stt', 'end', 'pts' and 'typ' " +
-        "must be passed as keyword argument(s).")
+      raise RuntimeError("Either 'rng' or 'idf', 'stt', 'end', 'pts' and 'typ'" +
+        " must be passed as keyword argument(s).")
     else:
       if rng is not None:
         Range.__init__(self, rng=rng)
@@ -292,7 +291,7 @@ class VectorRange(Range):
   # @param idf A unique identifier; optional (default: None).
   def __init__(self, rng=None, idf=None):
     if rng is None and idf is None:
-      sys.exit("Error: either 'rng' or 'idf' must be passed as keyword " +
+      raise RuntimeError("Either 'rng' or 'idf' must be passed as keyword " +
         "argument.")
     else:
       if rng is not None:

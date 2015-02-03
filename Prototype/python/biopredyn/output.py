@@ -5,7 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys, io, csv
+import io, csv
 from random import gauss
 import signals
 import libsbml
@@ -32,8 +32,8 @@ class Output:
   # 'plot3D', 'report' or 'output'. Optional (default: None).
   def __init__(self, out=None, idf=None, name=None, typ=None):
     if out is None and (idf is None or typ is None):
-      sys.exit("Error: either 'out' or 'idf' and 'typ' must be passed as " +
-        "keyword argument(s).")
+      raise RuntimeError("Either 'out' or 'idf' and 'typ' must be " +
+        "passed as keyword argument(s).")
     else:
       if out is not None:
         self.id = out.getId()
@@ -97,8 +97,8 @@ class Plot2D(Output):
   # @param name A name for 'self'; optional (default: None).
   def __init__(self, workflow, plot_2d=None, idf=None, name=None):
     if plot_2d is None and idf is None:
-      sys.exit("Error: either 'plot_2d' or 'idf' must be passed as keyword " +
-        "argument(s).")
+      raise RuntimeError("Either 'plot_2d' or 'idf' must be passed as " +
+        "keyword argument(s).")
     else:
       self.curves = []
       if plot_2d is not None:
@@ -166,8 +166,8 @@ class Plot3D(Output):
   # @param name A name for 'self'; optional (default: None).
   def __init__(self, workflow, plot_3d=None, idf=None, name=None):
     if plot_3d is None and idf is None:
-      sys.exit("Error: either 'plot_3d' or 'idf' must be passed as keyword " +
-        "argument.")
+      raise RuntimeError("Either 'plot_3d' or 'idf' must be passed as " +
+        "keyword argument.")
     else:
       self.surfaces = []
       if plot_3d is not None:
@@ -229,8 +229,8 @@ class Report(Output):
   # @param name A name for 'self'; optional (default: None).
   def __init__(self, workflow, report=None, idf=None, name=None):
     if report is None and idf is None:
-      sys.exit("Error: either 'report' or 'idf' must be passed as keyword " +
-        "argument.")
+      raise RuntimeError("Either 'report' or 'idf' must be passed as " +
+        "keyword argument.")
     else:
       self.datasets = []
       if report is not None:
@@ -258,8 +258,8 @@ class Report(Output):
     elif (filename.endswith('.xml')):
       self.write_as_numl(filename)
     else:
-      print("Error: invalid report format. Possible formats are: .csv, .xml")
-      sys.exit(2)
+      raise RuntimeError("Invalid report format. Possible formats " +
+        "are: .csv, .xml")
   
   ## Write the result of the task associated with self.data into a column 
   ## oriented CSV file. Each column corresponds to one iteration of each
@@ -310,8 +310,8 @@ class Report(Output):
             elif noise_type == "homoscedastic":
               data.append(gauss(v, std_dev))
             else:
-              sys.exit("Invalid noise type; expected noise types are" +
-                "'homoscedastic' or 'heteroscedastic'.")
+              raise RuntimeError("Invalid noise type; expected noise types " +
+                "are 'homoscedastic' or 'heteroscedastic'.")
         writer.writerow(data)
     f.close()
   

@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 import copy
 import libsbml
 import libsedml
@@ -39,7 +38,7 @@ class Simulation:
   # Optional (default: None).
   def __init__(self, simulation=None, idf=None, name=None, s_type=None):
     if (simulation is None) and (idf is None or s_type is None):
-      sys.exit("Error: either 'simulation' or 'idf' and 's_type' must be " +
+      raise RuntimeError("Either 'simulation' or 'idf' and 's_type' must be " +
         "passed as keyword arguments.")
     else:
       if simulation is not None:
@@ -115,7 +114,7 @@ class OneStep(Simulation):
   # @param step Size of the time step to integrate; optional (default: None).
   def __init__(self, simulation=None, idf=None, name=None, step=None):
     if simulation is None and (idf is None or step is None):
-      sys.exit("Error: either 'simulation' or 'idf' and 'step' must be " +
+      raise RuntimeError("Either 'simulation' or 'idf' and 'step' must be " +
         "passed as keyword arguments.")
     else:
       if simulation is not None:
@@ -267,7 +266,7 @@ class UniformTimeCourse(Simulation):
     out_st=None, pts=None):
     if simulation is None and (idf is None or start is None or end is None or
       out_st is None or pts is None):
-      sys.exit("Error: either 'simulation' or 'idf', 'start', 'end', " +
+      raise RuntimeError("Either 'simulation' or 'idf', 'start', 'end', " +
         "'out_st' and 'pts' must be passed as keyword arguments.")
     else:
       if simulation is not None:

@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 import libsbml
 import libsedml
 
@@ -51,15 +50,15 @@ class Variable:
       self.name = variable.getName()
       # element cannot have both a 'target' and a 'symbol'
       if not variable.isSetTarget() ^ variable.isSetSymbol():
-        sys.exit("Invalid 'variable' argument: one and only one of the " +
-          "target or symbol attributes must exist in the input " +
+        raise RuntimeError("Invalid 'variable' argument: one and only one of " +
+          "the target or symbol attributes must exist in the input " +
           "libsedml.SedVariable element.")
       else:
         self.target = variable.getTarget()
         self.symbol = variable.getSymbol()
       # element cannot refer to a task and a model a the same time
       if not variable.isSetTaskReference() ^ variable.isSetModelReference():
-        sys.exit("Invalid 'variable' argument; at least one of the " +
+        raise RuntimeError("Invalid 'variable' argument; at least one of the " +
           "taskReference or modelReference attributes must exist in the " +
           "input Variable element.")
       elif variable.isSetTaskReference():
@@ -74,17 +73,17 @@ class Variable:
         self.target = target
         self.symbol = symbol
       else:
-        sys.exit("Error: either 'target' or 'symbol' must be passed as " +
+        raise RuntimeError("Either 'target' or 'symbol' must be passed as " +
           "keyword argument.")
       # input arguments 'tsk_ref' and 'mod_ref' cannot exist simultaneously
       if (tsk_ref is not None ^ mod_ref is not None):
         self.task_id = tsk_ref
         self.model_id = mod_ref
       else:
-        sys.exit("Error: either 'tsk_ref' or 'mod_ref' must be passed as " +
+        raise RuntimeError("Either 'tsk_ref' or 'mod_ref' must be passed as " +
           "keyword argument.")
     else:
-      sys.exit("Error: either 'variable' or the " +
+      raise RuntimeError("Either 'variable' or the " +
         "following keyword arguments must be passed: 'idf'; 'target' OR " +
         "'symbol'; 'tsk_ref' OR 'mod_ref'.")
   

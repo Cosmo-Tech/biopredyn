@@ -8,8 +8,7 @@
 import libsbml
 import libsedml
 from lxml import etree
-import sys
-import urlparse
+import os, urlparse
 from bioservices import BioModels
 import change
 
@@ -27,6 +26,8 @@ class Model:
   # A list of changes to be applied to the model before it runs.
   ## @var resource_manager
   # Resource manager for the current work flow.
+  ## @var wf_dir
+  # Directory containing the sources of the parent workflow of 'self', if any.
   
   ## Constructor; either 'model' and 'workflow' or 'source' and 'idf' must be
   ## passed to the constructor.
@@ -44,15 +45,17 @@ class Model:
   def __init__(self, manager, model=None, workflow=None, source=None, idf=None,
     name=None):
     if (model is None or workflow is None) and (source is None or idf is None):
-      sys.exit("Error: either 'model' and 'workflow' or 'source' and 'idf' " +
-               "input arguments must be passed to the constructor.")
+      raise RuntimeError("Either 'model' and 'workflow' or 'source' " +
+        "and 'idf' input arguments must be passed to the constructor.")
     else:
       self.resource_manager = manager
       self.changes = []
+      self.wf_dir = None
       if model is not None:
         self.id = model.getId()
         self.name = model.getName()
         self.source = model.getSource()
+        self.wf_dir = os.path.dirname(workflow.get_source())
         for c in model.getListOfChanges():
           if c.getElementName() == "changeAttribute":
             self.add_change(change.ChangeAttribute(self, change=c))
@@ -135,8 +138,7 @@ class Model:
     if len(target) > 0:
       return target
     else:
-      sys.exit("XPath error: " + xpath + " could not be resolved in " +
-               self.source)
+      raise RuntimeError(xpath + " could not be resolved in " + self.source)
   
   ## Getter. Returns self.changes.
   # @param self The object pointer.
@@ -229,7 +231,7 @@ class Model:
       doc = s.getModelSBMLById(split.pop())
       self.tree = etree.fromstring(doc.encode('utf8'))
     else:
-      file = self.resource_manager.get_resource(self.source)
+      file = self.resource_manager.get_resource(self.source, hint=self.wf_dir)
       self.tree = etree.parse(file)
   
   ## Print a string representation of self.tree.

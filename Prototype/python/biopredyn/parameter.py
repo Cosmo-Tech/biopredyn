@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 import libsbml
 import libsedml
 
@@ -28,7 +27,7 @@ class Parameter:
   # None).
   def __init__(self, parameter=None, idf=None, name=None, value=None):
     if (parameter is None) and (idf is None or value is None):
-      sys.exit("Error: either 'parameter' or 'idf' and 'value' must be " +
+      raise RuntimeError("Either 'parameter' or 'idf' and 'value' must be " +
         "passed as keyword arguments.")
     else:
       if parameter is not None:

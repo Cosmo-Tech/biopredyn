@@ -6,7 +6,7 @@
 ## License: BSD 3-Clause
 
 import numpy as np
-import sys, os
+import os
 import libsbml
 import libsedml
 import model, output, result, task, simulation, datagenerator
@@ -160,11 +160,10 @@ class WorkFlow:
   # @return self.sedml
   def check(self):
     if self.sedml.getNumErrors() > 0:
-      print("Error code " + str(self.sedml.getError(0).getErrorId()) +
+      raise RuntimeError("Code " + str(self.sedml.getError(0).getErrorId()) +
             " at line " + str(self.sedml.getError(0).getLine()) + 
             " when opening file " + str(self.source) + ": " +
             str(self.sedml.getError(0).getShortMessage()))
-      sys.exit(2)
     else:
       print("Document " + self.source + " is SED-ML compliant.")
       # check compatibility with SED-ML level 1
@@ -284,8 +283,8 @@ class WorkFlow:
       elif o.__class__.__name__ == "Report":
         o.process(filename)
       else:
-        sys.exit("Error: invalid output type. Possible output types are: " +
-              "Plot2D, Plot3D, Report")
+        raise ValueError("Error: invalid output type. Possible output types " +
+          "are: Plot2D, Plot3D, Report")
     plt.show()
     if test:
       plt.close()

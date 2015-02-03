@@ -112,7 +112,7 @@ class XPathTestCase(GenericTestCase):
   def test_unresolved_xpath(self):
     local = os.path.abspath('FEBS_antimony.xml')
     mod = model.Model(self.manager, source=local, idf='febs')
-    self.assertRaises(SystemExit, mod.evaluate_xpath,
+    self.assertRaises(RuntimeError, mod.evaluate_xpath,
       '/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id="bad_id"]/@value')
   
   def test_read_value(self):
@@ -167,7 +167,7 @@ class ChangeTestCase(GenericTestCase):
     name = mod.evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/species[@id='Z']/@name")
     self.assertEqual(str(name[0]), 'fake_species')
-    self.assertRaises(SystemExit, mod.evaluate_xpath,
+    self.assertRaises(RuntimeError, mod.evaluate_xpath,
       "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_P']")
 
 ## GenericTestCase derived class for RepeatedTask related tests

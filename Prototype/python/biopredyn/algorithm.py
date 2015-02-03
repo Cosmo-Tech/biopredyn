@@ -28,8 +28,8 @@ class Algorithm:
   # @param kid A valid KiSAO identifier; optional (default: None).
   def __init__(self, algo=None, idf=None, name=None, kid=None):
     if algo is None and (idf is None or kid is None):
-      sys.exit("Error: either 'algo' or 'idf' and 'kid' must be passed as " +
-        "keyword argument(s).")
+      raise RuntimeError("Either 'algo' or 'idf' and 'kid' must be " +
+        "passed as keyword argument(s).")
     else:
       self.parameters = []
       if algo is not None:
@@ -138,8 +138,8 @@ class AlgorithmParameter:
   # @param value A string value for this parameter; optional (default: None).
   def __init__(self, parameter=None, idf=None, name=None, kid=None, value=None):
     if parameter is None and (idf is None or kid is None or value is None):
-      sys.exit("Error; either 'parameter' or 'idf', 'kid' and 'value' must " +
-        "be passed as keyword argument(s).")
+      raise RuntimeError("Either 'parameter' or 'idf', 'kid' and " +
+        "'value' must be passed as keyword argument(s).")
     else:
       if parameter is not None:
         self.id = parameter.getId()

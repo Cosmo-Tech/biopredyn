@@ -5,7 +5,6 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
-import sys
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
@@ -34,7 +33,7 @@ class Data:
   # 'surface' or 'dataSet'. Optional (default: None).
   def __init__(self, workflow, data=None, idf=None, name=None, typ=None):
     if data is None and (idf is None or typ is None):
-      sys.exit("Error: either 'data' or 'idf' ad 'typ' must be passed " +
+      raise RuntimeError("Either 'data' or 'idf' ad 'typ' must be passed " +
         "as keyword argument(s).")
     else:
       self.workflow = workflow
@@ -107,7 +106,7 @@ class DataSet(Data):
   def __init__(self, workflow, data=None, idf=None, name=None, lbl=None,
     dg_ref=None):
     if data is None and (idf is None or lbl is None or dg_ref is None):
-      sys.exit("Error: either 'data' or 'idf', 'lbl' and 'dg_ref' must be " +
+      raise RuntimeError("Either 'data' or 'idf', 'lbl' and 'dg_ref' must be " +
         "passed as keyword argument(s).")
     else:
       if data is not None:
@@ -209,8 +208,9 @@ class DataSet(Data):
           elif noise_type == 'homoscedastic':
             value.setValue(str(gauss(values[e][v], std_dev)))
           else:
-            sys.exit("Invalid noise type; expected noise types are" +
-              "'homoscedastic' or 'heteroscedastic'.")
+            raise ValueError("Invalid noise type: " + noise_type +
+              "\nExpected noise types are 'homoscedastic' or " +
+              "'heteroscedastic'.")
 
 ## Data-derived class for 2-dimensional data set description.
 class Curve(Data):
@@ -244,7 +244,7 @@ class Curve(Data):
     yid=None, logx=None, logy=None):
     if curve is None and (idf is None or xid is None or yid is None or logx is
       None or logy is None):
-      sys.exit("Error: either 'curve' or 'idf', 'xid', 'yid', 'logx' and " +
+      raise RuntimeError("Either 'curve' or 'idf', 'xid', 'yid', 'logx' and " +
         "'logy' must be passed as keyword argument(s).")
     else:
       if curve is not None:
@@ -395,8 +395,8 @@ class Surface(Data):
     yid=None, zid=None, logx=None, logy=None, logz=None):
     if surf is None and (idf is None or xid is None or yid is None or zid is
       None or logx is None or logy is None or logz is None):
-      sys.exit("Error: either 'surf' or 'idf', 'xid', 'yid', 'zid', 'logx', " +
-        "'logy' and 'logz' must be passed as keyword argument(s).")
+      raise RuntimeError("Either 'surf' or 'idf', 'xid', 'yid', 'zid', " +
+        "'logx', 'logy' and 'logz' must be passed as keyword argument(s).")
     else:
       if surf is not None:
         Data.__init__(self, workflow, data=surf)
