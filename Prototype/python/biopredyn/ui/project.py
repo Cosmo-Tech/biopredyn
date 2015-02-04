@@ -5,29 +5,41 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
+from PySide.QtGui import *
+import navigationtree, tabpanel
 from .. import resources, workflow
 
-## Class for handling projects in BioPreDyn user interface.
-# A Project object holds a list of WorkFlow objects and a ResourceManager.
-class Project:
+## QSplitter-derived class for handling projects in BioPreDyn user interface.
+class Project(QSplitter):
   ## @var resource_manager
   # A biopredyn.resources.ResourceManager object.
-  ## @var workflows
-  # A list of biopredyn.workflow.WorkFlow objects.
+  ## @var nav_tree
+  # A biopredyn.ui.navigationtree.NavigationTree object.
+  ## @var tab_panel
+  # A biopredyn.ui.tabpanel.TabPanel object.
   
   ## Constructor.
   # @param self The object pointer.
-  def __init__(self):
-    self.workflows = []
+  # @param parent A biopredyn.ui.mainwindow.MainWindow object.
+  def __init__(self, parent):
+    QSplitter.__init__(self, parent)
     self.resource_manager = resources.ResourceManager()
+    self.nav_tree = navigationtree.NavigationTree(parent)
+    self.tab_panel = tabpanel.TabPanel(parent)
+    self.addWidget(self.nav_tree)
+    self.addWidget(self.tab_panel)
+    self.setCollapsible(0, False)
+    self.setCollapsible(1, False)
+    sizes = [250, 550]
+    self.setSizes(sizes)
   
   ## Create a new biopredyn.workflow.WorkFlow object from the input 'source' and
-  ## adds it to self.workflows.
+  ## adds it to self.nav_tree.
   # @param self The object pointer.
   # @param source Complete filename of a valid SED-ML workflow.
   def add_workflow(self, source):
     wf = workflow.WorkFlow(self.resource_manager, source=source)
-    # TODO self.workflows.append(workflow)
+    self.nav_tree.add_workflow(wf)
   
   ## Getter for self.resource_manager.
   # @param self The object pointer.
@@ -35,24 +47,35 @@ class Project:
   def get_resource_manager(self):
     return self.resource_manager
   
+  ## Getter for self.nav_tree.
+  # @param self The object pointer.
+  # @return self.nav_tree
+  def get_nav_tree(self):
+    return self.nav_tree
+  
+  ## Getter for self.tab_panel.
+  # @param self The object pointer.
+  # @return self.tab_panel
+  def get_tab_panel(self):
+    return self.tab_panel
+  
   ## Create a new biopredyn.workflow.WorkFlow object and adds it to
-  ## self.workflows.
+  ## self.nav_tree.
   # @param self The object pointer.
   def new_workflow(self):
     wf = workflow.WorkFlow(self.resource_manager)
-    # TODO self.workflows.append(workflow)
+    # TODO self.nav_tree.add_workflow(workflow)
   
-  ## Remove the active workflow from self.workflows.
+  ## Remove the active workflow from self.nav_tree.
   # @param self The object pointer.
   def remove_workflow(self):
-    print("TODO") # TODO 
+    self.nav_tree.remove_item(
+      self.nav_tree.currentItem().get_workflow_element())
   
   ## Runs the active workflow i.e. runs its tasks, then process its outputs.
   # @param self The object pointer.
   def run_workflow(self):
-    # workflow.run_tasks()
-    # workflow.process_outputs()
-    print("TODO") # TODO
+    self.nav_tree.currentItem().get_workflow_element().run()
   
   ## Writes the active workflow to the input location 'source' as a SED-ML
   ## file.

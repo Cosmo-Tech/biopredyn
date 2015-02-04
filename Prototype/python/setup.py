@@ -24,4 +24,5 @@ setup(name='biopredyn',
               'PySide',
         ],
       packages=['biopredyn', 'biopredyn.ui'],
+      package_data={'biopredyn': ['ui/icons/*.xpm']},
       )
