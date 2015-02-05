@@ -133,6 +133,12 @@ class DataGenerator:
   # @return The number of time points in the variables used by this.
   def get_number_of_points(self):
     return self.variables[0].get_number_of_points()
+
+  ## Getter for self.parameters.
+  # @param self The object pointer.
+  # @return self.parameters
+  def get_parameters(self):
+    return self.parameters
   
   ## Evaluate the values encoded by this and returned them as a 1-dimensional
   ## array of time series.
@@ -168,6 +174,12 @@ class DataGenerator:
           res[t] = res[t].subs(p_id, p.get_value())
       results.append(res)
     return results
+
+  ## Getter for self.variables.
+  # @param self The object pointer.
+  # @return self.variables
+  def get_variables(self):
+    return self.variables
   
   ## Transform the input MathML mathematical expression into a SymPy
   # expression.

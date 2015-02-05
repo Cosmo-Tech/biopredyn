@@ -17,7 +17,9 @@ class Model:
   ## @var source
   # Address of the SBML file associated with the object.
   ## @var id
-  # A unique identifier for this object.
+  # A unique identifier for 'self'.
+  ## @var name
+  # A name for 'self'.
   ## @var namespaces
   # Dictionary of namespaces defining the associated SBML model.
   ## @var tree
@@ -145,6 +147,12 @@ class Model:
   # @return self.changes
   def get_changes(self):
     return self.changes
+  
+  ## Getter. Returns self.name.
+  # @param self The object pointer.
+  # @return self.name
+  def get_name(self):
+    return self.name
 
   ## Returns the list of SBML species identifiers in the COPASI.CTimeSeries
   ## sense: uses 'name' attributes if they exist, 'id' attributes otherwise.

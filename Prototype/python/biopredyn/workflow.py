@@ -183,6 +183,12 @@ class WorkFlow:
     print("DataGenerator not found: " + id)
     return 0
   
+  ## Getter. Returns self.data_generators.
+  # @param self The object pointer.
+  # @return self.data_generators
+  def get_data_generators(self):
+    return self.data_generators
+  
   ## Getter. Returns a model referenced by the input id listed in self.models.
   # @param self The object pointer.
   # @param id The id of the model to be returned.
@@ -196,6 +202,7 @@ class WorkFlow:
   
   ## Getter. Returns self.models.
   # @param self The object pointer.
+  # @return self.models
   def get_models(self):
     return self.models
   
@@ -213,6 +220,7 @@ class WorkFlow:
   
   ## Getter. Returns self.outputs.
   # @param self The object pointer.
+  # @return self.outputs
   def get_outputs(self):
     return self.outputs
   
@@ -224,6 +232,7 @@ class WorkFlow:
   
   ## Getter. Returns self.sedml.
   # @param self The object pointer.
+  # @return self.sedml
   def get_sedml(self):
     return self.sedml
   
@@ -247,6 +256,7 @@ class WorkFlow:
   
   ## Getter. Returns self.source.
   # @param self The object pointer.
+  # @return self.source
   def get_source(self):
     return self.source
   

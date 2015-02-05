@@ -17,6 +17,8 @@ import colorsys
 class Output:
   ## @var id
   # A unique identifier for the object.
+  ## @var signals
+  # A list of biopredyn.signals.Data objects.
   ## @var name
   # Name of this object.
   ## @var type
@@ -35,6 +37,7 @@ class Output:
       raise RuntimeError("Either 'out' or 'idf' and 'typ' must be " +
         "passed as keyword argument(s).")
     else:
+      self.signals = []
       if out is not None:
         self.id = out.getId()
         self.name = out.getName()
@@ -50,6 +53,12 @@ class Output:
   def __str__(self):
     tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
     return tree
+
+  ## Appends the input biopredyn.signals.Data object to self.signals.
+  # @param self The object pointer.
+  # @param data A biopredyn.signals.Data object.
+  def add_data(self, data):
+    self.signals.append(data)
   
   ## Getter. Returns self.id.
   # @param self The object pointer.
@@ -74,6 +83,12 @@ class Output:
   # @param name New value for self.name.
   def set_name(self, name):
     self.name = name
+
+  ## Setter for self.signals.
+  # @param self The object pointer.
+  # @return self.signals
+  def get_signals(self):
+    return self.signals
   
   ## Getter. Returns self.type.
   # @param self The object pointer.
@@ -83,8 +98,6 @@ class Output:
 
 ## Output-derived class for 2-dimensional plots.
 class Plot2D(Output):
-  ## @var curves
-  # A list of 2-dimensional signals to be plotted on the output.
   ## @var plot
   # A matplotlib figure.
   
@@ -100,11 +113,10 @@ class Plot2D(Output):
       raise RuntimeError("Either 'plot_2d' or 'idf' must be passed as " +
         "keyword argument(s).")
     else:
-      self.curves = []
       if plot_2d is not None:
         Output.__init__(self, out=plot_2d)
         for p in plot_2d.getListOfCurves():
-          self.add_curve(signals.Curve(workflow, curve=p))
+          self.add_data(signals.Curve(workflow, curve=p))
       else:
         Output.__init__(self, idf=idf, name=name, typ="plot2D")
   
@@ -114,21 +126,9 @@ class Plot2D(Output):
   def __str__(self):
     tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
     tree += "    |-listOfCurves\n"
-    for c in self.curves:
+    for c in self.signals:
       tree += str(c)
     return tree
-
-  ## Appends the input biopredyn.signals.Curve object to self.curves.
-  # @param self The object pointer.
-  # @param curve A biopredyn.signals.Curve object.
-  def add_curve(self, curve):
-    self.curves.append(curve)
-  
-  ## Getter. Returns self.curves.
-  # @param self The object pointer.
-  # @return self.curves
-  def get_curves(self):
-    return self.curves
   
   ## Getter. Returns self.plot.
   # @param self The object pointer.
@@ -141,9 +141,9 @@ class Plot2D(Output):
   def process(self):
     self.plot = plt.figure()
     ax = self.plot.add_subplot(111)
-    step = 1.0 / len(self.curves)
+    step = 1.0 / len(self.signals)
     hue = 0.0
-    for c in self.curves:
+    for c in self.signals:
       rgb = colorsys.hsv_to_rgb(hue, 0.75, 1.0)
       c.plot(ax, rgb)
       hue += step
@@ -152,8 +152,6 @@ class Plot2D(Output):
   
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
-  ## @var surfaces
-  # A list of 3-dimensional signals to be plotted on the output.
   ## @var plot
   # A matplotlib figure.
   
@@ -169,11 +167,10 @@ class Plot3D(Output):
       raise RuntimeError("Either 'plot_3d' or 'idf' must be passed as " +
         "keyword argument.")
     else:
-      self.surfaces = []
       if plot_3d is not None:
         Output.__init__(self, out=plot_3d)
         for s in plot_3d.getListOfSurfaces():
-          self.add_surface(signals.Surface(workflow, surf=s))
+          self.add_data(signals.Surface(workflow, surf=s))
       else:
         Output.__init__(self, idf=idf, name=name, typ="plot3D")
   
@@ -183,15 +180,9 @@ class Plot3D(Output):
   def __str__(self):
     tree = "  |-" + self.type + " id=" + self.id + " name=" + self.name + "\n"
     tree += "    |-listOfSurfaces\n"
-    for s in self.surfaces:
+    for s in self.signals:
       tree += str(s)
     return tree
-
-  ## Appends the input biopredyn.signals.Surface object to self.surfaces.
-  # @param self The object pointer.
-  # @param surf A biopredyn.signals.Surface object.
-  def add_surface(self, surf):
-    self.surfaces.append(surf)
   
   ## Getter. Returns self.plot.
   # @param self The object pointer.
@@ -199,26 +190,18 @@ class Plot3D(Output):
   def get_plot(self):
     return self.plot
   
-  ## Getter. Returns self.surfaces.
-  # @param self The object pointer.
-  # @return self.surfaces
-  def get_surfaces(self):
-    return self.surfaces
-  
   ## Plot the result of the task associated with self.data.
   # @param self The object pointer.
   def process(self):
     self.plot = plt.figure(self.id)
     ax = self.plot.add_subplot(111, projection='3d')
-    for s in self.surfaces:
+    for s in self.signals:
       s.plot(ax)
     ax.legend()
     ax.autoscale()
 
 ## Output-derived class for reports.
 class Report(Output):
-  ## @var datasets
-  # A list of 1-dimensional signals to be written in the report.
   
   ## Overridden constructor; either 'report' or 'idf' must be passed as keyword
   ## argument.
@@ -232,19 +215,12 @@ class Report(Output):
       raise RuntimeError("Either 'report' or 'idf' must be passed as " +
         "keyword argument.")
     else:
-      self.datasets = []
       if report is not None:
         Output.__init__(self, out=report)
         for d in report.getListOfDataSets():
-          self.add_dataset(signals.DataSet(workflow, data=d))
+          self.add_data(signals.DataSet(workflow, data=d))
       else:
         Output.__init__(self, idf=idf, name=name, typ="report")
-
-  ## Appends the input biopredyn.signals.DataSet object to self.datasets.
-  # @param self The object pointer.
-  # @param data A biopredyn.signals.DataSet object.
-  def add_dataset(self, data):
-    self.datasets.append(data)
   
   ## Write the result of the task associated with self.data into a report file.
   ## The report format depends on the extension of the input file: if it ends
@@ -283,22 +259,22 @@ class Report(Output):
     writer = csv.writer(f, delimiter=',')
     # writing header
     header = []
-    for d in self.datasets:
+    for d in self.signals:
       header.append(d.get_label())
     writer.writerow(header)
     # writing data - it is assumed all datasets have the same number of points
-    n_points = self.datasets[0].get_data_gen().get_number_of_points()
+    n_points = self.signals[0].get_data_gen().get_number_of_points()
     # for each time_point
     for n in range(n_points):
       num_exp = 0
       # number of experiments is detected
-      for d in self.datasets:
+      for d in self.signals:
         if d.get_num_experiments() > num_exp:
           num_exp = d.get_num_experiments()
       # data is written
       for e in range(num_exp):
         data = []
-        for d in self.datasets:
+        for d in self.signals:
           if str.lower(d.get_label()).__contains__("time"):
             data.append(d.get_data_gen().get_values()[0][n])
           else: # non-time series might be added noise
@@ -349,12 +325,12 @@ class Report(Output):
     val_desc.setName("value")
     val_desc.setValueType("double")
     # Create iterations and indices
-    num_indices = self.datasets[0].get_number_of_points()
+    num_indices = self.signals[0].get_number_of_points()
     for i in range(num_indices):
       i_value = comp.createCompositeValue()
       i_value.setIndexValue(str(i)) # temporary value
     # Populate the indices with values
-    for d in self.datasets:
+    for d in self.signals:
       d.write_as_numl(comp.getDimension(), artificial, noise_type, std_dev)
     writer = libnuml.NUMLWriter()
     writer.writeNUML(doc, filename)
