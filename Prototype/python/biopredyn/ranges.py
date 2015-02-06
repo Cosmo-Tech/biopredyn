@@ -14,6 +14,11 @@ import variable
 class Range:
   ## @var id
   # A unique identifier associated with the object.
+  ## @var name
+  # A name for 'self'.
+  ## @var rng_type
+  # Type of 'self'; can be either 'functionalRange', 'uniformRange',
+  # 'vectorRange'.
   ## @var values
   # A range of values encoded by the element.
   
@@ -21,16 +26,21 @@ class Range:
   # @param self The object pointer.
   # @param rng A libsedml.SedRange element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
-  def __init__(self, rng=None, idf=None):
-    if rng is None and idf is None:
-      raise RuntimeError("Either 'rng' or 'idf' must be passed as keyword " +
-        "argument.")
+  # @param idf A name for 'self'; optional (default: None).
+  def __init__(self, rng=None, idf=None, name=None, typ=None):
+    if rng is None and (idf is None or type is None):
+      raise RuntimeError("Either 'rng' or 'idf' and 'typ' must be passed as " +
+        "keyword argument.")
     else:
       self.values = []
       if rng is not None:
         self.id = rng.getId()
+        self.name = rng.getName()
+        self.rng_type = rng.getElementName()
       else:
         self.id = idf
+        self.name = name
+        self.rng_type = typ
   
   ## Appends the input value to self.values.
   # @param self The object pointer.
@@ -43,6 +53,12 @@ class Range:
   # @return self.id
   def get_id(self):
     return self.id
+
+  ## Getter for self.rng_type.
+  # @param self The object pointer.
+  # @return self.rng_type
+  def get_type(self):
+    return self.rng_type
   
   ## Setter for self.id.
   # @param self The object pointer.
@@ -89,11 +105,12 @@ class FunctionalRange(Range):
   # @param task A biopredyn.task.RepeatedTask object.
   # @param rng A libsedml.SedFunctionalRange element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
+  # @param idf A name for 'self'; optional (default: None).
   # @param rng_ref Identifier of another biopredyn.ranges.Range object stored in
   # self.task; optional (default: None).
   # @param math A valid MathML string; optional (default: None).
-  def __init__(self, workflow, task, rng=None, idf=None, rng_ref=None,
-    math=None):
+  def __init__(self, workflow, task, rng=None, idf=None, name=None,
+    rng_ref=None, math=None):
     if rng is None and (idf is None or math is None):
       raise RuntimeError("Either 'rng' or 'idf' and 'math' must be " +
         "passed as keyword argument(s).")
@@ -111,7 +128,7 @@ class FunctionalRange(Range):
           self.add_parameter(parameter.Parameter(parameter=p))
         self.math = self.parse_math_expression(rng.getMath())
       else:
-        Range.__init__(self, idf=idf)
+        Range.__init__(self, idf=idf, name=name, typ='functionalRange')
         self.range = rng_ref
         self.math = sympify(math)
   
@@ -150,6 +167,18 @@ class FunctionalRange(Range):
       result = result.subs(p_id, p.get_value())
     return result
   
+  ## Getter for self.parameters.
+  # @param self The object pointer.
+  # @return self.parameters
+  def get_parameters(self):
+    return self.parameters
+  
+  ## Getter for self.variables.
+  # @param self The object pointer.
+  # @return self.variables
+  def get_variables(self):
+    return self.variables
+  
   ## Transform the input MathML mathematical expression into a SymPy
   # expression.
   # @param self The object pointer.
@@ -168,7 +197,7 @@ class UniformRange(Range):
   # End point for the returned range of values.
   ## @var number_of_points
   # Number of intervals the range defined by start / end must be divided into.
-  ## @var type
+  ## @var scale
   # Type of range; can be either 'linear' or 'log'.
   
   ## Constructor; either 'rng' or 'idf', 'stt', 'end', 'pts' and 'typ'
@@ -176,18 +205,19 @@ class UniformRange(Range):
   # @param self The object pointer.
   # @param rng A libsedml.SedUniformRange element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param stt Starting point for the encoded range of values; optional
   # (default: None).
   # @param end End point for the encoded range of values; optional (default:
   # None).
   # @param pts Number of intervals between 'stt' and 'end'; optional (default:
   # None).
-  # @param typ Type of range; can be either 'linear' or 'log'. Optional
+  # @param scale Type of range; can be either 'linear' or 'log'. Optional
   # (default: None).
-  def __init__(self, rng=None, idf=None, stt=None, end=None, pts=None,
-    typ=None):
+  def __init__(self, rng=None, idf=None, name=None, stt=None, end=None,
+    pts=None, scale=None):
     if rng is None and (idf is None or stt is None or end is None or pts is None
-      or typ is None):
+      or scale is None):
       raise RuntimeError("Either 'rng' or 'idf', 'stt', 'end', 'pts' and 'typ'" +
         " must be passed as keyword argument(s).")
     else:
@@ -196,19 +226,19 @@ class UniformRange(Range):
         self.end = rng.getEnd()
         self.number_of_points = rng.getNumberOfPoints()
         self.start = rng.getStart()
-        self.type = rng.getType()
+        self.scale = rng.getType()
       else:
-        Range.__init__(self, idf=idf)
+        Range.__init__(self, idf=idf, name=name, typ='uniformRange')
         self.end = end
         self.number_of_points = pts
         self.start = stt
-        self.type = typ
+        self.scale = scale
       self.compute_values()
   
   ## Computes the range of values encoded by the element.
   # @param self The object pointer.
   def compute_values(self):
-    if self.type == 'linear':
+    if self.scale == 'linear':
       step = (self.end - self.start) / self.number_of_points
       factor = 0
       value = 0
@@ -216,7 +246,7 @@ class UniformRange(Range):
         value = self.start + factor * step
         self.add_value(value)
         factor += 1
-    elif self.type == 'log':
+    elif self.scale == 'log':
       if self.start <= 0 or self.end <= 0:
         print("Invalid boundary value in range element " + self.id + ".")
       else:
@@ -230,8 +260,8 @@ class UniformRange(Range):
           self.add_value(10**value)
           factor += 1
     else:
-      print("Invalid type value in range element " + self.id + ": " +
-            self.type)
+      print("Invalid scale value in range element " + self.id + ": " +
+            self.scale)
   
   ## Getter for self.end.
   # @param self The object pointer.
@@ -251,11 +281,11 @@ class UniformRange(Range):
   def get_start(self):
     return self.start
   
-  ## Getter for self.type.
+  ## Getter for self.scale.
   # @param self The object pointer.
-  # @return self.type
-  def get_type(self):
-    return self.type
+  # @return self.scale
+  def get_scale(self):
+    return self.scale
   
   ## Setter for self.end.
   # @param self The object pointer.
@@ -275,11 +305,11 @@ class UniformRange(Range):
   def set_start(self, start):
     self.start = start
   
-  ## Setter for self.type.
+  ## Setter for self.scale.
   # @param self The object pointer.
-  # @param type New value for self.type.
-  def set_type(self, type):
-    self.type = type
+  # @param type New value for self.scale.
+  def set_scale(self, scale):
+    self.scale = scale
 
 ## Range-derived class for vectors of values in SED-ML repeatedTask elements.
 class VectorRange(Range):
@@ -289,7 +319,8 @@ class VectorRange(Range):
   # @param self The object pointer.
   # @param rng A libsedml.SedVectorRange element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
-  def __init__(self, rng=None, idf=None):
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, rng=None, idf=None, name=None):
     if rng is None and idf is None:
       raise RuntimeError("Either 'rng' or 'idf' must be passed as keyword " +
         "argument.")
@@ -299,4 +330,4 @@ class VectorRange(Range):
         for v in rng.getValues():
           self.add_value(v)
       else:
-        Range.__init__(self, idf=idf)
+        Range.__init__(self, idf=idf, name=name, typ='vectorRange')

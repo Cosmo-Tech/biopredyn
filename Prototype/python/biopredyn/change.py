@@ -18,6 +18,9 @@ class Change:
   # Name of the Change element.
   ## @var target
   # XPath expression pointing the element to be impacted by the change.
+  ## @var chn_type
+  # Type of change; can be either 'computeChange', 'changeAttribute',
+  # 'changeXML', 'addXML', 'removeXML'.
   ## @var model
   # Reference to the model to be modified by the change.
   
@@ -26,7 +29,7 @@ class Change:
   # @param self The object pointer.
   # @param change A libsedml.SedChange element; optional (default=None).
   # @param idf A unique identifier; optional (default=None).
-  # @param A name for 'self'; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default=None).
   def __init__(self, change=None, idf=None, name=None, target=None):
     if (change is None) and (idf is None or target is None):
@@ -46,7 +49,7 @@ class Change:
   # @param self The object pointer.
   # @return A string representing this as a hierarchy.
   def __str__(self):
-    tree = "      |-" + self.type + " id=" + self.id + " name=" + self.name
+    tree = "      |-" + self.chn_type + " id=" + self.id + " name=" + self.name
     tree += " target=" + self.target + "\n"
     return tree
   
@@ -92,6 +95,12 @@ class Change:
   def get_target(self):
     return self.target
   
+  ## Getter for self.chn_type.
+  # @param self The object pointer.
+  # @return self.chn_type
+  def get_type(self):
+    return self.chn_type
+  
   ## Setter for self.target.
   # @param self The object pointer.
   # @param target New value for self.target.
@@ -126,6 +135,7 @@ class ComputeChange(Change):
         "must be passed as keyword arguments.")
     else:
       self.model = model
+      self.chn_type = 'computeChange'
       self.variables = []
       self.parameters = []
       if change is not None:
@@ -190,6 +200,18 @@ class ComputeChange(Change):
   def get_math(self):
     return self.math
   
+  ## Getter for self.parameters.
+  # @param self The object pointer.
+  # @return self.parameters
+  def get_parameters(self):
+    return self.parameters
+  
+  ## Getter for self.variables.
+  # @param self The object pointer.
+  # @return self.variables
+  def get_variables(self):
+    return self.variables
+  
   ## Setter for self.math.
   # @param self The object pointer.
   # @param math A SymPy expression.
@@ -219,6 +241,7 @@ class ChangeAttribute(Change):
         "'value' must be passed as keyword arguments.")
     else:
       self.model = model
+      self.chn_type = 'changeAttribute'
       if change is not None:
         Change.__init__(self, change=change)
         self.value = change.getNewValue()
@@ -272,6 +295,7 @@ class AddXML(Change):
         "'xml' must be passed as keyword arguments.")
     else:
       self.model = model
+      self.chn_type = 'addXML'
       if change is not None:
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
@@ -326,6 +350,7 @@ class ChangeXML(Change):
         "'xml' must be passed as arguments.")
     else:
       self.model = model
+      self.chn_type = 'changeXML'
       if change is not None:
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
@@ -378,6 +403,7 @@ class RemoveXML(Change):
         "be passed as arguments.")
     else:
       self.model = model
+      self.chn_type = 'removeXML'
       if change is not None:
         Change.__init__(self, change=change)
       elif idf is not None and target is not None and xml is not None:
@@ -415,6 +441,8 @@ class SetValue:
   # ID of a Range object from the parent RepeatedTask element.
   ## @var target
   # XPath expression pointing the element to be impacted by the change.
+  ## @var sv_type
+  # Type of 'self'; set to 'setValue'.
   ## @var variables
   # A list of Variable objects.
   ## @var workflow
@@ -427,6 +455,10 @@ class SetValue:
   # @param setvalue A libsedml.SedSetValue element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
   # @param name A name for 'self'; optional (default: None).
+  # @param target A valid XPath expression; optional (default: None).
+  # @param mod_ref Identifier of the biopredyn.model.Model object which should
+  # be modified; optional (default: None).
+  # @param math A valid MathML expression; optional (default: None).
   def __init__(self, task, workflow, setvalue=None, idf=None, name=None,
     target=None, mod_ref=None, math=None):
     if setvalue is None and (idf is None or target is None or mod_ref is None or
@@ -435,6 +467,7 @@ class SetValue:
         "'mod_ref' and 'math' must be passed as keyword argument(s).")
     else:
       self.task = task
+      self.sv_type = 'setValue'
       self.workflow = workflow
       self.parameters = []
       self.variables = []
@@ -458,13 +491,13 @@ class SetValue:
         self.math = sympify(math)
 
   ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
-  # @para self The object pointer.
+  # @param self The object pointer.
   # @param par A biopredyn.parameter.Parameter object.
   def add_parameter(self, par):
     self.parameters.append(par)
 
   ## Appends the input biopredyn.variable.Variable object to self.variables.
-  # @para self The object pointer.
+  # @param self The object pointer.
   # @param var A biopredyn.variable.Variable object.
   def add_variable(self, var):
     self.variables.append(var)
@@ -524,6 +557,12 @@ class SetValue:
   def get_target(self):
     return self.target
   
+  ## Getter for self.sv_type.
+  # @param self The object pointer.
+  # @return self.sv_type
+  def get_type(self):
+    return self.sv_type
+  
   ## Transform the input MathML mathematical expression into a SymPy
   # expression.
   # @param self The object pointer.
@@ -559,7 +598,7 @@ class SetValue:
   
   ## Setter for self.range.
   # @param self The object pointer.
-  # @param range Reference to the identifier of a biopredyn.ranges.Range object
+  # @param rng Reference to the identifier of a biopredyn.ranges.Range object
   # of self.task.
   def set_range(self, rng):
     self.range = rng

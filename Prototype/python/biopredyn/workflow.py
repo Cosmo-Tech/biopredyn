@@ -38,6 +38,7 @@ class WorkFlow:
   # None).
   def __init__(self, res_man, source=None):
     self.resource_manager = res_man
+    self.source = None
     self.models = []
     self.simulations = []
     self.tasks = []

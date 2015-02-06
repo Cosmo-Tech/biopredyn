@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
     file_menu.addAction(new_wf_action)
     open_wf_action = QAction("Open", self) # connect to open_workflow
     open_wf_action.setShortcut(QKeySequence.Open)
-    open_wf_action.setStatusTip("Open a SED-ML work flow.")
+    open_wf_action.setStatusTip("Open SED-ML work flows.")
     open_wf_action.triggered.connect(self.open_workflow)
     file_menu.addAction(open_wf_action)
     saveas_wf_action = QAction("Save as", self) # connect to save_workflow_as
@@ -96,10 +96,12 @@ class MainWindow(QMainWindow):
   def open_workflow(self):
     dir = (os.path.dirname(self.filename)
       if self.filename is not None else ".")
-    fname = QFileDialog.getOpenFileName(
-      self, "Open SED-ML file", dir, "XML file (*.xml)")
-    self.filename = fname[0]
-    self.project.add_workflow(self.filename)
+    fname = QFileDialog.getOpenFileNames(
+      self, "Open SED-ML file", dir, "XML files (*.xml)")
+    if len(fname[0]) > 0:
+      self.filename = fname[0][0]
+      for f in fname[0]:
+        self.project.add_workflow(f)
 
   ## Runs the active workflow.
   # @param self The object pointer.

@@ -13,9 +13,10 @@ class NavigationTree(QTreeWidget):
 
   ## Constructor.
   # @param self The object pointer.
+  # @param parent A biopredyn.ui.project.Project object.
   def __init__(self, parent):
     QTreeWidget.__init__(self, parent)
-    labels = ['Name', 'ID']
+    labels = ['Element', 'ID']
     self.setHeaderLabels(labels)
     self.setMinimumWidth(200)
 

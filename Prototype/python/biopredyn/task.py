@@ -21,18 +21,22 @@ class AbstractTask:
   # @param task A libsedml.SedTask object; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
   # @param name A name for 'self'; optional (default: None).
-  def __init__(self, task=None, idf=None, name=None):
+  # @param typ Type of 'self'; can be either 'task' or 'repeatedTask'.
+  # Optional (default: None).
+  def __init__(self, task=None, idf=None, name=None, typ=None):
     if task is None and idf is None:
-      raise RuntimeError("Either 'task' or 'idf' must be passed as keyword " +
-        "argument.")
+      raise RuntimeError("Either 'task' or 'idf' and 'typ' must be passed as " +
+        "keyword argument.")
     else:
       self.tool = None
       if task is not None:
         self.id = task.getId()
         self.name = task.getName()
+        self.type = task.getElementName()
       else:
         self.id = idf
         self.name = name
+        self.type = typ
 
   ## Getter. Returns self.id.
   # @param self The object pointer.
@@ -50,6 +54,12 @@ class AbstractTask:
   # @return self.tool
   def get_tool(self):
     return self.tool
+  
+  ## Getter. Returns self.type.
+  # @param self The object pointer.
+  # @return self.type
+  def get_type(self):
+    return self.type
   
   ## Setter for self.id.
   # @param self The object pointer.
@@ -104,7 +114,7 @@ class Task(AbstractTask):
         self.model_id = task.getModelReference()
         self.simulation_id = task.getSimulationReference()
       else:
-        AbstractTask.__init__(self, idf=idf, name=name)
+        AbstractTask.__init__(self, idf=idf, name=name, typ='task')
         self.model_id = mod_ref
         self.simulation_id = sim_ref
   
@@ -244,7 +254,7 @@ class RepeatedTask(AbstractTask):
         for s in task.getListOfSubTasks():
           self.add_task(SubTask(workflow, subtask=s))
       else:
-        AbstractTask.__init__(self, idf=idf, name=name)
+        AbstractTask.__init__(self, idf=idf, name=name, typ='repeatedTask')
         self.reset_model = reset
         self.master_range = rng
       self.subtasks.sort()
@@ -267,6 +277,12 @@ class RepeatedTask(AbstractTask):
   def add_task(self, tsk):
     self.subtasks.append(tsk)
     self.subtasks.sort()
+  
+  ## Getter. Returns self.changes.
+  # @param self The object pointer.
+  # @return self.changes
+  def get_changes(self):
+    return self.changes
 
   ## Getter. Returns a range referenced by the input id listed in self.ranges.
   # @param self The object pointer.
@@ -278,6 +294,18 @@ class RepeatedTask(AbstractTask):
         return r
     print("Range not found: " + id)
     return 0
+  
+  ## Getter. Returns self.ranges.
+  # @param self The object pointer.
+  # @return self.ranges
+  def get_ranges(self):
+    return self.ranges
+  
+  ## Getter. Returns self.subtasks.
+  # @param self The object pointer.
+  # @return self.subtasks
+  def get_subtasks(self):
+    return self.subtasks
   
   ## Run the repeated task.
   # The following operations are executed at each iteration defined by
