@@ -75,7 +75,7 @@ class Project(QSplitter):
   ## Runs the active workflow i.e. runs its tasks, then process its outputs.
   # @param self The object pointer.
   def run_workflow(self):
-    self.nav_tree.currentItem().get_workflow_element().run()
+    self.nav_tree.currentItem().get_workflow_element().run(self.tab_panel)
   
   ## Writes the active workflow to the input location 'source' as a SED-ML
   ## file.

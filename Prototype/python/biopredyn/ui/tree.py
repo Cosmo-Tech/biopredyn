@@ -373,6 +373,10 @@ class WorkFlowElement(TreeElement):
 
   ## Runs the tasks of self.workflow, and processes its outputs.
   # @param self The object pointer.
-  def run(self):
+  # @param tab_panel A biopredyn.ui.tabpanel.TabPanel object.
+  def run(self, tab_panel):
     self.workflow.run_tasks()
-    self.workflow.process_outputs()
+    for o in self.workflow.get_outputs():
+      o.process()
+      if o.get_type() == 'plot2D' or o.get_type() == 'plot3D':
+        tab_panel.add_tab(o)

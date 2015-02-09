@@ -13,11 +13,16 @@ import project
 ## Class describing the main window for the BioPreDyn user interface.
 # Derived from PySide.QtGui.QMainWindow.
 class MainWindow(QMainWindow):
-  # @var menu_bar
-  # @var project
-  # @var filename
-  # @var save_filename
-  # @var hbox
+  ## @var menu_bar
+  # Main menu bar of the BioPreDyn user interface.
+  ## @var project
+  # Central widget of 'self'.
+  ## @var filename
+  # Absolute path of the last file having been opened in 'self'.
+  ## @var save_filename
+  # Absolute path of the last file having been saved in 'self'.
+  ## @var hbox
+  # Layout of 'self'; a horizontal box layout.
 
   ## Constructor.
   # @param self The object pointer.
