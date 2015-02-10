@@ -6,6 +6,7 @@
 ## License: BSD 3-Clause
 
 import sys
+import libsedml
 
 ## Representation of an algorithm in SED-ML workflows; an algorithm is defined
 ## using a KiSAO id along with several optional algorithm parameters.
@@ -115,6 +116,18 @@ class Algorithm:
   def set_name(self, name):
     self.name = name
 
+  ## Returns the libsedml.SedAlgorithm representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedAlgorithm object.
+  def to_sedml(self, level, version):
+    alg = libsedml.SedAlgorithm(level, version)
+    alg.setKisaoID(self.get_kisao_id())
+    for p in self.get_parameters():
+      alg.addAlgorithmParameter(p.to_sedml(level, version))
+    return alg
+
 ## Representation of an algorithm parameter in SED-ML workflows; an algorithm
 ## parameter is defined using a KiSAO id, and has a value.
 class AlgorithmParameter:
@@ -199,3 +212,15 @@ class AlgorithmParameter:
   # @param value New value for self.value
   def set_value(self, value):
     self.value = value
+
+  ## Returns the libsedml.SedAlgorithmParameter representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedAlgorithmParameter object.
+  def to_sedml(self, level, version):
+    par = libsedml.SedAlgorithmParameter(level, version)
+    par.setKisaoID(self.get_kisao_id())
+    for p in self.get_parameters():
+      alg.addAlgorithmParameter(p.to_sedml(level, version))
+    return par

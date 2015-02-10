@@ -128,5 +128,6 @@ class MainWindow(QMainWindow):
       if self.save_filename is not None else ".")
     fname = QFileDialog.getSaveFileName(
       self, "Save SED-ML file", dir, "XML file (*.xml)")
-    self.save_filename = fname[0]
-    self.project.write_workflow(source=self.save_filename)
+    if len(fname[0]) > 0:
+      self.save_filename = fname[0]
+      self.project.write_workflow(source=self.save_filename)

@@ -45,6 +45,10 @@ class Variable:
   def __init__(self, workflow, variable=None, idf=None, name=None, target=None,
     symbol=None, tsk_ref=None, mod_ref=None):
     self.workflow = workflow
+    self.target = None
+    self.symbol = None
+    self.task_id = None
+    self.model_id = None
     if (variable is not None):
       self.id = variable.getId()
       self.name = variable.getName()
@@ -229,3 +233,22 @@ class Variable:
   # @param model_id New value for self.model_id.
   def set_model_id(self, model_id):
     self.model_id = model_id
+
+  ## Returns the libsedml.SedVariable representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedVariable object.
+  def to_sedml(self, level, version):
+    var = libsedml.SedVariable(level, version)
+    var.setId(self.get_id())
+    var.setName(self.get_name())
+    if self.get_target() is not None:
+      var.setTarget(self.get_target())
+    if self.get_symbol() is not None:
+      var.setSymbol(self.get_symbol())
+    if self.get_task_id() is not None:
+      var.setTaskReference(self.get_task_id())
+    if self.get_model_id() is not None:
+      var.setModelReference(self.get_model_id())
+    return var

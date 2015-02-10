@@ -64,7 +64,7 @@ class WorkFlow:
         elif s_name == "steadyState":
           self.add_simulation(simulation.SteadyState(simulation=s))
         else:
-          self.add_simulation(simulation.Simulation(simulation=s))
+          raise ValueError("Invalid simulation type: " + s_name)
       # Parsing self.sedml for task elements
       for t in self.sedml.getListOfTasks():
         t_name = t.getElementName()
@@ -73,7 +73,7 @@ class WorkFlow:
         elif t_name == "repeatedTask":
           self.add_task(task.RepeatedTask(self, task=t))
         else:
-          self.add_task(task.AbstractTask(task=t))
+          raise ValueError("Invalid task type: " + t_name)
       # Parsing self.sedml for data generator elements
       for d in self.sedml.getListOfDataGenerators():
         self.add_data_generator(datagenerator.DataGenerator(self,
@@ -88,7 +88,7 @@ class WorkFlow:
         elif o_name == "report":
           self.add_output(output.Report(self, report=o))
         else:
-          self.add_output(output.Output(out=o))
+          raise ValueError("Invalid output type: " + o_name)
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -300,11 +300,50 @@ class WorkFlow:
     if test:
       plt.close()
   
-  ## Executes the pipeline encoded in self.sedml.
+  ## Executes the pipeline encoded in 'self'.
   # Each task in self.tasks is executed.
-  # libSBMLSim is used as simulation engine.
   # @param self The object pointer.
   def run_tasks(self):
     # Parse the list of tasks in the input file; by default model changes apply
     for t in self.tasks:
       t.run(True)
+
+  ## Returns the libsedml.SedDocument representation of this.
+  # @param self The object pointer.
+  # @return A libsedml.SedDocument object.
+  def to_sedml(self):
+    lvl = self.sedml.getLevel()
+    vrs = self.sedml.getVersion()
+    doc = libsedml.SedDocument(lvl, vrs)
+    # append model elements
+    for m in self.get_models():
+      doc.addModel(m.to_sedml(lvl, vrs))
+    # append simulation elements
+    for s in self.get_simulations():
+      doc.addSimulation(s.to_sedml(lvl, vrs))
+    # append task elements
+    for t in self.get_tasks():
+      doc.addTask(t.to_sedml(lvl, vrs))
+    # append datagenerator elements
+    for d in self.get_data_generators():
+      doc.addDataGenerator(d.to_sedml(lvl, vrs))
+    # append output elements
+    for o in self.get_outputs():
+      doc.addOutput(o.to_sedml(lvl, vrs))
+    return doc
+
+  ## Writes 'self' as a SED-ML file to the input 'location'. If no 'location' is
+  ## provided, self.source is overriden.
+  # @param self The object pointer.
+  # @param location Absolute path to an XML file; optional (default: None).
+  # @return 'True' if 'self' was written succesfully, 'False' otherwise.
+  def write_to(self, location=None):
+    if location is None and self.source is None:
+      raise RuntimeError("No destination specified for writing SED-ML " +
+        "workflow.")
+    else:
+      doc = self.to_sedml()
+      writer = libsedml.SedWriter()
+      if location is not None:
+        self.source = location
+      return writer.writeSedMLToFile(doc, str(self.source))

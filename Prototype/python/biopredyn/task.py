@@ -5,6 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
+import libsedml
 import model, simulation, result, change, ranges
 
 ## Abstract representation of an atomic task in a SED-ML work flow.
@@ -196,6 +197,19 @@ class Task(AbstractTask):
   def set_simulation_id(self, simulation_id):
     self.simulation_id = simulation_id
 
+  ## Return the libsedml.SedTask representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedTask object.
+  def to_sedml(self, level, version):
+    tsk = libsedml.SedTask(level, version)
+    tsk.setId(self.get_id())
+    tsk.setName(self.get_name())
+    tsk.setSimulationReference(self.get_simulation_id())
+    tsk.setModelReference(self.get_model_id())
+    return tsk
+
 ## AbstractTask-derived class for nested loops of tasks in SED-ML work flows.
 class RepeatedTask(AbstractTask):
   ## @var workflow
@@ -283,6 +297,12 @@ class RepeatedTask(AbstractTask):
   # @return self.changes
   def get_changes(self):
     return self.changes
+  
+  ## Getter. Returns self.master_range.
+  # @param self The object pointer.
+  # @return self.rng
+  def get_master_range(self):
+    return self.master_range
 
   ## Getter. Returns a range referenced by the input id listed in self.ranges.
   # @param self The object pointer.
@@ -300,6 +320,12 @@ class RepeatedTask(AbstractTask):
   # @return self.ranges
   def get_ranges(self):
     return self.ranges
+  
+  ## Getter. Returns self.reset_model.
+  # @param self The object pointer.
+  # @return self.reset_model
+  def get_reset_model(self):
+    return self.reset_model
   
   ## Getter. Returns self.subtasks.
   # @param self The object pointer.
@@ -339,6 +365,28 @@ class RepeatedTask(AbstractTask):
       # 3. Sub-tasks are executed
       for t in self.subtasks:
         t.run(apply_changes)
+
+  ## Return the libsedml.SedRepeatedTask representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedRepeatedTask object.
+  def to_sedml(self, level, version):
+    tsk = libsedml.SedRepeatedTask(level, version)
+    tsk.setId(self.get_id())
+    tsk.setName(self.get_name())
+    tsk.setRangeId(self.get_master_range())
+    tsk.setResetModel(self.get_reset_model())
+    # handling changes
+    for c in self.get_changes():
+      tsk.addTaskChange(c.to_sedml(level, version))
+    # handling ranges
+    for r in self.get_ranges():
+      tsk.addRange(r.to_sedml(level, version))
+    # handling subtasks
+    for s in self.get_subtasks():
+      tsk.addSubTask(s.to_sedml(level, version))
+    return tsk
 
 ## Base-class for RepeatedTask element sub-tasks.
 class SubTask:
@@ -425,3 +473,14 @@ class SubTask:
   # @param task_id New value for self.task_id.
   def set_task_id(self, task_id):
     self.task_id = task_id
+
+  ## Return the libsedml.SedSubTask representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedSubTask object.
+  def to_sedml(self, level, version):
+    tsk = libsedml.SedSubTask(level, version)
+    tsk.setTask(self.get_task_id())
+    tsk.setOrder(self.get_order())
+    return tsk

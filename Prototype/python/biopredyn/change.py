@@ -8,6 +8,7 @@
 from sympy import *
 from lxml import etree
 import libsbml
+import libsedml
 import variable, parameter
 
 ## Base representation of a model pre-processing operation in a SED-ML workflow.
@@ -218,6 +219,24 @@ class ComputeChange(Change):
   def set_math(self, math):
     self.math = math
 
+  ## Returns the libsedml.SedComputeChange representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedComputeChange object.
+  def to_sedml(self, level, version):
+    ch = libsedml.SedComputeChange(level, version)
+    ch.setId(self.get_id())
+    ch.setName(self.get_name())
+    ch.setTarget(self.get_target())
+    # adding parameters and variables
+    for p in self.get_parameters():
+      ch.addParameter(p.to_sedml(level, version))
+    for v in self.get_variables():
+      ch.addVariable(v.to_sedml(level, version))
+    ch.setMath(libsbml.parseFormula(printing.ccode(self.math)))
+    return ch
+
 ## Change-derived class for changing attribute values.
 class ChangeAttribute(Change):
   ## @var value
@@ -274,6 +293,19 @@ class ChangeAttribute(Change):
   def set_value(self, value):
     self.value = value
 
+  ## Returns the libsedml.SedChangeAttribute representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedChangeAttribute object.
+  def to_sedml(self, level, version):
+    ch = libsedml.SedChangeAttribute(level, version)
+    ch.setId(self.get_id())
+    ch.setName(self.get_name())
+    ch.setTarget(self.get_target())
+    ch.setNewValue(self.get_value())
+    return ch
+
 ## Change-derived class for adding a piece of XML code.
 class AddXML(Change):
   ## @var xml
@@ -328,6 +360,19 @@ class AddXML(Change):
   # @param xml New value for self.xml.
   def set_xml(self, xml):
     self.xml = xml
+
+  ## Returns the libsedml.SedAddXML representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedAddXML object.
+  def to_sedml(self, level, version):
+    ch = libsedml.SedAddXML(level, version)
+    ch.setId(self.get_id())
+    ch.setName(self.get_name())
+    ch.setTarget(self.get_target())
+    ch.setNewXML(libsbml.XMLNode(self.get_xml()))
+    return ch
 
 ## Change-derived class for replacing a piece of XML code.
 class ChangeXML(Change):
@@ -386,6 +431,19 @@ class ChangeXML(Change):
   def set_xml(self, xml):
     self.xml = xml
 
+  ## Returns the libsedml.SedChangeXML representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedChangeXML object.
+  def to_sedml(self, level, version):
+    ch = libsedml.SedChangeXML(level, version)
+    ch.setId(self.get_id())
+    ch.setName(self.get_name())
+    ch.setTarget(self.get_target())
+    ch.setNewXML(libsbml.XMLNode(self.get_xml()))
+    return ch
+
 ## Change-derived class for removing a piece of XML code.
 class RemoveXML(Change):
   
@@ -423,6 +481,18 @@ class RemoveXML(Change):
       # target is removed by its parent
       parent = target[0].getparent()
       parent.remove(target[0])
+
+  ## Returns the libsedml.SedRemoveXML representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedRemoveXML object.
+  def to_sedml(self, level, version):
+    ch = libsedml.SedRemoveXML(level, version)
+    ch.setId(self.get_id())
+    ch.setName(self.get_name())
+    ch.setTarget(self.get_target())
+    return ch
 
 ## Class for RepeatedTask change elements; does not inherit from Change, as it
 ## works differently from the other changes.
@@ -471,6 +541,7 @@ class SetValue:
       self.workflow = workflow
       self.parameters = []
       self.variables = []
+      self.range = None
       if setvalue is not None:
         self.id = setvalue.getId()
         self.name = setvalue.getName()
@@ -551,6 +622,18 @@ class SetValue:
   def get_name(self):
     return self.name
   
+  ## Getter for self.parameters.
+  # @param self The object pointer.
+  # @return self.parameters
+  def get_parameters(self):
+    return self.parameters
+  
+  ## Getter for self.range.
+  # @param self The object pointer.
+  # @return self.range
+  def get_range(self):
+    return self.range
+  
   ## Getter for self.target.
   # @param self The object pointer.
   # @return self.target
@@ -562,6 +645,12 @@ class SetValue:
   # @return self.sv_type
   def get_type(self):
     return self.sv_type
+  
+  ## Getter for self.variables.
+  # @param self The object pointer.
+  # @return self.variables
+  def get_variables(self):
+    return self.parameters
   
   ## Transform the input MathML mathematical expression into a SymPy
   # expression.
@@ -602,3 +691,23 @@ class SetValue:
   # of self.task.
   def set_range(self, rng):
     self.range = rng
+
+  ## Returns the libsedml.SedSetValue representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedSetValue object.
+  def to_sedml(self, level, version):
+    ch = libsedml.SedSetValue(level, version)
+    ch.setId(self.get_id())
+    ch.setName(self.get_name())
+    ch.setRange(self.get_range())
+    ch.setTarget(self.get_target())
+    ch.setModelReference(self.get_model_id())
+    # adding parameters and variables
+    for p in self.get_parameters():
+      ch.addParameter(p.to_sedml(level, version))
+    for v in self.get_variables():
+      ch.addVariable(v.to_sedml(level, version))
+    ch.setMath(libsbml.parseFormula(printing.ccode(self.math)))
+    return ch

@@ -166,6 +166,19 @@ class OneStep(Simulation):
   def set_step(self, step):
     self.step = step
 
+  ## Returns the libsedml.SedOneStep representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedOneStep object.
+  def to_sedml(self, level, version):
+    one = libsedml.SedOneStep(level, version)
+    one.setId(self.get_id())
+    one.setName(self.get_name())
+    one.setStep(self.get_step())
+    one.setAlgorithm(self.get_algorithm().to_sedml(level, version))
+    return one
+
 ## Simulation-derived class for steady state simulations.
 class SteadyState(Simulation):
 
@@ -233,6 +246,18 @@ class SteadyState(Simulation):
         "for more information about the KiSAO ontology.")
     res.import_from_libfbc_fba(fbc_model.getSolution())
     return res
+
+  ## Returns the libsedml.SedSteadyState representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedSteadyState object.
+  def to_sedml(self, level, version):
+    st = libsedml.SedSteadyState(level, version)
+    st.setId(self.get_id())
+    st.setName(self.get_name())
+    st.setAlgorithm(self.get_algorithm().to_sedml(level, version))
+    return st
 
 ## Simulation-derived class for uniform time course simulations.
 class UniformTimeCourse(Simulation):
@@ -562,3 +587,19 @@ class UniformTimeCourse(Simulation):
   # @param output_start_time New value for self.output_start_time.
   def set_output_start_time(self, output_start_time):
     self.output_start_time = output_start_time
+
+  ## Returns the libsedml.SedUniformTimeCourse representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedUniformTimeCourse object.
+  def to_sedml(self, level, version):
+    sim = libsedml.SedUniformTimeCourse(level, version)
+    sim.setId(self.get_id())
+    sim.setName(self.get_name())
+    sim.setInitialTime(self.get_initial_time())
+    sim.setOutputStartTime(self.get_output_start_time())
+    sim.setOutputEndTime(self.get_output_end_time())
+    sim.setNumberOfPoints(self.get_number_of_points())
+    sim.setAlgorithm(self.get_algorithm().to_sedml(level, version))
+    return sim

@@ -18,6 +18,8 @@ class Model:
   # Address of the SBML file associated with the object.
   ## @var id
   # A unique identifier for 'self'.
+  ## @var language
+  # A valid SED-ML URI string.
   ## @var name
   # A name for 'self'.
   ## @var namespaces
@@ -43,9 +45,10 @@ class Model:
   # (default None).
   # @param source The address of a SBML model file; optional (default None).
   # @param idf A unique identifier; optional (default None).
+  # @param language A valid SED-ML URI string; optional (default None).
   # @param name A name for 'self'; optional (default: None).
   def __init__(self, manager, model=None, workflow=None, source=None, idf=None,
-    name=None):
+    language=None, name=None):
     if (model is None or workflow is None) and (source is None or idf is None):
       raise RuntimeError("Either 'model' and 'workflow' or 'source' " +
         "and 'idf' input arguments must be passed to the constructor.")
@@ -55,6 +58,7 @@ class Model:
       self.wf_dir = None
       if model is not None:
         self.id = model.getId()
+        self.language = model.getLanguage()
         self.name = model.getName()
         self.source = model.getSource()
         self.wf_dir = os.path.dirname(workflow.get_source())
@@ -71,6 +75,7 @@ class Model:
             self.add_change(change.RemoveXML(self, change=c))
       else:
         self.id = idf
+        self.language = language
         self.name = name
         self.source = source
       self.init_tree()
@@ -147,6 +152,12 @@ class Model:
   # @return self.changes
   def get_changes(self):
     return self.changes
+  
+  ## Getter. Returns self.language.
+  # @param self The object pointer.
+  # @return self.language
+  def get_language(self):
+    return self.language
   
   ## Getter. Returns self.name.
   # @param self The object pointer.
@@ -239,13 +250,28 @@ class Model:
       doc = s.getModelSBMLById(split.pop())
       self.tree = etree.fromstring(doc.encode('utf8'))
     else:
-      file = self.resource_manager.get_resource(self.source, hint=self.wf_dir)
-      self.tree = etree.parse(file)
+      fl = self.resource_manager.get_resource(self.source, hint=self.wf_dir)
+      self.tree = etree.parse(fl)
   
   ## Print a string representation of self.tree.
   # @param self The object pointer.
   def print_tree(self):
     print(etree.tostringlist(self.tree, pretty_print=True))
+
+  ## Returns the libsedml.SedModel representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedModel object.
+  def to_sedml(self, level, version):
+    mod = libsedml.SedModel(level, version)
+    mod.setId(self.get_id())
+    mod.setName(self.get_name())
+    mod.setLanguage(self.get_language())
+    mod.setSource(self.get_source())
+    for c in self.get_changes():
+      mod.addChange(c.to_sedml(level, version))
+    return mod
   
   ## Write self.tree as a SBML document at the input 'filename' location.
   # @param self The object pointer.

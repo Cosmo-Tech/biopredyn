@@ -189,3 +189,21 @@ class DataGenerator:
   def parse_math_expression(self, mathml):
     math = sympify(libsbml.formulaToString(mathml))
     return math
+
+  ## Returns the libsedml.SedDataGenerator representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedDataGenerator object.
+  def to_sedml(self, level, version):
+    dg = libsedml.SedDataGenerator(level, version)
+    dg.setId(self.get_id())
+    dg.setName(self.get_name())
+    dg.setMath(libsbml.parseFormula(printing.ccode(self.math)))
+    # parameters
+    for p in self.get_parameters():
+      dg.addParameter(p.to_sedml(level, version))
+    # variables
+    for v in self.get_variables():
+      dg.addVariable(v.to_sedml(level, version))
+    return dg

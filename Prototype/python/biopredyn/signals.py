@@ -5,6 +5,7 @@
 ## Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 ## License: BSD 3-Clause
 
+import libsedml
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
 from mpl_toolkits.mplot3d import Axes3D
@@ -168,6 +169,19 @@ class DataSet(Data):
   # @param data_id New value for self.data_id.
   def set_data_id(self, data_id):
     self.data_id = data_id
+
+  ## Returns the libsedml.SedDataSet representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML to be used.
+  # @param version Version of SED-ML to be used.
+  # @return A libsedml.SedDataSet object.
+  def to_sedml(self, level, version):
+    ds = libsedml.SedDataSet(level, version)
+    ds.setId(self.get_id())
+    ds.setName(self.get_name())
+    ds.setLabel(self.get_label())
+    ds.setDataReference(self.get_data_id())
+    return ds
   
   ## Write the data encoded in the input Dimension object.
   # Each data value is written in the composite value corresponding to its
@@ -354,6 +368,21 @@ class Curve(Data):
     # Plot the values
     plot.add_collection(lines)
 
+  ## Returns the libsedml.SedCurve representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML to be used.
+  # @param version Version of SED-ML to be used.
+  # @return A libsedml.SedCurve object.
+  def to_sedml(self, level, version):
+    crv = libsedml.SedCurve(level, version)
+    crv.setId(self.get_id())
+    crv.setName(self.get_name())
+    crv.setXDataReference(self.get_x_data_id())
+    crv.setLogX(self.get_log_x())
+    crv.setYDataReference(self.get_y_data_id())
+    crv.setLogY(self.get_log_y())
+    return crv
+
 ## Data-derived class for 3-dimensional data set description.
 class Surface(Data):
   ## @var x_data_id
@@ -441,12 +470,6 @@ class Surface(Data):
   def get_x_data_id(self):
     return self.x_data_id
   
-  ## Setter for self.x_data_id.
-  # @param self The object pointer.
-  # @param x_data_id New value for self.x_data_id.
-  def set_x_data_id(self, x_data_id):
-    self.x_data_id = x_data_id
-  
   ## Returns the DataGenerator object of self.workflow which ID is
   ## self.y_data_id.
   # @param self The object pointer.
@@ -459,12 +482,6 @@ class Surface(Data):
   # @return self.y_data_id
   def get_y_data_id(self):
     return self.y_data_id
-  
-  ## Setter for self.y_data_id.
-  # @param self The object pointer.
-  # @param y_data_id New value for self.y_data_id.
-  def set_y_data_id(self, y_data_id):
-    self.y_data_id = y_data_id
   
   ## Returns the DataGenerator object of self.workflow which ID is
   ## self.z_data_id.
@@ -479,23 +496,11 @@ class Surface(Data):
   def get_z_data_id(self):
     return self.z_data_id
   
-  ## Setter for self.z_data_id.
-  # @param self The object pointer.
-  # @param z_data_id New value for self.z_data_id.
-  def set_z_data_id(self, z_data_id):
-    self.z_data_id = z_data_id
-  
   ## Getter. Returns self.log_x.
   # @param self The object pointer.
   # @return self.x_data_ref
   def get_log_x(self):
     return self.log_x
-  
-  ## Setter for self.log_x.
-  # @param self The object pointer.
-  # @param log_x New value for self.log_x.
-  def set_id(self, log_x):
-    self.log_x = log_x
   
   ## Getter. Returns self.log_y.
   # @param self The object pointer.
@@ -503,23 +508,11 @@ class Surface(Data):
   def get_log_y(self):
     return self.log_y
   
-  ## Setter for self.log_y.
-  # @param self The object pointer.
-  # @param log_y New value for self.log_y.
-  def set_log_y(self, log_y):
-    self.log_y = log_y
-  
   ## Getter. Returns self.log_z.
   # @param self The object pointer.
   # @return self.z_data_ref
   def get_log_z(self):
     return self.log_z
-  
-  ## Setter for self.log_z.
-  # @param self The object pointer.
-  # @param log_z New value for self.log_z.
-  def set_log_z(self, log_z):
-    self.log_z = log_z
   
   ## Plot the data encoded in this on the input plot object.
   # @param self The object pointer.
@@ -537,3 +530,56 @@ class Surface(Data):
     y = np.array(self.get_y_data_gen().get_values())
     z = np.array(self.get_z_data_gen().get_values())
     plot.scatter(x, y, zs=z)
+  
+  ## Setter for self.log_x.
+  # @param self The object pointer.
+  # @param log_x New value for self.log_x.
+  def set_log_x(self, log_x):
+    self.log_x = log_x
+  
+  ## Setter for self.log_y.
+  # @param self The object pointer.
+  # @param log_y New value for self.log_y.
+  def set_log_y(self, log_y):
+    self.log_y = log_y
+  
+  ## Setter for self.log_z.
+  # @param self The object pointer.
+  # @param log_z New value for self.log_z.
+  def set_log_z(self, log_z):
+    self.log_z = log_z
+  
+  ## Setter for self.x_data_id.
+  # @param self The object pointer.
+  # @param x_data_id New value for self.x_data_id.
+  def set_x_data_id(self, x_data_id):
+    self.x_data_id = x_data_id
+  
+  ## Setter for self.y_data_id.
+  # @param self The object pointer.
+  # @param y_data_id New value for self.y_data_id.
+  def set_y_data_id(self, y_data_id):
+    self.y_data_id = y_data_id
+  
+  ## Setter for self.z_data_id.
+  # @param self The object pointer.
+  # @param z_data_id New value for self.z_data_id.
+  def set_z_data_id(self, z_data_id):
+    self.z_data_id = z_data_id
+
+  ## Returns the libsedml.SedSurface representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML to be used.
+  # @param version Version of SED-ML to be used.
+  # @return A libsedml.SedSurface object.
+  def to_sedml(self, level, version):
+    srf = libsedml.SedSurface(level, version)
+    srf.setId(self.get_id())
+    srf.setName(self.get_name())
+    srf.setXDataReference(self.get_x_data_id())
+    srf.setLogX(self.get_log_x())
+    srf.setYDataReference(self.get_y_data_id())
+    srf.setLogY(self.get_log_y())
+    srf.setZDataReference(self.get_z_data_id())
+    srf.setLogZ(self.get_log_z())
+    return srf

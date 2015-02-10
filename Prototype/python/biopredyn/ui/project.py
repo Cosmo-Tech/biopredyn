@@ -83,4 +83,10 @@ class Project(QSplitter):
   # @param source Where to write the active workflow; optional. If not
   # specified, the 'source' attribute of the active workflow is used. 
   def write_workflow(self, source=None):
-    print("TODO") # TODO
+    # if source=None and the current workflow has no source, user should be
+    # prompted for a save location
+    current = self.nav_tree.currentItem().get_workflow_element()
+    if source is None and not current.has_source():
+      parent.save_workflow_as()
+    else:
+      current.write_to(source)

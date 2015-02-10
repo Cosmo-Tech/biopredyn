@@ -79,3 +79,15 @@ class Parameter:
   # @param value New value for self.value.
   def set_value(self, value):
     self.value = value
+
+  ## Returns the libsedml.SedParameter representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedParameter object.
+  def to_sedml(self, level, version):
+    par = libsedml.SedParameter(level, version)
+    par.setId(self.get_id())
+    par.setName(self.get_name())
+    par.setValue(self.get_value())
+    return par

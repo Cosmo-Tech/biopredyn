@@ -371,6 +371,16 @@ class WorkFlowElement(TreeElement):
   def get_workflow_element(self):
     return self
 
+  ## Returns 'True' if self.workflow's 'source' attribute is not None; returns
+  ## 'False' otherwise.
+  # @param self The object pointer.
+  # @return A boolean value.
+  def has_source(self):
+    if self.workflow.get_source() is None:
+      return False
+    else:
+      return True
+
   ## Runs the tasks of self.workflow, and processes its outputs.
   # @param self The object pointer.
   # @param tab_panel A biopredyn.ui.tabpanel.TabPanel object.
@@ -380,3 +390,11 @@ class WorkFlowElement(TreeElement):
       o.process()
       if o.get_type() == 'plot2D' or o.get_type() == 'plot3D':
         tab_panel.add_tab(o)
+
+  ## Writes self.workflow as a SED-ML file.
+  # @param self The object pointer.
+  # @param source Absolute path to a SED-ML file where self.workflow will be
+  # written; if null, the 'source' attribute of self.workflow will be used
+  # instead.
+  def write_to(self, source):
+    self.workflow.write_to(location=source)

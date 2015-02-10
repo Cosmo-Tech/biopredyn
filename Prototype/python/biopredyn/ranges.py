@@ -6,6 +6,7 @@
 ## License: BSD 3-Clause
 
 import libsbml
+import libsedml
 import numpy as np
 from sympy import *
 import variable
@@ -54,6 +55,12 @@ class Range:
   def get_id(self):
     return self.id
 
+  ## Getter for self.name.
+  # @param self The object pointer.
+  # @return self.name
+  def get_name(self):
+    return self.name
+
   ## Getter for self.rng_type.
   # @param self The object pointer.
   # @return self.rng_type
@@ -65,6 +72,12 @@ class Range:
   # @param id A new value for self.id.
   def set_id(self, id):
     self.id = id
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name A new value for self.name.
+  def set_name(self, name):
+    self.name = name
   
   ## Returns the value of self.values which index is equal to the input
   ## iteration argument.
@@ -143,6 +156,12 @@ class FunctionalRange(Range):
   # @param var A biopredyn.variable.Variable object.
   def add_variable(self, var):
     self.variables.append(var)
+  
+  ## Getter for self.range.
+  # @param self The object pointer.
+  # @return self.range
+  def get_range(self):
+    return self.range
 
   ## Computes and returns the value encoded by the element for the current
   ## iteration of self.task. Overrides Range.get_value.
@@ -187,6 +206,25 @@ class FunctionalRange(Range):
   def parse_math_expression(self, mathml):
     math = sympify(libsbml.formulaToString(mathml))
     return math
+
+  ## Returns the libsedml.SedFunctionalRange representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedFunctionalRange object.
+  def to_sedml(self, level, version):
+    rng = libsedml.SedFunctionalRange(level, version)
+    rng.setId(self.get_id())
+    rng.setName(self.get_name())
+    rng.setRange(self.get_range())
+    rng.setMath(libsbml.parseFormula(printing.ccode(self.math)))
+    # parameters
+    for p in self.get_parameters():
+      rng.addParameter(p.to_sedml(level, version))
+    # variables
+    for v in self.get_variables():
+      rng.addVariable(v.to_sedml(level, version))
+    return rng
 
 ## Range-derived class for uniformly distributed ranges of values in SED-ML
 ## repeatedTask elements.
@@ -311,6 +349,21 @@ class UniformRange(Range):
   def set_scale(self, scale):
     self.scale = scale
 
+  ## Returns the libsedml.SedUniformRange representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedUniformRange object.
+  def to_sedml(self, level, version):
+    rng = libsedml.SedUniformRange(level, version)
+    rng.setId(self.get_id())
+    rng.setName(self.get_name())
+    rng.setStart(self.get_start())
+    rng.setEnd(self.get_end())
+    rng.setNumberOfPoints(self.get_number_of_points())
+    rng.setType(self.get_scale())
+    return rng
+
 ## Range-derived class for vectors of values in SED-ML repeatedTask elements.
 class VectorRange(Range):
   
@@ -331,3 +384,16 @@ class VectorRange(Range):
           self.add_value(v)
       else:
         Range.__init__(self, idf=idf, name=name, typ='vectorRange')
+
+  ## Returns the libsedml.SedVectorRange representation of 'self'.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedVectorRange object.
+  def to_sedml(self, level, version):
+    rng = libsedml.SedVectorRange(level, version)
+    rng.setId(self.get_id())
+    rng.setName(self.get_name())
+    for v in self.get_values():
+      rng.addValue(v)
+    return rng

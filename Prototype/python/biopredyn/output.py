@@ -149,6 +149,20 @@ class Plot2D(Output):
       hue += step
     ax.legend()
     ax.autoscale()
+
+  ## Returns the libsedml.SedPlot2D representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedPlot2D object.
+  def to_sedml(self, level, version):
+    plt = libsedml.SedPlot2D(level, version)
+    plt.setId(self.get_id())
+    plt.setName(self.get_name())
+    # curves
+    for c in self.get_signals():
+      plt.addCurve(c.to_sedml(level, version))
+    return plt
   
 ## Output-derived class for 3-dimensional plots.
 class Plot3D(Output):
@@ -200,6 +214,20 @@ class Plot3D(Output):
     ax.legend()
     ax.autoscale()
 
+  ## Returns the libsedml.SedPlot3D representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedPlot3D object.
+  def to_sedml(self, level, version):
+    plt = libsedml.SedPlot3D(level, version)
+    plt.setId(self.get_id())
+    plt.setName(self.get_name())
+    # surfaces
+    for s in self.get_signals():
+      plt.addSurface(s.to_sedml(level, version))
+    return plt
+
 ## Output-derived class for reports.
 class Report(Output):
   
@@ -236,6 +264,20 @@ class Report(Output):
     else:
       raise RuntimeError("Invalid report format. Possible formats " +
         "are: .csv, .xml")
+
+  ## Returns the libsedml.SedReport representation of this.
+  # @param self The object pointer.
+  # @param level Level of SED-ML language to be used.
+  # @param version Version of SED-ML language to be used.
+  # @return A libsedml.SedReport object.
+  def to_sedml(self, level, version):
+    rpt = libsedml.SedReport(level, version)
+    rpt.setId(self.get_id())
+    rpt.setName(self.get_name())
+    # datasets
+    for d in self.get_signals():
+      rpt.addDataSet(d.to_sedml(level, version))
+    return rpt
   
   ## Write the result of the task associated with self.data into a column 
   ## oriented CSV file. Each column corresponds to one iteration of each
