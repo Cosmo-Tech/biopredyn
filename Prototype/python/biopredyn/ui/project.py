@@ -63,7 +63,7 @@ class Project(QSplitter):
   ## self.nav_tree.
   # @param self The object pointer.
   def new_workflow(self):
-    wf = workflow.WorkFlow(self.resource_manager)
+    wf = workflow.WorkFlow(self.resource_manager, level=1, version=2)
     self.nav_tree.add_workflow(wf)
   
   ## Remove the active workflow from self.nav_tree.

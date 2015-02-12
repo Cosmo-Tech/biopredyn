@@ -26,6 +26,7 @@ bpdAddTest(bpdSBMLWriteModelTest SBMLTestCase.test_write_model)
 # SEDML related tests
 bpdAddTest(bpdSEDMLCopasiTimeCourseTest SEDMLTestCase.test_copasi_time_course)
 bpdAddTest(bpdSEDMLLibSBMLSimTimeCourseTest SEDMLTestCase.test_libsbmlsim_time_course)
+bpdAddTest(bpdSEDMLCreateAndSaveTest SEDMLTestCase.test_create_and_save)
 
 # Output related tests
 bpdAddTest(bpdOutputGraphicalOutputTest OutputTestCase.test_graphical_output)

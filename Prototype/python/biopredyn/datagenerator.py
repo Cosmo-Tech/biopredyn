@@ -32,7 +32,9 @@ class DataGenerator:
   # (default: None).
   # @param idf A unique identifier; optional (default: None).
   # @param name A name for 'self'; optional (default: None).
-  # @param math A valid MathML string; optional (default: None).
+  # @param math A valid Python mathematical expression. Symbols it contains must
+  # correspond to identifiers of elements listed in self.variables and / or
+  # self.parameters. Optional (default: None).
   def __init__(self, workflow, data_generator=None, idf=None, name=None,
     math=None):
     if data_generator is None and (idf is None or math is None):
@@ -198,7 +200,8 @@ class DataGenerator:
   def to_sedml(self, level, version):
     dg = libsedml.SedDataGenerator(level, version)
     dg.setId(self.get_id())
-    dg.setName(self.get_name())
+    if self.get_name() is not None:
+      dg.setName(str(self.get_name()))
     dg.setMath(libsbml.parseFormula(printing.ccode(self.math)))
     # parameters
     for p in self.get_parameters():

@@ -266,8 +266,10 @@ class Model:
   def to_sedml(self, level, version):
     mod = libsedml.SedModel(level, version)
     mod.setId(self.get_id())
-    mod.setName(self.get_name())
-    mod.setLanguage(self.get_language())
+    if self.get_name() is not None:
+      mod.setName(str(self.get_name()))
+    if self.get_language() is not None:
+      mod.setLanguage(str(self.get_language()))
     mod.setSource(self.get_source())
     for c in self.get_changes():
       mod.addChange(c.to_sedml(level, version))

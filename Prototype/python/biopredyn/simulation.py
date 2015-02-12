@@ -174,13 +174,30 @@ class OneStep(Simulation):
   def to_sedml(self, level, version):
     one = libsedml.SedOneStep(level, version)
     one.setId(self.get_id())
-    one.setName(self.get_name())
+    if self.get_name() is not None:
+      one.setName(str(self.get_name()))
     one.setStep(self.get_step())
     one.setAlgorithm(self.get_algorithm().to_sedml(level, version))
     return one
 
 ## Simulation-derived class for steady state simulations.
 class SteadyState(Simulation):
+
+  ## Overridden constructor; either 'simulation' or 'idf'
+  ## must be passed as keyword arguments.
+  # @param self The object pointer.
+  # @param simulation A libsedml.SedOneStep element; optional (default: None).
+  # @param idf A unique identifier; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  def __init__(self, simulation=None, idf=None, name=None):
+    if simulation is None and idf is None:
+      raise RuntimeError("Either 'simulation' or 'idf' must be " +
+        "passed as keyword arguments.")
+    else:
+      if simulation is not None:
+        Simulation.__init__(self, simulation=simulation)
+      else:
+        Simulation.__init__(self, idf=idf, name=name, s_type='steadyState')
 
   ## Run the simulation encoded in self on the input model using the input tool.
   # @param self The object pointer.
@@ -255,7 +272,8 @@ class SteadyState(Simulation):
   def to_sedml(self, level, version):
     st = libsedml.SedSteadyState(level, version)
     st.setId(self.get_id())
-    st.setName(self.get_name())
+    if self.get_name() is not None:
+      st.setName(str(self.get_name()))
     st.setAlgorithm(self.get_algorithm().to_sedml(level, version))
     return st
 
@@ -596,7 +614,8 @@ class UniformTimeCourse(Simulation):
   def to_sedml(self, level, version):
     sim = libsedml.SedUniformTimeCourse(level, version)
     sim.setId(self.get_id())
-    sim.setName(self.get_name())
+    if self.get_name() is not None:
+      sim.setName(str(self.get_name()))
     sim.setInitialTime(self.get_initial_time())
     sim.setOutputStartTime(self.get_output_start_time())
     sim.setOutputEndTime(self.get_output_end_time())

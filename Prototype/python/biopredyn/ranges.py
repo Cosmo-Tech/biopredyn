@@ -9,7 +9,7 @@ import libsbml
 import libsedml
 import numpy as np
 from sympy import *
-import variable
+import variable, parameter
 
 ## Base class for expressing ranges in SED-ML repeatedTask elements.
 class Range:
@@ -121,7 +121,9 @@ class FunctionalRange(Range):
   # @param idf A name for 'self'; optional (default: None).
   # @param rng_ref Identifier of another biopredyn.ranges.Range object stored in
   # self.task; optional (default: None).
-  # @param math A valid MathML string; optional (default: None).
+  # @param math A valid Python mathematical expression. Symbols it contains must
+  # correspond to identifiers of elements listed in self.variables and / or
+  # self.parameters. Optional (default: None).
   def __init__(self, workflow, task, rng=None, idf=None, name=None,
     rng_ref=None, math=None):
     if rng is None and (idf is None or math is None):
@@ -215,8 +217,10 @@ class FunctionalRange(Range):
   def to_sedml(self, level, version):
     rng = libsedml.SedFunctionalRange(level, version)
     rng.setId(self.get_id())
-    rng.setName(self.get_name())
-    rng.setRange(self.get_range())
+    if self.get_name() is not None:
+      rng.setName(str(self.get_name()))
+    if self.get_range() is not None:
+      rng.setRange(self.get_range())
     rng.setMath(libsbml.parseFormula(printing.ccode(self.math)))
     # parameters
     for p in self.get_parameters():
@@ -357,7 +361,8 @@ class UniformRange(Range):
   def to_sedml(self, level, version):
     rng = libsedml.SedUniformRange(level, version)
     rng.setId(self.get_id())
-    rng.setName(self.get_name())
+    if self.get_name() is not None:
+      rng.setName(str(self.get_name()))
     rng.setStart(self.get_start())
     rng.setEnd(self.get_end())
     rng.setNumberOfPoints(self.get_number_of_points())
@@ -393,7 +398,8 @@ class VectorRange(Range):
   def to_sedml(self, level, version):
     rng = libsedml.SedVectorRange(level, version)
     rng.setId(self.get_id())
-    rng.setName(self.get_name())
+    if self.get_name() is not None:
+      rng.setName(str(self.get_name()))
     for v in self.get_values():
       rng.addValue(v)
     return rng

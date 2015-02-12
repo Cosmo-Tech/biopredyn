@@ -13,7 +13,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import libsbml
 import libsedml
 import libnuml
-from biopredyn import model, workflow, result, resources
+from biopredyn import (resources, workflow, model, change, parameter, variable,
+simulation, algorithm, task, ranges, datagenerator, output, signals, result)
 
 ## Base class for BioPreDyn test cases.
 class GenericTestCase(unittest.TestCase):
@@ -49,23 +50,126 @@ class SBMLTestCase(GenericTestCase):
 class SEDMLTestCase(GenericTestCase):
 
   def test_copasi_time_course(self):
-    flow = workflow.WorkFlow(self.manager, source='test_graphical_output.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_graphical_output.xml')
     flow.get_task_by_id('task_1').set_tool('copasi')
     flow.run_tasks()
     self.assertEqual(
       len(flow.get_task_by_id('task_1').get_result().get_quantities_per_species('C')), 201)
   
   def test_libsbmlsim_time_course(self):
-    flow = workflow.WorkFlow(self.manager, source='test_graphical_output.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_graphical_output.xml')
     flow.run_tasks()
     self.assertEqual(
       len(flow.get_task_by_id('task_1').get_result().get_time_steps()), 201)
+
+  def test_create_and_save(self):
+    flow = workflow.WorkFlow(self.manager, level=1, version=2)
+    # create a workflow with all possible elements
+    # model
+    mod = model.Model(self.manager,
+      source="${CMAKE_CURRENT_SOURCE_DIR}/FEBS_antimony.xml", idf="mod_0")
+    # changes
+    comp_ch = change.ComputeChange(flow, mod, idf="ch_0",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']/@initialConcentration", math="sp_S*k0/k1")
+    comp_ch.add_parameter(parameter.Parameter(idf="k0", value=2.0e16))
+    comp_ch.add_parameter(parameter.Parameter(idf="k1", value=2.0))
+    comp_ch.add_variable(variable.Variable(flow, idf="sp_S",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']/@initialConcentration", mod_ref="mod_0"))
+    mod.add_change(comp_ch)
+    mod.add_change(change.ChangeAttribute(mod, idf="ch_1",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_E']/@initialAmount", value="1.66058e-05"))
+    mod.add_change(change.ChangeXML(mod, idf="ch_2",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_P']",
+      xml="<species id='Z' initialAmount='0' name='fake_species' compartment='fake_compartment'/>"))
+    mod.add_change(change.AddXML(mod, idf="ch_3",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies",
+      xml="<species id='Z' initialAmount='0' name='fake_species' compartment='fake_compartment'/>"))
+    mod.add_change(change.RemoveXML(mod, idf="ch_4",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']"))
+    flow.add_model(mod)
+    # simulations
+    uni = simulation.UniformTimeCourse(idf="sim_0", start=0.0,
+      end=20.0, out_st=0.0, pts=200)
+    algo = algorithm.Algorithm(idf="alg_0", kid="KISAO:0000035")
+    algo.add_parameter(algorithm.AlgorithmParameter(idf="par_0",
+      kid="KISAO:0000211", value=1e-5))
+    uni.set_algorithm(algo)
+    flow.add_simulation(uni)
+    steady = simulation.SteadyState(idf="sim_1")
+    steady.set_algorithm(algorithm.Algorithm(idf="alg_1",
+      kid="KISAO:0000437"))
+    flow.add_simulation(steady)
+    one = simulation.OneStep(idf="sim_2", step=0.1)
+    one.set_algorithm(algorithm.Algorithm(idf="alg_2",
+      kid="KISAO:0000035"))
+    flow.add_simulation(one)
+    # tasks
+    flow.add_task(task.Task(flow, idf="tsk_0", mod_ref="mod_0",
+      sim_ref="sim_0"))
+    rt = task.RepeatedTask(flow, idf="tsk_1", reset=False, rng="rng_0")
+    # ranges
+    vec = ranges.VectorRange(idf="rng_0")
+    vec.add_value(1.0)
+    vec.add_value(2.0)
+    rt.add_range(vec)
+    rt.add_range(ranges.UniformRange(idf="rng_1", stt=0.0, end=2.0,
+      pts=3, scale="linear"))
+    func = ranges.FunctionalRange(flow, rt, idf="rng_2",
+      math="rng_1+var_0+par_0", rng_ref="rng_1")
+    func.add_variable(variable.Variable(flow, idf="var_0",
+      target="/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id='k1']/@value",
+      mod_ref="mod_0"))
+    func.add_parameter(parameter.Parameter(idf="par_0", value=2.54))
+    rt.add_range(func)
+    rt.add_task(task.SubTask(flow, idf="tsk_0", order=1))
+    rt.add_change(change.SetValue(rt, flow, idf="ch_5",
+      target="/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id='k1']/@value",
+      mod_ref="mod_0", rng_ref="rng_1", math="2/(1+rng_1)"))
+    flow.add_task(rt)
+    # datagenerators
+    d_1 = datagenerator.DataGenerator(flow, idf="dg_0", math="var_1")
+    d_1.add_variable(variable.Variable(flow, idf="var_1",
+      symbol="urn:sedml:symbol:time", tsk_ref="tsk_0"))
+    d_2 = datagenerator.DataGenerator(flow, idf="dg_1",
+      math="var_2-par_1")
+    d_2.add_variable(variable.Variable(flow, idf="var_2",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_S']",
+      mod_ref="mod_0"))
+    d_2.add_parameter(parameter.Parameter(idf="par_1", value=6.7))
+    d_3 = datagenerator.DataGenerator(flow, idf="dg_2", math="var_3")
+    d_3.add_variable(variable.Variable(flow, idf="var_3",
+      target="/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies[1]/sbml:species[@id='sp_E']",
+      mod_ref="mod_0"))
+    flow.add_data_generator(d_1)
+    flow.add_data_generator(d_2)
+    flow.add_data_generator(d_3)
+    # outputs
+    rep = output.Report(flow, idf="out_0")
+    rep.add_data(signals.DataSet(flow, idf="sg_0", lbl="dataset",
+      dg_ref="dg_0"))
+    flow.add_output(rep)
+    p2 = output.Plot2D(flow, idf="out_1")
+    p2.add_data(signals.Curve(flow, idf="sig_1", xid="dg_0",
+      logx=False, yid="dg_1", logy=False))
+    flow.add_output(p2)
+    p3 = output.Plot3D(flow, idf="out_2")
+    p3.add_data(signals.Surface(flow, idf="sig_2", xid="dg_0",
+      logx=False, yid="dg_1", logy=False, zid="dg_2", logz=False))
+    flow.add_output(p3)
+    flow.write_to(
+      location='${CMAKE_CURRENT_BINARY_DIR}/test_create_and_save.xml')
+    # open the resulting file
+    flow_copy = workflow.WorkFlow(self.manager,
+      source='${CMAKE_CURRENT_BINARY_DIR}/test_create_and_save.xml')
 
 ## GenericTestCase derived class for Output related tests
 class OutputTestCase(GenericTestCase):
   
   def test_graphical_output(self):
-    flow = workflow.WorkFlow(self.manager, source='test_graphical_output.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_graphical_output.xml')
     flow.run_tasks()
     flow.process_outputs(test=True)
   
@@ -132,7 +236,8 @@ class XPathTestCase(GenericTestCase):
 class ChangeTestCase(GenericTestCase):
   
   def test_remove_xml(self):
-    flow = workflow.WorkFlow(self.manager, source='test_remove_xml.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_remove_xml.xml')
     pre_change = flow.get_model_by_id('FEBS').evaluate_xpath('//sbml:species')
     self.assertEqual(len(pre_change), 4)
     flow.get_model_by_id('FEBS').apply_changes()
@@ -140,14 +245,16 @@ class ChangeTestCase(GenericTestCase):
     self.assertEqual(len(post_change), 3)
   
   def test_attribute_value(self):
-    flow = workflow.WorkFlow(self.manager, source='test_change_attribute.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_change_attribute.xml')
     flow.get_model_by_id('FEBS').apply_changes()
     attr_value = flow.get_model_by_id('FEBS').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_E']/@initialAmount")
     self.assertEqual(float(attr_value[0]), 1.66058e-05)
   
   def test_compute_value(self):
-    flow = workflow.WorkFlow(self.manager, source='test_compute_change.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_compute_change.xml')
     flow.get_model_by_id('FEBS').apply_changes()
     attr_value = flow.get_model_by_id('FEBS').evaluate_xpath(
       "/sbml:sbml/sbml:model[@id='FEBS']/sbml:listOfSpecies/sbml:species[@id='sp_S']/@initialConcentration")
@@ -161,7 +268,8 @@ class ChangeTestCase(GenericTestCase):
     self.assertEqual(str(name[0]), 'fake_species')
   
   def test_change_xml(self):
-    flow = workflow.WorkFlow(self.manager, source='test_change_xml.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_change_xml.xml')
     mod = flow.get_model_by_id('FEBS')
     mod.apply_changes()
     name = mod.evaluate_xpath(
@@ -204,7 +312,8 @@ class OneStepTestCase(GenericTestCase):
 class SteadyStateTestCase(GenericTestCase):
 
   def test_fba_cobrapy(self):
-    flow = workflow.WorkFlow(self.manager, source='test_fba_cobrapy.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_fba_cobrapy.xml')
     task = flow.get_task_by_id("task_1")
     task.run(True)
     self.assertEqual(
@@ -212,7 +321,8 @@ class SteadyStateTestCase(GenericTestCase):
       0.38)
 
   def test_fba_libfbc(self):
-    flow = workflow.WorkFlow(self.manager, source='test_fba_libfbc.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_fba_libfbc.xml')
     task = flow.get_task_by_id("task_1")
     task.set_tool('libfbc')
     task.run(True)
@@ -224,7 +334,8 @@ class SteadyStateTestCase(GenericTestCase):
 class DataGenerationTestCase(GenericTestCase):
 
   def test_homoscedastic_csv(self):
-    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)
@@ -240,7 +351,8 @@ class DataGenerationTestCase(GenericTestCase):
     self.assertEqual(round(residuals.std(), 1), 0.1)
 
   def test_heteroscedastic_csv(self):
-    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)
@@ -256,7 +368,8 @@ class DataGenerationTestCase(GenericTestCase):
     self.assertNotEqual(residuals.std(), 0.0)
 
   def test_homoscedastic_numl(self):
-    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)
@@ -272,7 +385,8 @@ class DataGenerationTestCase(GenericTestCase):
     self.assertEqual(round(residuals.std(), 1), 0.1)
 
   def test_heteroscedastic_numl(self):
-    flow = workflow.WorkFlow(self.manager, source='test_data_generation.xml')
+    flow = workflow.WorkFlow(self.manager,
+      source='test_data_generation.xml')
     task = flow.get_tasks()[0]
     task.set_tool('copasi')
     flow.get_tasks()[1].run(True)

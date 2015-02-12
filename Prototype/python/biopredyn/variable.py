@@ -73,14 +73,14 @@ class Variable:
       self.id = idf
       self.name = name
       # input arguments 'target' and 'symbol' cannot exist simultaneously
-      if (target is not None ^ symbol is not None):
+      if ( ( target is not None ) ^ ( symbol is not None ) ):
         self.target = target
         self.symbol = symbol
       else:
         raise RuntimeError("Either 'target' or 'symbol' must be passed as " +
           "keyword argument.")
       # input arguments 'tsk_ref' and 'mod_ref' cannot exist simultaneously
-      if (tsk_ref is not None ^ mod_ref is not None):
+      if ( ( tsk_ref is not None ) ^ ( mod_ref is not None ) ):
         self.task_id = tsk_ref
         self.model_id = mod_ref
       else:
@@ -242,7 +242,8 @@ class Variable:
   def to_sedml(self, level, version):
     var = libsedml.SedVariable(level, version)
     var.setId(self.get_id())
-    var.setName(self.get_name())
+    if self.get_name() is not None:
+      var.setName(str(self.get_name()))
     if self.get_target() is not None:
       var.setTarget(self.get_target())
     if self.get_symbol() is not None:

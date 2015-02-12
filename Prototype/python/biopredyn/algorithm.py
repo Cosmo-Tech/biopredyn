@@ -44,9 +44,10 @@ class Algorithm:
         self.name = name
         self.kisao_id = kid
 
-  ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
+  ## Appends the input biopredyn.parameter.AlgorithmParameter object to
+  ## self.parameters.
   # @param self The object pointer.
-  # @param par A biopredyn.parameter.Parameter object.
+  # @param par A biopredyn.parameter.AlgorithmParameter object.
   def add_parameter(self, par):
     self.parameters.append(par)
 
@@ -123,6 +124,8 @@ class Algorithm:
   # @return A libsedml.SedAlgorithm object.
   def to_sedml(self, level, version):
     alg = libsedml.SedAlgorithm(level, version)
+    if self.get_name() is not None:
+      alg.setName(str(self.get_name()))
     alg.setKisaoID(self.get_kisao_id())
     for p in self.get_parameters():
       alg.addAlgorithmParameter(p.to_sedml(level, version))
@@ -220,7 +223,9 @@ class AlgorithmParameter:
   # @return A libsedml.SedAlgorithmParameter object.
   def to_sedml(self, level, version):
     par = libsedml.SedAlgorithmParameter(level, version)
+    par.setId(self.get_id())
+    if self.get_name() is not None:
+      par.setName(str(self.get_name()))
     par.setKisaoID(self.get_kisao_id())
-    for p in self.get_parameters():
-      alg.addAlgorithmParameter(p.to_sedml(level, version))
+    par.setValue(str(self.get_value()))
     return par

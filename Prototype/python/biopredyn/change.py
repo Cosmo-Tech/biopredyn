@@ -128,11 +128,11 @@ class ComputeChange(Change):
   # @param target A valid XPath expression; optional (default: None).
   # @param math A valid Python mathematical expression. Symbols it contains must
   # correspond to identifiers of elements listed in self.variables and / or
-  # self.parameters.
+  # self.parameters. Optional (default: None).
   def __init__(self, workflow, model, change=None, idf=None, name=None,
     target=None, math=None):
     if (change is None) and (idf is None or target is None or math is None):
-      raise RuntimeError("Either 'change' or 'target' and 'idf' " +
+      raise RuntimeError("Either 'change' or 'target', 'math' and 'idf' " +
         "must be passed as keyword arguments.")
     else:
       self.model = model
@@ -227,7 +227,8 @@ class ComputeChange(Change):
   def to_sedml(self, level, version):
     ch = libsedml.SedComputeChange(level, version)
     ch.setId(self.get_id())
-    ch.setName(self.get_name())
+    if self.get_name() is not None:
+      ch.setName(str(self.get_name()))
     ch.setTarget(self.get_target())
     # adding parameters and variables
     for p in self.get_parameters():
@@ -301,7 +302,8 @@ class ChangeAttribute(Change):
   def to_sedml(self, level, version):
     ch = libsedml.SedChangeAttribute(level, version)
     ch.setId(self.get_id())
-    ch.setName(self.get_name())
+    if self.get_name() is not None:
+      ch.setName(str(self.get_name()))
     ch.setTarget(self.get_target())
     ch.setNewValue(self.get_value())
     return ch
@@ -369,9 +371,10 @@ class AddXML(Change):
   def to_sedml(self, level, version):
     ch = libsedml.SedAddXML(level, version)
     ch.setId(self.get_id())
-    ch.setName(self.get_name())
-    ch.setTarget(self.get_target())
-    ch.setNewXML(libsbml.XMLNode(self.get_xml()))
+    if self.get_name() is not None:
+      ch.setName(str(self.get_name()))
+    ch.setTarget(str(self.get_target()))
+    ch.setNewXML(libsbml.XMLNode_convertStringToXMLNode(self.get_xml()))
     return ch
 
 ## Change-derived class for replacing a piece of XML code.
@@ -439,9 +442,10 @@ class ChangeXML(Change):
   def to_sedml(self, level, version):
     ch = libsedml.SedChangeXML(level, version)
     ch.setId(self.get_id())
-    ch.setName(self.get_name())
+    if self.get_name() is not None:
+      ch.setName(str(self.get_name()))
     ch.setTarget(self.get_target())
-    ch.setNewXML(libsbml.XMLNode(self.get_xml()))
+    ch.setNewXML(libsbml.XMLNode_convertStringToXMLNode(self.get_xml()))
     return ch
 
 ## Change-derived class for removing a piece of XML code.
@@ -464,7 +468,7 @@ class RemoveXML(Change):
       self.chn_type = 'removeXML'
       if change is not None:
         Change.__init__(self, change=change)
-      elif idf is not None and target is not None and xml is not None:
+      elif idf is not None and target is not None:
         Change.__init__(self, idf=idf, name=name, target=target)
   
   ## Compute the new value of self.target and change it in the model.
@@ -490,7 +494,8 @@ class RemoveXML(Change):
   def to_sedml(self, level, version):
     ch = libsedml.SedRemoveXML(level, version)
     ch.setId(self.get_id())
-    ch.setName(self.get_name())
+    if self.get_name() is not None:
+      ch.setName(str(self.get_name()))
     ch.setTarget(self.get_target())
     return ch
 
@@ -518,7 +523,8 @@ class SetValue:
   ## @var workflow
   # A WorkFlow object.
   
-  ## Constructor.
+  ## Constructor; either 'setvalue' or 'idf', 'target', 'mod_ref' and 'math'
+  ## must be passed as keyword arguments.
   # @param self The object pointer.
   # @param task A libsedml.SedRepeatedTask object.
   # @param workflow A WorkFlow object.
@@ -528,9 +534,12 @@ class SetValue:
   # @param target A valid XPath expression; optional (default: None).
   # @param mod_ref Identifier of the biopredyn.model.Model object which should
   # be modified; optional (default: None).
-  # @param math A valid MathML expression; optional (default: None).
+  # @param rng_ref Reference to a biopredyn.ranges.Range object in 'task'.
+  # @param math A valid Python mathematical expression. Symbols it contains must
+  # correspond to identifiers of elements listed in self.variables and / or
+  # self.parameters. Optional (default: None).
   def __init__(self, task, workflow, setvalue=None, idf=None, name=None,
-    target=None, mod_ref=None, math=None):
+    target=None, mod_ref=None, rng_ref=None, math=None):
     if setvalue is None and (idf is None or target is None or mod_ref is None or
       math is None):
       raise RuntimeError("Either 'setvalue' or 'idf', 'target', " +
@@ -559,6 +568,7 @@ class SetValue:
         self.name = name
         self.target = target
         self.model_id = mod_ref
+        self.range = rng_ref
         self.math = sympify(math)
 
   ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
@@ -700,8 +710,10 @@ class SetValue:
   def to_sedml(self, level, version):
     ch = libsedml.SedSetValue(level, version)
     ch.setId(self.get_id())
-    ch.setName(self.get_name())
-    ch.setRange(self.get_range())
+    if self.get_name() is not None:
+      ch.setName(str(self.get_name()))
+    if self.get_range() is not None:
+      ch.setRange(self.get_range())
     ch.setTarget(self.get_target())
     ch.setModelReference(self.get_model_id())
     # adding parameters and variables

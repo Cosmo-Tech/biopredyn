@@ -158,7 +158,8 @@ class Plot2D(Output):
   def to_sedml(self, level, version):
     plt = libsedml.SedPlot2D(level, version)
     plt.setId(self.get_id())
-    plt.setName(self.get_name())
+    if self.get_name() is not None:
+      plt.setName(str(self.get_name()))
     # curves
     for c in self.get_signals():
       plt.addCurve(c.to_sedml(level, version))
@@ -222,7 +223,8 @@ class Plot3D(Output):
   def to_sedml(self, level, version):
     plt = libsedml.SedPlot3D(level, version)
     plt.setId(self.get_id())
-    plt.setName(self.get_name())
+    if self.get_name() is not None:
+      plt.setName(str(self.get_name()))
     # surfaces
     for s in self.get_signals():
       plt.addSurface(s.to_sedml(level, version))
@@ -273,7 +275,8 @@ class Report(Output):
   def to_sedml(self, level, version):
     rpt = libsedml.SedReport(level, version)
     rpt.setId(self.get_id())
-    rpt.setName(self.get_name())
+    if self.get_name() is not None:
+      rpt.setName(str(self.get_name()))
     # datasets
     for d in self.get_signals():
       rpt.addDataSet(d.to_sedml(level, version))

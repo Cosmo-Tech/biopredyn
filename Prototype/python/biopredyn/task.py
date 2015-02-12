@@ -205,7 +205,8 @@ class Task(AbstractTask):
   def to_sedml(self, level, version):
     tsk = libsedml.SedTask(level, version)
     tsk.setId(self.get_id())
-    tsk.setName(self.get_name())
+    if self.get_name() is not None:
+      tsk.setName(str(self.get_name()))
     tsk.setSimulationReference(self.get_simulation_id())
     tsk.setModelReference(self.get_model_id())
     return tsk
@@ -236,7 +237,7 @@ class RepeatedTask(AbstractTask):
   # @param name A name for 'self'; optional (default: None).
   # @param reset Boolean value stating whether the model should be reset at each
   # iteration; optional (default: None).
-  # @param rng Reference to a biopredyn.simulation.Simulation object;
+  # @param rng Reference to a biopredyn.ranges.Range object;
   # optional (default: None).
   def __init__(self, workflow, task=None, idf=None, name=None, reset=None,
     rng=None):
@@ -273,9 +274,9 @@ class RepeatedTask(AbstractTask):
         self.master_range = rng
       self.subtasks.sort()
   
-  ## Appends the input biopredyn.change.Change object to self.changes.
+  ## Appends the input biopredyn.change.SetValue object to self.changes.
   # @param self The object pointer.
-  # @param change A biopredyn.change.Change object.
+  # @param change A biopredyn.change.SetValue object.
   def add_change(self, change):
     self.changes.append(change)
   
@@ -285,9 +286,9 @@ class RepeatedTask(AbstractTask):
   def add_range(self, rng):
     self.ranges.append(rng)
   
-  ## Appends the input biopredyn.task.Task object to self.subtasks.
+  ## Appends the input biopredyn.task.SubTask object to self.subtasks.
   # @param self The object pointer.
-  # @param tsk A biopredyn.task.Task object.
+  # @param tsk A biopredyn.task.SubTask object.
   def add_task(self, tsk):
     self.subtasks.append(tsk)
     self.subtasks.sort()
@@ -374,7 +375,8 @@ class RepeatedTask(AbstractTask):
   def to_sedml(self, level, version):
     tsk = libsedml.SedRepeatedTask(level, version)
     tsk.setId(self.get_id())
-    tsk.setName(self.get_name())
+    if self.get_name() is not None:
+      tsk.setName(str(self.get_name()))
     tsk.setRangeId(self.get_master_range())
     tsk.setResetModel(self.get_reset_model())
     # handling changes

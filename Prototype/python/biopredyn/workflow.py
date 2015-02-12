@@ -18,6 +18,8 @@ class WorkFlow:
   # Address of the SED-ML file associated with the object.
   ## @var data_generators
   # A list of DataGenerator elements.
+  ## @var level
+  # Level of SED-ML language to use in 'self'.
   ## @var models
   # A list of Model elements.
   ## @var outputs
@@ -30,65 +32,79 @@ class WorkFlow:
   # A list of Task elements.
   ## @var simulations
   # A list of Simulation elements.
+  ## @var version
+  # Version of SED-ML language to use in 'self'.
   
-  ## Constructor.
+  ## Constructor; either 'source' or 'level' and 'version' must be provided as
+  ## keyword arguments.
   # @param self The object pointer.
   # @param res_man A biopredyn.resources.ResourceManager object.
+  # @param level Level of SED-ML language to use; optional (default: None).
   # @param source Address of the SED-ML file to be read; optional (default:
   # None).
-  def __init__(self, res_man, source=None):
-    self.resource_manager = res_man
-    self.source = None
-    self.models = []
-    self.simulations = []
-    self.tasks = []
-    self.data_generators = []
-    self.outputs = []
-    if source is not None:
-      self.source = source
-      fl = self.resource_manager.get_resource(self.source)
-      reader = libsedml.SedReader()
-      self.sedml = reader.readSedMLFromString(fl.read())
-      self.check()
-      # Parsing self.sedml for model elements
-      for m in self.sedml.getListOfModels():
-        self.add_model(
-          model.Model(self.resource_manager, model=m, workflow=self))
-      # Parsing self.sedml for simulation elements
-      for s in self.sedml.getListOfSimulations():
-        s_name = s.getElementName()
-        if s_name == "uniformTimeCourse":
-          self.add_simulation(simulation.UniformTimeCourse(simulation=s))
-        elif s_name == "oneStep":
-          self.add_simulation(simulation.OneStep(simulation=s))
-        elif s_name == "steadyState":
-          self.add_simulation(simulation.SteadyState(simulation=s))
-        else:
-          raise ValueError("Invalid simulation type: " + s_name)
-      # Parsing self.sedml for task elements
-      for t in self.sedml.getListOfTasks():
-        t_name = t.getElementName()
-        if t_name == "task":
-          self.add_task(task.Task(self, task=t))
-        elif t_name == "repeatedTask":
-          self.add_task(task.RepeatedTask(self, task=t))
-        else:
-          raise ValueError("Invalid task type: " + t_name)
-      # Parsing self.sedml for data generator elements
-      for d in self.sedml.getListOfDataGenerators():
-        self.add_data_generator(datagenerator.DataGenerator(self,
-          data_generator=d))
-      # Parsing self.sedml for output elements
-      for o in self.sedml.getListOfOutputs():
-        o_name = o.getElementName()
-        if o_name == "plot2D":
-          self.add_output(output.Plot2D(self, plot_2d=o))
-        elif o_name == "plot3D":
-          self.add_output(output.Plot3D(self, plot_3d=o))
-        elif o_name == "report":
-          self.add_output(output.Report(self, report=o))
-        else:
-          raise ValueError("Invalid output type: " + o_name)
+  # @param version Version of SED-ML language to use; optional (default: None).
+  def __init__(self, res_man, level=None, source=None, version=None):
+    if source is None and (level is None or version is None):
+      raise RuntimeError("Either 'source' or 'level' and 'version' must be " +
+        "passed as keyword argument(s).")
+    else:
+      self.resource_manager = res_man
+      self.source = None
+      self.models = []
+      self.simulations = []
+      self.tasks = []
+      self.data_generators = []
+      self.outputs = []
+      if source is not None:
+        self.source = source
+        fl = self.resource_manager.get_resource(self.source)
+        reader = libsedml.SedReader()
+        self.sedml = reader.readSedMLFromString(fl.read())
+        self.level = self.sedml.getLevel()
+        self.version = self.sedml.getVersion()
+        self.check()
+        # Parsing self.sedml for model elements
+        for m in self.sedml.getListOfModels():
+          self.add_model(
+            model.Model(self.resource_manager, model=m, workflow=self))
+        # Parsing self.sedml for simulation elements
+        for s in self.sedml.getListOfSimulations():
+          s_name = s.getElementName()
+          if s_name == "uniformTimeCourse":
+            self.add_simulation(simulation.UniformTimeCourse(simulation=s))
+          elif s_name == "oneStep":
+            self.add_simulation(simulation.OneStep(simulation=s))
+          elif s_name == "steadyState":
+            self.add_simulation(simulation.SteadyState(simulation=s))
+          else:
+            raise ValueError("Invalid simulation type: " + s_name)
+        # Parsing self.sedml for task elements
+        for t in self.sedml.getListOfTasks():
+          t_name = t.getElementName()
+          if t_name == "task":
+            self.add_task(task.Task(self, task=t))
+          elif t_name == "repeatedTask":
+            self.add_task(task.RepeatedTask(self, task=t))
+          else:
+            raise ValueError("Invalid task type: " + t_name)
+        # Parsing self.sedml for data generator elements
+        for d in self.sedml.getListOfDataGenerators():
+          self.add_data_generator(datagenerator.DataGenerator(self,
+            data_generator=d))
+        # Parsing self.sedml for output elements
+        for o in self.sedml.getListOfOutputs():
+          o_name = o.getElementName()
+          if o_name == "plot2D":
+            self.add_output(output.Plot2D(self, plot_2d=o))
+          elif o_name == "plot3D":
+            self.add_output(output.Plot3D(self, plot_3d=o))
+          elif o_name == "report":
+            self.add_output(output.Report(self, report=o))
+          else:
+            raise ValueError("Invalid output type: " + o_name)
+      else:
+        self.level = level
+        self.version = version
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -312,24 +328,22 @@ class WorkFlow:
   # @param self The object pointer.
   # @return A libsedml.SedDocument object.
   def to_sedml(self):
-    lvl = self.sedml.getLevel()
-    vrs = self.sedml.getVersion()
-    doc = libsedml.SedDocument(lvl, vrs)
+    doc = libsedml.SedDocument(self.level, self.version)
     # append model elements
     for m in self.get_models():
-      doc.addModel(m.to_sedml(lvl, vrs))
+      doc.addModel(m.to_sedml(self.level, self.version))
     # append simulation elements
     for s in self.get_simulations():
-      doc.addSimulation(s.to_sedml(lvl, vrs))
+      doc.addSimulation(s.to_sedml(self.level, self.version))
     # append task elements
     for t in self.get_tasks():
-      doc.addTask(t.to_sedml(lvl, vrs))
+      doc.addTask(t.to_sedml(self.level, self.version))
     # append datagenerator elements
     for d in self.get_data_generators():
-      doc.addDataGenerator(d.to_sedml(lvl, vrs))
+      doc.addDataGenerator(d.to_sedml(self.level, self.version))
     # append output elements
     for o in self.get_outputs():
-      doc.addOutput(o.to_sedml(lvl, vrs))
+      doc.addOutput(o.to_sedml(self.level, self.version))
     return doc
 
   ## Writes 'self' as a SED-ML file to the input 'location'. If no 'location' is

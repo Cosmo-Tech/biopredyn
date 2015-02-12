@@ -178,7 +178,8 @@ class DataSet(Data):
   def to_sedml(self, level, version):
     ds = libsedml.SedDataSet(level, version)
     ds.setId(self.get_id())
-    ds.setName(self.get_name())
+    if self.get_name() is not None:
+      ds.setName(str(self.get_name()))
     ds.setLabel(self.get_label())
     ds.setDataReference(self.get_data_id())
     return ds
@@ -364,7 +365,7 @@ class Curve(Data):
         values.append(zip(x,y))
     lines = LineCollection(values)
     lines.set_color(col)
-    lines.set_label(self.get_name())
+    lines.set_label(str(self.get_name()))
     # Plot the values
     plot.add_collection(lines)
 
@@ -376,7 +377,8 @@ class Curve(Data):
   def to_sedml(self, level, version):
     crv = libsedml.SedCurve(level, version)
     crv.setId(self.get_id())
-    crv.setName(self.get_name())
+    if self.get_name() is not None:
+      crv.setName(str(self.get_name()))
     crv.setXDataReference(self.get_x_data_id())
     crv.setLogX(self.get_log_x())
     crv.setYDataReference(self.get_y_data_id())
@@ -575,7 +577,8 @@ class Surface(Data):
   def to_sedml(self, level, version):
     srf = libsedml.SedSurface(level, version)
     srf.setId(self.get_id())
-    srf.setName(self.get_name())
+    if self.get_name() is not None:
+      srf.setName(str(self.get_name()))
     srf.setXDataReference(self.get_x_data_id())
     srf.setLogX(self.get_log_x())
     srf.setYDataReference(self.get_y_data_id())

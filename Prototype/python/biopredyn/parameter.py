@@ -23,8 +23,7 @@ class Parameter:
   # @param parameter A libsedml.SedParameter element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
   # @param name A name for 'self'; optional (default: None).
-  # @param value A string representing a numerical value; optional (default:
-  # None).
+  # @param value A numerical value; optional (default: None).
   def __init__(self, parameter=None, idf=None, name=None, value=None):
     if (parameter is None) and (idf is None or value is None):
       raise RuntimeError("Either 'parameter' or 'idf' and 'value' must be " +
@@ -88,6 +87,7 @@ class Parameter:
   def to_sedml(self, level, version):
     par = libsedml.SedParameter(level, version)
     par.setId(self.get_id())
-    par.setName(self.get_name())
+    if self.get_name() is not None:
+      par.setName(str(self.get_name()))
     par.setValue(self.get_value())
     return par
