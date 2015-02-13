@@ -7,6 +7,7 @@
 
 import os
 from PySide.QtGui import *
+import dialogbox
 
 ## Base class for SED-ML elements in parent
 ## biopredyn.ui.navigationtree.NavigationTree object. Derived from
@@ -61,6 +62,12 @@ class ChangeElement(TreeElement):
       for p in change.get_parameters():
         self.par_list.addChild(ParameterElement(p, self.par_list))
 
+  ## Opens a biopredyn.ui.dialogbox.ChangeBox object for editing self.change.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.ChangeBox(self.change, self)
+    box.exec()
+
 ## TreeElement-derived class representing biopredyn.signals.Data
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
 class DataElement(TreeElement):
@@ -76,6 +83,12 @@ class DataElement(TreeElement):
     self.signal = signal
     self.setText(0, self.signal.get_type())
     self.setText(1, self.signal.get_id())
+
+  ## Opens a biopredyn.ui.dialogbox.DataBox object for editing self.signal.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.DataBox(self.signal, self)
+    box.exec()
 
 ## TreeElement-derived class representing biopredyn.datagenerator.DataGenerator
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
@@ -110,6 +123,13 @@ class DataGeneratorElement(TreeElement):
     for p in datagen.get_parameters():
       self.par_list.addChild(ParameterElement(p, self.par_list))
 
+  ## Opens a biopredyn.ui.dialogbox.DataGeneratorBox object for editing
+  ## self.datagenerator.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.DataGeneratorBox(self.datagenerator, self)
+    box.exec()
+
 ## TreeElement-derived class representing biopredyn.model.Model
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
 class ModelElement(TreeElement):
@@ -133,6 +153,12 @@ class ModelElement(TreeElement):
     self.addChild(self.change_list)
     for c in model.get_changes():
       self.change_list.addChild(ChangeElement(c, self.change_list))
+
+  ## Opens a biopredyn.ui.dialogbox.ModelBox object for editing self.model.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.ModelBox(self.model, self)
+    box.exec()
 
 ## TreeElement-derived class representing biopredyn.output.Output
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
@@ -163,6 +189,12 @@ class OutputElement(TreeElement):
     for s in output.get_signals():
       self.data_list.addChild(DataElement(s, self.data_list))
 
+  ## Opens a biopredyn.ui.dialogbox.OutputBox object for editing self.output.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.OutputBox(self.output, self)
+    box.exec()
+
 ## TreeElement-derived class representing biopredyn.parameter.Parameter
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
 class ParameterElement(TreeElement):
@@ -178,6 +210,13 @@ class ParameterElement(TreeElement):
     self.parameter = param
     self.setText(0, "Parameter")
     self.setText(1, self.parameter.get_id())
+
+  ## Opens a biopredyn.ui.dialogbox.ParameterBox object for editing
+  ## self.parameter.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.ParameterBox(self.parameter, self)
+    box.exec()
 
 ## TreeElement-derived class representing biopredyn.ranges.Range
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
@@ -214,6 +253,12 @@ class RangeElement(TreeElement):
       for p in rng.get_parameters():
         self.par_list.addChild(ParameterElement(p, self.par_list))
 
+  ## Opens a biopredyn.ui.dialogbox.RangeBox object for editing self.rng.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.RangeBox(self.rng, self)
+    box.exec()
+
 ## TreeElement-derived class representing biopredyn.simulation.Simulation
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
 class SimulationElement(TreeElement):
@@ -230,6 +275,13 @@ class SimulationElement(TreeElement):
     self.setText(0, self.simulation.get_type())
     self.setText(1, self.simulation.get_id())
 
+  ## Opens a biopredyn.ui.dialogbox.SimulationBox object for editing
+  ## self.simulation.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.SimulationBox(self.simulation, self)
+    box.exec()
+
 ## TreeElement-derived class representing biopredyn.task.SubTask
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
 class SubTaskElement(TreeElement):
@@ -245,6 +297,12 @@ class SubTaskElement(TreeElement):
     self.subtask = subtask
     self.setText(0, 'SubTask')
     self.setText(1, self.subtask.get_task_id())
+
+  ## Opens a biopredyn.ui.dialogbox.SubTaskBox object for editing self.subtask.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.SubTaskBox(self.subtask, self)
+    box.exec()
 
 ## TreeElement-derived class representing biopredyn.task.Task
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
@@ -290,6 +348,12 @@ class TaskElement(TreeElement):
       for s in task.get_subtasks():
         self.subtask_list.addChild(SubTaskElement(s, self.subtask_list))
 
+  ## Opens a biopredyn.ui.dialogbox.TaskBox object for editing self.task.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.TaskBox(self.task, self)
+    box.exec()
+
 ## TreeElement-derived class representing biopredyn.variable.Variable
 ## objects in parent biopredyn.ui.navigationtree.NavigationTree object.
 class VariableElement(TreeElement):
@@ -305,6 +369,13 @@ class VariableElement(TreeElement):
     self.variable = var
     self.setText(0, "Variable")
     self.setText(1, self.variable.get_id())
+
+  ## Opens a biopredyn.ui.dialogbox.VariableBox object for editing
+  ## self.variable.
+  # @param self The object pointer.
+  def edit(self):
+    box = dialogbox.VariableBox(self.variable, self)
+    box.exec()
 
 ## TreeElement-derived class representing biopredyn.workflow.WorkFlow objects in
 ## parent biopredyn.ui.navigationtree.NavigationTree object.

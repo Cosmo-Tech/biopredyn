@@ -329,8 +329,9 @@ class TimeSeries(Result):
             or (is_empty[p] == True
             and len(self.result[names[p]]) != len(self.result['time']))):
             self.result[names[p]].append([])
-          self.result[names[p]][len(self.result['time']) - 1].append(
-            float(values[p]))
+          if len(values[p]) > 0: # TODO handle the sparse data case
+            self.result[names[p]][len(self.result['time']) - 1].append(
+              float(values[p]))
       return names
     else:
       raise TypeError("Invalid file format: " + address)
