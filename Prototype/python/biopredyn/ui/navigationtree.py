@@ -26,6 +26,15 @@ class NavigationTree(QTreeWidget):
   def add_workflow(self, workflow):
     wf = tree.WorkFlowElement(self, workflow)
     self.invisibleRootItem().addChild(wf)
+    wf.setExpanded(True)
+
+  ## Opens a biopredyn.ui.DialogBox window providing several widgets for editing
+  ## the current element of 'self', if editable.
+  # @param self The object pointer.
+  def edit_element(self):
+    elt = self.currentItem()
+    if elt.is_editable():
+      elt.edit()
 
   ## Removes the input 'item' from 'self'.
   # @param self The object pointer.

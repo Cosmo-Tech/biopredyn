@@ -400,19 +400,19 @@ class SubTask:
   ## @var workflow
   # Reference to the WorkFlow object this object belongs to.
   
-  ## Constructor; either 'subtask' or 'idf' and 'order' must be passed as
+  ## Constructor; either 'subtask' or 'tsk_id' and 'order' must be passed as
   ## keyword argument(s).
   # @param self The object pointer.
   # @param workflow A WorkFlow object.
   # @param subtask A libsedml.SedSubTask element; optional (default: None).
-  # @param idf Identifier of an already existing biopredyn.task.AbstractTask
+  # @param tsk_id Identifier of an already existing biopredyn.task.AbstractTask
   # object in 'workflow'; optional (default: None).
   # @param order Order of execution of 'self' relatively to the other
   # biopredyn.task.SubTask objects of its parent biopredyn.task.RepeatedTask;
   # optional (default: None).
-  def __init__(self, workflow, subtask=None, idf=None, order=None):
-    if subtask is None and (idf is None or order is None):
-      raise RuntimeError("Either 'subtask' or 'idf' and 'order' must be " +
+  def __init__(self, workflow, subtask=None, tsk_id=None, order=None):
+    if subtask is None and (tsk_id is None or order is None):
+      raise RuntimeError("Either 'subtask' or 'tsk_id' and 'order' must be " +
         "passed as keyword argument(s).")
     else:
       self.workflow = workflow
@@ -421,7 +421,7 @@ class SubTask:
         self.task_id = subtask.getTask()
       else:
         self.order = order
-        self.task_id = idf
+        self.task_id = tsk_id
   
   ## Comparison operator (order wise).
   # @param self The object pointer.

@@ -314,7 +314,7 @@ class Curve(Data):
   ## Setter for self.y_data_id.
   # @param self The object pointer.
   # @param y_data_id New value for self.id.
-  def set_id(self, y_data_id):
+  def set_y_data_id(self, y_data_id):
     self.y_data_id = y_data_id
   
   ## Returns the DataGenerator object of self.workflow which ID is

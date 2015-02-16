@@ -164,6 +164,12 @@ class Model:
   # @return self.name
   def get_name(self):
     return self.name
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
 
   ## Returns the list of SBML species identifiers in the COPASI.CTimeSeries
   ## sense: uses 'name' attributes if they exist, 'id' attributes otherwise.
@@ -217,6 +223,12 @@ class Model:
   # @return self.tree
   def get_tree(self):
     return self.tree
+  
+  ## Setter for self.name.
+  # @param self The object pointer.
+  # @param name New value for self.name.
+  def set_name(self, name):
+    self.name = name
   
   ## Setter for self.tree.
   # @param self The object pointer.

@@ -36,6 +36,7 @@ class MainWindow(QMainWindow):
     self.project = project.Project(self)
     # Menu bar
     self.menu_bar = QMenuBar(self)
+    self.setMenuBar(self.menu_bar)
     # 'File' menu
     file_menu = QMenu("File", parent=self.menu_bar)
     new_wf_action = QAction("New", self) # connect to new_workflow
@@ -77,7 +78,14 @@ class MainWindow(QMainWindow):
     quit_action.triggered.connect(self.close)
     file_menu.addAction(quit_action)
     self.menu_bar.addMenu(file_menu)
-    self.setMenuBar(self.menu_bar)
+    # 'Edit' menu
+    edit_menu = QMenu("Edit", parent=self.menu_bar)
+    edit_elt_action = QAction("Edit element", self) # connect to edit_element
+    edit_elt_action.setShortcut("Ctrl+Shift+E")
+    edit_elt_action.setStatusTip("Edit the attributes of the selected element.")
+    edit_elt_action.triggered.connect(self.edit_element)
+    edit_menu.addAction(edit_elt_action)
+    self.menu_bar.addMenu(edit_menu)
     # Central widget
     self.setCentralWidget(self.project)
     # Status bar
@@ -88,6 +96,12 @@ class MainWindow(QMainWindow):
   # @param self The object pointer.
   def close_workflow(self):
     self.project.remove_workflow()
+
+  ## Opens a biopredyn.ui.DialogBox window providing several widgets for editing
+  ## the current element.
+  # @param self The object pointer.
+  def edit_element(self):
+    self.project.edit_element()
 
   ## Creates a new workflow.
   # @param self The object pointer.

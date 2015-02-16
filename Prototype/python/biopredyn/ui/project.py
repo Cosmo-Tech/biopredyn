@@ -40,6 +40,12 @@ class Project(QSplitter):
   def add_workflow(self, source):
     wf = workflow.WorkFlow(self.resource_manager, source=source)
     self.nav_tree.add_workflow(wf)
+
+  ## Opens a biopredyn.ui.DialogBox window providing several widgets for editing
+  ## the current element, if editable.
+  # @param self The object pointer.
+  def edit_element(self):
+    self.nav_tree.edit_element()
   
   ## Getter for self.resource_manager.
   # @param self The object pointer.
