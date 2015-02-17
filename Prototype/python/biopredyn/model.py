@@ -224,6 +224,12 @@ class Model:
   def get_tree(self):
     return self.tree
   
+  ## Setter for self.language.
+  # @param self The object pointer.
+  # @param language New value for self.language.
+  def set_language(self, language):
+    self.language = language
+  
   ## Setter for self.name.
   # @param self The object pointer.
   # @param name New value for self.name.
