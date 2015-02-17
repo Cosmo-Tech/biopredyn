@@ -26,15 +26,25 @@ class DialogBox(QDialog):
   # @param self The object pointer.
   def __init__(self):
     QDialog.__init__(self)
+    # main layout: vertical grid
+    self.layout = QVBoxLayout(self)
+    # upper layout: displays widgets for editing 'name' and 'ID' attributes,
+    # common to (almost) all dialog boxes
+    self.up_layout = QFormLayout()
     self.id_edit = QLineEdit(self)
     self.name_edit = QLineEdit(self)
-    self.layout = QFormLayout(self)
-    self.layout.addRow("ID", self.id_edit)
-    self.layout.addRow("Name", self.name_edit)
+    self.up_layout.addRow("ID", self.id_edit)
+    self.up_layout.addRow("Name", self.name_edit)
+    self.layout.addLayout(self.up_layout)
+    # lower layout: displays widgets depending on the nature of the dialog box
+    self.low_layout = QFormLayout()
+    self.layout.addLayout(self.low_layout)
+    # buttons: standard 'ok' and 'cancel' buttons at the bottom of the dialog
     self.buttons = QDialogButtonBox(
       QDialogButtonBox.Ok | QDialogButtonBox.Cancel, parent=self)
     self.buttons.accepted.connect(self.accept)
     self.buttons.rejected.connect(self.reject)
+    self.layout.addWidget(self.buttons)
     self.setLayout(self.layout)
 
 ## DialogBox-derived class for editing biopredyn.ui.tree.ChangeElement objects.
@@ -51,7 +61,6 @@ class ChangeBox(DialogBox):
     self.change = change
     self.id_edit.setText(self.change.get_id())
     self.name_edit.setText(self.change.get_name())
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -75,7 +84,6 @@ class DataBox(DialogBox):
     self.data = data
     self.id_edit.setText(self.data.get_id())
     self.name_edit.setText(self.data.get_name())
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -101,7 +109,6 @@ class DataGeneratorBox(DialogBox):
     self.data_gen = data_gen
     self.id_edit.setText(self.data_gen.get_id())
     self.name_edit.setText(self.data_gen.get_name())
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -125,7 +132,6 @@ class ModelBox(DialogBox):
     self.model = model
     self.id_edit.setText(self.model.get_id())
     self.name_edit.setText(self.model.get_name())
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -149,7 +155,6 @@ class OutputBox(DialogBox):
     self.out = out
     self.id_edit.setText(self.out.get_id())
     self.name_edit.setText(self.out.get_name())
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -177,14 +182,12 @@ class ParameterBox(DialogBox):
     self.setWindowTitle("Edit parameter")
     self.par = par
     self.id_edit.setText(self.par.get_id())
-    # add 'Value' field
     self.name_edit.setText(self.par.get_name())
+    # add 'Value' field
     self.value_edit = QLineEdit(self)
     self.value_edit.setValidator(QDoubleValidator())
-    self.layout.addRow("Value", self.value_edit)
+    self.low_layout.addRow("Value", self.value_edit)
     self.value_edit.setText(str(self.par.get_value()))
-    # add self.buttons
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -212,7 +215,6 @@ class RangeBox(DialogBox):
     self.rng = rng
     self.id_edit.setText(self.rng.get_id())
     self.name_edit.setText(self.rng.get_name())
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -238,7 +240,6 @@ class SimulationBox(DialogBox):
     self.sim = sim
     self.id_edit.setText(self.sim.get_id())
     self.name_edit.setText(self.sim.get_name())
-    self.layout.addRow(self.buttons)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -252,6 +253,12 @@ class SimulationBox(DialogBox):
 class SubTaskBox(DialogBox):
   ## @var sub
   # Reference to the biopredyn.task.SubTask element to be edited by 'self'.
+  ## @var order_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'order' attribute of
+  # self.sub.
+  ## @var tsk_id_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'task_id' attribute of
+  # self.sub.
 
   ## Constructor.
   # @param self The object pointer.
@@ -260,19 +267,23 @@ class SubTaskBox(DialogBox):
     DialogBox.__init__(self)
     self.setWindowTitle("Edit subtask")
     self.sub = sub
-    self.id_edit.setText(self.sub.get_task_id())
+    self.tsk_id_edit = QLineEdit(self)
+    self.tsk_id_edit.setText(str(self.sub.get_task_id()))
+    self.low_layout.addRow("Task ID", self.tsk_id_edit)
     self.order_edit = QLineEdit(self)
-    self.order_edit.setValidator(QIntValidator())
-    self.layout.addRow("Order", self.order_edit)
     self.order_edit.setText(str(self.sub.get_order()))
-    # add self.buttons
-    self.layout.addRow(self.buttons)
+    self.order_edit.setValidator(QIntValidator())
+    self.low_layout.addRow("Order", self.order_edit)
+    # remove widgets from upper layout since self.sub does not have a 'name' nor
+    # an 'id' attribute
+    for i in reversed(range(self.up_layout.count())): 
+      self.up_layout.itemAt(i).widget().setParent(None)
 
   ## Overriden accept method.
   # @param self The object pointer.
   def accept(self):
     try:
-      self.sub.set_task_id(str(self.id_edit.text()))
+      self.sub.set_task_id(str(self.tsk_id_edit.text()))
       self.sub.set_order(int(self.order_edit.text()))
       self.done(QDialog.Accepted)
     except ValueError:
