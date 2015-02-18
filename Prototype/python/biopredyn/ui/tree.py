@@ -188,7 +188,7 @@ class OutputElement(TreeElement):
 
   ## Constructor.
   # @param self The object pointer.
-  # @param model A biopredyn.model.Model object.
+  # @param output A biopredyn.model.Model object.
   # @param parent A TreeElement object.
   def __init__(self, output, parent):
     TreeElement.__init__(self, parent)

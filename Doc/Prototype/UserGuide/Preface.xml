@@ -11,22 +11,22 @@
     <title>Purpose of this document</title>
     <para>This document aims at giving the user all the information he/she needs
     in order to set a suitable environment for the <literal>BioPreDyn</literal>
-    software suite prototype (deliverable 7.2 of the
+    software framework (deliverable 3.4 / 8.3 of the
     <literal>BioPreDyn</literal> project), as long as basic instructions on how 
     to use it.
     </para>
     <para>This document does not describe the architecture of the deliverable
-    7.2 nor gives details about its implementation; this will be
+    3.4 / 8.3 nor gives details about its implementation; this will be
     detailed respectively in the requirements guide and the design notes.</para>
   </section>
   <section id="PrototypeUserGuideAudience">
     <title>Audience</title>
-    <para>This document is primarily intended to advanced users willing to
-    test the <literal>BioPreDyn</literal> software suite prototype on their own
-    model. As a proof of concept for more advanced versions (deliverables
-    3.4 / 8.3), very little effort is put on the package user-friendliness; it
-    is assumed that the reader knows how to compile and build code
-    using GNU make, CMake, or Visual Studio.</para>
+    <para>This document is primarily intended to users willing to
+    use the <literal>BioPreDyn</literal> software framework on their own
+    model. Usage of this framework as a command line tool, as a Python library
+    or as an application will be covered. The installation chapter assumes that
+    the reader is familiar with compilation and build using GNU make, CMake, or
+    Visual Studio.</para>
   </section>
   <section id="PrototypeUserGuideOrganization">
     <title>Organization</title>
@@ -43,16 +43,15 @@
         <formalpara>
           <title>Installation</title>
           <para>How to install a suitable environment for working with the
-          <literal>BioPreDyn</literal> software suite prototype on multiple
-          platforms.
+          <literal>BioPreDyn</literal> software framwork on multiple platforms.
           </para>
         </formalpara>
       </listitem>
       <listitem>
         <formalpara>
           <title>Usage</title>
-          <para>How to use the <literal>BioPreDyn</literal> software suite
-          prototype.</para>
+          <para>How to use the <literal>BioPreDyn</literal> software framework.
+          </para>
         </formalpara>
       </listitem>
     </itemizedlist>

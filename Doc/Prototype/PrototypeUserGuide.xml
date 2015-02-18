@@ -8,7 +8,7 @@
 []>
 <article id="PrototypeUserGuide">
   <articleinfo>
-    <title>BioPreDyn software suite prototype - Deliverable 7.2 - User guide
+    <title>BioPreDyn software framework - User guide
     </title>
     <subjectset>
       <subject>
@@ -30,10 +30,10 @@
         </affiliation>
       </author>
     </authorgroup>
-    <pubdate>2014</pubdate>
+    <pubdate>2015</pubdate>
     <abstract>
-      <para>This document is the user guide for the BioPreDyn software suite
-      prototype (deliverable 7.2).
+      <para>This document is the user guide for the BioPreDyn software
+      framework.
       </para>
     </abstract>
   </articleinfo>

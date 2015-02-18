@@ -9,7 +9,7 @@
   <title>Usage</title>
   <section>
     <title>Command line</title>
-    <para>Once the <literal>BioPreDyn</literal> prototype is installed, it can
+    <para>Once the <literal>BioPreDyn</literal> framework is installed, it can
 be used to run numerical experiments encoded as <literal>SED-ML</literal>
 files. Simply open a shell or a command prompt, navigate to the folder where
 the prototype is installed, and type the following commands:</para>
@@ -17,7 +17,7 @@ the prototype is installed, and type the following commands:</para>
   cd Prototype/python/biopredyn
     </programlisting>
     <para>This folder contains a <literal>biopredynCL.py</literal> file which can
-be used to run the prototype. To do so, one can use the following syntax:
+be executed as a command line tool. To do so, one can use the following syntax:
     </para>
     <programlisting>
   python biopredynCL.py [options]

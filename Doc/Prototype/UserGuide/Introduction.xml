@@ -8,14 +8,14 @@
 <section>
   <title>Introduction</title>
   <para>
-    This code is the deliverable 7.2 of the BioPreDyn project
-    ("Prototype Software for Testing: User-friendly version of
-    prototype software for testing in a setting for industrial
-    applications").
+    This code is the deliverable 3.4 / 8.3 of the BioPreDyn project
+    ("Integrated software suite implementing the methods and tools developed
+     during this project in an interoperable, user-friendly and well-supported
+     way.").
   </para>
   <para>
     For more information about the development tasks related to the
-    BioPreDyn project (and the content of the deliverable 7.2), please
+    BioPreDyn project (and the content of the deliverable 3.4 / 8.3), please
     visit the <ulink url="https://thecosmocompany.com/biopredyn-trac/">
     developer's wiki</ulink>.
   </para>
