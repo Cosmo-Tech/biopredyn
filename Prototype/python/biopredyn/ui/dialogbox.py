@@ -254,9 +254,6 @@ class SimulationBox(DialogBox):
   ## @var utc_layout
   # A PySide.QtGui.QFormLayout object providing widgets for editing self.sim in
   # case it is a biopredyn.UniformTimeCourse object.
-  ## @var st_layout
-  # A PySide.QtGui.QFormLayout object providing widgets for editing self.sim in
-  # case it is a biopredyn.SteadyState object.
   ## @var step_layout
   # A PySide.QtGui.QFormLayout object providing widgets for editing self.sim in
   # case it is a biopredyn.OneStep object.

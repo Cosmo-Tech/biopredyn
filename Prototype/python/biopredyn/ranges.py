@@ -27,7 +27,9 @@ class Range:
   # @param self The object pointer.
   # @param rng A libsedml.SedRange element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
-  # @param idf A name for 'self'; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
+  # @param typ The type of range encode in 'self'; can be either 'vectorRange',
+  # 'functionalRange' or 'uniformRange'. Optional (default: None).
   def __init__(self, rng=None, idf=None, name=None, typ=None):
     if rng is None and (idf is None or type is None):
       raise RuntimeError("Either 'rng' or 'idf' and 'typ' must be passed as " +
@@ -118,7 +120,7 @@ class FunctionalRange(Range):
   # @param task A biopredyn.task.RepeatedTask object.
   # @param rng A libsedml.SedFunctionalRange element; optional (default: None).
   # @param idf A unique identifier; optional (default: None).
-  # @param idf A name for 'self'; optional (default: None).
+  # @param name A name for 'self'; optional (default: None).
   # @param rng_ref Identifier of another biopredyn.ranges.Range object stored in
   # self.task; optional (default: None).
   # @param math A valid Python mathematical expression. Symbols it contains must
@@ -349,7 +351,7 @@ class UniformRange(Range):
   
   ## Setter for self.scale.
   # @param self The object pointer.
-  # @param type New value for self.scale.
+  # @param scale New value for self.scale.
   def set_scale(self, scale):
     self.scale = scale
 

@@ -291,7 +291,7 @@ class SimulationElement(TreeElement):
 
   ## Constructor.
   # @param self The object pointer.
-  # @param task A biopredyn.simulation.Simulation object.
+  # @param simulation A biopredyn.simulation.Simulation object.
   # @param parent A TreeElement object.
   def __init__(self, simulation, parent):
     TreeElement.__init__(self, parent)
@@ -316,7 +316,7 @@ class SubTaskElement(TreeElement):
 
   ## Constructor.
   # @param self The object pointer.
-  # @param task A biopredyn.task.SubTask object.
+  # @param subtask A biopredyn.task.SubTask object.
   # @param parent A TreeElement object.
   def __init__(self, subtask, parent):
     TreeElement.__init__(self, parent)

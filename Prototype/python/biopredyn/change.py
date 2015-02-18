@@ -32,19 +32,24 @@ class Change:
   # @param idf A unique identifier; optional (default=None).
   # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default=None).
-  def __init__(self, change=None, idf=None, name=None, target=None):
-    if (change is None) and (idf is None or target is None):
-      raise RuntimeError("Either 'change' or 'target' and 'idf' " +
+  # @param typ The type of change encoded in 'self'; can be either
+  # 'computeChange', 'changeAttribute', 'changeXML', 'addXML' or 'removeXML'.
+  # Optional (default: None).
+  def __init__(self, change=None, idf=None, name=None, target=None, typ=None):
+    if (change is None) and (idf is None or target is None or typ is None):
+      raise RuntimeError("Either 'change' or 'target', 'idf' and 'typ' " +
         "must be passed as keyword arguments.")
     else:
       if change is not None:
         self.id = change.getId()
         self.name = change.getName()
         self.target = change.getTarget()
+        self.chn_type = change.getElementName()
       elif idf is not None and target is not None:
         self.id = idf
         self.name = name
         self.target = target
+        self.chn_type = typ
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -136,7 +141,6 @@ class ComputeChange(Change):
         "must be passed as keyword arguments.")
     else:
       self.model = model
-      self.chn_type = 'computeChange'
       self.variables = []
       self.parameters = []
       if change is not None:
@@ -147,7 +151,8 @@ class ComputeChange(Change):
           self.add_parameter(parameter.Parameter(parameter=p))
         self.math = self.parse_math_expression(change.getMath())
       elif idf is not None and target is not None and math is not None:
-        Change.__init__(self, idf=idf, name=name, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target,
+          typ='computeChange')
         self.math = sympify(math)
   
   ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
@@ -261,12 +266,12 @@ class ChangeAttribute(Change):
         "'value' must be passed as keyword arguments.")
     else:
       self.model = model
-      self.chn_type = 'changeAttribute'
       if change is not None:
         Change.__init__(self, change=change)
         self.value = change.getNewValue()
       elif idf is not None and target is not None and value is not None:
-        Change.__init__(self, idf=idf, name=name, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target,
+          typ='changeAttribute')
         self.value = value
   
   ## Set the value of self.target to self.value in self.model.
@@ -329,12 +334,11 @@ class AddXML(Change):
         "'xml' must be passed as keyword arguments.")
     else:
       self.model = model
-      self.chn_type = 'addXML'
       if change is not None:
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
       elif idf is not None and target is not None and xml is not None:
-        Change.__init__(self, idf=idf, name=name, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target, typ='addXML')
         self.xml = xml
   
   ## Add self.xml as a child of self.target in self.model.
@@ -398,12 +402,12 @@ class ChangeXML(Change):
         "'xml' must be passed as arguments.")
     else:
       self.model = model
-      self.chn_type = 'changeXML'
       if change is not None:
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
       elif idf is not None and target is not None and xml is not None:
-        Change.__init__(self, idf=idf, name=name, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target,
+          typ='changeXML')
         self.xml = xml
   
   ## Compute the new value of self.target and change it in the model.
@@ -465,11 +469,11 @@ class RemoveXML(Change):
         "be passed as arguments.")
     else:
       self.model = model
-      self.chn_type = 'removeXML'
       if change is not None:
         Change.__init__(self, change=change)
       elif idf is not None and target is not None:
-        Change.__init__(self, idf=idf, name=name, target=target)
+        Change.__init__(self, idf=idf, name=name, target=target,
+          typ='removeXML')
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.

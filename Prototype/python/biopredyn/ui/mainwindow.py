@@ -21,8 +21,8 @@ class MainWindow(QMainWindow):
   # Absolute path of the last file having been opened in 'self'.
   ## @var save_filename
   # Absolute path of the last file having been saved in 'self'.
-  ## @var hbox
-  # Layout of 'self'; a horizontal box layout.
+  ## @var status_bar
+  # A PySide.QtGui.QStatusBar object.
 
   ## Constructor.
   # @param self The object pointer.
