@@ -123,7 +123,7 @@ class SEDMLTestCase(GenericTestCase):
       mod_ref="mod_0"))
     func.add_parameter(parameter.Parameter(idf="par_0", value=2.54))
     rt.add_range(func)
-    rt.add_task(task.SubTask(flow, idf="tsk_0", order=1))
+    rt.add_task(task.SubTask(flow, tsk_id="tsk_0", order=1))
     rt.add_change(change.SetValue(rt, flow, idf="ch_5",
       target="/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id='k1']/@value",
       mod_ref="mod_0", rng_ref="rng_1", math="2/(1+rng_1)"))

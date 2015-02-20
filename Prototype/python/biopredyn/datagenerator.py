@@ -103,9 +103,11 @@ class DataGenerator:
   
   ## Setter for self.math.
   # @param self The object pointer.
-  # @param math New value for self.id.
+  # @param math A valid Python mathematical expression. Symbols it contains must
+  # correspond to identifiers of elements listed in self.variables and / or
+  # self.parameters.
   def set_math(self, math):
-    self.math = math
+    self.math = sympify(math)
   
   ## Getter. Returns self.name.
   # @param self The object pointer.

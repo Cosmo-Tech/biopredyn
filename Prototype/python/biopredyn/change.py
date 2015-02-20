@@ -220,9 +220,11 @@ class ComputeChange(Change):
   
   ## Setter for self.math.
   # @param self The object pointer.
-  # @param math A SymPy expression.
+  # @param math A valid Python mathematical expression. Symbols it contains must
+  # correspond to identifiers of elements listed in self.variables and / or
+  # self.parameters.
   def set_math(self, math):
-    self.math = math
+    self.math = sympify(math)
 
   ## Returns the libsedml.SedComputeChange representation of this.
   # @param self The object pointer.
