@@ -20,7 +20,11 @@ class DialogBox(QDialog):
   ## @var name_edit
   # A PySide.QtGui.QLineEdit object for editing 'name' attributes.
   ## @var layout
-  # Layout of 'self', a PySide.QtGui.QFormLayout object.
+  # Layout of 'self', a PySide.QtGui.QGridLayout object.
+  ## @var up_layout
+  # Upper layout of 'self', a PySide.QtGui.QFormLayout object.
+  ## @var mid_layout
+  # Central layout of 'self', a PySide.QtGui.QStackedLayout object.
 
   ## Constructor.
   # @param self The object pointer.
@@ -36,9 +40,9 @@ class DialogBox(QDialog):
     self.up_layout.addRow("ID", self.id_edit)
     self.up_layout.addRow("Name", self.name_edit)
     self.layout.addLayout(self.up_layout, 0, 0)
-    # lower layout: displays widgets depending on the nature of the dialog box
-    self.low_layout = QFormLayout()
-    self.layout.addLayout(self.low_layout, 1, 0)
+    # middle layout: displays widgets depending on the nature of the dialog box
+    self.mid_layout = QStackedLayout()
+    self.layout.addLayout(self.mid_layout, 1, 0)
     # buttons: standard 'ok' and 'cancel' buttons at the bottom of the dialog
     self.buttons = QDialogButtonBox(
       QDialogButtonBox.Ok | QDialogButtonBox.Cancel, parent=self)
@@ -49,26 +53,131 @@ class DialogBox(QDialog):
 
 ## DialogBox-derived class for editing biopredyn.ui.tree.ChangeElement objects.
 class ChangeBox(DialogBox):
+  ## @var ax_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.change in
+  # case it is a biopredyn.change.addXML object.
+  ## @var ca_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.change in
+  # case it is a biopredyn.change.changeAttribute object.
+  ## @var cc_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.change in
+  # case it is a biopredyn.change.computeChange object.
   ## @var change
   # Reference to the biopredyn.change.Change element to be edited by 'self'.
+  ## @var cx_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.change in
+  # case it is a biopredyn.change.changeXML object.
+  ## @var mth_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'math' attribute of
+  # self.change ('computeChange' case).
+  ## @var rx_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.change in
+  # case it is a biopredyn.change.removeXML object.
+  ## @var tgt_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'target' attribute of
+  # self.change.
+  ## @var typ_box
+  # A PySide.QtGui.QComboBox object for editing the 'type' attribute of
+  # self.change; possible values are 'computeChange', 'changeAttribute',
+  # 'changeXML', 'addXML' and 'removeXML'.
+  ## @var val_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'value' attribute of
+  # self.change ('changeAttribute' case).
+  ## @var xml_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'xml' attribute of
+  # self.change ('addXML' and 'changeXML' cases).
 
   ## Constructor.
   # @param self The object pointer.
-  # @param change A biopredyn.change.Change object.
-  def __init__(self, change):
+  # @param change A biopredyn.change.Change object; optional (default: None).
+  def __init__(self, change=None):
     DialogBox.__init__(self)
     self.setWindowTitle("Edit change")
-    self.change = change
-    self.id_edit.setText(self.change.get_id())
-    self.name_edit.setText(self.change.get_name())
+    # 'target' editor - common to all types
+    self.tgt_edit = QLineEdit()
+    self.up_layout.addRow("Target", self.tgt_edit)
+    # 'type' combo box
+    types = ['computeChange', 'changeAttribute', 'addXML', 'changeXML',
+      'removeXML']
+    self.typ_box = QComboBox()
+    self.typ_box.addItems(types)
+    self.up_layout.addRow("Type", self.typ_box)
+    # 'computeChange' widget
+    self.cc_wid = QWidget()
+    cc_lay = QFormLayout(self.cc_wid)
+    self.mth_edit = QLineEdit()
+    cc_lay.addRow("Math", self.mth_edit)
+    self.mid_layout.addWidget(self.cc_wid)
+    # 'changeAttribute' widget
+    self.ca_wid = QWidget()
+    ca_lay = QFormLayout(self.ca_wid)
+    self.val_edit = QLineEdit()
+    ca_lay.addRow("Value", self.val_edit)
+    self.mid_layout.addWidget(self.ca_wid)
+    # 'addXML' widget
+    self.ax_wid = QWidget()
+    ax_lay = QFormLayout(self.ax_wid)
+    self.xml_edit = QLineEdit()
+    ax_lay.addRow("XML", self.xml_edit)
+    self.mid_layout.addWidget(self.ax_wid)
+    # 'changeXML' widget
+    self.cx_wid = QWidget()
+    cx_lay = QFormLayout(self.cx_wid)
+    self.xml_edit = QLineEdit()
+    cx_lay.addRow("XML", self.xml_edit)
+    self.mid_layout.addWidget(self.cx_wid)
+    # 'removeXML' widget
+    self.rx_wid = QWidget()
+    rx_lay = QFormLayout(self.rx_wid)
+    self.mid_layout.addWidget(self.rx_wid)
+    if change is not None:
+      self.change = change
+      self.id_edit.setText(self.change.get_id())
+      self.name_edit.setText(self.change.get_name())
+      self.tgt_edit.setText(str(self.change.get_target()))
+      self.typ_box.setCurrentIndex(types.index(self.change.get_type()))
+      self.typ_box.setDisabled(True)
+      if self.change.get_type() == 'computeChange':
+        self.mth_edit.setText(str(self.change.get_math()))
+      elif self.change.get_type() == 'changeAttribute':
+        self.val_edit.setText(self.change.get_value())
+      elif (self.change.get_type() == 'addXML' or
+        self.change.get_type() == 'changeXML'):
+        self.xml_edit.setText(self.change.get_xml())
+      self.update_layout()
+    # catch and process currentIndexChanged signal
+    self.typ_box.currentIndexChanged.connect(self.update_layout)
 
   ## Overriden accept method.
   # @param self The object pointer.
   def accept(self):
     self.change.set_id(str(self.id_edit.text()))
+    self.change.set_target(str(self.tgt_edit.text()))
     if self.name_edit.text() is not None:
       self.change.set_name(str(self.name_edit.text()))
+    if (self.change.get_type() == 'computeChange'):
+      self.change.set_math(str(self.mth_edit.text()))
+    elif (self.change.get_type() == 'changeAttribute'):
+      self.change.set_value(str(self.val_edit.text()))
+    elif (self.change.get_type() == 'addXML'):
+      self.change.set_xml(str(self.xml_edit.text()))
+    elif (self.change.get_type() == 'changeXML'):
+      self.change.set_xml(str(self.xml_edit.text()))
     self.done(QDialog.Accepted)
+
+  ## Adapt self.mid_layout depending on the current text in self.typ_box.
+  # @param self The object pointer.
+  def update_layout(self):
+    if (self.typ_box.currentText() == 'computeChange'):
+      self.mid_layout.setCurrentWidget(self.cc_wid)
+    elif (self.typ_box.currentText() == 'changeAttribute'):
+      self.mid_layout.setCurrentWidget(self.ca_wid)
+    elif (self.typ_box.currentText() == 'addXML'):
+      self.mid_layout.setCurrentWidget(self.ax_wid)
+    elif (self.typ_box.currentText() == 'changeXML'):
+      self.mid_layout.setCurrentWidget(self.cx_wid)
+    elif (self.typ_box.currentText() == 'removeXML'):
+      self.mid_layout.setCurrentWidget(self.rx_wid)
 
 ## DialogBox-derived class for editing biopredyn.ui.tree.DataElement objects.
 class DataBox(DialogBox):
@@ -138,14 +247,17 @@ class ModelBox(DialogBox):
     self.model = model
     self.id_edit.setText(self.model.get_id())
     self.name_edit.setText(self.model.get_name())
+    wid = QWidget()
+    lay = QFormLayout(wid)
     # 'Language' field
     self.lng_edit = QLineEdit(self)
-    self.low_layout.addRow("Language", self.lng_edit)
+    lay.addRow("Language", self.lng_edit)
     self.lng_edit.setText(str(self.model.get_language()))
     # 'Source' field
     self.source_edit = QLineEdit(self)
-    self.low_layout.addRow("Source", self.source_edit)
+    lay.addRow("Source", self.source_edit)
     self.source_edit.setText(str(self.model.get_source()))
+    self.mid_layout.addWidget(wid)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -200,11 +312,14 @@ class ParameterBox(DialogBox):
     self.par = par
     self.id_edit.setText(self.par.get_id())
     self.name_edit.setText(self.par.get_name())
+    wid = QWidget()
+    lay = QFormLayout(wid)
     # add 'Value' field
     self.value_edit = QLineEdit(self)
     self.value_edit.setValidator(QDoubleValidator())
-    self.low_layout.addRow("Value", self.value_edit)
+    lay.addRow("Value", self.value_edit)
     self.value_edit.setText(str(self.par.get_value()))
+    self.mid_layout.addWidget(wid)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -251,12 +366,15 @@ class SimulationBox(DialogBox):
   # A PySide.QtGui.QComboBox object for editing the 'type' attribute of
   # self.sim; possible values are 'uniformTimeCourse', 'steadyState' and
   # 'oneStep'.
-  ## @var utc_layout
-  # A PySide.QtGui.QFormLayout object providing widgets for editing self.sim in
+  ## @var utc_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.sim in
   # case it is a biopredyn.UniformTimeCourse object.
-  ## @var step_layout
-  # A PySide.QtGui.QFormLayout object providing widgets for editing self.sim in
+  ## @var one_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.sim in
   # case it is a biopredyn.OneStep object.
+  ## @var std_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.sim in
+  # case it is a biopredyn.SteadyState object.
   ## @var start_edit
   # A PySide.QtGui.QLineEdit object for editing the 'initial_time' attribute of
   # self.sim (UniformTimeCourse case).
@@ -282,25 +400,33 @@ class SimulationBox(DialogBox):
     self.typ_box = QComboBox()
     self.typ_box.addItems(types)
     self.up_layout.addRow("Type", self.typ_box)
-    # layout for uniformTimeCourse case
-    self.utc_layout = QFormLayout()
+    # widget for uniformTimeCourse case
+    self.utc_wid = QWidget()
+    utc_lay = QFormLayout(self.utc_wid)
     self.start_edit = QLineEdit()
     self.start_edit.setValidator(QDoubleValidator())
-    self.utc_layout.addRow("Start time", self.start_edit)
+    utc_lay.addRow("Start time", self.start_edit)
     self.end_edit = QLineEdit()
     self.end_edit.setValidator(QDoubleValidator())
-    self.utc_layout.addRow("End time", self.end_edit)
+    utc_lay.addRow("End time", self.end_edit)
     self.out_st_edit = QLineEdit()
     self.out_st_edit.setValidator(QDoubleValidator())
-    self.utc_layout.addRow("Output start time", self.out_st_edit)
+    utc_lay.addRow("Output start time", self.out_st_edit)
     self.pts_edit = QLineEdit()
     self.pts_edit.setValidator(QIntValidator())
-    self.utc_layout.addRow("Number of points", self.pts_edit)
-    # layout for oneStep case
-    self.step_layout = QFormLayout()
+    utc_lay.addRow("Number of points", self.pts_edit)
+    self.mid_layout.addWidget(self.utc_wid)
+    # widget for oneStep case
+    self.one_wid = QWidget()
+    one_lay = QFormLayout(self.one_wid)
     self.step_edit = QLineEdit()
     self.step_edit.setValidator(QDoubleValidator())
-    self.step_layout.addRow("Step", self.step_edit)
+    one_lay.addRow("Step", self.step_edit)
+    self.mid_layout.addWidget(self.one_wid)
+    # widget for steadyState case
+    self.std_wid = QWidget()
+    std_lay = QFormLayout(self.std_wid)
+    self.mid_layout.addWidget(self.std_wid)
     if sim is not None:
       self.sim = sim
       self.id_edit.setText(self.sim.get_id())
@@ -334,13 +460,15 @@ class SimulationBox(DialogBox):
         self.sim.set_step(float(self.step_edit.text()))
     self.done(QDialog.Accepted)
 
-  ## Adapt self.layout depending on the current text in self.typ_box.
+  ## Adapt self.mid_layout depending on the current text in self.typ_box.
   # @param self The object pointer.
   def update_layout(self):
     if (self.typ_box.currentText() == 'uniformTimeCourse'):
-      self.layout.addLayout(self.utc_layout, 1, 0)
+      self.mid_layout.setCurrentWidget(self.utc_wid)
     elif (self.typ_box.currentText() == 'oneStep'):
-      self.layout.addLayout(self.step_layout, 1, 0)
+      self.mid_layout.setCurrentWidget(self.one_wid)
+    elif (self.typ_box.currentText() == 'steadyState'):
+      self.mid_layout.setCurrentWidget(self.std_wid)
 
 ## DialogBox-derived class for editing biopredyn.ui.tree.SubTaskElement objects.
 class SubTaskBox(DialogBox):
@@ -360,13 +488,16 @@ class SubTaskBox(DialogBox):
     DialogBox.__init__(self)
     self.setWindowTitle("Edit subtask")
     self.sub = sub
+    wid = QWidget()
+    lay = QFormLayout(wid)
     self.tsk_id_edit = QLineEdit(self)
     self.tsk_id_edit.setText(str(self.sub.get_task_id()))
-    self.low_layout.addRow("Task ID", self.tsk_id_edit)
+    lay.addRow("Task ID", self.tsk_id_edit)
     self.order_edit = QLineEdit(self)
     self.order_edit.setText(str(self.sub.get_order()))
     self.order_edit.setValidator(QIntValidator())
-    self.low_layout.addRow("Order", self.order_edit)
+    lay.addRow("Order", self.order_edit)
+    self.mid_layout.addWidget(wid)
     # remove widgets from upper layout since self.sub does not have a 'name' nor
     # an 'id' attribute
     for i in reversed(range(self.up_layout.count())): 
@@ -384,30 +515,115 @@ class SubTaskBox(DialogBox):
 
 ## DialogBox-derived class for editing biopredyn.ui.tree.TaskElement objects.
 class TaskBox(DialogBox):
+  ## @var mod_edit
+  # An instance of PySide.QtGui.QLineEdit for editing 'model_id' attribute of
+  # self.tsk.
+  ## @var rng_edit
+  # An instance of PySide.QtGui.QLineEdit for editing 'master_range' attribute
+  # of self.tsk.
+  ## @var rpt_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.tsk in
+  # case it is a biopredyn.task.RepeatedTask object.
+  ## @var rst_box
+  # An instance of PySide.QtGui.QCheckBox for editing 'reset_model' attribute
+  # of self.tsk.
+  ## @var sim_edit
+  # An instance of PySide.QtGui.QLineEdit for editing 'simulation_id' attribute
+  # of self.tsk.
   ## @var tsk
   # Reference to the biopredyn.task.Task element to be edited by 'self'.
+  ## @var tsk_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.tsk in
+  # case it is a biopredyn.task.Task object.
 
   ## Constructor.
   # @param self The object pointer.
-  # @param tsk A biopredyn.task.Task object.
-  def __init__(self, tsk):
+  # @param tsk A biopredyn.task.Task object; optional (default: None).
+  def __init__(self, tsk=None):
     DialogBox.__init__(self)
     self.setWindowTitle("Edit task")
     self.tsk = tsk
     self.id_edit.setText(self.tsk.get_id())
     self.name_edit.setText(self.tsk.get_name())
+    # 'type' combo box
+    types = ['task', 'repeatedTask']
+    self.typ_box = QComboBox()
+    self.typ_box.addItems(types)
+    self.up_layout.addRow("Type", self.typ_box)
+    # layout for 'task' case
+    self.tsk_wid = QWidget()
+    tsk_lay = QFormLayout(self.tsk_wid)
+    # add 'Model reference' field
+    self.mod_edit = QLineEdit(self)
+    tsk_lay.addRow("Model reference", self.mod_edit)
+    # add 'Simulation reference' field
+    self.sim_edit = QLineEdit(self)
+    tsk_lay.addRow("Simulation reference", self.sim_edit)
+    self.mid_layout.addWidget(self.tsk_wid)
+    # layout for 'repeatedTask' case
+    self.rpt_wid = QWidget()
+    rpt_lay = QFormLayout(self.rpt_wid)
+    # add 'Reset model' check box
+    self.rst_box = QCheckBox(self)
+    rpt_lay.addRow("Reset model", self.rst_box)
+    # add 'Range reference' field
+    self.rng_edit = QLineEdit(self)
+    rpt_lay.addRow("Range reference", self.rng_edit)
+    self.mid_layout.addWidget(self.rpt_wid)
+    if tsk is not None:
+      self.tsk = tsk
+      self.id_edit.setText(self.tsk.get_id())
+      self.name_edit.setText(self.tsk.get_name())
+      self.typ_box.setCurrentIndex(types.index(self.tsk.get_type()))
+      #self.typ_box.setDisabled(True)
+      if (self.typ_box.currentText() == 'task'):
+        self.mod_edit.setText(str(self.tsk.get_model_id()))
+        self.sim_edit.setText(str(self.tsk.get_simulation_id()))
+      elif (self.typ_box.currentText() == 'repeatedTask'):
+        self.rst_box.setChecked(self.tsk.get_reset_model())
+        self.rng_edit.setText(str(self.tsk.get_master_range()))
+      self.update_layout()
+    # catch and process currentIndexChanged signal
+    self.typ_box.currentIndexChanged.connect(self.update_layout)
 
   ## Overriden accept method.
   # @param self The object pointer.
   def accept(self):
-    self.tsk.set_id(str(self.id_edit.text()))
-    if self.name_edit.text() is not None:
-      self.tsk.set_name(str(self.name_edit.text()))
+    if self.tsk is not None:
+      self.tsk.set_id(str(self.id_edit.text()))
+      if self.name_edit.text() is not None:
+        self.tsk.set_name(str(self.name_edit.text()))
+      if (self.tsk.get_type() == 'task'):
+        self.tsk.set_model_id(str(self.mod_edit.text()))
+        self.tsk.set_simulation_id(str(self.sim_edit.text()))
+      elif (self.tsk.get_type() == 'repeatedTask'):
+        self.tsk.set_reset_model(self.rst_box.isChecked())
+        self.tsk.set_master_range(str(self.rng_edit.text()))
     self.done(QDialog.Accepted)
+
+  ## Adapt self.mid_layout depending on the current text in self.typ_box.
+  # @param self The object pointer.
+  def update_layout(self):
+    if (self.typ_box.currentText() == 'task'):
+      self.mid_layout.setCurrentWidget(self.tsk_wid)
+    elif (self.typ_box.currentText() == 'repeatedTask'):
+      self.mid_layout.setCurrentWidget(self.rpt_wid)
 
 ## DialogBox-derived class for editing biopredyn.ui.tree.VariableElement
 ## objects.
 class VariableBox(DialogBox):
+  ## @var mod_edit
+  # An instance of PySide.QtGui.QLineEdit for editing 'model_id' attribute of
+  # self.var.
+  ## @var sym_edit
+  # An instance of PySide.QtGui.QLineEdit for editing 'symbol' attribute of
+  # self.var.
+  ## @var tgt_edit
+  # An instance of PySide.QtGui.QLineEdit for editing 'target' attribute of
+  # self.var.
+  ## @var tsk_edit
+  # An instance of PySide.QtGui.QLineEdit for editing 'task_id' attribute of
+  # self.var.
   ## @var var
   # Reference to the biopredyn.variable.Variable element to be edited by 'self'.
 
@@ -420,6 +636,25 @@ class VariableBox(DialogBox):
     self.var = var
     self.id_edit.setText(self.var.get_id())
     self.name_edit.setText(self.var.get_name())
+    wid = QWidget()
+    lay = QFormLayout(wid)
+    # add 'Target' field
+    self.tgt_edit = QLineEdit(self)
+    lay.addRow("Target", self.tgt_edit)
+    self.tgt_edit.setText(str(self.var.get_target()))
+    # add 'Symbol' field
+    self.sym_edit = QLineEdit(self)
+    lay.addRow("Symbol", self.sym_edit)
+    self.sym_edit.setText(str(self.var.get_symbol()))
+    # add 'Task reference' field
+    self.tsk_edit = QLineEdit(self)
+    lay.addRow("Task reference", self.tsk_edit)
+    self.tsk_edit.setText(str(self.var.get_task_id()))
+    # add 'Model reference' field
+    self.mod_edit = QLineEdit(self)
+    lay.addRow("Model reference", self.mod_edit)
+    self.mod_edit.setText(str(self.var.get_model_id()))
+    self.mid_layout.addWidget(wid)
 
   ## Overriden accept method.
   # @param self The object pointer.
@@ -427,4 +662,12 @@ class VariableBox(DialogBox):
     self.var.set_id(str(self.id_edit.text()))
     if self.name_edit.text() is not None:
       self.var.set_name(str(self.name_edit.text()))
+    if self.tgt_edit.text() is not None:
+      self.var.set_target(str(self.tgt_edit.text()))
+    if self.sym_edit.text() is not None:
+      self.var.set_symbol(str(self.sym_edit.text()))
+    if self.tsk_edit.text() is not None:
+      self.var.set_task_id(str(self.tsk_edit.text()))
+    if self.mod_edit.text() is not None:
+      self.var.set_model_id(str(self.mod_edit.text()))
     self.done(QDialog.Accepted)

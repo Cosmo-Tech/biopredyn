@@ -389,6 +389,18 @@ class RepeatedTask(AbstractTask):
     for s in self.get_subtasks():
       tsk.addSubTask(s.to_sedml(level, version))
     return tsk
+  
+  ## Setter. Assign a new value to self.master_range.
+  # @param self The object pointer.
+  # @param rng New value for self.master_range.
+  def set_master_range(self, rng):
+    self.master_range = rng
+  
+  ## Setter. Assign a new value to self.reset_model.
+  # @param self The object pointer.
+  # @param reset New value for self.reset_model.
+  def set_reset_model(self, reset):
+    self.reset_model = reset
 
 ## Base-class for RepeatedTask element sub-tasks.
 class SubTask:
