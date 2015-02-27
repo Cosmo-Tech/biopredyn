@@ -148,19 +148,25 @@ class FunctionalRange(Range):
         Range.__init__(self, idf=idf, name=name, typ='functionalRange')
         self.range = rng_ref
         self.math = sympify(math)
-  
+
   ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
   # @param self The object pointer.
   # @param par A biopredyn.parameter.Parameter object.
   def add_parameter(self, par):
     self.parameters.append(par)
-  
+
   ## Appends the input biopredyn.variable.Variable object to self.variables.
   # @param self The object pointer.
   # @param var A biopredyn.variable.Variable object.
   def add_variable(self, var):
     self.variables.append(var)
-  
+
+  ## Getter for self.math.
+  # @param self The object pointer.
+  # @return self.math
+  def get_math(self):
+    return self.math
+
   ## Getter for self.range.
   # @param self The object pointer.
   # @return self.range
@@ -210,6 +216,14 @@ class FunctionalRange(Range):
   def parse_math_expression(self, mathml):
     math = sympify(libsbml.formulaToString(mathml))
     return math
+
+  ## Setter for self.math.
+  # @param self The object pointer.
+  # @param math A valid Python mathematical expression. Symbols it contains must
+  # correspond to identifiers of elements listed in self.variables,
+  # self.parameters and / or the identifier of self.range.
+  def set_math(self, math):
+    self.math = sympify(math)
 
   ## Returns the libsedml.SedFunctionalRange representation of 'self'.
   # @param self The object pointer.
@@ -391,6 +405,12 @@ class VectorRange(Range):
           self.add_value(v)
       else:
         Range.__init__(self, idf=idf, name=name, typ='vectorRange')
+
+  ## Setter for self.values.
+  # @param self The object pointer.
+  # @param values A list of numerical values.
+  def set_values(self, values):
+    self.values = values
 
   ## Returns the libsedml.SedVectorRange representation of 'self'.
   # @param self The object pointer.
