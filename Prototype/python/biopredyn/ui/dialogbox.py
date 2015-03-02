@@ -67,12 +67,21 @@ class ChangeBox(DialogBox):
   ## @var cx_wid
   # A PySide.QtGui.QWidget object providing widgets for editing self.change in
   # case it is a biopredyn.change.changeXML object.
+  ## @var mod_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'model_id' attribute of
+  # self.change ('setValue' case).
   ## @var mth_edit
   # A PySide.QtGui.QLineEdit object for editing the 'math' attribute of
-  # self.change ('computeChange' case).
+  # self.change ('computeChange' and 'setValue' case).
+  ## @var rng_edit
+  # A PySide.QtGui.QLineEdit object for editing the 'range' attribute of
+  # self.change ('setValue' case).
   ## @var rx_wid
   # A PySide.QtGui.QWidget object providing widgets for editing self.change in
   # case it is a biopredyn.change.removeXML object.
+  ## @var sv_wid
+  # A PySide.QtGui.QWidget object providing widgets for editing self.change in
+  # case it is a biopredyn.change.setValue object.
   ## @var tgt_edit
   # A PySide.QtGui.QLineEdit object for editing the 'target' attribute of
   # self.change.
@@ -98,7 +107,7 @@ class ChangeBox(DialogBox):
     self.up_layout.addRow("Target", self.tgt_edit)
     # 'type' combo box
     types = ['computeChange', 'changeAttribute', 'addXML', 'changeXML',
-      'removeXML']
+      'removeXML', 'setValue']
     self.typ_box = QComboBox()
     self.typ_box.addItems(types)
     self.up_layout.addRow("Type", self.typ_box)
@@ -130,10 +139,20 @@ class ChangeBox(DialogBox):
     self.rx_wid = QWidget()
     rx_lay = QFormLayout(self.rx_wid)
     self.mid_layout.addWidget(self.rx_wid)
+    # 'setValue' widget
+    self.sv_wid = QWidget()
+    sv_lay = QFormLayout(self.sv_wid)
+    self.mod_edit = QLineEdit()
+    sv_lay.addRow("Model reference", self.mod_edit)
+    self.rng_edit = QLineEdit()
+    sv_lay.addRow("Range reference", self.rng_edit)
+    sv_lay.addRow("Math", self.mth_edit)
+    self.mid_layout.addWidget(self.sv_wid)
     if change is not None:
       self.change = change
       self.id_edit.setText(self.change.get_id())
-      self.name_edit.setText(self.change.get_name())
+      if self.change.get_name() is not None:
+        self.name_edit.setText(self.change.get_name())
       self.tgt_edit.setText(str(self.change.get_target()))
       self.typ_box.setCurrentIndex(types.index(self.change.get_type()))
       self.typ_box.setDisabled(True)
@@ -144,6 +163,11 @@ class ChangeBox(DialogBox):
       elif (self.change.get_type() == 'addXML' or
         self.change.get_type() == 'changeXML'):
         self.xml_edit.setText(self.change.get_xml())
+      elif self.change.get_type() == 'setValue':
+        self.mod_edit.setText(str(self.change.get_model_id()))
+        if self.change.get_range() is not None:
+          self.rng_edit.setText(str(self.change.get_range()))
+        self.mth_edit.setText(str(self.change.get_math()))
       self.update_layout()
     # catch and process currentIndexChanged signal
     self.typ_box.currentIndexChanged.connect(self.update_layout)
@@ -163,6 +187,11 @@ class ChangeBox(DialogBox):
       self.change.set_xml(str(self.xml_edit.text()))
     elif (self.change.get_type() == 'changeXML'):
       self.change.set_xml(str(self.xml_edit.text()))
+    elif (self.change.get_type() == 'setValue'):
+      self.change.set_math(str(self.mth_edit.text()))
+      self.change.set_model_id(str(self.mod_edit.text()))
+      if self.rng_edit.text() is not None:
+        self.change.set_range(str(self.rng_edit.text()))
     self.done(QDialog.Accepted)
 
   ## Adapt self.mid_layout depending on the current text in self.typ_box.
@@ -178,6 +207,8 @@ class ChangeBox(DialogBox):
       self.mid_layout.setCurrentWidget(self.cx_wid)
     elif (self.typ_box.currentText() == 'removeXML'):
       self.mid_layout.setCurrentWidget(self.rx_wid)
+    elif (self.typ_box.currentText() == 'setValue'):
+      self.mid_layout.setCurrentWidget(self.sv_wid)
 
 ## DialogBox-derived class for editing biopredyn.ui.tree.DataElement objects.
 class DataBox(DialogBox):

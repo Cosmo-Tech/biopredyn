@@ -59,7 +59,7 @@ class ChangeElement(TreeElement):
     self.change = change
     self.setText(0, self.change.get_type())
     self.setText(1, self.change.get_id())
-    if change.get_type() == 'computeChange':
+    if change.get_type() == 'computeChange' or change.get_type() == 'setValue':
       # list of variables
       self.var_list = TreeElement(self)
       self.var_list.setText(0, 'listOfVariables')

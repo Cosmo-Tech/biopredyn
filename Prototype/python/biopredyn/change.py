@@ -21,7 +21,7 @@ class Change:
   # XPath expression pointing the element to be impacted by the change.
   ## @var chn_type
   # Type of change; can be either 'computeChange', 'changeAttribute',
-  # 'changeXML', 'addXML', 'removeXML'.
+  # 'changeXML', 'addXML', 'removeXML', 'setValue'.
   ## @var model
   # Reference to the model to be modified by the change.
   
@@ -32,11 +32,8 @@ class Change:
   # @param idf A unique identifier; optional (default=None).
   # @param name A name for 'self'; optional (default: None).
   # @param target A valid XPath expression; optional (default=None).
-  # @param typ The type of change encoded in 'self'; can be either
-  # 'computeChange', 'changeAttribute', 'changeXML', 'addXML' or 'removeXML'.
-  # Optional (default: None).
-  def __init__(self, change=None, idf=None, name=None, target=None, typ=None):
-    if (change is None) and (idf is None or target is None or typ is None):
+  def __init__(self, change=None, idf=None, name=None, target=None):
+    if (change is None) and (idf is None or target is None):
       raise RuntimeError("Either 'change' or 'target', 'idf' and 'typ' " +
         "must be passed as keyword arguments.")
     else:
@@ -49,7 +46,6 @@ class Change:
         self.id = idf
         self.name = name
         self.target = target
-        self.chn_type = typ
   
   ## String representation of this. Displays it as a hierarchy.
   # @param self The object pointer.
@@ -151,8 +147,8 @@ class ComputeChange(Change):
           self.add_parameter(parameter.Parameter(parameter=p))
         self.math = self.parse_math_expression(change.getMath())
       elif idf is not None and target is not None and math is not None:
-        Change.__init__(self, idf=idf, name=name, target=target,
-          typ='computeChange')
+        Change.__init__(self, idf=idf, name=name, target=target)
+        self.chn_type = 'computeChange'
         self.math = sympify(math)
   
   ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
@@ -272,8 +268,8 @@ class ChangeAttribute(Change):
         Change.__init__(self, change=change)
         self.value = change.getNewValue()
       elif idf is not None and target is not None and value is not None:
-        Change.__init__(self, idf=idf, name=name, target=target,
-          typ='changeAttribute')
+        Change.__init__(self, idf=idf, name=name, target=target)
+        self.chn_type = 'changeAttribute'
         self.value = value
   
   ## Set the value of self.target to self.value in self.model.
@@ -340,7 +336,8 @@ class AddXML(Change):
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
       elif idf is not None and target is not None and xml is not None:
-        Change.__init__(self, idf=idf, name=name, target=target, typ='addXML')
+        Change.__init__(self, idf=idf, name=name, target=target)
+        self.chn_type = 'addXML'
         self.xml = xml
   
   ## Add self.xml as a child of self.target in self.model.
@@ -408,8 +405,8 @@ class ChangeXML(Change):
         Change.__init__(self, change=change)
         self.xml = change.getNewXML().toXMLString()
       elif idf is not None and target is not None and xml is not None:
-        Change.__init__(self, idf=idf, name=name, target=target,
-          typ='changeXML')
+        Change.__init__(self, idf=idf, name=name, target=target)
+        self.chn_type = 'changeXML'
         self.xml = xml
   
   ## Compute the new value of self.target and change it in the model.
@@ -474,8 +471,8 @@ class RemoveXML(Change):
       if change is not None:
         Change.__init__(self, change=change)
       elif idf is not None and target is not None:
-        Change.__init__(self, idf=idf, name=name, target=target,
-          typ='removeXML')
+        Change.__init__(self, idf=idf, name=name, target=target)
+        self.chn_type = 'removeXML'
   
   ## Compute the new value of self.target and change it in the model.
   # @param self The object pointer.
@@ -505,27 +502,14 @@ class RemoveXML(Change):
     ch.setTarget(self.get_target())
     return ch
 
-## Class for RepeatedTask change elements; does not inherit from Change, as it
-## works differently from the other changes.
-class SetValue:
-  ## @var id
-  # ID of the Change element.
-  ## @var math
-  # A Sympy expression.
+## ComputeChange-derived class for RepeatedTask change elements.
+class SetValue(ComputeChange):
   ## @var model_id
   # ID of the model to be modified by this.
-  ## @var name
-  # Name of the Change element.
-  ## @var parameters
-  # A list of Parameter objects.
   ## @var range
   # ID of a Range object from the parent RepeatedTask element.
-  ## @var target
-  # XPath expression pointing the element to be impacted by the change.
-  ## @var sv_type
-  # Type of 'self'; set to 'setValue'.
-  ## @var variables
-  # A list of Variable objects.
+  ## @var task
+  # Reference to a biopredyn.task.RepeatedTask object.
   ## @var workflow
   # A WorkFlow object.
   
@@ -552,48 +536,27 @@ class SetValue:
         "'mod_ref' and 'math' must be passed as keyword argument(s).")
     else:
       self.task = task
-      self.sv_type = 'setValue'
-      self.workflow = workflow
-      self.parameters = []
-      self.variables = []
       self.range = None
       if setvalue is not None:
-        self.id = setvalue.getId()
-        self.name = setvalue.getName()
-        self.target = setvalue.getTarget()
+        ComputeChange.__init__(self, workflow,
+          workflow.get_model_by_id(setvalue.getModelReference()),
+          change=setvalue)
         if setvalue.isSetRange():
           self.set_range(setvalue.getRange())
         self.model_id = setvalue.getModelReference()
-        for v in setvalue.getListOfVariables():
-          self.add_variable(variable.Variable(workflow, variable=v))
-        for p in setvalue.getListOfParameters():
-          self.add_parameter(parameter.Parameter(parameter=p))
-        self.math = self.parse_math_expression(setvalue.getMath())
       else:
-        self.id = idf
-        self.name = name
-        self.target = target
+        ComputeChange.__init__(self, workflow,
+          workflow.get_model_by_id(mod_ref), idf=idf, name=name, target=target,
+          math=math)
         self.model_id = mod_ref
         self.range = rng_ref
-        self.math = sympify(math)
-
-  ## Appends the input biopredyn.parameter.Parameter object to self.parameters.
-  # @param self The object pointer.
-  # @param par A biopredyn.parameter.Parameter object.
-  def add_parameter(self, par):
-    self.parameters.append(par)
-
-  ## Appends the input biopredyn.variable.Variable object to self.variables.
-  # @param self The object pointer.
-  # @param var A biopredyn.variable.Variable object.
-  def add_variable(self, var):
-    self.variables.append(var)
+        self.chn_type = 'setValue'
   
-  ## Compute the new value of self.target and change it in self.model.
+  ## Overriden method; computes the new value of self.target and change it in
+  ## self.model.
   # @param self The object pointer.
   # @param iteration Current iteration of self.task.
   def apply(self, iteration):
-    model = self.workflow.get_model_by_id(self.model_id)
     result = self.math
     # SymPy substitution - range
     if self.range is not None:
@@ -613,18 +576,12 @@ class SetValue:
     if self.target.split('/')[-1].startswith('@'):
       # Case where self.target points to an attribute
       splt = self.target.rsplit('/', 1)
-      node = model.evaluate_xpath(splt[0])
+      node = self.model.evaluate_xpath(splt[0])
       node[0].set(splt[1].lstrip('@'), str(result))
     else:
       # Case where self.target points to an element
-      node = model.evaluate_xpath(self.target)
+      node = self.model.evaluate_xpath(self.target)
       node.text = str(result)
-  
-  ## Getter for self.id.
-  # @param self The object pointer.
-  # @return self.id
-  def get_id(self):
-    return self.id
   
   ## Getter for self.model_id.
   # @param self The object pointer.
@@ -632,74 +589,17 @@ class SetValue:
   def get_model_id(self):
     return self.model_id
   
-  ## Getter for self.name.
-  # @param self The object pointer.
-  # @return self.name
-  def get_name(self):
-    return self.name
-  
-  ## Getter for self.parameters.
-  # @param self The object pointer.
-  # @return self.parameters
-  def get_parameters(self):
-    return self.parameters
-  
   ## Getter for self.range.
   # @param self The object pointer.
   # @return self.range
   def get_range(self):
     return self.range
   
-  ## Getter for self.target.
-  # @param self The object pointer.
-  # @return self.target
-  def get_target(self):
-    return self.target
-  
-  ## Getter for self.sv_type.
-  # @param self The object pointer.
-  # @return self.sv_type
-  def get_type(self):
-    return self.sv_type
-  
-  ## Getter for self.variables.
-  # @param self The object pointer.
-  # @return self.variables
-  def get_variables(self):
-    return self.parameters
-  
-  ## Transform the input MathML mathematical expression into a SymPy
-  # expression.
-  # @param self The object pointer.
-  # @param mathml A MathML expression.
-  # @return math A SymPy expression.
-  def parse_math_expression(self, mathml):
-    math = sympify(libsbml.formulaToString(mathml))
-    return math
-  
-  ## Setter for self.id.
-  # @param self The object pointer.
-  # @param id New value for self.id.
-  def set_id(self, id):
-    self.id = id
-  
-  ## Setter for self.name.
-  # @param self The object pointer.
-  # @param name New value for self.name.
-  def set_name(self, name):
-    self.name = name
-  
   ## Setter for self.model_id.
   # @param self The object pointer.
   # @param model_id New value for self.model_id.
   def set_model_id(self, model_id):
     self.model_id = model_id
-  
-  ## Setter for self.target.
-  # @param self The object pointer.
-  # @param target New value for self.target.
-  def set_target(self, target):
-    self.target = target
   
   ## Setter for self.range.
   # @param self The object pointer.
@@ -708,7 +608,7 @@ class SetValue:
   def set_range(self, rng):
     self.range = rng
 
-  ## Returns the libsedml.SedSetValue representation of this.
+  ## Overriden method; returns the libsedml.SedSetValue representation of this.
   # @param self The object pointer.
   # @param level Level of SED-ML language to be used.
   # @param version Version of SED-ML language to be used.
