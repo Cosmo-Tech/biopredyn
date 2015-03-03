@@ -20,6 +20,9 @@ The engine can also be used as a Python library; the available API is documented
 (using [doxygen](http://www.stack.nl/~dimitri/doxygen/)) on
 [this page](https://thecosmocompany.com/BioPreDyn-doxygen/).
 
+## Dashboards
+Results of the nightly tests can be browsed on [this page](https://thecosmocompany.com/CDash/index.php?project=BioPreDyn).
+
 ## License
 This project is distributed under the terms of the
 [BSD-3 clause license](http://opensource.org/licenses/BSD-3-Clause):
