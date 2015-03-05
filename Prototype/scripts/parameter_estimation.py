@@ -27,9 +27,6 @@ model_result = sim.run_as_parameter_estimation(
   wf.get_models()[0], calibration_file, validation_file,
   observables, unknowns, min_unknown_values, max_unknown_values, algo, rm)
 
-# funny science
-plt.xkcd()
-
 # plotting model and data results
 plt.figure("Fitted model: " + wf.get_models()[0].get_id())
 for s in model_result.get_fitted_result().get_result().keys():

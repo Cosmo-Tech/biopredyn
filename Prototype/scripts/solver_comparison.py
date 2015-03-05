@@ -42,8 +42,6 @@ r_non_stiff = libsbmlsim.simulateSBMLFromString(
 non_stiff_result = result.TimeSeries()
 names = non_stiff_result.import_from_libsbmlsim(r_non_stiff, 0.0)
 
-plt.xkcd()
-
 # Plot results - for each species, time series produced
 # by both solvers are plotted
 time = np.array(stiff_result.get_time_steps()) # Same for all plots
