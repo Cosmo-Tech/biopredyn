@@ -43,6 +43,7 @@ displays various indicators and statistics for this estimation. It uses
 
 ### `model_discrimination.py`
 
-Runs a parameter estimation 3 times on the same model using a stochastic
-optimization algrithm, then compare the models by computing their respective
-AIC and BIC. It uses [COPASI](http://www.copasi.org) as a simulation engine.
+Runs a parameter estimation on two differents version of the same enzyme
+kinetics model (one with four parameters instead of three), then compare them
+by computing their respective AIC and BIC. It uses
+[COPASI](http://www.copasi.org) as a simulation engine.
