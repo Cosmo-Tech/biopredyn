@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="DesignNotesIntroduction">
+  <title>Introduction</title>
+  <para>The <ulink url="http://www.biopredyn.eu/">BioPreDyn</ulink> project
+  aims at standardizing the data regression process in systems biology.
+  Nowadays, there exists a great variety of very specialized tools in this
+  field: each one of them is capable of handling one or several steps in the
+  systems biology model building cycle.</para>
+  <para>Deliverables 3.4, 7.2 and 8.3 of the <literal>BioPreDyn</literal>
+  project consist in a software tool linking some of those tools together in a
+  cross-platform, user-friendly framework. This document describes and explains
+  the architectural choices made during the design of this framework, based on
+  the integrated software suite and graphical user interface requirements.
+  </para>
+</section>

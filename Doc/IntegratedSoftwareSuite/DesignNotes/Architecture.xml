@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="Architecture">
+  <title>Architecture</title>
+  <para>In this chapter, we detail the chosen architecture for the BioPreDyn
+  software framework. We first focus on the engine (or back-end), then the
+  graphical user interface is detailed.</para>
+  <section id="ArchitectureEngine">
+    <title>Engine</title>
+    <para>
+    The BioPreDyn software framework aims at describing and manipulating
+    simulation work flows using the <ulink url="http://sed-ml.org/">Simulation
+    Experiment Description Markup Language</ulink> (SED-ML); this is reflected
+    in the organization of its classes:
+    </para>
+    <mediaobject id="EngineUML">
+      <imageobject role="html">
+        <imagedata align="center" contentdepth="100%" fileref="Sketches/prototype_uml.png" format="PNG" scalefit="1" width="100%"/>
+      </imageobject>
+      <caption>Architecture [1]: UML class diagram of the BioPreDyn engine
+      </caption>
+    </mediaobject>
+    <para>
+    The BioPreDyn engine is composed of five components, each one of them being
+    dedicated to the execution and / or processing of specific elements of the
+    described work flow:
+      <itemizedlist>
+        <listitem>
+          <para><link linkend="ModelComponent">Model component</link></para>
+        </listitem>
+        <listitem>
+          <para><link linkend="SimulationComponent">Simulation component</link></para>
+        </listitem>
+        <listitem>
+          <para><link linkend="TaskComponent">Task component</link></para>
+        </listitem>
+        <listitem>
+          <para><link linkend="DataGenerationComponent">Data generation component</link></para>
+        </listitem>
+        <listitem>
+          <para><link linkend="OutputComponent">Output component</link></para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>Synchronization between each component is achieved by
+    the <literal>Workflow</literal> class:
+    </para>
+    <mediaobject id="WorkflowUML">
+      <imageobject role="html">
+        <imagedata align="center" contentdepth="100%" fileref="Sketches/top_workflow.png" format="PNG" scalefit="1" width="100%"/>
+      </imageobject>
+      <caption>Architecture [2]: UML class diagram of the Workflow class
+      </caption>
+    </mediaobject>
+    <para>
+    A <literal>Workflow</literal> instance is required for each new work flow
+    to describe. In addition to aggregating the components required for
+    describing a complete work flow, each <literal>WorkFlow</literal> object
+    contains a reference to a <literal>ResourceManager</literal> object, which
+    handles the acquisition of external resources for the work flow (such as
+    model source files).
+    </para>
+    <para>Now each component of the BioPreDyn engine will be detailed.</para>
+    <section id="ModelComponent">
+      <title>Model component</title>
+      <para>This component handles the representation of the model (expressed
+      in <ulink url="http://sbml.org/Main_Page">SBML</ulink> in this case) in a
+      simulation work flow.</para>
+      <mediaobject id="ModelComponentUML">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/model_component.png" format="PNG" scalefit="1" width="50%"/>
+        </imageobject>
+        <caption>Architecture [3]: UML class diagram of the Model component
+        </caption>
+      </mediaobject>
+      <para>The <literal>Model</literal> component consists in the following
+      classes:
+        <itemizedlist>
+          <listitem>
+            <formalpara>
+              <title><literal>Model</literal></title>
+              <para>Provide tools and accessors for manipulating models in the
+              SED-ML sense. Additionally, this class handles the translation
+              between the in-memory representation (as an
+              <literal>XML</literal> tree) and the corresponding SBML file.
+              </para>
+            </formalpara>
+            <formalpara>
+              <title><literal>Change</literal> (and its inherited classes
+                <literal>AddXML</literal>, <literal>ChangeXML</literal>,
+                <literal>RemoveXML</literal>,
+                <literal>ChangeAttribute</literal> and
+                <literal>ComputeChange</literal>)
+              </title>
+              <para>In <literal>SED-ML</literal>, changes are objects that
+              describe modifications to be applied to the model before it
+              actually runs. Classes inheriting from the
+              <emphasis><literal>Change</literal></emphasis> class provide
+              tools for editing and executing such changes; changes are not
+              reflected on the physical <literal>SBML</literal> file
+              associated with the modified model.
+              </para>
+            </formalpara>
+            <formalpara>
+              <title>SetValue</title>
+              <para>This class derives from the
+              <literal>ComputeChange</literal> and displays the same behavior,
+              except it is used only in <literal>RepeatedTask</literal> object.
+              </para>
+            </formalpara>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </section>
+    <section id="SimulationComponent">
+      <title>Simulation component</title>
+      <para>The <literal>Simulation</literal> component provides methods that
+      call external simulation engines for running simulations on SBML models.
+      </para>
+      <mediaobject id="SimulationComponentUML">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/simulation_component.png" format="PNG" scalefit="1" width="50%"/>
+        </imageobject>
+        <caption>Architecture [4]: UML class diagram of the Simulation
+        component
+        </caption>
+      </mediaobject>
+      <para>The <literal>Simulation</literal> component consists in the
+      following classes:
+        <itemizedlist>
+          <listitem>
+            <formalpara>
+              <title><literal>Simulation</literal> (and its inherited classes
+                <literal>UniformTimeCourse</literal>,
+                <literal>OneStep</literal> and <literal>SteadyState</literal>)
+              </title>
+              <para/>
+            </formalpara>
+            <formalpara>
+              <title><literal>Algorithm</literal></title>
+              <para/>
+            </formalpara>
+            <formalpara>
+              <title>Statistics</title>
+              <para/>
+            </formalpara>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </section>
+    <section id="TaskComponent">
+      <title>Task component</title>
+      <para/>
+      <mediaobject id="TaskComponentUML">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/task_component.png" format="PNG" scalefit="1" width="50%"/>
+        </imageobject>
+        <caption>Architecture [5]: UML class diagram of the Task component
+        </caption>
+      </mediaobject>
+    </section>
+    <section id="DataGenerationComponent">
+      <title>Data generation component</title>
+      <para/>
+      <mediaobject id="DataGenerationComponentUML">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/data_generation_component.png" format="PNG" scalefit="1" width="50%"/>
+        </imageobject>
+        <caption>Architecture [6]: UML class diagram of the Data generation
+        component
+        </caption>
+      </mediaobject>
+    </section>
+    <section id="OutputComponent">
+      <title>Output component</title>
+      <para/>
+      <mediaobject id="OutputComponentUML">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/output_component.png" format="PNG" scalefit="1" width="50%"/>
+        </imageobject>
+        <caption>Architecture [7]: UML class diagram of the Output component
+        </caption>
+      </mediaobject>
+    </section>
+  </section>
+  <section id="ArchitectureGUI">
+    <title>Graphical User Interface</title>
+    <mediaobject id="GraphicalUserInterfaceUML">
+      <imageobject role="html">
+        <imagedata align="center" contentdepth="100%" fileref="Sketches/ui_prototype_uml.png" format="PNG" scalefit="1" width="100%"/>
+      </imageobject>
+      <caption>Architecture [8]: UML class diagram of the BioPreDyn software
+      graphical user interface
+      </caption>
+    </mediaobject>
+    <para/>
+  </section>
+</section>

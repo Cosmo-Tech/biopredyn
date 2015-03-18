@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
+-->
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article id="DesignNotes">
+  <articleinfo>
+    <title>BioPreDyn software framework design notes</title>
+    <subjectset>
+      <subject>
+        <subjectterm>BioPreDyn</subjectterm>
+      </subject>
+    </subjectset>
+    <keywordset>
+      <keyword>CoSMo</keyword>
+      <keyword>Project</keyword>
+      <keyword>Systems biology</keyword>
+      <keyword>BioPreDyn</keyword>
+    </keywordset>
+    <authorgroup>
+      <author>
+        <firstname>Bertrand</firstname>
+        <surname>Moreau</surname>
+        <affiliation>
+          <orgname>The CoSMo company</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+    <pubdate>2015</pubdate>
+    <abstract>
+      <para>This document describes the architectural and technical choices
+      made during the development of the BioPreDyn software framework.
+      </para>
+    </abstract>
+  </articleinfo>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Preface.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Introduction.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Requirements.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Architecture.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Implementation.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/References.xml"/>
+</article>

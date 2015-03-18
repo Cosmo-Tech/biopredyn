@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Language: XML
+  Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
+-->
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="DesignNotesPreface">
+  <title>Preface</title>
+  <section id="DesignNotesPurpose">
+    <title>Purpose of this document</title>
+    <para>This document summarizes the design steps for the development
+    of the <literal>BioPreDyn</literal> integrated software suite (deliverables
+    3.4, 7.2 and 8.3 of the BioPreDyn project). It first quickly reminds the
+    main requirements for the BioPreDyn software framework; architecture and
+    components of the BioPreDyn engine back-end are then described; finally,
+    structure and classes of the graphical user interface are presented, along
+    with details on how it interfaces with the back-end.</para>
+    <para>This document does not give information on how to install nor use the
+    BioPreDyn software framework; this is covered by the prototype user guide.
+    </para>
+  </section>
+  <section id="DesignNotesAudience">
+    <title>Audience</title>
+    <para>This document is primarily intended to developers willing to
+    understand the choices made during the <literal>BioPreDyn</literal> software
+    suite design stage. It is particularly useful for maintenance and
+    modification purposes.</para>
+  </section>
+  <section id="DesignNotesOrganization">
+    <title>Organization</title>
+    <para>This guide is divided into four main sections:</para>
+    <itemizedlist>
+      <listitem>
+        <formalpara>
+          <title>Introduction</title>
+          <para>A short introduction to the project context, and how the current
+          document fits in the global picture.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Requirements</title>
+          <para>Quick review of the requirements for the BioPreDyn software
+          framework, both for the engine and the graphical user interface.
+          </para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Architecture</title>
+          <para>Detailed description of each component of the BioPreDyn software
+          framework, and of its graphical user interface.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Implementation</title>
+          <para>This section gives an overview of the technologies chosen for
+          implementing the BioPreDyn software framework.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>References</title>
+          <para>Articles and publications related to the project.</para>
+        </formalpara>
+      </listitem>
+    </itemizedlist>
+  </section>
+</section>
