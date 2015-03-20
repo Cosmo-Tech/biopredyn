@@ -3,11 +3,10 @@
   Language: XML
   Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 -->
-<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<section>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<section id="Usage">
   <title>Usage</title>
-  <section>
+  <section id="CommandLineUsage">
     <title>Command line</title>
     <para>Once the <literal>BioPreDyn</literal> framework is installed, it can
 be used to run numerical experiments encoded as <literal>SED-ML</literal>
@@ -64,7 +63,7 @@ valid CSV file.
       </listitem>
     </itemizedlist>
   </section>
-  <section>
+  <section id="WritingScriptsUsage">
     <title>Writing scripts</title>
     <para><literal>BioPreDyn</literal> is a software framework for manipulating
 simulation workflows in systems biology. Is is primarily intended to provide
@@ -109,5 +108,102 @@ model building cycle can be found in the
 <ulink url="https://github.com/TheCoSMoCompany/biopredyn/tree/master/Prototype/scripts">
 <literal>scripts</literal> folder</ulink> of the project repository.
     </para>
+  </section>
+  <section id="UserInterfaceUsage">
+    <title>User interface</title>
+    <formalpara>
+      <title>Starting the GUI</title>
+      <para>The <literal>BioPreDyn</literal> software framework provides a
+      graphical user interface for editing and executing simulation work flows
+      written in <acronym>SED-ML</acronym>. Simply open a command prompt or a
+      shell, navigate to the folder where the prototype is installed, and type
+      the following command:</para>
+    </formalpara>
+    <programlisting>
+  cd Prototype/python/biopredyn
+    </programlisting>
+    <para>This folder contains a <literal>biopredynUI.py</literal> file which can
+be executed as a command line tool. To do so, one can use the following syntax:
+    </para>
+    <programlisting>
+  python biopredynUI.py
+    </programlisting>
+    <para>As a result, the <literal>BioPreDyn</literal> software user interface
+    is opened:
+    </para>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="90%" contentdepth="100%" align="center" scalefit="1" fileref="Sketches/window.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+    <formalpara>
+      <title>Opening a work flow</title>
+      <para>Click on <emphasis role="bold">File &gt; Open</emphasis>; a window
+      prompting for one or several <literal>SED-ML</literal> files appear.
+      </para>
+    </formalpara>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="90%" contentdepth="100%" align="center" scalefit="1" fileref="Sketches/open_workflows.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+    <para>Multiple <literal>SED-ML</literal> fiels can be selected at this
+    point. When the selection is done, click on
+    <emphasis role="bold">Open</emphasis>.</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="90%" contentdepth="100%" align="center" scalefit="1" fileref="Sketches/workflows.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+    <para>A hierarchical tree appears in the left side panel of the window for
+    each selected <literal>work flow</literal>; the <literal>ID</literal>
+    attribute is displayed, if it exists.</para>
+    <formalpara>
+      <title>Editing an element</title>
+      <para>Every element (except the root of
+      each work flow or list elements) can be edited by clicking on
+      <emphasis role="bold">Edit &gt; Edit element</emphasis>.</para>
+    </formalpara>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="90%" contentdepth="100%" align="center" scalefit="1" fileref="Sketches/edit_range.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+    <para>Attributes of the selected element can be edited; only the type
+    cannot be modified when editing an element (for element that have a type,
+    it is determined when the object is created, and it cannot be changed).
+    When the modifications are done, click on
+    <emphasis role="bold">OK</emphasis>.</para>
+    <formalpara>
+      <title>Saving a work flow</title>
+      <para>A work flow can be saved as a <literal>SED-ML</literal> file by
+      clicking on <emphasis role="bold">File &gt; Save as</emphasis>.</para>
+    </formalpara>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="90%" contentdepth="100%" align="center" scalefit="1" fileref="Sketches/save_as.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+    <para>Once the name and location of the file is set, click on
+    <emphasis role="bold">Save</emphasis>.</para>
+    <formalpara>
+      <title>Executing a work flow</title>
+      <para>The selected work flow can be executed by clicking on
+      <emphasis role="bold">File &gt; Run</emphasis>. If a graphical output is
+      defined, it will be displayed as a tab in the right side panel of the
+      window:</para>
+    </formalpara>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="90%" contentdepth="100%" align="center" scalefit="1" fileref="Sketches/run.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+    <para>Each tab provide tools for editing the displayed plot, exporting its
+    content, changing the scale, zooming, etc.</para>
+    <mediaobject>
+      <imageobject>
+        <imagedata width="90%" contentdepth="100%" align="center" scalefit="1" fileref="Sketches/edit_figure.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
   </section>
 </section>
