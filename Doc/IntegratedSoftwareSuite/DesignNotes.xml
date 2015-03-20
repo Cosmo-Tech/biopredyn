@@ -28,16 +28,10 @@
       </author>
     </authorgroup>
     <pubdate>2015</pubdate>
-    <abstract>
-      <para>This document describes the architectural and technical choices
-      made during the development of the BioPreDyn software framework.
-      </para>
-    </abstract>
   </articleinfo>
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Preface.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Introduction.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Requirements.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Architecture.xml"/>
-  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/Implementation.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="DesignNotes/References.xml"/>
 </article>

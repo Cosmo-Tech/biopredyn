@@ -3,15 +3,13 @@
   Language: XML
   Copyright: [2012-2015] The CoSMo Company, All Rights Reserved
 -->
-<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section id="SoftwareSuiteDesignNotesReferences">
   <title>References</title>
   <itemizedlist>
     <listitem>
       <para>
-        <anchor id="ReferencesSBML"
-                xreflabel="Hucka2003" />
+        <anchor id="ReferencesSBML2003" xreflabel="Hucka2003"/>
         <emphasis role="bold">[1]</emphasis>
         Hucka, M., Finney, A., Sauro, H. M., Bolouri, H., Doyle, J. C., Kitano,
         H., Arkin, a. P., et al. (2003). 
@@ -23,8 +21,7 @@
     </listitem>
     <listitem>
       <para>
-        <anchor id="ReferencesSEDML"
-                xreflabel="Kohn2008" />
+        <anchor id="ReferencesSEDML2008" xreflabel="Kohn2008"/>
         <emphasis role="bold">[2]</emphasis>
         Köhn, D., Novere, N. Le. (2008). 
         <ulink url="http://www.springerlink.com/index/N67N137071431XT7.pdf">
@@ -34,14 +31,14 @@
     </listitem>
     <listitem>
       <para>
-        <anchor id="ReferencesSBRML"
-                xreflabel="Dada2010" />
+        <anchor id="ReferencesSEDML2011" xreflabel="Waltemath2011"/>
         <emphasis role="bold">[3]</emphasis>
-        Dada, J. O., Spasić, I., Paton, N. W., Mendes, P. (2010).
-        <ulink url="http://www.ncbi.nlm.nih.gov/pubmed/20176582">SBRML: a markup
-        language for associating systems biology data with models.</ulink>
-        Bioinformatics (Oxford, England), 26(7), 932–8.
-        doi:10.1093/bioinformatics/btq069
+        Waltemath, D., Adams, R., Bergmann, F. T., Hucka, M., Kolpakov, F.,
+        Miller, A. K., … Le Novère, N. (2011).
+        <ulink url="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3292844/">
+        Reproducible computational biology experiments with
+        SED-ML--the Simulation Experiment Description Markup Language.</ulink>
+        BMC systems biology, 5(1), 198. doi:10.1186/1752-0509-5-198
       </para>
     </listitem>
   </itemizedlist>

@@ -68,8 +68,8 @@
     <section id="ModelComponent">
       <title>Model component</title>
       <para>This component handles the representation of the model (expressed
-      in <ulink url="http://sbml.org/Main_Page">SBML</ulink> in this case) in a
-      simulation work flow.</para>
+      in <ulink url="http://SBML.org/Main_Page"><acronym>SBML</acronym></ulink>
+      in this case) in a simulation work flow.</para>
       <mediaobject id="ModelComponentUML">
         <imageobject role="html">
           <imagedata align="center" contentdepth="100%" fileref="Sketches/model_component.png" format="PNG" scalefit="1" width="50%"/>
@@ -84,9 +84,10 @@
             <formalpara>
               <title><literal>Model</literal></title>
               <para>Provide tools and accessors for manipulating models in the
-              SED-ML sense. Additionally, this class handles the translation
-              between the in-memory representation (as an
-              <literal>XML</literal> tree) and the corresponding SBML file.
+              <acronym>SED-ML</acronym> sense. Additionally, this class handles
+              the translation between the in-memory representation (as an
+              <acronym>XML</acronym> tree) and the corresponding
+              <acronym>SBML</acronym> file.
               </para>
             </formalpara>
             <formalpara>
@@ -99,17 +100,17 @@
               <para>In <literal>SED-ML</literal>, changes are objects that
               describe modifications to be applied to the model before it
               actually runs. Classes inheriting from the
-              <emphasis><literal>Change</literal></emphasis> class provide
-              tools for editing and executing such changes; changes are not
-              reflected on the physical <literal>SBML</literal> file
-              associated with the modified model.
+              <literal>Change</literal> class provide tools for editing and
+              executing such changes; changes are not reflected on the physical
+              <acronym>SBML</acronym> file associated with the modified model.
               </para>
             </formalpara>
             <formalpara>
-              <title>SetValue</title>
+              <title><literal>SetValue</literal></title>
               <para>This class derives from the
               <literal>ComputeChange</literal> and displays the same behavior,
-              except it is used only in <literal>RepeatedTask</literal> object.
+              except it is used only in <link linkend="TaskComponent">
+              <literal>RepeatedTask</literal></link> object.
               </para>
             </formalpara>
           </listitem>
@@ -119,7 +120,8 @@
     <section id="SimulationComponent">
       <title>Simulation component</title>
       <para>The <literal>Simulation</literal> component provides methods that
-      call external simulation engines for running simulations on SBML models.
+      call external simulation engines for running simulations on
+      <acronym>SBML</acronym> models.
       </para>
       <mediaobject id="SimulationComponentUML">
         <imageobject role="html">
@@ -138,15 +140,35 @@
                 <literal>UniformTimeCourse</literal>,
                 <literal>OneStep</literal> and <literal>SteadyState</literal>)
               </title>
-              <para/>
+              <para>Classes inheriting from the <literal>Simulation</literal>
+              class provide tools for editing the parameters of the encoded
+              simulations, along with methods to simulate them. Depending on
+              the nature of the simulation, different external simulation
+              engines can be available in the BioPreDyn framework; in such a
+              case, distinct methods using each of these engines exist, so that
+              the user can choose the simulation engine most adapted to its
+              needs.
+              </para>
             </formalpara>
+          </listitem>
+          <listitem>
             <formalpara>
               <title><literal>Algorithm</literal></title>
-              <para/>
+              <para>This class provides an access to the
+              <ulink url="http://biomodels.net/kisao/">KiSAO</ulink>
+              description of the simulation algorithm to be used when running
+              the simulation.</para>
             </formalpara>
+          </listitem>
+          <listitem>
             <formalpara>
-              <title>Statistics</title>
-              <para/>
+              <title><literal>Statistics</literal></title>
+              <para><literal>UniformTimeCourse</literal> conditions can be used
+              to estimate the parameters of the simulated model; after a
+              successful parameter estimation, a <literal>Statistics</literal>
+              object is returned. This object provides methods to access
+              information about this estimation: residuals, correlation matrix,
+              confidence intervals for the estimated parameters, etc.</para>
             </formalpara>
           </listitem>
         </itemizedlist>
@@ -154,18 +176,84 @@
     </section>
     <section id="TaskComponent">
       <title>Task component</title>
-      <para/>
+      <para>The <literal>Task</literal> component connects the models with the
+      simulations:</para>
       <mediaobject id="TaskComponentUML">
         <imageobject role="html">
-          <imagedata align="center" contentdepth="100%" fileref="Sketches/task_component.png" format="PNG" scalefit="1" width="50%"/>
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/task_component.png" format="PNG" scalefit="1" width="70%"/>
         </imageobject>
         <caption>Architecture [5]: UML class diagram of the Task component
         </caption>
       </mediaobject>
+      <para>The <literal>Task</literal> component consists in the
+      following classes:
+        <itemizedlist>
+          <listitem>
+            <formalpara>
+              <title><literal>AbstractTask</literal> (and its inherited classes
+                <literal>Task</literal> and <literal>RepeatedTask</literal>)
+              </title>
+              <para>These classes provide tools for accessing the elements the
+              encoded task refers to, namely a
+              <link linkend="SimulationComponent"><literal>Simulation</literal>
+              </link> derived object and a
+              <link linkend="ModelComponent"><literal>Model</literal></link>
+              object. In addition, the simulation engine can be set through the
+              methods provided by the <literal>AbstractTask</literal> class.
+              </para>
+            </formalpara>
+          </listitem>
+          <listitem>
+            <formalpara>
+              <title><literal>Result</literal> (and its inherited classes
+                <literal>Fluxes</literal> and <literal>TimeSeries</literal>)
+              </title>
+              <para><literal>Result</literal> derived classes are responsible
+              for the numerical data produced by a successful simulation run or
+              imported from a <acronym>CSV</acronym> or
+              <ulink url="https://code.google.com/p/numl/">NuML</ulink> file.
+              Numerical results are stored and returned as dictionaries.
+              </para>
+            </formalpara>
+          </listitem>
+          <listitem>
+            <formalpara>
+              <title><literal>Range</literal> (and its inherited classes
+                <literal>FunctionalRange</literal>,
+                <literal>VectorRange</literal> and
+                <literal>UniformRange</literal>)
+              </title>
+              <para><literal>Range</literal> derived classes are only used in
+              <literal>RepeatedTask</literal> objects in order to describe the
+              range of values to iterate over. These classes contain the code
+              required for computing those values and provide the methods to
+              acquire them. The way these values are computed varies according
+              to the nature of the <literal>Range</literal> object.</para>
+            </formalpara>
+          </listitem>
+          <listitem>
+            <formalpara>
+              <title><literal>SubTask</literal></title>
+              <para><literal>SubTask</literal> objects provide methods for
+              accessing the <literal>Task</literal> object they refer to, and
+              for comparing itself with another <literal>SubTask</literal>
+              based on the value of their respective <literal>order</literal>
+              attributes.
+              </para>
+            </formalpara>
+          </listitem>
+        </itemizedlist>
+      </para>
     </section>
     <section id="DataGenerationComponent">
       <title>Data generation component</title>
-      <para/>
+      <para>Data generation occurs after a successful simulation run; it
+      consists in applying post-processing effects to the numerical values
+      stored in a
+      <link linkend="TaskComponent"><literal>Result</literal></link> object
+      before exporting it in an
+      <link linkend="OutputComponent"><literal>Output</literal></link> object.
+      </para>
       <mediaobject id="DataGenerationComponentUML">
         <imageobject role="html">
           <imagedata align="center" contentdepth="100%" fileref="Sketches/data_generation_component.png" format="PNG" scalefit="1" width="50%"/>
@@ -174,29 +262,215 @@
         component
         </caption>
       </mediaobject>
+      <para>The data generation component consists in the following classes:
+        <itemizedlist>
+          <listitem>
+            <formalpara>
+              <title><literal>DataGenerator</literal></title>
+              <para>This class provide tools for accessing the
+              <link linkend="VariableClass"><literal>Variable</literal></link>
+              and <link linkend="ParameterClass"><literal>Parameter</literal>
+              </link> objects it refers to. It contains the required code and
+              provides the methods for computing and returning the values it
+              encodes for.</para>
+            </formalpara>
+          </listitem>
+          <listitem>
+            <formalpara>
+              <title><literal>Data</literal> (and its inherited classes
+                <literal>Curve</literal>,
+                <literal>Surface</literal> and
+                <literal>DataSet</literal>)
+              </title>
+              <para><literal>Data</literal> derived classes refer to one or
+              several <literal>DataGenerator</literal> objects and structure
+              them together depending on the signal they encode; for instance,
+              a <literal>Curve</literal> object refers to two
+              <literal>DataGenerator</literal> objects, one for the X-axis, and
+              one for the Y-axis. These classes provide the methods for
+              accessing the <literal>DataGenerator</literal> objects they refer
+              to, along with additional information, depending on the nature
+              of the <literal>Data</literal> object.</para>
+            </formalpara>
+          </listitem>
+        </itemizedlist>
+      </para>
     </section>
     <section id="OutputComponent">
       <title>Output component</title>
-      <para/>
+      <para>The <literal>Output</literal> component handles the outputs of the
+      work flow:</para>
       <mediaobject id="OutputComponentUML">
         <imageobject role="html">
-          <imagedata align="center" contentdepth="100%" fileref="Sketches/output_component.png" format="PNG" scalefit="1" width="50%"/>
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/output_component.png" format="PNG" scalefit="1" width="70%"/>
         </imageobject>
         <caption>Architecture [7]: UML class diagram of the Output component
         </caption>
+      </mediaobject>
+      <para>The <literal>Output</literal> component consists in the following
+      classes:
+        <itemizedlist>
+          <listitem>
+            <formalpara>
+              <title><literal>Output</literal> (and its inherited classes
+                <literal>Report</literal>,
+                <literal>Plot2D</literal> and
+                <literal>Plot3D</literal>)
+              </title>
+              <para>These classes provide tools for accessing the
+              <link linkend="DataGenerationComponent"><literal>Data</literal>
+              </link> objects they refer to, along with methods to process the
+              output they encode for: displaying plots or writing numerical
+              results to files.</para>
+            </formalpara>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </section>
+    <section id="VariableClass">
+      <title>Variable class</title>
+      <para>The <literal>Variable</literal> class does not belong to any
+      component, but is used by many classes:</para>
+      <mediaobject id="VariableClassUML">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/variable.png" format="PNG" scalefit="1" width="50%"/>
+        </imageobject>
+        <caption>Architecture [8]: UML class diagram of the Variable class
+        neighbourhood</caption>
+      </mediaobject>
+      <para>A <literal>Variable</literal> object defines a target value in a
+      <link linkend="ModelComponent"><literal>Model</literal></link> by
+      referring to it directly, or through a
+      <link linkend="TaskComponent"><literal>Task</literal></link> reference.
+      The <literal>Variable</literal> class provides tools for accessing this
+      value.
+      </para>
+    </section>
+    <section id="ParameterClass">
+      <title>Parameter class</title>
+      <para>The <literal>Parameter</literal> class simply gives access to a
+      numerical value; it does not belong to any component.</para>
+      <mediaobject id="ParameterClassUML">
+        <imageobject role="html">
+          <imagedata align="center" contentdepth="100%" fileref="Sketches/parameter.png" format="PNG" scalefit="1" width="70%"/>
+        </imageobject>
+        <caption>Architecture [9]: UML class diagram of the Parameter class
+        neighbourhood</caption>
       </mediaobject>
     </section>
   </section>
   <section id="ArchitectureGUI">
     <title>Graphical User Interface</title>
+    <para>Following the requirements provided by the
+    <ulink url="https://thecosmocompany.com/BioPreDyn-doc/IntegratedSoftwareSuite/GraphicalUserInterfaceRequirementsGuide.pdf">
+    graphical user interface requirements guide</ulink>, the BioPreDyn software
+    graphical user interface consists in a main window displaying two widgets:
+    a navigation tree for visually exploring a work flow, and a tab widget for
+    displaying and organizing graphical outputs. The following design is
+    proposed in order to fulfill those requirements:</para>
     <mediaobject id="GraphicalUserInterfaceUML">
       <imageobject role="html">
-        <imagedata align="center" contentdepth="100%" fileref="Sketches/ui_prototype_uml.png" format="PNG" scalefit="1" width="100%"/>
+        <imagedata align="center" contentdepth="100%" fileref="Sketches/ui_prototype_uml_design.png" format="PNG" scalefit="1" width="100%"/>
       </imageobject>
-      <caption>Architecture [8]: UML class diagram of the BioPreDyn software
+      <caption>Architecture [10]: UML class diagram of the BioPreDyn software
       graphical user interface
       </caption>
     </mediaobject>
-    <para/>
+    <para>This design consists in the following classes and components:</para>
+    <itemizedlist>
+      <listitem>
+        <formalpara>
+          <title><literal>MainWindow</literal></title>
+          <para>The top level class of the BioPreDyn graphical user interface;
+          it displays the main layout of the interface, and handles the menu
+          bar, along with top level application features (closing the
+          application, changing the size of the window, displaying status
+          information, etc).</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title><literal>Project</literal></title>
+          <para>Synchronizes the various components of the interface; handles
+          the communication between its parent <literal>MainWindow</literal>
+          object and its children <literal>TabPanel</literal> and
+          <literal>NavigationTree</literal> objects.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Navigation tree component</title>
+          <para>It consists in the following elements:
+          <itemizedlist>
+            <listitem>
+              <formalpara>
+                <title><literal>NavigationTree</literal></title>
+                <para>A widget displaying a hierarchical tree representing one
+                or several work flows; each node of the displayed work flow is
+                an instance of a <literal>TreeElement</literal> derived class.
+                </para>
+              </formalpara>
+            </listitem>
+            <listitem>
+              <formalpara>
+                <title><literal>TreeElement</literal> (and its inherited
+                classes)</title>
+                <para>A node in its parent <literal>NavigationTree</literal>
+                object. Objects inheriting from this class refer to an object
+                in the BioPreDyn software framework; when clicking on the
+                <literal>Edit</literal> action (via the contextual menu or the
+                <literal>Edit</literal> menu) when such an object is selected,
+                the corresponding <literal>DialogBox</literal> opens and
+                provides several tools to the user for editing the underlying
+                object.</para>
+              </formalpara>
+            </listitem>
+          </itemizedlist>
+          </para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Tab component</title>
+          <para>It contains the following classes:
+          <itemizedlist>
+            <listitem>
+              <formalpara>
+                <title><literal>TabPanel</literal></title>
+                <para>A widget for displaying graphical outputs resulting from
+                the execution of a simulation work flow. Tabs are instances of
+                the <literal>Tab</literal> class; they can be
+                reorganized and deleted without impacting the corresponding
+                work flow. Each tab proposes tools for manipulating the plots
+                (zoom in, zoom out, save as image file, etc).</para>
+              </formalpara>
+            </listitem>
+            <listitem>
+              <formalpara>
+                <title><literal>Tab</literal></title>
+                <para>A widget for displaying graphical outputs resulting from
+                the execution of a simulation work flow. Tabs are instances of
+                the <literal>Tab</literal> class; they can be
+                reorganized and deleted without impacting the corresponding
+                work flow. Each tab proposes tools for manipulating the plots
+                (zoom in, zoom out, save as image file, etc).</para>
+              </formalpara>
+            </listitem>
+          </itemizedlist>
+          </para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Dialog component</title>
+          <para>It contains <literal>DialogBox</literal> derived classes;
+          these classes are instantiated each time a
+          <literal>TreeElement</literal> is edited. They provide tools for
+          editing the attributes of the object referred to by the
+          selected <literal>TreeElement</literal> object.
+          </para>
+        </formalpara>
+      </listitem>
+    </itemizedlist>
   </section>
 </section>

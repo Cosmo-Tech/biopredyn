@@ -9,7 +9,7 @@
   <section id="DesignNotesPurpose">
     <title>Purpose of this document</title>
     <para>This document summarizes the design steps for the development
-    of the <literal>BioPreDyn</literal> integrated software suite (deliverables
+    of the BioPreDyn integrated software suite (deliverables
     3.4, 7.2 and 8.3 of the BioPreDyn project). It first quickly reminds the
     main requirements for the BioPreDyn software framework; architecture and
     components of the BioPreDyn engine back-end are then described; finally,
@@ -22,9 +22,11 @@
   <section id="DesignNotesAudience">
     <title>Audience</title>
     <para>This document is primarily intended to developers willing to
-    understand the choices made during the <literal>BioPreDyn</literal> software
+    understand the choices made during the BioPreDyn software
     suite design stage. It is particularly useful for maintenance and
-    modification purposes.</para>
+    modification purposes. The reader is assumed to have knowledge about the
+    <ulink url="http://sed-ml.org/">Simulation Experiment Description Markup
+    Language (SED-ML)</ulink>.</para>
   </section>
   <section id="DesignNotesOrganization">
     <title>Organization</title>
@@ -50,13 +52,6 @@
           <title>Architecture</title>
           <para>Detailed description of each component of the BioPreDyn software
           framework, and of its graphical user interface.</para>
-        </formalpara>
-      </listitem>
-      <listitem>
-        <formalpara>
-          <title>Implementation</title>
-          <para>This section gives an overview of the technologies chosen for
-          implementing the BioPreDyn software framework.</para>
         </formalpara>
       </listitem>
       <listitem>

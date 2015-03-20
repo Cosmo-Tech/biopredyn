@@ -6,5 +6,107 @@
 <!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <section id="Requirements">
   <title>Requirements</title>
-  <para></para>
+  <para>In this chapter the requirements for the BioPreDyn software framework
+  are summarized; for more information about these requirements please refer to
+  the <ulink url="https://thecosmocompany.com/BioPreDyn-doc/IntegratedSoftwareSuite/IntegratedSoftwareSuiteRequirementsGuide.pdf">
+  integrated software suite requirements</ulink> and the
+  <ulink url="https://thecosmocompany.com/BioPreDyn-doc/IntegratedSoftwareSuite/GraphicalUserInterfaceRequirementsGuide.pdf">
+  graphical user interface requirements</ulink> guides.</para>
+  <section id="EngineRequirements">
+    <title>Engine requirements</title>
+    <itemizedlist>
+      <listitem>
+        <formalpara>
+          <title>Systems biology model building cycle implementation</title>
+          <para>The chosen architecture should allow as many systems biology
+          model building steps as possible to be implemented and executed.
+          </para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Modularity</title>
+          <para>The chosen architecture should allow any combination of steps
+          from the systems biology model building cycle to be executed; in
+          addition, the user should be given the possibility of choosing
+          between different simulation engines for each step if multiple tools
+          exist for this step.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Standard languages</title>
+          <para>In order to be easily interfaced with other tools, the
+          integrated software suite should be compatible with reference
+          biochemical model and data formats.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Validation cases</title>
+          <para>The chosen architecture and implementation should be validated
+          using relevant use cases from the systems biology, ideally taken from
+          the <ulink url="http://www.iim.csic.es/~gingproc/biopredynbench/">
+          BioPreDyn project benchmark models</ulink>.</para>
+        </formalpara>
+      </listitem>
+    </itemizedlist>
+    <para>From this requirements, it was decided to use the
+    <ulink url="http://sed-ml.org/">Simulation Experiment Description Markup
+    Language (SED-ML)</ulink> as a way to describe simulation work flows; and
+    that the <ulink url="http://sbml.org/Main_Page">Systems Biology Markup
+    Language (SBML)</ulink> would be the main language for encoding models. The
+    following design reflects this decision.
+    </para>
+  </section>
+  <section id="GUIRequirements">
+    <title>Graphical user interface requirements</title>
+    <itemizedlist>
+      <listitem>
+        <formalpara>
+          <title>Work flow manipulation</title>
+          <para>The chosen interface should allow the user to:
+            <itemizedlist>
+              <listitem>
+                <para>Open a <acronym>SED-ML</acronym> file and build its
+                corresponding work flow</para>
+              </listitem>
+              <listitem>
+                <para>Display the elements of a work flow</para>
+              </listitem>
+              <listitem>
+                <para>Execute a work flow</para>
+              </listitem>
+              <listitem>
+                <para>Save a work flow</para>
+              </listitem>
+            </itemizedlist>
+          </para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Graphical outputs</title>
+          <para>The chosen interface should be capable of displaying the
+          graphical outputs resulting from the execution of a
+          <acronym>SED-ML</acronym> work flow.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Written reports</title>
+          <para>The user should be allowed to write the numerical values
+          resulting from the execution of a work flow on disk in an
+          appropriate format.</para>
+        </formalpara>
+      </listitem>
+      <listitem>
+        <formalpara>
+          <title>Editing work flow elements</title>
+          <para>The chosen interface should provide tools for editing any
+          element of a work flow.</para>
+        </formalpara>
+      </listitem>
+    </itemizedlist>
+  </section>
 </section>
