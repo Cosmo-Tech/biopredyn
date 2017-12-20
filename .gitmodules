@@ -9,4 +9,4 @@
 	url = https://github.com/bmoreau/COPASI.git
 [submodule "Prototype/src/libfbc"]
 	path = Prototype/src/libfbc
-	url = https://github.com/TheCoSMoCompany/libfbc.git
+	url = https://github.com/Cosmo-Tech/libfbc.git
